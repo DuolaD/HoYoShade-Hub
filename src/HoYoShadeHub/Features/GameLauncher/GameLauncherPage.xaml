@@ -523,6 +523,7 @@
             <local:StartGameButton x:Name="Button_StartGame"
                                    Grid.Column="2"
                                    HorizontalAlignment="Right"
+                                   EnableGameLaunch="{x:Bind EnableGameLaunch}"
                                    GameCommand="{x:Bind ClickStartGameButtonCommand}"
                                    GameState="{x:Bind GameState}"
                                    RunningGameInfo="{x:Bind RunningGameInfo}"
@@ -584,7 +585,37 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-
+        <!--  启动模式选择（左下角）  -->
+        <StackPanel Margin="40,0,0,60"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Background="{ThemeResource CustomAcrylicBrush}"
+                    CornerRadius="8"
+                    Padding="12,8">
+            <TextBlock Text="启动选项"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            
+            <CheckBox x:Name="CheckBox_EnableGameLaunch"
+                      Content="启动游戏"
+                      IsChecked="{x:Bind EnableGameLaunch, Mode=TwoWay}"
+                      Margin="0,4"
+                      FontWeight="SemiBold" />
+            
+            <CheckBox x:Name="CheckBox_UseHoYoShade"
+                      Content="启动 HoYoShade"
+                      IsChecked="{x:Bind UseHoYoShade, Mode=TwoWay}"
+                      IsEnabled="{x:Bind IsHoYoShadeInstalled}"
+                      Margin="0,4" />
+            
+            <CheckBox x:Name="CheckBox_UseOpenHoYoShade"
+                      Content="启动 OpenHoYoShade"
+                      IsChecked="{x:Bind UseOpenHoYoShade, Mode=TwoWay}"
+                      IsEnabled="{x:Bind IsOpenHoYoShadeInstalled}"
+                      Margin="0,4" />
+        </StackPanel>
 
     </Grid>
 

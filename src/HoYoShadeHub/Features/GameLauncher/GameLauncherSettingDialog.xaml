@@ -313,12 +313,9 @@
                                           Glyph="&#xE9CE;" />
                                 <Button.Flyout>
                                     <Flyout>
-                                        <TextBlock MaxWidth="380" TextWrapping="Wrap">
-                                            <Run Text="{x:Bind lang:Lang.GameLauncherSettingDialog_AvoidShowingAlertsAboutDetectingIllegalToolInTheGame}" />
-                                            <Hyperlink NavigateUri="https://github.com/Scighost/HoYoShadeHub/issues/1634" UnderlineStyle="None">
-                                                <Run Text="#1634" />
-                                            </Hyperlink>
-                                        </TextBlock>
+                                        <TextBlock MaxWidth="380"
+                                                   Text="{x:Bind lang:Lang.GameLauncherSettingDialog_AvoidShowingAlertsAboutDetectingIllegalToolInTheGame}"
+                                                   TextWrapping="Wrap" />
                                     </Flyout>
                                 </Button.Flyout>
                             </Button>

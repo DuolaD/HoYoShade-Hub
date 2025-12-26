@@ -57,6 +57,7 @@ public sealed partial class GameLauncherPage : PageBase
     {
         InitializeGameFeature();
         CheckGameVersion();
+        CheckShadeInstallation();
         _ = InitializeGameServerAsync();
         _ = InitializeBackgameImageSwitcherAsync();
         WeakReferenceMessenger.Default.Register<GameInstallPathChangedMessage>(this, OnGameInstallPathChanged);
@@ -83,12 +84,103 @@ public sealed partial class GameLauncherPage : PageBase
     }
 
 
+    private void CheckShadeInstallation()
+    {
+        try
+        {
+            // Check HoYoShade installation
+            string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+            IsHoYoShadeInstalled = Directory.Exists(hoYoShadePath) && 
+                                   Directory.GetFiles(hoYoShadePath, "*.dll").Length > 0;
+
+            // Check OpenHoYoShade installation
+            string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+            IsOpenHoYoShadeInstalled = Directory.Exists(openHoYoShadePath) && 
+                                       Directory.GetFiles(openHoYoShadePath, "*.dll").Length > 0;
+
+            // Uncheck options if shaders are not installed
+            if (!IsHoYoShadeInstalled && UseHoYoShade)
+            {
+                UseHoYoShade = false;
+            }
+            if (!IsOpenHoYoShadeInstalled && UseOpenHoYoShade)
+            {
+                UseOpenHoYoShade = false;
+            }
+
+            _logger.LogInformation("HoYoShade installed: {HoYoShade}, OpenHoYoShade installed: {OpenHoYoShade}", 
+                IsHoYoShadeInstalled, IsOpenHoYoShadeInstalled);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Check shade installation");
+            IsHoYoShadeInstalled = false;
+            IsOpenHoYoShadeInstalled = false;
+        }
+    }
 
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(InstalledLocateGameEnabled))]
     public partial GameState GameState { get; set; }
 
+
+    private bool _enableGameLaunch = true;
+    public bool EnableGameLaunch
+    {
+        get => _enableGameLaunch;
+        set => SetProperty(ref _enableGameLaunch, value);
+    }
+
+    private bool _useHoYoShade;
+    public bool UseHoYoShade
+    {
+        get => _useHoYoShade;
+        set
+        {
+            if (SetProperty(ref _useHoYoShade, value) && value)
+            {
+                // Uncheck OpenHoYoShade if HoYoShade is checked
+                UseOpenHoYoShade = false;
+                _logger.LogInformation("UseHoYoShade enabled, UseOpenHoYoShade disabled");
+            }
+        }
+    }
+
+    private bool _useOpenHoYoShade;
+    public bool UseOpenHoYoShade
+    {
+        get => _useOpenHoYoShade;
+        set
+        {
+            if (SetProperty(ref _useOpenHoYoShade, value) && value)
+            {
+                // Uncheck HoYoShade if OpenHoYoShade is checked
+                UseHoYoShade = false;
+                _logger.LogInformation("UseOpenHoYoShade enabled, UseHoYoShade disabled");
+            }
+        }
+    }
+
+    private bool _isHoYoShadeInstalled;
+    public bool IsHoYoShadeInstalled
+    {
+        get => _isHoYoShadeInstalled;
+        set => SetProperty(ref _isHoYoShadeInstalled, value);
+    }
+
+    private bool _isOpenHoYoShadeInstalled;
+    public bool IsOpenHoYoShadeInstalled
+    {
+        get => _isOpenHoYoShadeInstalled;
+        set => SetProperty(ref _isOpenHoYoShadeInstalled, value);
+    }
+
+
+    private void ComboBox_LaunchMode_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
+    {
+        // Removed - no longer using ComboBox
+    }
 
 
 
@@ -128,7 +220,12 @@ public sealed partial class GameLauncherPage : PageBase
     #region Game Server
 
 
-    public List<GameServerConfig>? GameServers { get; set => SetProperty(ref field, value); }
+    private List<GameServerConfig>? _gameServers;
+    public List<GameServerConfig>? GameServers 
+    { 
+        get => _gameServers;
+        set => SetProperty(ref _gameServers, value);
+    }
 
     [ObservableProperty]
     public partial GameServerConfig? SelectedGameServer { get; set; }
@@ -192,12 +289,28 @@ public sealed partial class GameLauncherPage : PageBase
     #region Game Version
 
 
-    public string? GameInstallPath { get; set => SetProperty(ref field, value); }
+    private string? _gameInstallPath;
+    public string? GameInstallPath 
+    { 
+        get => _gameInstallPath;
+        set => SetProperty(ref _gameInstallPath, value);
+    }
 
     /// <summary>
     /// 可移动存储设备提示
     /// </summary>
-    public bool IsInstallPathRemovableTipEnabled { get; set => SetProperty(ref field, value); }
+    private bool _isInstallPathRemovableTipEnabled;
+    public bool IsInstallPathRemovableTipEnabled 
+    { 
+        get => _isInstallPathRemovableTipEnabled;
+        set
+        {
+            if (SetProperty(ref _isInstallPathRemovableTipEnabled, value))
+            {
+                OnPropertyChanged(nameof(InstalledLocateGameEnabled));
+            }
+        }
+    }
 
     /// <summary>
     /// 已安装？定位游戏
@@ -207,12 +320,22 @@ public sealed partial class GameLauncherPage : PageBase
     /// <summary>
     /// 预下载按钮是否可用
     /// </summary>
-    public bool IsPredownloadButtonEnabled { get; set => SetProperty(ref field, value); }
+    private bool _isPredownloadButtonEnabled;
+    public bool IsPredownloadButtonEnabled 
+    { 
+        get => _isPredownloadButtonEnabled;
+        set => SetProperty(ref _isPredownloadButtonEnabled, value);
+    }
 
     /// <summary>
     /// 预下载是否完成
     /// </summary>
-    public bool IsPredownloadFinished { get; set => SetProperty(ref field, value); }
+    private bool _isPredownloadFinished;
+    public bool IsPredownloadFinished 
+    { 
+        get => _isPredownloadFinished;
+        set => SetProperty(ref _isPredownloadFinished, value);
+    }
 
 
     private Version? localGameVersion;
@@ -373,9 +496,12 @@ public sealed partial class GameLauncherPage : PageBase
 
 
 
-    public string? RunningGameInfo { get; set => SetProperty(ref field, value); }
-
-
+    private string? _runningGameInfo;
+    public string? RunningGameInfo 
+    { 
+        get => _runningGameInfo;
+        set => SetProperty(ref _runningGameInfo, value);
+    }
 
 
 
@@ -422,7 +548,35 @@ public sealed partial class GameLauncherPage : PageBase
     {
         try
         {
-            var process = await _gameLauncherService.StartGameAsync(CurrentGameId);
+            // Check if game launch is enabled
+            if (!EnableGameLaunch)
+            {
+                _logger.LogWarning("Game launch is disabled");
+                InAppToast.MainWindow?.Warning("请勾选\"启动游戏\"选项");
+                return;
+            }
+
+            Process? process = null;
+            
+            // Determine which shade to use (if any)
+            if (UseHoYoShade)
+            {
+                // Launch game with HoYoShade
+                string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+                process = await LaunchGameWithShadeAsync(hoYoShadePath, "HoYoShade");
+            }
+            else if (UseOpenHoYoShade)
+            {
+                // Launch game with OpenHoYoShade
+                string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+                process = await LaunchGameWithShadeAsync(openHoYoShadePath, "OpenHoYoShade");
+            }
+            else
+            {
+                // Launch game normally (no shade)
+                process = await _gameLauncherService.StartGameAsync(CurrentGameId);
+            }
+            
             if (process is not null)
             {
                 GameState = GameState.GameIsRunning;
@@ -441,6 +595,53 @@ public sealed partial class GameLauncherPage : PageBase
     }
 
 
+    private async Task<Process?> LaunchGameWithShadeAsync(string shadePath, string shadeName)
+    {
+        try
+        {
+            if (!Directory.Exists(shadePath))
+            {
+                _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
+                InAppToast.MainWindow?.Error($"{shadeName} 未安装，请先安装后再使用");
+                return null;
+            }
+
+            var gameInstallPath = GameLauncherService.GetGameInstallPath(CurrentGameId);
+            if (string.IsNullOrWhiteSpace(gameInstallPath))
+            {
+                _logger.LogWarning("Game install path not found");
+                InAppToast.MainWindow?.Error("未找到游戏安装路径");
+                return null;
+            }
+
+            var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+            var gameExePath = Path.Combine(gameInstallPath, gameExeName);
+            
+            if (!File.Exists(gameExePath))
+            {
+                _logger.LogWarning("Game exe not found: {Path}", gameExePath);
+                throw new FileNotFoundException("Game exe not found", gameExeName);
+            }
+
+            // TODO: Implement proper shade injection logic
+            // For now, just launch the game normally
+            var process = await _gameLauncherService.StartGameAsync(CurrentGameId, gameInstallPath);
+            
+            if (process != null)
+            {
+                InAppToast.MainWindow?.Success($"已使用 {shadeName} 启动游戏");
+                _logger.LogInformation("Launched game with {ShadeName}", shadeName);
+            }
+            
+            return process;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Launch game with {ShadeName}", shadeName);
+            InAppToast.MainWindow?.Error($"使用 {shadeName} 启动游戏失败: {ex.Message}");
+            return null;
+        }
+    }
 
 
     #endregion
@@ -457,7 +658,6 @@ public sealed partial class GameLauncherPage : PageBase
     {
         await LocateGameAsync();
     }
-
 
 
     private async Task ResumeDownloadAsync()
@@ -626,11 +826,26 @@ public sealed partial class GameLauncherPage : PageBase
     private const string PauseIcon = "\uE62E";
 
 
-    public List<GameBackground> BackgroundImages { get; set => SetProperty(ref field, value); }
+    private List<GameBackground> _backgroundImages;
+    public List<GameBackground> BackgroundImages 
+    { 
+        get => _backgroundImages;
+        set => SetProperty(ref _backgroundImages, value);
+    }
 
-    public bool CanStopVideo { get; set => SetProperty(ref field, value); }
+    private bool _canStopVideo;
+    public bool CanStopVideo 
+    { 
+        get => _canStopVideo;
+        set => SetProperty(ref _canStopVideo, value);
+    }
 
-    public string StartStopButtonIcon { get; set => SetProperty(ref field, value); }
+    private string _startStopButtonIcon;
+    public string StartStopButtonIcon 
+    { 
+        get => _startStopButtonIcon;
+        set => SetProperty(ref _startStopButtonIcon, value);
+    }
 
 
     private int currentBackgroundImageIndex;

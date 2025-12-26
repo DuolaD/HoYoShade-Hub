@@ -36,6 +36,8 @@ public sealed partial class StartGameButton : UserControl
     public string? RunningGameInfo { get; set => SetProperty(ref field, value); }
 
 
+    public bool EnableGameLaunch { get; set { if (SetProperty(ref field, value)) UpdateActionButtonState(); } }
+
 
     public GameState GameState { get; set { if (SetProperty(ref field, value)) UpdateActionButtonState(); } }
 
@@ -52,7 +54,9 @@ public sealed partial class StartGameButton : UserControl
     public bool IsAccentColorBackgroundVisible => Button_GameAction.IsEnabled && GameState is not GameState.Installing;
 
 
-    public bool IsGameActionCommandRunning => !Button_GameAction.IsEnabled && GameState is not GameState.GameIsRunning;
+    public bool IsGameActionCommandRunning => !Button_GameAction.IsEnabled && 
+                                              GameState is not GameState.GameIsRunning and not GameState.ComingSoon &&
+                                              EnableGameLaunch;
 
 
     public string StartGameButtonText => GameState switch
@@ -89,7 +93,9 @@ public sealed partial class StartGameButton : UserControl
 
     private void UpdateActionButtonState()
     {
-        Button_GameAction.IsEnabled = GameState is not GameState.GameIsRunning and not GameState.ComingSoon;
+        // Disable button if EnableGameLaunch is false or if GameState is GameIsRunning or ComingSoon
+        Button_GameAction.IsEnabled = EnableGameLaunch && 
+                                      GameState is not GameState.GameIsRunning and not GameState.ComingSoon;
         OnPropertyChanged(nameof(GameStateIsInstalling));
         if (GameStateIsInstalling)
         {
