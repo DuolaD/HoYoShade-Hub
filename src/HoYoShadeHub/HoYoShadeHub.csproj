@@ -26,6 +26,9 @@
 		<Product>HoYoShade Hub</Product>
 		<Copyright>Copyright © 2025 HoYoShade Hub Team</Copyright>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Page Remove="Features\Setting\ResetReShadeIniDialog.xaml" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
@@ -73,6 +76,12 @@
 		<Content Update="Assets\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Features\Setting\ResetReShadeIniDialog.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
 	</ItemGroup>
 
 </Project>

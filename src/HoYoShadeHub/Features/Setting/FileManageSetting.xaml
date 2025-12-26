@@ -236,6 +236,20 @@
                         </Grid>
                     </Button>
                     
+                    <!--  重置ReShade.ini按钮  -->
+                    <Button Height="40"
+                            Margin="0,8,0,0"
+                            Padding="16,0,16,0"
+                            BorderThickness="0"
+                            Command="{x:Bind ResetHoYoShadeReShadeIniCommand}"
+                            CornerRadius="8,20,20,8"
+                            Style="{ThemeResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE777;" />
+                            <TextBlock Text="重置ReShade.ini" />
+                        </StackPanel>
+                    </Button>
+                    
                     <!--  HoYoShade卸载按钮  -->
                     <Button Height="40"
                             Margin="0,8,0,0"
@@ -330,6 +344,20 @@
                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                       Glyph="&#xE8A7;" />
                         </Grid>
+                    </Button>
+                    
+                    <!--  重置ReShade.ini按钮  -->
+                    <Button Height="40"
+                            Margin="0,8,0,0"
+                            Padding="16,0,16,0"
+                            BorderThickness="0"
+                            Command="{x:Bind ResetOpenHoYoShadeReShadeIniCommand}"
+                            CornerRadius="8,20,20,8"
+                            Style="{ThemeResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE777;" />
+                            <TextBlock Text="重置ReShade.ini" />
+                        </StackPanel>
                     </Button>
                     
                     <!--  OpenHoYoShade卸载按钮  -->

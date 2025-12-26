@@ -657,52 +657,58 @@ public sealed partial class FileManageSetting : PageBase
     }
 
 
-
-    #endregion
-
-
-
-
-    #region Log
-
-
-
     /// <summary>
-    /// 打开日志文件夹
+    /// 重置HoYoShade的ReShade.ini
     /// </summary>
     /// <returns></returns>
     [RelayCommand]
-    private async Task OpenLogFolderAsync()
+    private async Task ResetHoYoShadeReShadeIniAsync()
     {
         try
         {
-            if (File.Exists(AppConfig.LogFile))
+            var dialog = new ResetReShadeIniDialog
             {
-                var item = await StorageFile.GetFileFromPathAsync(AppConfig.LogFile);
-                var options = new FolderLauncherOptions();
-                options.ItemsToSelect.Add(item);
-                await Launcher.LaunchFolderPathAsync(Path.GetDirectoryName(AppConfig.LogFile), options);
-            }
-            else
-            {
-                await Launcher.LaunchFolderPathAsync(Path.Combine(AppConfig.CacheFolder, "log"));
-            }
+                ShadePath = HoYoShadePath,
+                XamlRoot = this.XamlRoot,
+            };
+            
+            await dialog.ShowAsync();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Open log folder");
+            _logger.LogError(ex, "Reset HoYoShade ReShade.ini");
         }
     }
 
 
+    /// <summary>
+    /// 重置OpenHoYoShade的ReShade.ini
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    private async Task ResetOpenHoYoShadeReShadeIniAsync()
+    {
+        try
+        {
+            var dialog = new ResetReShadeIniDialog
+            {
+                ShadePath = OpenHoYoShadePath,
+                XamlRoot = this.XamlRoot,
+            };
+            
+            await dialog.ShowAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Reset OpenHoYoShade ReShade.ini");
+        }
+    }
+
 
     #endregion
 
 
-
-
-    #region Cache
-
+    #region 缓存
 
 
     public string LogCacheSize { get => field; set => SetProperty(ref field, value); } = "0.00 KB";
@@ -722,11 +728,58 @@ public sealed partial class FileManageSetting : PageBase
     {
         try
         {
-            var local = AppConfig.CacheFolder;
-            LogCacheSize = await GetFolderSizeStringAsync(Path.Combine(local, "log"));
-            ImageCacheSize = await GetFolderSizeStringAsync(Path.Combine(local, "cache"));
-            WebCacheSize = await GetFolderSizeStringAsync(Path.Combine(local, "webview"));
-            GameCacheSize = await GetFolderSizeStringAsync(Path.Combine(local, "game"));
+            await Task.Run(() =>
+            {
+                long logSize = 0;
+                long imageSize = 0;
+                long webSize = 0;
+                long gameSize = 0;
+
+                // Log cache
+                string logFolder = Path.Combine(AppConfig.CacheFolder, "log");
+                if (Directory.Exists(logFolder))
+                {
+                    logSize = Directory.GetFiles(logFolder, "*", SearchOption.AllDirectories)
+                        .Sum(file => new FileInfo(file).Length);
+                }
+
+                // Image cache
+                string imageCacheFolder = Path.Combine(AppConfig.CacheFolder, "cache");
+                if (Directory.Exists(imageCacheFolder))
+                {
+                    imageSize = Directory.GetFiles(imageCacheFolder, "*", SearchOption.AllDirectories)
+                        .Sum(file => new FileInfo(file).Length);
+                }
+                
+                // Thumbnail cache
+                string thumbCacheFolder = Path.Combine(AppConfig.CacheFolder, "thumb");
+                if (Directory.Exists(thumbCacheFolder))
+                {
+                    imageSize += Directory.GetFiles(thumbCacheFolder, "*", SearchOption.AllDirectories)
+                        .Sum(file => new FileInfo(file).Length);
+                }
+
+                // Webview cache
+                string webviewFolder = Path.Combine(AppConfig.CacheFolder, "webview");
+                if (Directory.Exists(webviewFolder))
+                {
+                    webSize = Directory.GetFiles(webviewFolder, "*", SearchOption.AllDirectories)
+                        .Sum(file => new FileInfo(file).Length);
+                }
+
+                // Game resource cache
+                string gameResourceFolder = Path.Combine(AppConfig.CacheFolder, "GameResource");
+                if (Directory.Exists(gameResourceFolder))
+                {
+                    gameSize = Directory.GetFiles(gameResourceFolder, "*", SearchOption.AllDirectories)
+                        .Sum(file => new FileInfo(file).Length);
+                }
+
+                LogCacheSize = FormatSize(logSize);
+                ImageCacheSize = FormatSize(imageSize);
+                WebCacheSize = FormatSize(webSize);
+                GameCacheSize = FormatSize(gameSize);
+            });
         }
         catch (Exception ex)
         {
@@ -735,31 +788,30 @@ public sealed partial class FileManageSetting : PageBase
     }
 
 
-
-    private static async Task<string> GetFolderSizeStringAsync(string folder) => await Task.Run(() =>
+    /// <summary>
+    /// 打开日志文件夹
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    private async Task OpenLogFolderAsync()
     {
-        if (Directory.Exists(folder))
+        try
         {
-            double size = Directory.GetFiles(folder, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
-            if (size < (1 << 20))
+            string logFolder = Path.Combine(AppConfig.CacheFolder, "log");
+            if (Directory.Exists(logFolder))
             {
-                return $"{size / (1 << 10):F2} KB";
-            }
-            else
-            {
-                return $"{size / (1 << 20):F2} MB";
+                await Launcher.LaunchUriAsync(new Uri(logFolder));
             }
         }
-        else
+        catch (Exception ex)
         {
-            return "0.00 KB";
+            _logger.LogError(ex, "Open log folder");
         }
-    });
-
+    }
 
 
     /// <summary>
-    /// 清除缓存
+    /// 清理缓存
     /// </summary>
     /// <returns></returns>
     [RelayCommand]
@@ -767,74 +819,46 @@ public sealed partial class FileManageSetting : PageBase
     {
         try
         {
-            var local = AppConfig.CacheFolder;
-            await DeleteFolderAsync(Path.Combine(local, "log"));
-            await DeleteFolderAsync(Path.Combine(local, "crash"));
-            await DeleteFolderAsync(Path.Combine(local, "cache"));
-            await DeleteFolderAsync(Path.Combine(local, "webview"));
-            await DeleteFolderAsync(Path.Combine(local, "update"));
-            await DeleteFolderAsync(Path.Combine(local, "game"));
-            await ClearDuplicateBgAsync();
+            await Task.Run(() =>
+            {
+                // 清理图片缓存
+                string imageCacheFolder = Path.Combine(AppConfig.CacheFolder, "cache");
+                if (Directory.Exists(imageCacheFolder))
+                {
+                    Directory.Delete(imageCacheFolder, true);
+                }
+
+                // 清理缩略图缓存
+                string thumbCacheFolder = Path.Combine(AppConfig.CacheFolder, "thumb");
+                if (Directory.Exists(thumbCacheFolder))
+                {
+                    Directory.Delete(thumbCacheFolder, true);
+                }
+
+                // 清理Webview缓存
+                string webviewFolder = Path.Combine(AppConfig.CacheFolder, "webview");
+                if (Directory.Exists(webviewFolder))
+                {
+                    Directory.Delete(webviewFolder, true);
+                }
+
+                // 清理游戏资源缓存
+                string gameResourceFolder = Path.Combine(AppConfig.CacheFolder, "GameResource");
+                if (Directory.Exists(gameResourceFolder))
+                {
+                    Directory.Delete(gameResourceFolder, true);
+                }
+            });
+
+            await UpdateCacheSizeAsync();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Clear cache");
         }
-        await UpdateCacheSizeAsync();
     }
-
-
-
-    private async Task DeleteFolderAsync(string folder) => await Task.Run(() =>
-    {
-        if (Directory.Exists(folder))
-        {
-            try
-            {
-                Directory.Delete(folder, true);
-                Directory.CreateDirectory(folder);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Delete folder '{folder}'", folder);
-            }
-        }
-    });
-
-
-
-    private async Task ClearDuplicateBgAsync()
-    {
-        try
-        {
-            string folder = Path.Join(AppConfig.UserDataFolder, "bg");
-            if (Directory.Exists(folder))
-            {
-                string[] files = Directory.GetFiles(folder, "*");
-                ConcurrentDictionary<string, bool> dict = new();
-                await Parallel.ForEachAsync(files, async (file, _) =>
-                {
-                    using FileStream fs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-                    string hash = Convert.ToHexString(await SHA256.HashDataAsync(fs));
-                    if (dict.TryAdd(hash, true))
-                    {
-                        return;
-                    }
-                    fs.Dispose();
-                    File.Delete(file);
-                });
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Clear duplicate bg");
-        }
-    }
-
 
 
     #endregion
-
-
 
 }
