@@ -3443,5 +3443,122 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("WelcomeView_WelcomeToHoYoShadeHubDescription", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Reset ReShade.ini 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_Title {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Are you sure you want to reset ReShade.ini? 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_WarningTitle {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_WarningTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This will delete all existing ReShade settings and create a new default configuration file. 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_WarningMessage1 {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_WarningMessage1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 All your presets, shader selections, and custom settings will be lost. This operation cannot be undone. 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_WarningMessage2 {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_WarningMessage2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Reset 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_Reset {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Cancel 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_Cancel {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Close 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_Close {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Resetting ReShade.ini... 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_Resetting {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_Resetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Reset completed 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_ResetCompleted {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_ResetCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Reset failed 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_ResetFailed {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_ResetFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Shade path not found 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_ShadePathNotFound {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_ShadePathNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 ReShade.ini file not found 的本地化字符串。
+        /// </summary>
+        public static string ResetReShadeIniDialog_ReShadeIniNotFound {
+            get {
+                return ResourceManager.GetString("ResetReShadeIniDialog_ReShadeIniNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Reset ReShade.ini 的本地化字符串。
+        /// </summary>
+        public static string FileSettingPage_ResetReShadeIni {
+            get {
+                return ResourceManager.GetString("FileSettingPage_ResetReShadeIni", resourceCulture);
+            }
+        }
     }
 }

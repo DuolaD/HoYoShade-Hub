@@ -1254,4 +1254,43 @@ If you are unsure what to choose, we recommend downloading and installing all sh
   <data name="GameLauncherPage_LaunchOpenHoYoShade" xml:space="preserve">
     <value>Launch OpenHoYoShade</value>
   </data>
+  <data name="ResetReShadeIniDialog_Title" xml:space="preserve">
+    <value>Reset ReShade.ini</value>
+  </data>
+  <data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">
+    <value>Are you sure you want to reset ReShade.ini?</value>
+  </data>
+  <data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">
+    <value>This will delete all existing ReShade settings and create a new default configuration file.</value>
+  </data>
+  <data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">
+    <value>All your presets, shader selections, and custom settings will be lost. This operation cannot be undone.</value>
+  </data>
+  <data name="ResetReShadeIniDialog_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetReShadeIniDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ResetReShadeIniDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ResetReShadeIniDialog_Resetting" xml:space="preserve">
+    <value>Resetting ReShade.ini...</value>
+  </data>
+  <data name="ResetReShadeIniDialog_ResetCompleted" xml:space="preserve">
+    <value>Reset completed</value>
+  </data>
+  <data name="ResetReShadeIniDialog_ResetFailed" xml:space="preserve">
+    <value>Reset failed</value>
+  </data>
+  <data name="ResetReShadeIniDialog_ShadePathNotFound" xml:space="preserve">
+    <value>Shade path not found</value>
+  </data>
+  <data name="ResetReShadeIniDialog_ReShadeIniNotFound" xml:space="preserve">
+    <value>ReShade.ini file not found</value>
+  </data>
+  <data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
+    <value>Reset ReShade.ini</value>
+  </data>
 </root>

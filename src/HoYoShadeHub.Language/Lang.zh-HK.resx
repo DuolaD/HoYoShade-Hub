@@ -1254,4 +1254,43 @@
   <data name="GameLauncherPage_LaunchOpenHoYoShade" xml:space="preserve">
     <value>啟動 OpenHoYoShade</value>
   </data>
+  <data name="ResetReShadeIniDialog_Title" xml:space="preserve">
+    <value>重設ReShade.ini</value>
+  </data>
+  <data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">
+    <value>你確定要重設ReShade.ini呵？</value>
+  </data>
+  <data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">
+    <value>呢個會delete晒所有現有嘅ReShade設定，並且建立一個新嘅預設設定檔。</value>
+  </data>
+  <data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">
+    <value>你所有嘅預設、着色器選擇同埋自訂設定都會冇咗。呢個操作無法撤銷。</value>
+  </data>
+  <data name="ResetReShadeIniDialog_Reset" xml:space="preserve">
+    <value>重設</value>
+  </data>
+  <data name="ResetReShadeIniDialog_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="ResetReShadeIniDialog_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="ResetReShadeIniDialog_Resetting" xml:space="preserve">
+    <value>重設緊ReShade.ini...</value>
+  </data>
+  <data name="ResetReShadeIniDialog_ResetCompleted" xml:space="preserve">
+    <value>重設完成</value>
+  </data>
+  <data name="ResetReShadeIniDialog_ResetFailed" xml:space="preserve">
+    <value>重設失敗</value>
+  </data>
+  <data name="ResetReShadeIniDialog_ShadePathNotFound" xml:space="preserve">
+    <value>搵唔到Shade路徑</value>
+  </data>
+  <data name="ResetReShadeIniDialog_ReShadeIniNotFound" xml:space="preserve">
+    <value>搵唔到ReShade.ini檔案</value>
+  </data>
+  <data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
+    <value>重設ReShade.ini</value>
+  </data>
 </root>
