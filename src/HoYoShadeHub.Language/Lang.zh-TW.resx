@@ -1,0 +1,1245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Language_Chinese" xml:space="preserve">
+    <value>華語</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>英語</value>
+  </data>
+  <data name="Language_Japanese" xml:space="preserve">
+    <value>日語</value>
+  </data>
+  <data name="Language_Korean" xml:space="preserve">
+    <value>韓語</value>
+  </data>
+  <data name="SelectDirectoryPage_SelectFolder" xml:space="preserve">
+    <value>選擇資料夾</value>
+  </data>
+  <data name="SelectDirectoryPage_AutoDeleteAfterUpdate" xml:space="preserve">
+    <value>此資料夾將在程式更新後被自動刪除</value>
+  </data>
+  <data name="SelectDirectoryPage_NoWritePermission" xml:space="preserve">
+    <value>沒有寫入權限</value>
+  </data>
+  <data name="DownloadGamePage_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Common_Confirm" xml:space="preserve">
+    <value>確定</value>
+  </data>
+  <data name="DownloadGamePage_Downloading" xml:space="preserve">
+    <value>下載中</value>
+  </data>
+  <data name="DownloadGamePage_Verifying" xml:space="preserve">
+    <value>驗證中</value>
+  </data>
+  <data name="DownloadGamePage_Decompressing" xml:space="preserve">
+    <value>解壓縮中</value>
+  </data>
+  <data name="DownloadGamePage_SomethingError" xml:space="preserve">
+    <value>出錯了</value>
+  </data>
+  <data name="DownloadGamePage_Retry" xml:space="preserve">
+    <value>重試</value>
+  </data>
+  <data name="DownloadGamePage_UnknownError" xml:space="preserve">
+    <value>未知錯誤</value>
+  </data>
+  <data name="DownloadGamePage_Finished" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="DownloadGamePage_Pause" xml:space="preserve">
+    <value>暫停</value>
+  </data>
+  <data name="DownloadGamePage_Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="UpdateService_CannotUpdateAutomatically" xml:space="preserve">
+    <value>無法自動更新</value>
+  </data>
+  <data name="GameSettingPage_Custom" xml:space="preserve">
+    <value>自訂</value>
+  </data>
+  <data name="GameSettingPage_Resolution" xml:space="preserve">
+    <value>解析度</value>
+  </data>
+  <data name="GameSettingPage_FullScreen" xml:space="preserve">
+    <value>全螢幕</value>
+  </data>
+  <data name="GameSettingPage_CustomResolution" xml:space="preserve">
+    <value>自訂解析度</value>
+  </data>
+  <data name="GameSettingPage_VoiceLanguage" xml:space="preserve">
+    <value>語音</value>
+  </data>
+  <data name="GameSettingPage_VoiceLanguageDescription" xml:space="preserve">
+    <value>首次啟動遊戲前設定此值可以避免下載部分語音資源</value>
+  </data>
+  <data name="GameSettingPage_GraphicsSetting" xml:space="preserve">
+    <value>圖形設定</value>
+  </data>
+  <data name="GameSettingPage_FPS" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Common_Apply" xml:space="preserve">
+    <value>套用</value>
+  </data>
+  <data name="GameSettingPage_GameNotInstalled" xml:space="preserve">
+    <value>遊戲未安裝</value>
+  </data>
+  <data name="GameSettingPage_SettingNotEffect" xml:space="preserve">
+    <value>遊戲運行時更改的設定無法生效</value>
+  </data>
+  <data name="GameSettingPage_ResolutionMustBeGreaterThan0" xml:space="preserve">
+    <value>解析度必須大於 0</value>
+  </data>
+  <data name="LauncherPage_UpdateGame" xml:space="preserve">
+    <value>更新遊戲</value>
+  </data>
+  <data name="LauncherPage_PlayTime" xml:space="preserve">
+    <value>遊戲時間</value>
+  </data>
+  <data name="Common_Refresh" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="LauncherPage_ThisWeek" xml:space="preserve">
+    <value>本週</value>
+  </data>
+  <data name="LauncherPage_ThisMonth" xml:space="preserve">
+    <value>本月</value>
+  </data>
+  <data name="LauncherPage_LastTime" xml:space="preserve">
+    <value>上次</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="LauncherPage_GameSetting" xml:space="preserve">
+    <value>遊戲設定</value>
+  </data>
+  <data name="LauncherPage_CustomStartExecutable" xml:space="preserve">
+    <value>自訂啟動程式</value>
+  </data>
+  <data name="Common_Select" xml:space="preserve">
+    <value>選擇</value>
+  </data>
+  <data name="SettingPage_BgSizeTip" xml:space="preserve">
+    <value>請選擇與應用程式視窗相符合的圖片像素大小，太大的圖片會降低效能。</value>
+  </data>
+  <data name="LauncherPage_StartGame" xml:space="preserve">
+    <value>啟動遊戲</value>
+  </data>
+  <data name="LauncherPage_GameIsRunning" xml:space="preserve">
+    <value>遊戲正在執行中</value>
+  </data>
+  <data name="Common_Continue" xml:space="preserve">
+    <value>繼續</value>
+  </data>
+  <data name="MainPage_Launcer" xml:space="preserve">
+    <value>啟動器</value>
+  </data>
+  <data name="MainPage_GameScreenshot" xml:space="preserve">
+    <value>遊戲截圖</value>
+  </data>
+  <data name="ScreenshotPage_GameScreenshot" xml:space="preserve">
+    <value>遊戲截圖</value>
+  </data>
+  <data name="SettingPage_Log" xml:space="preserve">
+    <value>啓動器日誌</value>
+  </data>
+  <data name="SettingPage_AppSettings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingPage_OpenLogFolder" xml:space="preserve">
+    <value>開啟啓動器日誌資料夾</value>
+  </data>
+  <data name="SettingPage_CustomBackgroundSupportVideo" xml:space="preserve">
+    <value>自訂背景 (支援影片)</value>
+  </data>
+  <data name="SettingPage_CheckForUpdate" xml:space="preserve">
+    <value>檢查更新</value>
+  </data>
+  <data name="SettingPage_CurrentVersion" xml:space="preserve">
+    <value>目前版本：</value>
+  </data>
+  <data name="SettingPage_JoinPreviewReleaseChannel" xml:space="preserve">
+    <value>加入預覽版更新通道</value>
+  </data>
+  <data name="SettingPage_ReselectDataFolder" xml:space="preserve">
+    <value>重新選擇資料目錄</value>
+  </data>
+  <data name="SettingPage_DeleteAllSettings" xml:space="preserve">
+    <value>恢復初始設定</value>
+  </data>
+  <data name="SettingPage_About" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="SettingPage_ProjectHomepage" xml:space="preserve">
+    <value>項目主頁</value>
+  </data>
+  <data name="SettingPage_ReportIssue" xml:space="preserve">
+    <value>回饋問題</value>
+  </data>
+  <data name="SettingPage_ReleaseHistroy" xml:space="preserve">
+    <value>更新紀錄</value>
+  </data>
+  <data name="SettingPage_TheCurrentLocationOfTheDataFolderIs" xml:space="preserve">
+    <value>目前資料目錄的位置是：</value>
+  </data>
+  <data name="SettingPage_WouldLikeToReselectDataFolder" xml:space="preserve">
+    <value>想要重新選擇嗎？ (你需要在選擇前手動遷移資料)</value>
+  </data>
+  <data name="Common_Yes" xml:space="preserve">
+    <value>是的</value>
+  </data>
+  <data name="SettingPage_AfterDeletingTheSoftwareWillBeRestartedAutomatically" xml:space="preserve">
+    <value>刪除完成後，將自動重啟</value>
+  </data>
+  <data name="UpdatePage_NewVersion" xml:space="preserve">
+    <value>新版本！</value>
+  </data>
+  <data name="UpdatePage_Links" xml:space="preserve">
+    <value>相關連結：</value>
+  </data>
+  <data name="UpdatePage_BuiltTime" xml:space="preserve">
+    <value>編譯時間：</value>
+  </data>
+  <data name="UpdatePage_ReleaseChannel" xml:space="preserve">
+    <value>更新通道：</value>
+  </data>
+  <data name="UpdatePage_Architecture" xml:space="preserve">
+    <value>架構：</value>
+  </data>
+  <data name="UpdatePage_RemindLatter" xml:space="preserve">
+    <value>下次提醒我</value>
+  </data>
+  <data name="UpdatePage_IgnoreThisVersion" xml:space="preserve">
+    <value>忽略此版本</value>
+  </data>
+  <data name="UpdatePage_UpdateNow" xml:space="preserve">
+    <value>現在更新</value>
+  </data>
+  <data name="UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage" xml:space="preserve">
+    <value>你需要手動下載新版本安裝包</value>
+  </data>
+  <data name="UpdatePage_PreviewChannel" xml:space="preserve">
+    <value>預覽版</value>
+  </data>
+  <data name="UpdatePage_StableChannel" xml:space="preserve">
+    <value>穩定版</value>
+  </data>
+  <data name="UpdatePage_DevChannel" xml:space="preserve">
+    <value>開發版</value>
+  </data>
+  <data name="UpdatePage_ReleasePage" xml:space="preserve">
+    <value>發布頁面</value>
+  </data>
+  <data name="SettingPage_Language" xml:space="preserve">
+    <value>語言</value>
+  </data>
+  <data name="SettingPage_FollowSystem" xml:space="preserve">
+    <value>跟隨系統</value>
+  </data>
+  <data name="ScreenshotPage_ScreenshotFolderDoesNotExist" xml:space="preserve">
+    <value>截圖資料夾不存在</value>
+  </data>
+  <data name="SettingPage_PrivacyPolicy" xml:space="preserve">
+    <value>用戶協議及隱私政策</value>
+  </data>
+  <data name="SelectGamePage_SelectGameServer" xml:space="preserve">
+    <value>選擇伺服器</value>
+  </data>
+  <data name="Common_Exit" xml:space="preserve">
+    <value>離開</value>
+  </data>
+  <data name="ScreenshotPage_BackupScreenshots" xml:space="preserve">
+    <value>備份截圖</value>
+  </data>
+  <data name="SettingPage_LastBackup" xml:space="preserve">
+    <value>上次備份</value>
+  </data>
+  <data name="SettingPage_BackupDatabase" xml:space="preserve">
+    <value>備份資料庫</value>
+  </data>
+  <data name="ScreenshotPage_BackedUpNewScreenshots" xml:space="preserve">
+    <value>新增 {0} 張截圖備份</value>
+  </data>
+  <data name="DownloadGamePage_Merging" xml:space="preserve">
+    <value>合併中</value>
+  </data>
+  <data name="LauncherPage_ConfirmDelete" xml:space="preserve">
+    <value>確認刪除</value>
+  </data>
+  <data name="SettingPage_Donate" xml:space="preserve">
+    <value>捐贈</value>
+  </data>
+  <data name="SettingPage_URLProtocolExperimental" xml:space="preserve">
+    <value>URL 協議 (實驗中)</value>
+  </data>
+  <data name="SettingPage_URLProtocolDesc" xml:space="preserve">
+    <value>其他軟體可透過 URL 協議使用 HoYoShade Hub 的部分功能</value>
+  </data>
+  <data name="SettingPage_RegisterURLProtocol" xml:space="preserve">
+    <value>註冊 URL 協議</value>
+  </data>
+  <data name="SettingPage_TestURLProtocol" xml:space="preserve">
+    <value>測試 URL 協議</value>
+  </data>
+  <data name="ImageViewPage_ZoomOut" xml:space="preserve">
+    <value>縮小</value>
+  </data>
+  <data name="ImageViewPage_ZoomIn" xml:space="preserve">
+    <value>放大</value>
+  </data>
+  <data name="ImageViewPage_Rotate" xml:space="preserve">
+    <value>旋轉</value>
+  </data>
+  <data name="Common_Copy" xml:space="preserve">
+    <value>複製</value>
+  </data>
+  <data name="Common_Open" xml:space="preserve">
+    <value>開啟</value>
+  </data>
+  <data name="LauncherPage_StartupCount" xml:space="preserve">
+    <value>啟動次數</value>
+  </data>
+  <data name="FileSettingPage_DataFolder" xml:space="preserve">
+    <value>資料目錄</value>
+  </data>
+  <data name="SettingPage_FileManagement" xml:space="preserve">
+    <value>管理</value>
+  </data>
+  <data name="AboutSettingPage_Links" xml:space="preserve">
+    <value>連結</value>
+  </data>
+  <data name="SettingPage_Advanced" xml:space="preserve">
+    <value>進階</value>
+  </data>
+  <data name="LauncherPage_ThisDay" xml:space="preserve">
+    <value>今日</value>
+  </data>
+  <data name="ExperienceSettingPage_CloseWindowOption" xml:space="preserve">
+    <value>關閉視窗選項</value>
+  </data>
+  <data name="ExperienceSettingPage_MinimizeToSystemTray" xml:space="preserve">
+    <value>最小化到系統工作列圖示</value>
+  </data>
+  <data name="ExperienceSettingPage_ExitCompletely" xml:space="preserve">
+    <value>完全退出</value>
+  </data>
+  <data name="CloseWindowDialog_YouCouldChangeTheOptionAgainInSettingPage" xml:space="preserve">
+    <value>您可以在設定分頁中再次變更選項。</value>
+  </data>
+  <data name="FileSettingPage_DataFolderIsImportant" xml:space="preserve">
+    <value>您的個人資料儲存在下面的資料夾中。 它非常重要，請不要隨意删除。</value>
+  </data>
+  <data name="ExperienceSettingPage_MinimizeToTaskbar" xml:space="preserve">
+    <value>最小化至工作列</value>
+  </data>
+  <data name="ExperienceSettingPage_DoNothing" xml:space="preserve">
+    <value>什麼也不做</value>
+  </data>
+  <data name="ExperienceSettingPage_AfterStartingGame" xml:space="preserve">
+    <value>開啓遊戲後</value>
+  </data>
+  <data name="AppearanceSettingPage_HelpUsTranslateHoYoShadeHub" xml:space="preserve">
+    <value>幫助我們翻譯 HoYoShade Hub</value>
+  </data>
+  <data name="FileSettingPage_Cache" xml:space="preserve">
+    <value>快取</value>
+  </data>
+  <data name="FileSettingPage_Log" xml:space="preserve">
+    <value>日誌</value>
+  </data>
+  <data name="FileSettingPage_Image" xml:space="preserve">
+    <value>圖片</value>
+  </data>
+  <data name="FileSettingPage_Browser" xml:space="preserve">
+    <value>瀏覽器</value>
+  </data>
+  <data name="FileSettingPage_ClearCache" xml:space="preserve">
+    <value>清除快取</value>
+  </data>
+  <data name="DownloadGamePage_TheFolderDoesNotExist" xml:space="preserve">
+    <value>資料夾不存在</value>
+  </data>
+  <data name="LauncherPage_PleaseDoNotSelectTheRootDirectoryOfADrive" xml:space="preserve">
+    <value>請不要選擇磁碟的根目錄。</value>
+  </data>
+  <data name="AppearanceSettingPage_TransparencyEffects" xml:space="preserve">
+    <value>透明度效果</value>
+  </data>
+  <data name="AppearanceSettingPage_AnimationEffects" xml:space="preserve">
+    <value>動畫效果</value>
+  </data>
+  <data name="FileSettingPage_GameResource" xml:space="preserve">
+    <value>遊戲資源</value>
+  </data>
+  <data name="GameResourcePage_LatestVersion" xml:space="preserve">
+    <value>最新版本</value>
+  </data>
+  <data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
+    <value>最近更新內容</value>
+  </data>
+  <data name="GameBizSelector_AutoSearch" xml:space="preserve">
+    <value>自動搜尋</value>
+  </data>
+  <data name="InstallGameDialog_Installed" xml:space="preserve">
+    <value>已安裝？</value>
+  </data>
+  <data name="InstallGameDialog_LocateGame" xml:space="preserve">
+    <value>定位遊戲</value>
+  </data>
+  <data name="SettingPage_Download" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="DownloadGamePage_Paused" xml:space="preserve">
+    <value>已暫停</value>
+  </data>
+  <data name="Common_Restart" xml:space="preserve">
+    <value>重新啟動</value>
+  </data>
+  <data name="GameLauncherPage_RemovableStorageDeviceNotConnected" xml:space="preserve">
+    <value>可卸除式裝置未連線。</value>
+  </data>
+  <data name="StartGameButton_Resume" xml:space="preserve">
+    <value>繼續下載</value>
+  </data>
+  <data name="StartGameButton_Waiting" xml:space="preserve">
+    <value>等待中</value>
+  </data>
+  <data name="GameLauncherPage_Relocate" xml:space="preserve">
+    <value>重新定位</value>
+  </data>
+  <data name="GameLauncherSettingDialog_RelocateGame" xml:space="preserve">
+    <value>重新定位遊戲</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Size" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="GameLauncherSettingDialog_BasicInformation" xml:space="preserve">
+    <value>基本資訊</value>
+  </data>
+  <data name="GameLauncherSettingDialog_StartupArguments" xml:space="preserve">
+    <value>啟動參數</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CustomBackground" xml:space="preserve">
+    <value>自訂背景</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CommandLineArgument" xml:space="preserve">
+    <value>指令行參數</value>
+  </data>
+  <data name="GameLauncherSettingDialog_SeeMoreInformationAboutCommandLineArgument" xml:space="preserve">
+    <value>檢視有關指令行參數的更多資訊。</value>
+  </data>
+  <data name="GameSelector_ActualSizeOfInstalledGames" xml:space="preserve">
+    <value>已安裝遊戲實際佔用空間</value>
+  </data>
+  <data name="GameSelector_StorageSpaceSavedByHardLinks" xml:space="preserve">
+    <value>通過硬連結節省存儲空間</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CannotDecodeFile" xml:space="preserve">
+    <value>無法解碼檔案。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_AnUnknownErrorOccurredPleaseCheckTheLogs" xml:space="preserve">
+    <value>發生未知錯誤，請檢查日誌。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_DragAndDropImageOrVideoFiles" xml:space="preserve">
+    <value>拖放圖片 / 影片檔案。</value>
+  </data>
+  <data name="GameSelector_Calculating" xml:space="preserve">
+    <value>計算中</value>
+    <comment>Calculating storage space usage.</comment>
+  </data>
+  <data name="SettingPage_General" xml:space="preserve">
+    <value>一般</value>
+    <comment>General Setting</comment>
+  </data>
+  <data name="SettingPage_ForABetterExperiencePleaseEnableTheFollowingFeaturesInSystemSettings" xml:space="preserve">
+    <value>為了更好的體驗，請在系統設定中啟用以下功能。</value>
+  </data>
+  <data name="UpdateWindow_AutoRestartAfterUpdate" xml:space="preserve">
+    <value>更新後自動重新啟動應用程式</value>
+  </data>
+  <data name="UpdateWindow_DisplayUpdateContentAfterRestart" xml:space="preserve">
+    <value>重新啟動程式後展示更新內容</value>
+  </data>
+  <data name="Common_WebView2ComponentInitializationFailed" xml:space="preserve">
+    <value>WebView2 元件初始化失敗。</value>
+  </data>
+  <data name="SettingPage_RPCService" xml:space="preserve">
+    <value>RPC 服務</value>
+  </data>
+  <data name="SettingPage_RPCService_Desc" xml:space="preserve">
+    <value>RPC 服務是一個獨立的處理程序，用於在下載遊戲、更新軟體、以及其他需要系統管理員權限的功能，避免重新啟動。</value>
+  </data>
+  <data name="SettingPage_KeepRPCServiceRunningInTheBackground" xml:space="preserve">
+    <value>保持 RPC 服務背景運作</value>
+  </data>
+  <data name="SettingPage_RPCServiceWarningIfAppInRemovableStorage" xml:space="preserve">
+    <value>偵測到應用程式處於可移動儲存裝置中，不建議保持 RPC 服務後台運作。</value>
+  </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="StartGameButton_InQueue" xml:space="preserve">
+    <value>佇列中</value>
+  </data>
+  <data name="StartGameButton_Install" xml:space="preserve">
+    <value>安裝</value>
+  </data>
+  <data name="StartGameButton_Verify" xml:space="preserve">
+    <value>校驗</value>
+  </data>
+  <data name="SettingPage_RPCServiceIsNotRunning" xml:space="preserve">
+    <value>RPC 服務未執行</value>
+  </data>
+  <data name="SettingPage_RunService" xml:space="preserve">
+    <value>執行服務</value>
+  </data>
+  <data name="SettingPage_RPCServiceIsRunning" xml:space="preserve">
+    <value>RPC 服務正在運行</value>
+  </data>
+  <data name="SettingPage_StopService" xml:space="preserve">
+    <value>停止服務</value>
+  </data>
+  <data name="SettingPage_CannotConnectRPCService" xml:space="preserve">
+    <value>無法連線 RPC 服務</value>
+  </data>
+  <data name="WelcomeView_DearPlayerWelcomeToHoYoShadeHub" xml:space="preserve">
+    <value>親愛的玩家，歡迎來到 HoYoShade Hub！</value>
+  </data>
+  <data name="WelcomeView_WelcomeToHoYoShadeHubDescription" xml:space="preserve">
+    <value>這是一個專爲 HoYoShade 打造的 GUI 啓動器，幫助您更加輕鬆的安裝並管理它，享受更好的體驗。</value>
+  </data>
+  <data name="WelcomeView_SelectUserDataFolderDescription" xml:space="preserve">
+    <value>您的所有個人資料將會被儲存在以下資料夾中。它很重要，您也可以點選下方的按鍵選擇其他資料夾。</value>
+  </data>
+  <data name="WelcomeView_BeforeStartingSomeNecessaryEnvironmentChecksAreRequired" xml:space="preserve">
+    <value>開始之前還需要檢查一些必要環境。</value>
+  </data>
+  <data name="WelcomeView_NetworkStatus" xml:space="preserve">
+    <value>網路狀態</value>
+  </data>
+  <data name="WelcomeView_NotInstalled" xml:space="preserve">
+    <value>未安裝</value>
+  </data>
+  <data name="WelcomeView_InstallNow" xml:space="preserve">
+    <value>現在安裝</value>
+  </data>
+  <data name="WelcomeView_Installed" xml:space="preserve">
+    <value>已安裝</value>
+  </data>
+  <data name="WelcomeView_HoYoShadeHubStart" xml:space="preserve">
+    <value>HoYoShade Hub，啟動！</value>
+  </data>
+  <data name="GameSelector_ClickToSelectOrSwitchGame" xml:space="preserve">
+    <value>點選此處選擇或切換遊戲。</value>
+  </data>
+  <data name="SettingPage_Toolbox" xml:space="preserve">
+    <value>工具箱</value>
+  </data>
+  <data name="GachaImportAndExportWindow_Import" xml:space="preserve">
+    <value>導入</value>
+  </data>
+  <data name="GameSettingPage_EnableHDR" xml:space="preserve">
+    <value>啟用 HDR</value>
+  </data>
+  <data name="Common_RestoreDefaults" xml:space="preserve">
+    <value>還原預設值</value>
+  </data>
+  <data name="GameSettingPage_HDRBrightnessSetting" xml:space="preserve">
+    <value>HDR 亮度設定</value>
+  </data>
+  <data name="GameSettingPage_IfYouHaveMultipleMonitorsYouNeedToSetTheHDRSupportedMonitorAsThePrimaryDisplay" xml:space="preserve">
+    <value>如果有多個顯示器，需要把支援 HDR 的設定為主顯示器。</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_AdaptToMonitorBrightness" xml:space="preserve">
+    <value>適配顯示器亮度</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_MaxLuminance" xml:space="preserve">
+    <value>最大亮度</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_SceneryBrightness" xml:space="preserve">
+    <value>場景亮度</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_UIBrightness" xml:space="preserve">
+    <value>界面亮度</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_MonitorInformation" xml:space="preserve">
+    <value>顯示器訊息</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_ColorSpace" xml:space="preserve">
+    <value>顏色空間</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_PeakLuminance" xml:space="preserve">
+    <value>峰值亮度</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_MaxFullScreenLuminance" xml:space="preserve">
+    <value>最高全螢幕亮度</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_SDRWhiteLuminance" xml:space="preserve">
+    <value>SDR 白色亮度</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_StandardDynamicRange" xml:space="preserve">
+    <value>標準動態範圍</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_WideColorGamut" xml:space="preserve">
+    <value>廣色域</value>
+  </data>
+  <data name="GenshinHDRLuminanceSettingDialog_HighDynamicRange" xml:space="preserve">
+    <value>高動態範圍</value>
+  </data>
+  <data name="WelcomeView_IfHoYoShadeHubTakesALongTimeToStartItIsRecommendedToDisableSmartAppControlInWindowsSecurity" xml:space="preserve">
+    <value>如果 HoYoShade Hub 啟動時間過長，建議關閉 Windows 安全中心的SmartApp控制功能。</value>
+  </data>
+  <data name="WelcomeView_OpenWindowsSecurity" xml:space="preserve">
+    <value>開啟 Windows 安全中心</value>
+  </data>
+  <data name="WelcomeView_LearnMore" xml:space="preserve">
+    <value>了解更多</value>
+  </data>
+  <data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
+    <value>網絡出錯，您可以繼續使用 HoYoShade Hub ，但無法收到更新。</value>
+  </data>
+  <data name="MainView_CheckSystemProxy_SystemProxyIsEnabled" xml:space="preserve">
+    <value>系統代理已開啟。</value>
+  </data>
+  <data name="GameSettingPage_TheCurrentMonitorDoesNotSupportHDR" xml:space="preserve">
+    <value>當前顯示器不支持 HDR。</value>
+  </data>
+  <data name="GameSettingPage_WindowsHDRIsNotTurnedOn" xml:space="preserve">
+    <value>Windows HDR 未開啟。</value>
+  </data>
+  <data name="InstallGameDialog_MappedNetworkDrivesAreNotSupportedPleaseUseANetworkSharePathStartingWithDoubleBackslashes" xml:space="preserve">
+    <value>不支援映射的網路驅動器。請使用以雙反斜線 (\\) 開頭的網路共用路徑。</value>
+  </data>
+  <data name="ScreenCaptureInfoWindow_ScreenshotSaved" xml:space="preserve">
+    <value>截圖已保存</value>
+  </data>
+  <data name="ScreenshotPage_ManageScreenshotFolders" xml:space="preserve">
+    <value>管理截圖資料夾</value>
+  </data>
+  <data name="ScreenshotFolderManageDialog_AddFolder" xml:space="preserve">
+    <value>添加資料夾</value>
+  </data>
+  <data name="ScreenshotFolderManageDialog_BackingUp" xml:space="preserve">
+    <value>備份中……</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="ScreenshotFolderManageDialog_FailedToBackupScreenshots" xml:space="preserve">
+    <value>備份截圖失敗</value>
+  </data>
+  <data name="ScreenCaptureInfoWindow_ScreenshotFailed" xml:space="preserve">
+    <value>備份截圖失敗</value>
+  </data>
+  <data name="ScreenCaptureInfoWindow_CheckTheLogForMoreInformation" xml:space="preserve">
+    <value>查看日誌了解更多信息</value>
+  </data>
+  <data name="GameSettingPage_StarRailFpsTip" xml:space="preserve">
+    <value>請勿修改遊戲內「圖像品質」預設，避免幀率設置失效。若設置為 120 幀而遊戲內顯示為 30 幀，這是正常現象。</value>
+  </data>
+  <data name="ScreenshotFolderManageDialog_ImagesFromTheFollowingFoldersWillBeDisplayedInTheGallery" xml:space="preserve">
+    <value>以下資料夾中的圖片都會顯示在圖庫中</value>
+  </data>
+  <data name="ImageViewWindow2_OpenInExplorer" xml:space="preserve">
+    <value>在檔案總管中打開</value>
+  </data>
+  <data name="ImageViewWindow2_OpenWith" xml:space="preserve">
+    <value>開啟方式</value>
+  </data>
+  <data name="ImageViewWindow2_Previous" xml:space="preserve">
+    <value>上一個</value>
+    <comment>Previous Image</comment>
+  </data>
+  <data name="ImageViewWindow2_Next" xml:space="preserve">
+    <value>下一個</value>
+    <comment>Next Image</comment>
+  </data>
+  <data name="ImageViewWindow2_ShowGallery" xml:space="preserve">
+    <value>顯示圖庫</value>
+  </data>
+  <data name="ImageViewWindow2_FitToWindow" xml:space="preserve">
+    <value>適應視窗大小</value>
+    <comment>Zoom image fit to window</comment>
+  </data>
+  <data name="ImageViewWindow2_CopyFile" xml:space="preserve">
+    <value>複製檔案</value>
+  </data>
+  <data name="ImageViewWindow2_CopyPath" xml:space="preserve">
+    <value>複製路徑</value>
+  </data>
+  <data name="ImageViewWindow2_CopyImage" xml:space="preserve">
+    <value>複製圖片</value>
+  </data>
+  <data name="Common_Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="ImageViewWindow2_ImageInformation" xml:space="preserve">
+    <value>圖片資訊</value>
+  </data>
+  <data name="ImageViewWindow2_EditImage" xml:space="preserve">
+    <value>編輯圖片</value>
+  </data>
+  <data name="ImageViewWindow2_DisplayMode" xml:space="preserve">
+    <value>顯示模式</value>
+  </data>
+  <data name="ImageViewWindow2_SDRMappedLuminance" xml:space="preserve">
+    <value>SDR 映射亮度</value>
+  </data>
+  <data name="ImageViewWindow2_ExportImage" xml:space="preserve">
+    <value>匯出圖片</value>
+  </data>
+  <data name="ImageViewWindow2_DeleteImageFile" xml:space="preserve">
+    <value>刪除圖片檔案</value>
+  </data>
+  <data name="ImageViewWindow2_CopiedToClipboard" xml:space="preserve">
+    <value>已復製到剪貼簿</value>
+  </data>
+  <data name="ImageViewWindow2_FileDoesNotExist" xml:space="preserve">
+    <value>檔案不存在</value>
+  </data>
+  <data name="ImageViewWindow2_OpenWithDefaultApp" xml:space="preserve">
+    <value>使用預設程式打開</value>
+  </data>
+  <data name="ImageViewWindow2_NoImageToDisplay" xml:space="preserve">
+    <value>沒有要顯示的圖片</value>
+  </data>
+  <data name="Common_OpenFiles" xml:space="preserve">
+    <value>打開檔案</value>
+  </data>
+  <data name="ImageViewWindow2_OpenNewFiles" xml:space="preserve">
+    <value>打開新檔案</value>
+  </data>
+  <data name="ImageViewWindow2_FailedToDisplayImage" xml:space="preserve">
+    <value>圖片載入失敗</value>
+  </data>
+  <data name="ImageViewWindow2_FailedToSaveImage" xml:space="preserve">
+    <value>存儲圖片失敗</value>
+  </data>
+  <data name="ImageViewWindow2_FailedToDeleteImageFile" xml:space="preserve">
+    <value>刪除圖片檔案失敗</value>
+  </data>
+  <data name="ImageViewWindow2_UnableToDeleteTheFile" xml:space="preserve">
+    <value>無法刪除檔案</value>
+  </data>
+  <data name="ImageViewWindow2_InsufficientPermissionsOrTheFileIsInUse" xml:space="preserve">
+    <value>沒有權限或檔案正在使用</value>
+  </data>
+  <data name="HotkeyInput_ClickToSetShortcutKeys" xml:space="preserve">
+    <value>點擊設定快捷鍵</value>
+  </data>
+  <data name="HotkeyInput_PressTheShortcutKeys" xml:space="preserve">
+    <value>按下快捷鍵</value>
+  </data>
+  <data name="HotkeyManager_TheShortcutKeys0IsAlreadyInUse" xml:space="preserve">
+    <value>快捷鍵 ({0}) 已被佔用</value>
+  </data>
+  <data name="HotkeyManager_FailedToRegisterTheShortcutKeys0" xml:space="preserve">
+    <value>快捷鍵 ({0}) 註冊失敗</value>
+  </data>
+  <data name="HotkeyManager_TheShortcutKeys0IsAlreadyInUsePleaseModifyItInSettingsPage" xml:space="preserve">
+    <value>快捷鍵 ({0}) 已被佔用，請在設定頁面中修改。</value>
+  </data>
+  <data name="HotkeyManager_FailedToRegisterTheShortcutKeys0PleaseRetryInSettingsPage" xml:space="preserve">
+    <value>快捷鍵 ({0}) 註冊失敗，請在設定頁面中重試。</value>
+  </data>
+  <data name="HotkeySetting_OpenMainWindow" xml:space="preserve">
+    <value>打開主視窗</value>
+  </data>
+  <data name="HotkeySetting_FailedToRegisterTheShortcutKeys" xml:space="preserve">
+    <value>快捷鍵註冊失敗</value>
+  </data>
+  <data name="HotkeySetting_SingleKeyShortcutsTips" xml:space="preserve">
+    <value>如果註冊單鍵快捷鍵 (F1-F12)，需要以管理員權限運行 HoYoShade Hub，否則在遊戲中快捷鍵無法生效。</value>
+  </data>
+  <data name="SettingPage_KeyboardShortcuts" xml:space="preserve">
+    <value>鍵盤快速鍵</value>
+  </data>
+  <data name="GameSettingPage_UsePopupWindow" xml:space="preserve">
+    <value>使用無邊框視窗</value>
+  </data>
+  <data name="ToolboxSetting_ImageViewer" xml:space="preserve">
+    <value>圖片瀏覽器</value>
+  </data>
+  <data name="ToolboxSetting_ViewOrEditImage" xml:space="preserve">
+    <value>查看 / 編輯圖片</value>
+  </data>
+  <data name="ImageViewWindow2_CopyAsJPG" xml:space="preserve">
+    <value>複製成 JPG</value>
+  </data>
+  <data name="ScreenshotPage_MultiSelect" xml:space="preserve">
+    <value>多重選擇</value>
+  </data>
+  <data name="ScreenshotPage_Total0Files" xml:space="preserve">
+    <value>總共 {0} 個檔案</value>
+  </data>
+  <data name="ScreenCaptureInfoWindow_ProcessingImage" xml:space="preserve">
+    <value>正在處理影像</value>
+  </data>
+  <data name="ScreenshotPage_BatchConvert" xml:space="preserve">
+    <value>批量轉換</value>
+  </data>
+  <data name="ImageBatchConvertWindow_Quality" xml:space="preserve">
+    <value>質素</value>
+  </data>
+  <data name="ImageBatchConvertWindow_StartConvert" xml:space="preserve">
+    <value>開始轉換</value>
+  </data>
+  <data name="Common_Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="ImageBatchConvertWindow_OutputFolder" xml:space="preserve">
+    <value>輸出資料夾</value>
+  </data>
+  <data name="ImageBatchConvertWindow_OriginalFileFolder" xml:space="preserve">
+    <value>原文件所在資料夾</value>
+  </data>
+  <data name="ImageBatchConvertWindow_SelectOutputFormat" xml:space="preserve">
+    <value>選擇輸出格式</value>
+  </data>
+  <data name="ImageBatchConvertWindow_NoReadOrWritePermission" xml:space="preserve">
+    <value>無讀取和寫入權限</value>
+  </data>
+  <data name="ImageBatchConvertWindow_ConvertFailed" xml:space="preserve">
+    <value>轉換失敗</value>
+  </data>
+  <data name="ImageBatchConvertWindow_IfOutputFileExists" xml:space="preserve">
+    <value>如果輸出文件已存在</value>
+  </data>
+  <data name="ImageBatchConvertWindow_SkipDefault" xml:space="preserve">
+    <value>跳過（默認）</value>
+  </data>
+  <data name="ImageBatchConvertWindow_Overwrite" xml:space="preserve">
+    <value>覆蓋</value>
+  </data>
+  <data name="ImageBatchConvertWindow_Rename" xml:space="preserve">
+    <value>重新命名</value>
+  </data>
+  <data name="Common_Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="Common_Failed" xml:space="preserve">
+    <value>失敗</value>
+  </data>
+  <data name="ImageBatchConvertWindow_ImageBatchConvert" xml:space="preserve">
+    <value>影像批量轉換</value>
+  </data>
+  <data name="Common_CopiedToClipboard" xml:space="preserve">
+    <value>已復製到剪貼簿</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LaunchGameUsingCMD" xml:space="preserve">
+    <value>Launch Game using CMD</value>
+  </data>
+  <data name="GameLauncherSettingDialog_AvoidShowingAlertsAboutDetectingIllegalToolInTheGame" xml:space="preserve">
+    <value>Avoid showing alerts about detecting illegal tool in the game.</value>
+  </data>
+  <data name="UpdateWindow_FullPackage" xml:space="preserve">
+    <value>Full Package</value>
+  </data>
+  <data name="SettingPage_DefaultDisableVideoBackgroundPlayback" xml:space="preserve">
+    <value>禁用自動播放影片背景</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Title" xml:space="preserve">
+    <value>首先，讓我們下載並安裝 HoYoShade 框架</value>
+  </data>
+  <data name="HoYoShadeDownloadView_SelectVersion" xml:space="preserve">
+    <value>選擇版本</value>
+  </data>
+  <data name="HoYoShadeDownloadView_SelectType" xml:space="preserve">
+    <value>選擇類型</value>
+  </data>
+  <data name="HoYoShadeDownloadView_DownloadServer" xml:space="preserve">
+    <value>下載伺服器</value>
+  </data>
+  <data name="HoYoShadeDownloadView_DownloadAndInstall" xml:space="preserve">
+    <value>下載並安裝</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusFetchingReleases" xml:space="preserve">
+    <value>正在獲取版本列表...</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusReady" xml:space="preserve">
+    <value>準備就緒。</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusFailedToLoadVersions" xml:space="preserve">
+    <value>獲取版本列表失敗：{0}</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusInitializing" xml:space="preserve">
+    <value>正在初始化下載...</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
+    <value>未找到匹配的安裝包。</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusStartingRPC" xml:space="preserve">
+    <value>正在啟動 RPC 服務...</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusDownloading" xml:space="preserve">
+    <value>正在下載...</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusExtracting" xml:space="preserve">
+    <value>正在解壓...</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusFinished" xml:space="preserve">
+    <value>安裝完成！</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusError" xml:space="preserve">
+    <value>錯誤：{0}</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Next" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Pause" xml:space="preserve">
+    <value>暫停</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Resume" xml:space="preserve">
+    <value>繼續</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
+    <value>HoYoShade</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Option_OpenHoYoShade" xml:space="preserve">
+    <value>OpenHoYoShade</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_GithubDirect" xml:space="preserve">
+    <value>GitHub (直連)</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
+    <value>GitHub (代理)</value>
+  </data>
+  <data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
+    <value>{0}/s - {1}%</value>
+  </data>
+  <data name="HoYoShadeDownloadView_HoYoShade_Description" xml:space="preserve">
+    <value>完整的 HoYoShade 包，包含所有內置預設和其它資源，適合普通用戶使用。</value>
+  </data>
+  <data name="HoYoShadeDownloadView_OpenHoYoShade_Description" xml:space="preserve">
+    <value>僅包含基礎框架，不含任何內置預設和其它資源，適合想要在此基礎上進行開發的開發者使用。</value>
+  </data>
+  <data name="HoYoShadeDownloadView_LatestVersion" xml:space="preserve">
+    <value>（最新版本）</value>
+  </data>
+  <data name="HoYoShadeDownloadView_LatestVersionTip" xml:space="preserve">
+    <value>除非你知道你自己正在做什麼,否則,通常情況下,安裝最新版本是最好的選擇。</value>
+  </data>
+  <data name="HoYoShadeDownloadView_ImportFromLocal" xml:space="preserve">
+    <value>或者，從本地導入壓縮包</value>
+  </data>
+  <data name="HoYoShadeDownloadView_SelectPackage" xml:space="preserve">
+    <value>選擇壓縮包</value>
+  </data>
+  <data name="HoYoShadeDownloadView_SelectFolder" xml:space="preserve">
+    <value>選擇資料夾</value>
+  </data>
+  <data name="HoYoShadeDownloadView_PackageValidating" xml:space="preserve">
+    <value>正在驗證壓縮包...</value>
+  </data>
+  <data name="HoYoShadeDownloadView_PackageInvalid" xml:space="preserve">
+    <value>無效的壓縮包：{0}</value>
+  </data>
+  <data name="HoYoShadeDownloadView_PackageVersionTooOld" xml:space="preserve">
+    <value>壓縮包版本 {0} 過舊，請使用 V3 及以上版本。</value>
+  </data>
+  <data name="HoYoShadeDownloadView_PackageSHA256Mismatch" xml:space="preserve">
+    <value>壓縮包 SHA256 校驗失敗，檔案可能已損壞或被修改。</value>
+  </data>
+  <data name="HoYoShadeDownloadView_PackageValidated" xml:space="preserve">
+    <value>壓縮包驗證成功：{0} {1}</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Installing" xml:space="preserve">
+    <value>正在安裝...</value>
+  </data>
+  <data name="HoYoShadeDownloadView_InstallStatus" xml:space="preserve">
+    <value>安裝狀態</value>
+  </data>
+  <data name="ReShadeDownloadView_Title" xml:space="preserve">
+    <value>接下來，讓我們下載並安裝 ReShade 着色器和插件</value>
+  </data>
+  <data name="ReShadeDownloadView_Description" xml:space="preserve">
+    <value>您需要下載並安裝 ReShade 着色器和插件，才能讓 HoYoShade 正常運作。
+但是對於 OpenHoYoShade 來說，這一步是非必要的，因為它是作為開發用途而使用的。如果您安裝的是OpenHoYoShade，我們建議您跳過這一步。
+可供安裝的着色器和插件列表和 ReShade 官方安裝器同步，受 ReShade 官方控制。
+
+由於 ReShade 版本更新迭代的原因，此前可供安裝的着色器/插件可能並不會在此列表中出現，也無法被下載並安裝。我們對此無能為力。
+如果您需要安裝並不位於列表中的着色器/插件，我們建議您可以在安裝好之後手動補全它們。
+
+如果您並不知道如何選擇，我們建議您下載並安裝全部着色器/插件。</value>
+  </data>
+  <data name="ReShadeDownloadView_SelectInstallTarget" xml:space="preserve">
+    <value>選擇安裝目標</value>
+  </data>
+  <data name="ReShadeDownloadView_InstallToHoYoShadeOnly" xml:space="preserve">
+    <value>僅安裝至 HoYoShade</value>
+  </data>
+  <data name="ReShadeDownloadView_InstallToOpenHoYoShadeOnly" xml:space="preserve">
+    <value>僅安裝至 OpenHoYoShade</value>
+  </data>
+  <data name="ReShadeDownloadView_InstallToBoth" xml:space="preserve">
+    <value>同時安裝至 HoYoShade 和 OpenHoYoShade</value>
+  </data>
+  <data name="ReShadeDownloadView_OpenHoYoShadeWarning" xml:space="preserve">
+    <value>OpenHoYoShade 是作為開發用途而使用的，我們建議您跳過為其安裝 ReShade 着色器和插件的步驟。</value>
+  </data>
+  <data name="ReShadeDownloadView_BothTargetsWarning" xml:space="preserve">
+    <value>OpenHoYoShade 是作為開發用途而使用的，我們建議您僅安裝至 HoYoShade 。</value>
+  </data>
+  <data name="ReShadeDownloadView_SelectInstallType" xml:space="preserve">
+    <value>選擇安裝類型</value>
+  </data>
+  <data name="ReShadeDownloadView_InstallAll" xml:space="preserve">
+    <value>下載並安裝全部 ReShade 着色器和插件</value>
+  </data>
+  <data name="ReShadeDownloadView_InstallEssentialOnly" xml:space="preserve">
+    <value>僅安裝必要 ReShade 着色器，不安裝任何插件</value>
+  </data>
+  <data name="ReShadeDownloadView_CustomizeInstall" xml:space="preserve">
+    <value>自訂安裝着色器和插件</value>
+  </data>
+  <data name="ReShadeDownloadView_CustomizeInstallDialogTitle" xml:space="preserve">
+    <value>自訂 ReShade 着色器和插件</value>
+  </data>
+  <data name="ReShadeDownloadView_SkipThisStep" xml:space="preserve">
+    <value>跳過此步驟</value>
+  </data>
+  <data name="ReShadeDownloadView_DownloadAndInstall" xml:space="preserve">
+    <value>下載並安裝</value>
+  </data>
+  <data name="ReShadeDownloadView_StatusReady" xml:space="preserve">
+    <value>準備就緒。</value>
+  </data>
+  <data name="ReShadeDownloadView_StatusDownloading" xml:space="preserve">
+    <value>正在下載...</value>
+  </data>
+  <data name="ReShadeDownloadView_StatusInstalling" xml:space="preserve">
+    <value>正在安裝...</value>
+  </data>
+  <data name="ReShadeDownloadView_StatusFinished" xml:space="preserve">
+    <value>安裝完成！</value>
+  </data>
+  <data name="ReShadeDownloadView_StatusError" xml:space="preserve">
+    <value>錯誤：{0}</value>
+  </data>
+	<data name="Common_Shader" xml:space="preserve">
+    <value>着色器</value>
+  </data>
+	<data name="Common_Addon" xml:space="preserve">
+    <value>插件</value>
+  </data>
+	<data name="HoYoShadeDownloadView_PackageAlreadyInstalled" xml:space="preserve">
+    <value>無法安裝：{0} 已經安裝。</value>
+  </data>
+  <data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
+    <value>着色器</value>
+  </data>
+  <data name="ReShadeDownloadView_TypeAddons" xml:space="preserve">
+    <value>插件</value>
+  </data>
+  <data name="ReShadeDownloadView_ImportHint" xml:space="preserve">
+    <value>或者，從本地導入壓縮包或資料夾</value>
+  </data>
+  <data name="ReShadeDownloadView_FolderStructureInvalid" xml:space="preserve">
+    <value>資料夾結構無效。所選資料夾必須包含 "Shaders" 和 "Textures" 資料夾，"Addons" 資料夾為可選項，且不能有其他資料夾。</value>
+  </data>
+  <data name="ReShadeDownloadView_FolderImporting" xml:space="preserve">
+    <value>正在匯入資料夾...</value>
+  </data>
+  <data name="ReShadeDownloadView_FolderImported" xml:space="preserve">
+    <value>資料夾匯入成功！</value>
+  </data>
+  <data name="FileSettingPage_HoYoShadeFramework" xml:space="preserve">
+    <value>HoYoShade框架</value>
+  </data>
+  <data name="FileSettingPage_InstallHoYoShadeFramework" xml:space="preserve">
+    <value>安裝HoYoShade框架</value>
+  </data>
+  <data name="FileSettingPage_InstallReShadeShadersAndAddons" xml:space="preserve">
+    <value>安裝ReShade着色器及插件</value>
+  </data>
+  <data name="FileSettingPage_InstallStatus" xml:space="preserve">
+    <value>安裝狀態</value>
+  </data>
+  <data name="FileSettingPage_TotalSize" xml:space="preserve">
+    <value>總佔用</value>
+  </data>
+  <data name="FileSettingPage_ShaderAndAddonSize" xml:space="preserve">
+    <value>着色器及插件佔用</value>
+  </data>
+  <data name="FileSettingPage_PresetSize" xml:space="preserve">
+    <value>預設佔用</value>
+  </data>
+  <data name="FileSettingPage_ScreenshotSize" xml:space="preserve">
+    <value>截圖佔用</value>
+  </data>
+  <data name="FileSettingPage_OtherContentSize" xml:space="preserve">
+    <value>其他內容佔用</value>
+  </data>
+  <data name="FileSettingPage_UninstallHoYoShade" xml:space="preserve">
+    <value>解安裝HoYoShade</value>
+  </data>
+  <data name="FileSettingPage_UninstallOpenHoYoShade" xml:space="preserve">
+    <value>解安裝OpenHoYoShade</value>
+  </data>
+  <data name="UninstallShadeDialog_ConfirmUninstallTitle" xml:space="preserve">
+    <value>您確定要解安裝{0}嗎？</value>
+  </data>
+  <data name="UninstallShadeDialog_WarningMessage1" xml:space="preserve">
+    <value>這將同時刪除所有安裝的{0}着色器、插件、預設和遊戲截圖。一旦執行解安裝操作，這些資料將會永遠無法恢復。</value>
+  </data>
+  <data name="UninstallShadeDialog_WarningMessage2" xml:space="preserve">
+    <value>如果您還有重要且未進行備份，請在解安裝前先進行備份。</value>
+  </data>
+  <data name="UninstallShadeDialog_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="UninstallShadeDialog_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="UninstallShadeDialog_Uninstall" xml:space="preserve">
+    <value>解安裝</value>
+  </data>
+  <data name="UninstallShadeDialog_ConfirmUninstall" xml:space="preserve">
+    <value>確認解安裝</value>
+  </data>
+  <data name="UninstallShadeDialog_PreparingUninstall" xml:space="preserve">
+    <value>正在準備解安裝...</value>
+  </data>
+  <data name="UninstallShadeDialog_DeletingFiles" xml:space="preserve">
+    <value>正在刪除檔案... ({0}/{1})</value>
+  </data>
+  <data name="UninstallShadeDialog_DeletingDirectories" xml:space="preserve">
+    <value>正在清理資料夾...</value>
+  </data>
+  <data name="UninstallShadeDialog_UninstallCompleted" xml:space="preserve">
+    <value>解安裝完成</value>
+  </data>
+  <data name="UninstallShadeDialog_UninstallCancelled" xml:space="preserve">
+    <value>解安裝已取消</value>
+  </data>
+</root>

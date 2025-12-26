@@ -1,0 +1,50 @@
+name: Question
+description: I have a question
+title: "[Question] "
+labels: ["triage"]
+body:
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Your question may be closed without any reply if duplicate.
+      options:
+        - label: My question was not mentioned by others, and it is not a duplicate question.
+          required: true
+
+  - type: textarea
+    id: bug
+    attributes:
+      label: Description
+      description: Describe your question.
+    validations:
+      required: true
+
+  - type: input
+    id: starward_ver
+    attributes:
+      label: Starward Version
+      placeholder:
+    validations:
+      required: true
+
+  - type: input
+    id: win_ver
+    attributes:
+      label: Windows Version
+      placeholder: "Example: 22621.1928"
+    validations:
+      required: true
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Please upload log file.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Enter any other applicable info here.

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "HoYoShadeHub": {
+      "commandName": "Project",
+      "commandLineArgs": "",
+      "nativeDebugging": false
+    }
+  }
+}

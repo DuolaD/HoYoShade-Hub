@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option csharp_namespace = "HoYoShadeHub.RPC.HoYoShadeInstall";
+
+package HoYoShadeHub.RPC.HoYoShadeInstall;
+
+import "google/protobuf/wrappers.proto";
+
+service HoYoShadeInstaller {
+    rpc InstallHoYoShade (InstallHoYoShadeRequest) returns (stream InstallHoYoShadeProgress);
+    rpc InstallReShadePack (InstallReShadePackRequest) returns (stream InstallReShadePackProgress);
+}
+
+message InstallHoYoShadeRequest {
+    string download_url = 1;
+    string target_path = 2;
+}
+
+message InstallHoYoShadeProgress {
+    int32 state = 1; // 0: Pending, 1: Downloading, 2: Extracting, 3: Finished, 4: Error
+    int64 total_bytes = 2;
+    int64 download_bytes = 3;
+    google.protobuf.StringValue error_message = 4;
+}
+
+message InstallReShadePackRequest {
+    string base_path = 1; // Base directory where HoYoShade/OpenHoYoShade is installed
+    int32 install_target = 2; // 0: HoYoShadeOnly, 1: OpenHoYoShadeOnly, 2: Both
+    int32 install_mode = 3; // 0: All, 1: EssentialOnly, 2: Custom
+    string download_server = 4; // Base URL for downloads (GitHub or proxy)
+    repeated string custom_packages = 5; // Package names for custom mode
+}
+
+message InstallReShadePackProgress {
+    int32 state = 1; // 0: Pending, 1: Downloading, 2: Installing, 3: Finished, 4: Error
+    int64 total_files = 2; // Total number of files to download
+    int64 downloaded_files = 3; // Number of files downloaded
+    int64 total_bytes = 4; // Total bytes to download
+    int64 download_bytes = 5; // Bytes downloaded
+    google.protobuf.StringValue current_file = 6; // Current file being downloaded
+    google.protobuf.StringValue error_message = 7;
+    int32 current_file_type = 8; // 0: Shader, 1: Addon
+    int64 download_speed_bytes_per_sec = 9; // Download speed in bytes per second
+}

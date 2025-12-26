@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog x:Class="HoYoShadeHub.Features.Setting.UninstallShadeDialog"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:lang="using:HoYoShadeHub.Language"
+               xmlns:local="using:HoYoShadeHub.Features.Setting"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               x:DefaultBindMode="OneWay"
+               DefaultButton="None"
+               mc:Ignorable="d">
+
+    <Grid MinWidth="500">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  警告内容  -->
+        <StackPanel Grid.Row="0" Spacing="12">
+            <TextBlock FontSize="16"
+                       FontWeight="SemiBold"
+                       Text="{x:Bind WarningTitle, Mode=OneWay}"
+                       TextWrapping="Wrap" />
+            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind WarningMessage1, Mode=OneWay}"
+                       TextWrapping="Wrap" />
+            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind WarningMessage2}"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <!--  ������ʾ  -->
+        <StackPanel Grid.Row="1"
+                    Margin="0,16,0,0"
+                    Spacing="8"
+                    Visibility="{x:Bind IsUninstalling, Converter={StaticResource BoolToVisibilityConverter}}">
+            <ProgressBar IsIndeterminate="{x:Bind IsIndeterminate}"
+                         Maximum="100"
+                         Value="{x:Bind UninstallProgress}" />
+            <Grid>
+                <TextBlock HorizontalAlignment="Left"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Text="{x:Bind StatusMessage}" />
+                <TextBlock HorizontalAlignment="Right"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Text="{x:Bind ProgressText}"
+                           Visibility="{x:Bind ShowProgressText, Converter={StaticResource BoolToVisibilityConverter}}" />
+            </Grid>
+        </StackPanel>
+
+        <!--  ��ť��  -->
+        <StackPanel Grid.Row="2"
+                    Margin="0,24,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Spacing="12">
+            <!--  ȡ��/��ɰ�ť  -->
+            <Button MinWidth="120"
+                    Command="{x:Bind CancelCommand}"
+                    Content="{x:Bind CancelButtonText}"
+                    IsEnabled="{x:Bind CanCancel}" />
+
+            <!--  ж��/ȷ��ж�ذ�ť  -->
+            <Button MinWidth="120"
+                    Command="{x:Bind UninstallCommand}"
+                    Content="{x:Bind UninstallButtonText, Mode=OneWay}"
+                    IsEnabled="{x:Bind CanUninstall}"
+                    Visibility="{x:Bind ShowUninstallButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Button.Style>
+                    <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                        <Setter Property="Background" Value="{ThemeResource AccentButtonBackground}" />
+                        <Setter Property="Foreground" Value="{ThemeResource AccentButtonForeground}" />
+                        <Setter Property="BorderBrush" Value="{ThemeResource AccentButtonBorderBrush}" />
+                    </Style>
+                </Button.Style>
+            </Button>
+            
+            <!--  ȷ��ж�ذ�ť����ɫ�����ڵڶ���ȷ��ʱ��ʾ��  -->
+            <Button MinWidth="120"
+                    x:Name="ConfirmUninstallButton"
+                    Command="{x:Bind UninstallCommand}"
+                    Content="{x:Bind UninstallButtonText, Mode=OneWay}"
+                    IsEnabled="{x:Bind CanUninstall}"
+                    Visibility="{x:Bind ShowConfirmButton, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A52414" />
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#8A1F11" />
+                    <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#3C3C3C" />
+                    <SolidColorBrush x:Key="ButtonForeground" Color="White" />
+                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
+                    <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
+                    <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#787878" />
+                </Button.Resources>
+            </Button>
+        </StackPanel>
+    </Grid>
+</ContentDialog>

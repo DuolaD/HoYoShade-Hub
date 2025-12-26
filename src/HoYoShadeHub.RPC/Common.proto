@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option csharp_namespace = "HoYoShadeHub.RPC";
+
+package HoYoShadeHub.RPC;
+
+message EmptyMessage {
+
+}

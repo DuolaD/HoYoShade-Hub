@@ -1,0 +1,52 @@
+
+name: Build
+
+on:
+  push:
+    branches: [ "main", "dev/*" ]
+  pull_request:
+    branches: [ "main", "dev/*" ]
+
+
+jobs:
+
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+        platform: [x64, arm64]
+
+    env:
+      Configuration: ${{ matrix.configuration }}
+      Platform: ${{ matrix.platform }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        global-json-file: global.json
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: SHA
+      id: sha
+      run: echo "sha=$("${{ github.sha }}".SubString(0, 7))" >> $env:GITHUB_OUTPUT
+
+    - name: Build
+      run: |
+        $sha = "${{ steps.sha.outputs.sha }}"
+        New-Item -Path "build/HoYoShadeHub/" -Type Directory
+        msbuild src/HoYoShadeHub.Launcher "-property:Configuration=$env:Configuration;Platform=$env:Platform;OutDir=$(Resolve-Path "build/HoYoShadeHub/")"
+        dotnet publish src/HoYoShadeHub -c $env:Configuration -r "win-$env:Platform" -o "build/HoYoShadeHub/app-build.$sha" -p:Platform=$env:Platform -p:Version="0.0.1-build.$sha" -p:DefineConstants=CI
+        Add-Content "build/HoYoShadeHub/version.ini" -Value "app_folder=app-build.$sha`r`nexe_name=HoYoShadeHub.exe"
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v5
+      with:
+        name: HoYoShadeHub_${{ matrix.configuration }}_${{ matrix.platform }}_${{ steps.sha.outputs.sha }}
+        path: build/HoYoShadeHub/
