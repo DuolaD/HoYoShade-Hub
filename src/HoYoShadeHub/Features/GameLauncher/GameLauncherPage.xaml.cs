@@ -606,6 +606,15 @@ public sealed partial class GameLauncherPage : PageBase
                 return null;
             }
 
+            // Check if inject.exe exists
+            string injectExePath = Path.Combine(shadePath, "inject.exe");
+            if (!File.Exists(injectExePath))
+            {
+                _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
+                InAppToast.MainWindow?.Error($"{shadeName} 中未找到 inject.exe");
+                return null;
+            }
+
             var gameInstallPath = GameLauncherService.GetGameInstallPath(CurrentGameId);
             if (string.IsNullOrWhiteSpace(gameInstallPath))
             {
@@ -623,17 +632,42 @@ public sealed partial class GameLauncherPage : PageBase
                 throw new FileNotFoundException("Game exe not found", gameExeName);
             }
 
-            // TODO: Implement proper shade injection logic
-            // For now, just launch the game normally
-            var process = await _gameLauncherService.StartGameAsync(CurrentGameId, gameInstallPath);
+            // Step 1: Start inject.exe (don't wait for it to finish)
+            _logger.LogInformation("Starting {ShadeName} injector: {InjectPath} {GameExe}", 
+                shadeName, injectExePath, gameExeName);
+
+            var injectStartInfo = new ProcessStartInfo
+            {
+                FileName = injectExePath,
+                Arguments = gameExeName,
+                UseShellExecute = false,
+                WorkingDirectory = shadePath,
+                CreateNoWindow = true
+            };
+
+            Process.Start(injectStartInfo);
+            _logger.LogInformation("Injector started, waiting before launching game...");
+
+            // Step 2: Wait a short delay to let injector initialize
+            await Task.Delay(500);
+
+            // Step 3: Launch the game normally
+            _logger.LogInformation("Launching game normally");
+            var gameProcess = await _gameLauncherService.StartGameAsync(CurrentGameId, gameInstallPath);
             
-            if (process != null)
+            if (gameProcess != null)
             {
                 InAppToast.MainWindow?.Success($"已使用 {shadeName} 启动游戏");
-                _logger.LogInformation("Launched game with {ShadeName}", shadeName);
+                _logger.LogInformation("Successfully launched game with {ShadeName}, process: {Name} ({Id})", 
+                    shadeName, gameProcess.ProcessName, gameProcess.Id);
+                return gameProcess;
             }
-            
-            return process;
+            else
+            {
+                _logger.LogWarning("Failed to start game process");
+                InAppToast.MainWindow?.Error("游戏启动失败");
+                return null;
+            }
         }
         catch (Exception ex)
         {
