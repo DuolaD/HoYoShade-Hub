@@ -1242,4 +1242,16 @@
   <data name="UninstallShadeDialog_UninstallCancelled" xml:space="preserve">
     <value>解安裝已取消</value>
   </data>
+  <data name="GameLauncherPage_LaunchOptions" xml:space="preserve">
+    <value>啟動選項</value>
+  </data>
+  <data name="GameLauncherPage_LaunchGame" xml:space="preserve">
+    <value>啟動遊戲</value>
+  </data>
+  <data name="GameLauncherPage_LaunchHoYoShade" xml:space="preserve">
+    <value>啟動 HoYoShade</value>
+  </data>
+  <data name="GameLauncherPage_LaunchOpenHoYoShade" xml:space="preserve">
+    <value>啟動 OpenHoYoShade</value>
+  </data>
 </root>

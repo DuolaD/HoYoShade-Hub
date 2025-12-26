@@ -1242,4 +1242,16 @@ If you are unsure what to choose, we recommend downloading and installing all sh
   <data name="UninstallShadeDialog_UninstallCancelled" xml:space="preserve">
     <value>Uninstall cancelled</value>
   </data>
+  <data name="GameLauncherPage_LaunchOptions" xml:space="preserve">
+    <value>Launch Options</value>
+  </data>
+  <data name="GameLauncherPage_LaunchGame" xml:space="preserve">
+    <value>Launch Game</value>
+  </data>
+  <data name="GameLauncherPage_LaunchHoYoShade" xml:space="preserve">
+    <value>Launch HoYoShade</value>
+  </data>
+  <data name="GameLauncherPage_LaunchOpenHoYoShade" xml:space="preserve">
+    <value>Launch OpenHoYoShade</value>
+  </data>
 </root>

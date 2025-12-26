@@ -592,26 +592,26 @@
                     Background="{ThemeResource CustomAcrylicBrush}"
                     CornerRadius="8"
                     Padding="12,8">
-            <TextBlock Text="启动选项"
+            <TextBlock Text="{x:Bind lang:Lang.GameLauncherPage_LaunchOptions}"
                        FontSize="12"
                        FontWeight="SemiBold"
                        Margin="0,0,0,8"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
             
             <CheckBox x:Name="CheckBox_EnableGameLaunch"
-                      Content="启动游戏"
+                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchGame}"
                       IsChecked="{x:Bind EnableGameLaunch, Mode=TwoWay}"
                       Margin="0,4"
                       FontWeight="SemiBold" />
             
             <CheckBox x:Name="CheckBox_UseHoYoShade"
-                      Content="启动 HoYoShade"
+                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchHoYoShade}"
                       IsChecked="{x:Bind UseHoYoShade, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsHoYoShadeInstalled}"
                       Margin="0,4" />
             
             <CheckBox x:Name="CheckBox_UseOpenHoYoShade"
-                      Content="启动 OpenHoYoShade"
+                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchOpenHoYoShade}"
                       IsChecked="{x:Bind UseOpenHoYoShade, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsOpenHoYoShadeInstalled}"
                       Margin="0,4" />
