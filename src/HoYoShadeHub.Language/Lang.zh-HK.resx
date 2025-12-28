@@ -1257,15 +1257,26 @@
   <data name="ResetReShadeIniDialog_Title" xml:space="preserve">
     <value>重設ReShade.ini</value>
   </data>
-  <data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">
-    <value>你確定要重設ReShade.ini呵？</value>
-  </data>
-  <data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">
-    <value>呢個會delete晒所有現有嘅ReShade設定，並且建立一個新嘅預設設定檔。</value>
-  </data>
-  <data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">
-    <value>你所有嘅預設、着色器選擇同埋自訂設定都會冇咗。呢個操作無法撤銷。</value>
-  </data>
+	<data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">  
+    <value>你確定要繼續重設 ReShade.ini 嗎？</value>  
+</data>
+	<data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">  
+    <value>一般情況下，重設 ReShade.ini 嘅操作係全自動檢測並喺後台運行嘅。  
+換句話講，通常你唔需要手動去重設 ReShade.ini。  
+
+只有以下兩種情況，你先需要重設 ReShade.ini 設定檔：  
+· Releases 介面明確寫咗必須/建議重設 ReShade.ini 設定檔，咁樣可以開啟新功能或者修復 Bug。  
+· HoYoShade 嘅開發者/貢獻者明確要求你進行呢個操作。  
+
+除此之外，正常情況下你唔需要進行重設 ReShade.ini 嘅操作。  
+
+重設完成之後，你需要重新刪除已經複製到遊戲程式根目錄下嘅 ReShade.ini 設定檔，否則 HoYoShade/OpenHoYoShade 可能無法正常運作。</value>  
+</data>
+	<data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">  
+    <value>重設 ReShade.ini 並唔會導致你安裝喺 HoYoShade/OpenHoYoShade 嘅著色器、插件、預設同埋遊戲截圖遺失。  
+
+你確定要繼續重設操作嗎？</value>  
+	</data>
   <data name="ResetReShadeIniDialog_Reset" xml:space="preserve">
     <value>重設</value>
   </data>

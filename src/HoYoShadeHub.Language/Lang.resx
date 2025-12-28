@@ -1258,13 +1258,24 @@ If you are unsure what to choose, we recommend downloading and installing all sh
     <value>Reset ReShade.ini</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">
-    <value>Are you sure you want to reset ReShade.ini?</value>
+    <value>Are you sure you want to continue resetting ReShade.ini?</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">
-    <value>This will delete all existing ReShade settings and create a new default configuration file.</value>
+    <value>Under normal circumstances, the ReShade.ini reset operation is automatically detected and runs in the background.
+This means that you usually do not need to manually reset ReShade.ini.
+
+Generally, you only need to reset the ReShade.ini configuration file in the following two situations:
+· The Releases page explicitly states that you must/should reset the ReShade.ini configuration file to enable new features/fix bugs.
+· HoYoShade developers/contributors explicitly ask you to perform this operation.
+
+Apart from these, you generally do not need to perform the ReShade.ini reset operation.
+
+After the reset is complete, you need to delete the ReShade.ini configuration file that has been copied to the game process root directory, otherwise HoYoShade/OpenHoYoShade will not work as expected.</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">
-    <value>All your presets, shader selections, and custom settings will be lost. This operation cannot be undone.</value>
+    <value>Resetting ReShade.ini will not cause the loss of shaders, plugins, presets, and game screenshots installed in HoYoShade/OpenHoYoShade.
+
+Do you want to continue with the reset operation?</value>
   </data>
   <data name="ResetReShadeIniDialog_Reset" xml:space="preserve">
     <value>Reset</value>

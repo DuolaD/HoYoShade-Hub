@@ -1258,13 +1258,24 @@
     <value>重置ReShade.ini</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">
-    <value>您确定要重置ReShade.ini吗？</value>
+    <value>你确定要继续重置ReShade.ini吗？</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">
-    <value>这将删除所有现有的ReShade设置，并创建一个新的默认配置文件。</value>
+    <value>正常情况下，重置ReShade.ini的操作是全自动检测并后台运行的。
+也就是说，通常情况下你都不需要再手动进行重置ReShade.ini。
+
+一般只有以下两种情况，你才需要重置ReShade.ini配置文件：
+· Releases界面中明确写明了必须/建议重置ReShade.ini配置文件，以此开启新功能/修复Bug。
+· HoYoShade开发者/贡献者明确要求你进行这个操作。
+
+除此之外，一般情况下你都不需要进行重置ReShade.ini操作。
+
+重置完毕后，你需要重新删除已经复制到游戏进程根目录下的ReShade.ini配置文件，否则HoYoShade/OpenHoYoShade将无法按照预期正常工作。</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">
-    <value>您的所有预设、着色器选择和自定义设置都将丢失。此操作无法撤销。</value>
+    <value>重置ReShade.ini并不会导致你安装在HoYoShade/OpenHoYoShade的着色器，插件，预设及游戏截图丢失。
+
+是否继续重置操作？</value>
   </data>
   <data name="ResetReShadeIniDialog_Reset" xml:space="preserve">
     <value>重置</value>
