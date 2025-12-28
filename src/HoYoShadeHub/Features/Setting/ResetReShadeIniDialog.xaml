@@ -15,10 +15,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!--  ¾¯¸æÄÚÈÝ  -->
+        <!--  è­¦å‘Šå†…å®¹  -->
         <StackPanel Grid.Row="0" Spacing="12">
             <TextBlock FontSize="16"
                        FontWeight="SemiBold"
@@ -32,35 +31,21 @@
                        TextWrapping="Wrap" />
         </StackPanel>
 
-        <!--  ½ø¶ÈÏÔÊ¾  -->
+        <!--  æŒ‰é’®æ   -->
         <StackPanel Grid.Row="1"
-                    Margin="0,16,0,0"
-                    Spacing="8"
-                    Visibility="{x:Bind IsResetting, Converter={StaticResource BoolToVisibilityConverter}}">
-            <ProgressBar IsIndeterminate="True" />
-            <TextBlock HorizontalAlignment="Left"
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       Text="{x:Bind StatusMessage}" />
-        </StackPanel>
-
-        <!--  °´Å¥À¸  -->
-        <StackPanel Grid.Row="2"
                     Margin="0,24,0,0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="12">
-            <!--  È¡Ïû/Íê³É°´Å¥  -->
+            <!--  å–æ¶ˆæŒ‰é’®  -->
             <Button MinWidth="120"
                     Command="{x:Bind CancelCommand}"
-                    Content="{x:Bind CancelButtonText}"
-                    IsEnabled="{x:Bind CanCancel}" />
+                    Content="{x:Bind lang:Lang.ResetReShadeIniDialog_Cancel}" />
 
-            <!--  ÖØÖÃ°´Å¥  -->
+            <!--  é‡ç½®æŒ‰é’®  -->
             <Button MinWidth="120"
                     Command="{x:Bind ResetCommand}"
-                    Content="{x:Bind lang:Lang.ResetReShadeIniDialog_Reset}"
-                    IsEnabled="{x:Bind CanReset}"
-                    Visibility="{x:Bind ShowResetButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Content="{x:Bind lang:Lang.ResetReShadeIniDialog_Reset}">
                 <Button.Style>
                     <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                         <Setter Property="Background" Value="{ThemeResource AccentButtonBackground}" />

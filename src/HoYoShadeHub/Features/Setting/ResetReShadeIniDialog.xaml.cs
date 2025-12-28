@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using HoYoShadeHub.Language;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -20,30 +21,11 @@ public sealed partial class ResetReShadeIniDialog : ContentDialog
     }
 
     private string _shadePath = "";
-    public string ShadePath 
-    { 
-        get => _shadePath; 
+    public string ShadePath
+    {
+        get => _shadePath;
         set => SetProperty(ref _shadePath, value);
     }
-
-    public bool IsResetting { get => field; set => SetProperty(ref field, value); }
-
-    public string StatusMessage { get => field; set => SetProperty(ref field, value); } = "";
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CanCancel))]
-    [NotifyPropertyChangedFor(nameof(ShowResetButton))]
-    private bool isCompleted;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CancelButtonText))]
-    private bool canReset = true;
-
-    public bool CanCancel => !IsResetting || IsCompleted;
-
-    public bool ShowResetButton => !IsResetting && !IsCompleted;
-
-    public string CancelButtonText => IsCompleted ? Lang.ResetReShadeIniDialog_Close : Lang.ResetReShadeIniDialog_Cancel;
 
     [RelayCommand]
     private async Task ResetAsync()
@@ -51,72 +33,78 @@ public sealed partial class ResetReShadeIniDialog : ContentDialog
         try
         {
             _logger.LogInformation("ResetAsync called, ShadePath={ShadePath}", ShadePath);
-            
-            IsResetting = true;
-            CanReset = false;
-            StatusMessage = Lang.ResetReShadeIniDialog_Resetting;
 
-            await Task.Delay(500); // 短暂延迟让UI更新
+            if (!Directory.Exists(ShadePath))
+            {
+                _logger.LogWarning("Shade path does not exist: {path}", ShadePath);
+                this.Hide();
+                return;
+            }
 
-            // 开始重置
-            await PerformResetAsync();
+            // INIBuild.exe 位于 LauncherResource 子目录下
+            string iniBuildPath = Path.Combine(ShadePath, "LauncherResource", "INIBuild.exe");
 
-            StatusMessage = Lang.ResetReShadeIniDialog_ResetCompleted;
-            IsCompleted = true;
-            
-            await Task.Delay(1000); // 显示完成状态
+            if (File.Exists(iniBuildPath))
+            {
+                _logger.LogInformation("Running INIBuild.exe at {path}", iniBuildPath);
+
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = iniBuildPath,
+                    WorkingDirectory = ShadePath,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                };
+
+                using var process = Process.Start(processInfo);
+                
+                if (process == null)
+                {
+                    _logger.LogError("Failed to start INIBuild.exe - Process.Start returned null");
+                }
+                else
+                {
+                    _logger.LogInformation("INIBuild.exe started successfully, PID: {pid}", process.Id);
+
+                    // 读取输出
+                    var outputTask = process.StandardOutput.ReadToEndAsync();
+                    var errorTask = process.StandardError.ReadToEndAsync();
+
+                    // 等待进程完成
+                    await process.WaitForExitAsync();
+
+                    string output = await outputTask;
+                    string error = await errorTask;
+
+                    _logger.LogInformation("INIBuild.exe completed with exit code: {ExitCode}", process.ExitCode);
+
+                    if (!string.IsNullOrWhiteSpace(output))
+                    {
+                        _logger.LogInformation("INIBuild.exe output: {output}", output);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(error))
+                    {
+                        _logger.LogWarning("INIBuild.exe error: {error}", error);
+                    }
+                }
+            }
+            else
+            {
+                _logger.LogWarning("INIBuild.exe not found at {path}", iniBuildPath);
+            }
+
+            // 关闭弹窗
+            this.Hide();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Reset ReShade.ini failed");
-            StatusMessage = $"{Lang.ResetReShadeIniDialog_ResetFailed}: {ex.Message}";
-            IsResetting = false;
-            CanReset = true;
+            // 即使出错也关闭弹窗
+            this.Hide();
         }
-    }
-
-    private async Task PerformResetAsync()
-    {
-        if (!Directory.Exists(ShadePath))
-        {
-            _logger.LogWarning("Shade path does not exist: {path}", ShadePath);
-            throw new DirectoryNotFoundException(Lang.ResetReShadeIniDialog_ShadePathNotFound);
-        }
-
-        await Task.Run(() =>
-        {
-            string reshadeIniPath = Path.Combine(ShadePath, "ReShade.ini");
-            
-            if (!File.Exists(reshadeIniPath))
-            {
-                _logger.LogWarning("ReShade.ini does not exist: {path}", reshadeIniPath);
-                throw new FileNotFoundException(Lang.ResetReShadeIniDialog_ReShadeIniNotFound);
-            }
-
-            try
-            {
-                // 删除现有的ReShade.ini
-                File.Delete(reshadeIniPath);
-                _logger.LogInformation("Deleted existing ReShade.ini");
-                
-                // 创建新的默认ReShade.ini
-                string defaultIniContent = @"[GENERAL]
-EffectSearchPaths=.\reshade-shaders\Shaders\**
-TextureSearchPaths=.\reshade-shaders\Textures\**
-
-[INPUT]
-KeyOverlay=36,0,0,0
-GamepadNavigation=0
-";
-                File.WriteAllText(reshadeIniPath, defaultIniContent);
-                _logger.LogInformation("Created new default ReShade.ini");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to reset ReShade.ini");
-                throw;
-            }
-        });
     }
 
     [RelayCommand]
