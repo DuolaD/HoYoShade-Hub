@@ -876,7 +876,7 @@
     <value>Failed to register the shortcut keys.</value>
   </data>
   <data name="HotkeySetting_SingleKeyShortcutsTips" xml:space="preserve">
-    <value>If you register single-key shortcuts (F1閳ユ強12), you need to run HoYoShade Hub with administrator privileges; otherwise, the shortcuts may not work in the game.</value>
+    <value>If you register single-key shortcuts (F1-12), you need to run HoYoShade Hub with administrator privileges; otherwise, the shortcuts may not work in the game.</value>
   </data>
   <data name="SettingPage_KeyboardShortcuts" xml:space="preserve">
     <value>Keyboard Shortcuts</value>
