@@ -145,6 +145,9 @@ public sealed partial class ScreenshotPage2 : PageBase
                     _folders.Add(new(folder) { InGame = true });
                 }
             }
+            
+            // 自动添加HoYoShade和OpenHoYoShade的截图文件夹
+            AddShaderScreenshotFolders();
 
             string? externalFolder = AppConfig.GetExternalScreenshotFolder(CurrentGameBiz);
             if (!string.IsNullOrWhiteSpace(externalFolder))
@@ -236,16 +239,13 @@ public sealed partial class ScreenshotPage2 : PageBase
                     relativePath ??= config.GameScreenshotDir;
                 }
             }
-            string? folder = AppConfig.ScreenshotFolder;
-            if (!Directory.Exists(folder))
-            {
-                folder = Path.Join(AppConfig.UserDataFolder, "Screenshots");
-            }
-            folder = Path.Join(folder, name);
-            Directory.CreateDirectory(folder);
-            backupFolder = folder;
+            
+            // 不再为游戏单独创建截图文件夹，而是使用shader框架的截图文件夹
+            // 如果HoYoShade/OpenHoYoShade未安装，backupFolder将为null
+            backupFolder = null;
+            
             string? installPath = GameLauncherService.GetGameInstallPath(CurrentGameId);
-            folder = Path.Join(installPath, relativePath);
+            string folder = Path.Join(installPath, relativePath);
             if (Directory.Exists(folder))
             {
                 screenshotFolder = folder;
@@ -264,6 +264,58 @@ public sealed partial class ScreenshotPage2 : PageBase
     private void ItemsView_Images_Loaded(object sender, RoutedEventArgs e)
     {
         _defaultScrollController ??= ItemsView_Images.VerticalScrollController;
+    }
+    
+    
+    private void AddShaderScreenshotFolders()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(AppConfig.UserDataFolder))
+            {
+                return;
+            }
+
+            // 检测HoYoShade是否安装
+            string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+            if (Directory.Exists(hoYoShadePath))
+            {
+                string hoYoShadeScreenshotPath = Path.Combine(hoYoShadePath, "ScreenShot");
+                if (Directory.Exists(hoYoShadeScreenshotPath))
+                {
+                    string folder = Path.GetFullPath(hoYoShadeScreenshotPath);
+                    if (_folders.FirstOrDefault(x => x.Folder == folder) is null)
+                    {
+                        var watcher = CreateFileSystemWatcher(folder);
+                        _watchers.Add(watcher);
+                        _folders.Add(new(folder) { Default = false });
+                        _logger.LogInformation("Added HoYoShade screenshot folder: {Path}", folder);
+                    }
+                }
+            }
+
+            // 检测OpenHoYoShade是否安装
+            string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+            if (Directory.Exists(openHoYoShadePath))
+            {
+                string openHoYoShadeScreenshotPath = Path.Combine(openHoYoShadePath, "ScreenShot");
+                if (Directory.Exists(openHoYoShadeScreenshotPath))
+                {
+                    string folder = Path.GetFullPath(openHoYoShadeScreenshotPath);
+                    if (_folders.FirstOrDefault(x => x.Folder == folder) is null)
+                    {
+                        var watcher = CreateFileSystemWatcher(folder);
+                        _watchers.Add(watcher);
+                        _folders.Add(new(folder) { Default = false });
+                        _logger.LogInformation("Added OpenHoYoShade screenshot folder: {Path}", folder);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Add shader screenshot folders");
+        }
     }
 
 
