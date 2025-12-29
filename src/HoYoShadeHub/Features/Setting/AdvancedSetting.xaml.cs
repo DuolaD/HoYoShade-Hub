@@ -74,7 +74,7 @@ public sealed partial class AdvancedSetting : PageBase
     {
         try
         {
-            var status = await Launcher.QueryUriSupportAsync(new Uri("starward://"), LaunchQuerySupportType.Uri);
+            var status = await Launcher.QueryUriSupportAsync(new Uri("hoyoshadehub://"), LaunchQuerySupportType.Uri);
 #pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
             _EnableUrlProtocol = status is LaunchQuerySupportStatus.Available;
 #pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
@@ -94,7 +94,7 @@ public sealed partial class AdvancedSetting : PageBase
     {
         try
         {
-            await Launcher.LaunchUriAsync(new Uri("starward://test"));
+            await Launcher.LaunchUriAsync(new Uri("hoyoshadehub://test"));
         }
         catch (Exception ex)
         {

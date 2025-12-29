@@ -88,7 +88,7 @@ public static class Program
                 return;
             }
 
-            if (args[0].ToLower().StartsWith("starward://"))
+            if (args[0].ToLower().StartsWith("hoyoshadehub://"))
             {
                 if (UrlProtocolService.HandleUrlProtocolAsync(args[0]).GetAwaiter().GetResult())
                 {

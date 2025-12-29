@@ -397,7 +397,7 @@
     <value>赞助开发者</value>
   </data>
   <data name="SettingPage_URLProtocolExperimental" xml:space="preserve">
-    <value>URL 协议（实验中）</value>
+    <value>URL 协议</value>
   </data>
   <data name="SettingPage_URLProtocolDesc" xml:space="preserve">
     <value>其他软件可通过 URL 协议使用 HoYoShade Hub 的部分功能</value>

@@ -397,7 +397,7 @@
     <value>捐贈</value>
   </data>
   <data name="SettingPage_URLProtocolExperimental" xml:space="preserve">
-    <value>URL 協議 (試驗緊)</value>
+    <value>URL 協議</value>
   </data>
   <data name="SettingPage_URLProtocolDesc" xml:space="preserve">
     <value>其他軟件可以透過 URL 協議使用 HoYoShade Hub 嘅部分功能</value>

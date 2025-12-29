@@ -397,7 +397,7 @@
     <value>Donate</value>
   </data>
   <data name="SettingPage_URLProtocolExperimental" xml:space="preserve">
-    <value>URL Protocol (Experimental)</value>
+    <value>URL Protocol</value>
   </data>
   <data name="SettingPage_URLProtocolDesc" xml:space="preserve">
     <value>Other software can use some of HoYoShade Hub's features through the URL protocol.</value>

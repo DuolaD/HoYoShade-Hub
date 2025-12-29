@@ -1,6 +1,6 @@
 ﻿# URL Protocol
 
-Other software even website could use url protocol `starward` to call some features of HoYoShade Hub. The url protocol is registered only when the user enables this feature in setting page.
+Other software even website could use url protocol `hoyoshadehub` to call some features of HoYoShade Hub. The url protocol is registered only when the user enables this feature in setting page.
 
 ![URL Protocol](https://user-images.githubusercontent.com/61003590/278273851-7c614cde-d8c4-403b-876e-cecc3570f684.png)
 
@@ -24,7 +24,7 @@ The parameter `game_biz`  in the following is game region identifier and can be 
 ### Start game
 
 ```
-starward://startgame/{game_biz}?install_path={install_path}
+hoyoshadehub://startgame/{game_biz}?install_path={install_path}
 ```
 
 **Acceptable query arguments**
@@ -37,7 +37,7 @@ starward://startgame/{game_biz}?install_path={install_path}
 ### Record playtime
 
 ```
-starward://playtime/{game_biz}?pid={pid}
+hoyoshadehub://playtime/{game_biz}?pid={pid}
 ```
 
 **Acceptable query arguments**

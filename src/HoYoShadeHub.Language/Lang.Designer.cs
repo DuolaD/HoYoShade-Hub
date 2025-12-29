@@ -1250,7 +1250,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 If you register single-key shortcuts (F1閳ユ強12), you need to run HoYoShade Hub with administrator privileges; otherwise, the shortcuts may not work in the game. 的本地化字符串。
+        ///   查找类似 If you register single-key shortcuts (F1-12), you need to run HoYoShade Hub with administrator privileges; otherwise, the shortcuts may not work in the game. 的本地化字符串。
         /// </summary>
         public static string HotkeySetting_SingleKeyShortcutsTips {
             get {
@@ -3101,7 +3101,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 URL Protocol (Experimental) 的本地化字符串。
+        ///   查找类似 URL Protocol 的本地化字符串。
         /// </summary>
         public static string SettingPage_URLProtocolExperimental {
             get {
