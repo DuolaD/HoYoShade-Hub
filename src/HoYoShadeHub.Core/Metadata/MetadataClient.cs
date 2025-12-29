@@ -119,7 +119,7 @@ public class MetadataClient
 
     public async Task<GithubRelease?> GetGithubLatestReleaseAsync(CancellationToken cancellationToken = default)
     {
-        const string url = "https://api.github.com/repos/Scighost/HoYoShadeHub/releases?page=1&per_page=1";
+        const string url = "https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases?page=1&per_page=1";
         var list = await CommonGetAsync<List<GithubRelease>>(url, cancellationToken);
         return list?.FirstOrDefault();
     }
@@ -128,7 +128,7 @@ public class MetadataClient
 
     public async Task<List<GithubRelease>> GetGithubReleaseAsync(int page, int perPage, CancellationToken cancellationToken = default)
     {
-        string url = $"https://api.github.com/repos/Scighost/HoYoShadeHub/releases?page={page}&per_page={perPage}";
+        string url = $"https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases?page={page}&per_page={perPage}";
         var list = await CommonGetAsync<List<GithubRelease>>(url, cancellationToken);
         return list ?? new List<GithubRelease>();
     }
@@ -137,7 +137,7 @@ public class MetadataClient
 
     public async Task<GithubRelease?> GetGithubReleaseAsync(string tag, CancellationToken cancellationToken = default)
     {
-        string url = $"https://api.github.com/repos/Scighost/HoYoShadeHub/releases/tags/{tag}";
+        string url = $"https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases/tags/{tag}";
         return await CommonGetAsync<GithubRelease>(url, cancellationToken);
     }
 
@@ -149,7 +149,7 @@ public class MetadataClient
         {
             Text = markdown,
             Mode = "gfm",
-            Context = "Scighost/HoYoShadeHub",
+            Context = "DuolaD/HoYoShade-Hub",
         };
         var content = new StringContent(JsonSerializer.Serialize(request, typeof(GithubMarkdownRequest), MetadataJsonContext.Default), new MediaTypeHeaderValue("application/json"));
         var response = await _httpClient.PostAsync(url, content, cancellationToken);
