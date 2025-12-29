@@ -85,20 +85,6 @@
                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                       Glyph="&#xE711;" />
                         </Button>
-                        <!--  备份文件夹  -->
-                        <Button x:Name="Button_BackupFolder"
-                                Grid.Column="2"
-                                Width="32"
-                                Height="32"
-                                Padding="0"
-                                Click="Button_BackupFolder_Click"
-                                Style="{ThemeResource DateTimePickerFlyoutButtonStyle}"
-                                ToolTipService.ToolTip="{x:Bind lang:Lang.ScreenshotPage_BackupScreenshots}"
-                                Visibility="{x:Bind InGame}">
-                            <FontIcon FontSize="16"
-                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                      Glyph="&#xF413;" />
-                        </Button>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -128,14 +114,25 @@
                    Visibility="Collapsed" />
 
 
-        <!--  添加文件夹  -->
-        <Button Grid.Row="4"
-                Margin="24"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Command="{x:Bind AddFolderCommand}">
-            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind lang:Lang.ScreenshotFolderManageDialog_AddFolder}" />
-        </Button>
+        <!--  添加文件夹 和 备份截图按钮  -->
+        <StackPanel Grid.Row="4"
+                    Margin="24"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal"
+                    Spacing="12">
+            <Button Command="{x:Bind AddFolderCommand}">
+                <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind lang:Lang.ScreenshotFolderManageDialog_AddFolder}" />
+            </Button>
+            <Button Command="{x:Bind BackupAllScreenshotsCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon FontSize="16"
+                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                              Glyph="&#xF413;" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind lang:Lang.ScreenshotPage_BackupScreenshots}" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
 
 
         <!--  保存 / 取消  -->

@@ -105,6 +105,88 @@ public sealed partial class ScreenshotFolderManageDialog : ContentDialog
     }
 
 
+    /// <summary>
+    /// 备份所有文件夹中的截图到用户数据目录/Screenshots/
+    /// </summary>
+    [RelayCommand]
+    private async Task BackupAllScreenshotsAsync()
+    {
+        try
+        {
+            TextBlock_BackupResult.Visibility = Visibility.Collapsed;
+            
+            if (string.IsNullOrWhiteSpace(AppConfig.UserDataFolder))
+            {
+                _logger.LogWarning("UserDataFolder is null, cannot backup screenshots.");
+                TextBlock_BackupResult.Visibility = Visibility.Visible;
+                TextBlock_BackupResult.Text = Lang.ScreenshotFolderManageDialog_FailedToBackupScreenshots;
+                return;
+            }
+
+            // 目标备份文件夹：用户数据目录/Screenshots/
+            string backupFolder = Path.Combine(AppConfig.UserDataFolder, "Screenshots");
+            Directory.CreateDirectory(backupFolder);
+            
+            StackPanel_BackingUp.Visibility = Visibility.Visible;
+            
+            int totalCount = await Task.Run(() =>
+            {
+                int count = 0;
+                
+                // 遍历所有文件夹
+                foreach (var screenshotFolder in ScreenshotFolders)
+                {
+                    if (!Directory.Exists(screenshotFolder.Folder))
+                    {
+                        continue;
+                    }
+                    
+                    try
+                    {
+                        var files = Directory.GetFiles(screenshotFolder.Folder);
+                        foreach (var sourceFile in files)
+                        {
+                            // 只备份支持的图片格式
+                            if (!ScreenshotHelper.IsSupportedExtension(sourceFile))
+                            {
+                                continue;
+                            }
+                            
+                            string fileName = Path.GetFileName(sourceFile);
+                            string targetFile = Path.Combine(backupFolder, fileName);
+                            
+                            // 如果目标文件不存在，才进行复制
+                            if (!File.Exists(targetFile))
+                            {
+                                File.Copy(sourceFile, targetFile, false);
+                                count++;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to backup screenshots from folder: {Folder}", screenshotFolder.Folder);
+                    }
+                }
+                
+                return count;
+            });
+            
+            StackPanel_BackingUp.Visibility = Visibility.Collapsed;
+            TextBlock_BackupResult.Visibility = Visibility.Visible;
+            TextBlock_BackupResult.Text = string.Format(Lang.ScreenshotPage_BackedUpNewScreenshots, totalCount);
+            
+            _logger.LogInformation("Backed up {Count} screenshots to {BackupFolder}", totalCount, backupFolder);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to backup all screenshots.");
+            StackPanel_BackingUp.Visibility = Visibility.Collapsed;
+            TextBlock_BackupResult.Visibility = Visibility.Visible;
+            TextBlock_BackupResult.Text = Lang.ScreenshotFolderManageDialog_FailedToBackupScreenshots;
+        }
+    }
+
 
 
     private async void Button_OpenFolder_Click(object sender, RoutedEventArgs e)
@@ -136,68 +218,6 @@ public sealed partial class ScreenshotFolderManageDialog : ContentDialog
         }
         catch { }
     }
-
-
-
-    private async void Button_BackupFolder_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is Button button)
-        {
-            button.IsEnabled = false;
-            try
-            {
-                TextBlock_BackupResult.Visibility = Visibility.Collapsed;
-                if (button.DataContext is ScreenshotFolder folder)
-                {
-                    if (Directory.Exists(folder.Folder))
-                    {
-                        if (ScreenshotFolders?.FirstOrDefault(x => x.Default) is ScreenshotFolder screenshotFolder)
-                        {
-                            string backupFolder = screenshotFolder.Folder;
-                            Directory.CreateDirectory(backupFolder);
-                            StackPanel_BackingUp.Visibility = Visibility.Visible;
-                            int count = await Task.Run(() =>
-                            {
-
-                                int count = 0;
-                                var files = Directory.GetFiles(folder.Folder);
-                                foreach (var item in files)
-                                {
-                                    var target = Path.Combine(backupFolder, Path.GetFileName(item));
-                                    if (!File.Exists(target))
-                                    {
-                                        File.Copy(item, target);
-                                        count++;
-                                    }
-                                }
-                                return count;
-                            });
-                            StackPanel_BackingUp.Visibility = Visibility.Collapsed;
-                            TextBlock_BackupResult.Visibility = Visibility.Visible;
-                            TextBlock_BackupResult.Text = string.Format(Lang.ScreenshotPage_BackedUpNewScreenshots, count);
-                            return;
-                        }
-                    }
-                    _logger.LogWarning("Game exe name of {GameBiz} is null, cannot backup screenshots.", CurrentGameId.GameBiz);
-                    TextBlock_BackupResult.Visibility = Visibility.Visible;
-                    TextBlock_BackupResult.Text = Lang.ScreenshotFolderManageDialog_FailedToBackupScreenshots;
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to backup screenshots.");
-                TextBlock_BackupResult.Visibility = Visibility.Visible;
-                TextBlock_BackupResult.Text = Lang.ScreenshotFolderManageDialog_FailedToBackupScreenshots;
-            }
-            finally
-            {
-                StackPanel_BackingUp.Visibility = Visibility.Collapsed;
-                button.IsEnabled = true;
-            }
-        }
-    }
-
 
 
 
