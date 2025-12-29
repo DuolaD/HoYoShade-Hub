@@ -45,15 +45,15 @@ $release = [ordered]@{
     Install           = $null
     InstallSize       = 0
     InstallHash       = $null
-    Portable          = "https://starward.scighost.com/release/package/$portableName"
+    Portable          = "https://github.com/DuolaD/HoYoShade-Hub/releases/download/v$Version/$portableName"
     PortableSize      = (Get-Item $portableFile).Length
     PortableHash      = (Get-FileHash $portableFile).Hash
-    SeparatePrefix    = "https://starward.scighost.com/release/separate_files/"
+    SeparatePrefix    = "https://github.com/DuolaD/HoYoShade-Hub/releases/download/v$Version/"
 };
 
 if ($Dev) {
-    $release.Portable = "https://starward.scighost.com/release/package/dev/$portableName";
-    $release.SeparatePrefix = "https://starward.scighost.com/release/separate_files/dev/";
+    $release.Portable = "https://github.com/DuolaD/HoYoShade-Hub/releases/download/v$Version-dev/$portableName";
+    $release.SeparatePrefix = "https://github.com/DuolaD/HoYoShade-Hub/releases/download/v$Version-dev/";
 }
 
 Out-File -FilePath "$metadata/version_preview_$Architecture.json" -InputObject (ConvertTo-Json $release);

@@ -24,10 +24,10 @@ dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- pack $Output 
 
 if ($DiffTags.Count -eq 0 -and $DiffCount -gt 0) {
     if ($env:GITHUB_TOKEN) {
-        $json = Invoke-WebRequest 'https://api.github.com/repos/Scighost/Starward/releases' -Headers @{ Authorization = "Bearer $env:GITHUB_TOKEN" } | ConvertFrom-Json;
+        $json = Invoke-WebRequest 'https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases' -Headers @{ Authorization = "Bearer $env:GITHUB_TOKEN" } | ConvertFrom-Json;
     }
     else {
-        $json = Invoke-WebRequest 'https://api.github.com/repos/Scighost/Starward/releases' | ConvertFrom-Json;
+        $json = Invoke-WebRequest 'https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases' | ConvertFrom-Json;
     }
 
     $pre = $true;
