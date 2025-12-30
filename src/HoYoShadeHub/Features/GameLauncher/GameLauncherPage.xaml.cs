@@ -90,12 +90,12 @@ public sealed partial class GameLauncherPage : PageBase
         {
             // Check HoYoShade installation
             string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
-            IsHoYoShadeInstalled = Directory.Exists(hoYoShadePath) && 
+            IsHoYoShadeInstalled = Directory.Exists(hoYoShadePath) &&
                                    Directory.GetFiles(hoYoShadePath, "*.dll").Length > 0;
 
             // Check OpenHoYoShade installation
             string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
-            IsOpenHoYoShadeInstalled = Directory.Exists(openHoYoShadePath) && 
+            IsOpenHoYoShadeInstalled = Directory.Exists(openHoYoShadePath) &&
                                        Directory.GetFiles(openHoYoShadePath, "*.dll").Length > 0;
 
             // Uncheck options if shaders are not installed
@@ -111,7 +111,7 @@ public sealed partial class GameLauncherPage : PageBase
             // Check Blender plugin configurations
             CheckBlenderPluginConfigurations();
 
-            _logger.LogInformation("HoYoShade installed: {HoYoShade}, OpenHoYoShade installed: {OpenHoYoShade}", 
+            _logger.LogInformation("HoYoShade installed: {HoYoShade}, OpenHoYoShade installed: {OpenHoYoShade}",
                 IsHoYoShadeInstalled, IsOpenHoYoShadeInstalled);
         }
         catch (Exception ex)
@@ -129,14 +129,14 @@ public sealed partial class GameLauncherPage : PageBase
             // Check Genshin Impact Blender Plugin
             bool isGenshinGame = CurrentGameBiz.ToGame().Value == GameBiz.hk4e;
             IsGenshinBlenderPluginVisible = isGenshinGame ? Visibility.Visible : Visibility.Collapsed;
-            
+
             if (isGenshinGame)
             {
                 string? genshinPluginPath = AppConfig.GenshinBlenderPluginPath;
-                IsGenshinBlenderPluginConfigured = !string.IsNullOrWhiteSpace(genshinPluginPath) && 
+                IsGenshinBlenderPluginConfigured = !string.IsNullOrWhiteSpace(genshinPluginPath) &&
                                                    Directory.Exists(genshinPluginPath) &&
                                                    File.Exists(Path.Combine(genshinPluginPath, "client.exe"));
-                
+
                 if (!IsGenshinBlenderPluginConfigured && LaunchGenshinBlenderPlugin)
                 {
                     LaunchGenshinBlenderPlugin = false;
@@ -146,21 +146,21 @@ public sealed partial class GameLauncherPage : PageBase
             // Check ZZZ Blender Plugin
             bool isZZZGame = CurrentGameBiz.ToGame().Value == GameBiz.nap;
             IsZZZBlenderPluginVisible = isZZZGame ? Visibility.Visible : Visibility.Collapsed;
-            
+
             if (isZZZGame)
             {
                 string? zzzPluginPath = AppConfig.ZZZBlenderPluginPath;
-                IsZZZBlenderPluginConfigured = !string.IsNullOrWhiteSpace(zzzPluginPath) && 
+                IsZZZBlenderPluginConfigured = !string.IsNullOrWhiteSpace(zzzPluginPath) &&
                                                Directory.Exists(zzzPluginPath) &&
                                                File.Exists(Path.Combine(zzzPluginPath, "loader.exe"));
-                
+
                 if (!IsZZZBlenderPluginConfigured && LaunchZZZBlenderPlugin)
                 {
                     LaunchZZZBlenderPlugin = false;
                 }
             }
 
-            _logger.LogInformation("Blender plugins - Genshin configured: {Genshin}, ZZZ configured: {ZZZ}", 
+            _logger.LogInformation("Blender plugins - Genshin configured: {Genshin}, ZZZ configured: {ZZZ}",
                 IsGenshinBlenderPluginConfigured, IsZZZBlenderPluginConfigured);
         }
         catch (Exception ex)
@@ -297,7 +297,7 @@ public sealed partial class GameLauncherPage : PageBase
     {
         // Disable game launch checkbox if any Blender plugin is selected
         IsGameLaunchCheckboxEnabled = !LaunchGenshinBlenderPlugin && !LaunchZZZBlenderPlugin;
-        
+
         // If no Blender plugin is selected and game launch is unchecked, re-enable it
         if (IsGameLaunchCheckboxEnabled && !EnableGameLaunch)
         {
@@ -377,8 +377,8 @@ public sealed partial class GameLauncherPage : PageBase
 
 
     private List<GameServerConfig>? _gameServers;
-    public List<GameServerConfig>? GameServers 
-    { 
+    public List<GameServerConfig>? GameServers
+    {
         get => _gameServers;
         set => SetProperty(ref _gameServers, value);
     }
@@ -446,8 +446,8 @@ public sealed partial class GameLauncherPage : PageBase
 
 
     private string? _gameInstallPath;
-    public string? GameInstallPath 
-    { 
+    public string? GameInstallPath
+    {
         get => _gameInstallPath;
         set => SetProperty(ref _gameInstallPath, value);
     }
@@ -456,8 +456,8 @@ public sealed partial class GameLauncherPage : PageBase
     /// 可移动存储设备提示
     /// </summary>
     private bool _isInstallPathRemovableTipEnabled;
-    public bool IsInstallPathRemovableTipEnabled 
-    { 
+    public bool IsInstallPathRemovableTipEnabled
+    {
         get => _isInstallPathRemovableTipEnabled;
         set
         {
@@ -477,8 +477,8 @@ public sealed partial class GameLauncherPage : PageBase
     /// 预下载按钮是否可用
     /// </summary>
     private bool _isPredownloadButtonEnabled;
-    public bool IsPredownloadButtonEnabled 
-    { 
+    public bool IsPredownloadButtonEnabled
+    {
         get => _isPredownloadButtonEnabled;
         set => SetProperty(ref _isPredownloadButtonEnabled, value);
     }
@@ -487,8 +487,8 @@ public sealed partial class GameLauncherPage : PageBase
     /// 预下载是否完成
     /// </summary>
     private bool _isPredownloadFinished;
-    public bool IsPredownloadFinished 
-    { 
+    public bool IsPredownloadFinished
+    {
         get => _isPredownloadFinished;
         set => SetProperty(ref _isPredownloadFinished, value);
     }
@@ -653,8 +653,8 @@ public sealed partial class GameLauncherPage : PageBase
 
 
     private string? _runningGameInfo;
-    public string? RunningGameInfo 
-    { 
+    public string? RunningGameInfo
+    {
         get => _runningGameInfo;
         set => SetProperty(ref _runningGameInfo, value);
     }
@@ -708,37 +708,46 @@ public sealed partial class GameLauncherPage : PageBase
             bool useShader = UseHoYoShade || UseOpenHoYoShade;
 
             // Case 1: Both Blender plugin and shader are selected
-            // Start shader injector first, then launch Blender plugin (which will start the game)
             if (launchingBlenderPlugin && useShader)
             {
-                // Start shader injector (it will wait for game process)
+                Process? shaderInjectorProcess = null;
+
+                // Start shader injector
                 if (UseHoYoShade)
                 {
                     string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
-                    await StartShaderInjectorOnlyAsync(hoYoShadePath, "HoYoShade");
+                    shaderInjectorProcess = await StartShaderInjectorOnlyAsync(hoYoShadePath, "HoYoShade");
                 }
                 else if (UseOpenHoYoShade)
                 {
                     string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
-                    await StartShaderInjectorOnlyAsync(openHoYoShadePath, "OpenHoYoShade");
+                    shaderInjectorProcess = await StartShaderInjectorOnlyAsync(openHoYoShadePath, "OpenHoYoShade");
                 }
 
-                // Launch Blender plugin (it will start the game itself)
+                Process? blenderPluginProcess = null;
+
+                // Launch Blender plugin
                 if (LaunchGenshinBlenderPlugin)
                 {
-                    await LaunchGenshinBlenderPluginAsync();
+                    blenderPluginProcess = await LaunchGenshinBlenderPluginAsync();
                 }
-
-                if (LaunchZZZBlenderPlugin)
+                else if (LaunchZZZBlenderPlugin)
                 {
-                    await LaunchZZZBlenderPluginAsync();
+                    blenderPluginProcess = await LaunchZZZBlenderPluginAsync();
                 }
 
-                _logger.LogInformation("Shader injector and Blender plugin launched");
+                _logger.LogInformation("Shader injector and Blender plugin launched, starting process monitoring");
+
+                // Start monitoring
+                if (shaderInjectorProcess != null && blenderPluginProcess != null)
+                {
+                    _ = MonitorInjectorProcessesAsync(shaderInjectorProcess, blenderPluginProcess);
+                }
+
                 return;
             }
 
-            // Case 2: Only Blender plugin is selected (no shader)
+            // Case 2: Only Blender plugin
             if (launchingBlenderPlugin)
             {
                 if (LaunchGenshinBlenderPlugin)
@@ -753,7 +762,7 @@ public sealed partial class GameLauncherPage : PageBase
                 return;
             }
 
-            // Case 3: Normal game launch with or without shader (no Blender plugin)
+            // Case 3: Normal game launch
             Process? process = null;
 
             if (UseHoYoShade)
@@ -788,8 +797,10 @@ public sealed partial class GameLauncherPage : PageBase
         }
     }
 
-    // 在 LaunchGameWithShadeAsync 方法后面添加这个新方法
-    private async Task StartShaderInjectorOnlyAsync(string shadePath, string shadeName)
+    /// <summary>
+    /// 只启动shader注入器，不启动游戏（供Blender插件使用）
+    /// </summary>
+    private async Task<Process?> StartShaderInjectorOnlyAsync(string shadePath, string shadeName)
     {
         try
         {
@@ -797,7 +808,7 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
                 InAppToast.MainWindow?.Error($"{shadeName} 未安装，请先安装后再使用");
-                return;
+                return null;
             }
 
             string injectExePath = Path.Combine(shadePath, "inject.exe");
@@ -805,7 +816,7 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
                 InAppToast.MainWindow?.Error($"{shadeName} 中未找到 inject.exe");
-                return;
+                return null;
             }
 
             var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
@@ -822,19 +833,81 @@ public sealed partial class GameLauncherPage : PageBase
                 CreateNoWindow = true
             };
 
-            Process.Start(injectStartInfo);
-            _logger.LogInformation("{ShadeName} injector started, waiting for game process", shadeName);
+            Process? injectorProcess = Process.Start(injectStartInfo);
+            _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for game process",
+                shadeName, injectorProcess?.Id ?? -1);
             InAppToast.MainWindow?.Success($"已启动 {shadeName} 注入器");
+
+            return injectorProcess;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Start {ShadeName} injector", shadeName);
             InAppToast.MainWindow?.Error($"启动 {shadeName} 注入器失败: {ex.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 监控注入器进程：如果Blender插件进程退出但游戏未启动，则关闭shader注入器
+    /// </summary>
+    private async Task MonitorInjectorProcessesAsync(Process shaderInjectorProcess, Process blenderPluginProcess)
+    {
+        try
+        {
+            _logger.LogInformation("Started monitoring injector processes - Shader: {ShaderPid}, Blender: {BlenderPid}",
+                shaderInjectorProcess.Id, blenderPluginProcess.Id);
+
+            // Wait for Blender plugin process to exit
+            await Task.Run(() => blenderPluginProcess.WaitForExit());
+
+            _logger.LogInformation("Blender plugin process exited, checking game status...");
+
+            // Give the game time to start
+            await Task.Delay(2000);
+
+            // Check if game is running
+            Process? gameProcess = await _gameLauncherService.GetGameProcessAsync(CurrentGameId);
+
+            if (gameProcess == null)
+            {
+                // Game not running, kill shader injector
+                _logger.LogInformation("Game not started, terminating shader injector process");
+
+                try
+                {
+                    if (!shaderInjectorProcess.HasExited)
+                    {
+                        shaderInjectorProcess.Kill();
+                        _logger.LogInformation("Shader injector process terminated");
+                        InAppToast.MainWindow?.Information("游戏未启动，已终止shader注入器进程");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to terminate shader injector process");
+                }
+            }
+            else
+            {
+                // Game is running
+                _logger.LogInformation("Game started successfully with shader injection");
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    GameState = GameState.GameIsRunning;
+                    GameProcess = gameProcess;
+                    WeakReferenceMessenger.Default.Send(new GameStartedMessage());
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error monitoring injector processes");
         }
     }
 
 
-    private async Task LaunchGenshinBlenderPluginAsync()
+    private async Task<Process?> LaunchGenshinBlenderPluginAsync()
     {
         try
         {
@@ -843,7 +916,7 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 _logger.LogWarning("Genshin Blender plugin path not configured");
                 InAppToast.MainWindow?.Error("原神Blender/留影机插件路径未配置，请在设置中配置");
-                return;
+                return null;
             }
 
             string clientExePath = Path.Combine(pluginPath, "client.exe");
@@ -851,11 +924,11 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 _logger.LogWarning("client.exe not found in {Path}", pluginPath);
                 InAppToast.MainWindow?.Error("未找到 client.exe，请检查插件路径");
-                return;
+                return null;
             }
 
             _logger.LogInformation("Launching Genshin Blender plugin: {Path}", clientExePath);
-            
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = clientExePath,
@@ -863,18 +936,21 @@ public sealed partial class GameLauncherPage : PageBase
                 UseShellExecute = true
             };
 
-            Process.Start(startInfo);
+            Process? process = Process.Start(startInfo);
             InAppToast.MainWindow?.Success("已启动原神Blender/留影机插件");
-            _logger.LogInformation("Genshin Blender plugin launched successfully");
+            _logger.LogInformation("Genshin Blender plugin launched successfully (PID: {Pid})", process?.Id ?? -1);
+
+            return process;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch Genshin Blender plugin");
             InAppToast.MainWindow?.Error($"启动原神Blender/留影机插件失败: {ex.Message}");
+            return null;
         }
     }
 
-    private async Task LaunchZZZBlenderPluginAsync()
+    private async Task<Process?> LaunchZZZBlenderPluginAsync()
     {
         try
         {
@@ -883,7 +959,7 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 _logger.LogWarning("ZZZ Blender plugin path not configured");
                 InAppToast.MainWindow?.Error("绝区零Blender/留影机插件路径未配置，请在设置中配置");
-                return;
+                return null;
             }
 
             string loaderExePath = Path.Combine(pluginPath, "loader.exe");
@@ -891,11 +967,11 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 _logger.LogWarning("loader.exe not found in {Path}", pluginPath);
                 InAppToast.MainWindow?.Error("未找到 loader.exe，请检查插件路径");
-                return;
+                return null;
             }
 
             _logger.LogInformation("Launching ZZZ Blender plugin: {Path}", loaderExePath);
-            
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = loaderExePath,
@@ -903,14 +979,17 @@ public sealed partial class GameLauncherPage : PageBase
                 UseShellExecute = true
             };
 
-            Process.Start(startInfo);
+            Process? process = Process.Start(startInfo);
             InAppToast.MainWindow?.Success("已启动绝区零Blender/留影机插件");
-            _logger.LogInformation("ZZZ Blender plugin launched successfully");
+            _logger.LogInformation("ZZZ Blender plugin launched successfully (PID: {Pid})", process?.Id ?? -1);
+
+            return process;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch ZZZ Blender plugin");
             InAppToast.MainWindow?.Error($"启动绝区零Blender/留影机插件失败: {ex.Message}");
+            return null;
         }
     }
 
@@ -944,7 +1023,7 @@ public sealed partial class GameLauncherPage : PageBase
 
             var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
             var gameExePath = Path.Combine(gameInstallPath, gameExeName);
-            
+
             if (!File.Exists(gameExePath))
             {
                 _logger.LogWarning("Game exe not found: {Path}", gameExePath);
@@ -952,7 +1031,7 @@ public sealed partial class GameLauncherPage : PageBase
             }
 
             // Step 1: Start inject.exe (don't wait for it to finish)
-            _logger.LogInformation("Starting {ShadeName} injector: {InjectPath} {GameExe}", 
+            _logger.LogInformation("Starting {ShadeName} injector: {InjectPath} {GameExe}",
                 shadeName, injectExePath, gameExeName);
 
             var injectStartInfo = new ProcessStartInfo
@@ -973,11 +1052,11 @@ public sealed partial class GameLauncherPage : PageBase
             // Step 3: Launch the game normally
             _logger.LogInformation("Launching game normally");
             var gameProcess = await _gameLauncherService.StartGameAsync(CurrentGameId, gameInstallPath);
-            
+
             if (gameProcess != null)
             {
                 InAppToast.MainWindow?.Success($"已使用 {shadeName} 启动游戏");
-                _logger.LogInformation("Successfully launched game with {ShadeName}, process: {Name} ({Id})", 
+                _logger.LogInformation("Successfully launched game with {ShadeName}, process: {Name} ({Id})",
                     shadeName, gameProcess.ProcessName, gameProcess.Id);
                 return gameProcess;
             }
@@ -1180,22 +1259,22 @@ public sealed partial class GameLauncherPage : PageBase
 
 
     private List<GameBackground> _backgroundImages;
-    public List<GameBackground> BackgroundImages 
-    { 
+    public List<GameBackground> BackgroundImages
+    {
         get => _backgroundImages;
         set => SetProperty(ref _backgroundImages, value);
     }
 
     private bool _canStopVideo;
-    public bool CanStopVideo 
-    { 
+    public bool CanStopVideo
+    {
         get => _canStopVideo;
         set => SetProperty(ref _canStopVideo, value);
     }
 
     private string _startStopButtonIcon;
-    public string StartStopButtonIcon 
-    { 
+    public string StartStopButtonIcon
+    {
         get => _startStopButtonIcon;
         set => SetProperty(ref _startStopButtonIcon, value);
     }
