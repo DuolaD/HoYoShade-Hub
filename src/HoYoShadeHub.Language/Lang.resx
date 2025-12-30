@@ -1313,4 +1313,25 @@ Do you want to continue with the reset operation?</value>
   <data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
     <value>Integration features coming soon...</value>
   </data>
+  <data name="SettingPage_BlenderPlugin" xml:space="preserve">
+    <value>Blender Plugin</value>
+  </data>
+  <data name="SettingPage_GenshinBlenderPlugin" xml:space="preserve">
+    <value>Genshin Impact Blender Plugin</value>
+  </data>
+  <data name="SettingPage_ZZZBlenderPlugin" xml:space="preserve">
+    <value>Zenless Zone Zero Blender Plugin</value>
+  </data>
+  <data name="SettingPage_PluginFolderPath" xml:space="preserve">
+    <value>Plugin Folder Path</value>
+  </data>
+  <data name="SettingPage_SelectFolder" xml:space="preserve">
+    <value>Select Folder</value>
+  </data>
+  <data name="SettingPage_Unbind" xml:space="preserve">
+    <value>Unbind</value>
+  </data>
+  <data name="SettingPage_NotSet" xml:space="preserve">
+    <value>Not Set</value>
+  </data>
 </root>

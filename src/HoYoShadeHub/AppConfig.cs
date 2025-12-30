@@ -707,6 +707,26 @@ public static class AppConfig
     }
 
 
+    /// <summary>
+    /// 原神Blender/留影机插件路径
+    /// </summary>
+    public static string? GenshinBlenderPluginPath
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+
+    /// <summary>
+    /// 绝区零Blender/留影机插件路径
+    /// </summary>
+    public static string? ZZZBlenderPluginPath
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+
     #endregion
 
 

@@ -11,23 +11,88 @@
              mc:Ignorable="d">
 
     <ScrollViewer>
-        <StackPanel Padding="0,0,24,0">
+        <StackPanel Padding="0,0,24,0" Spacing="20">
 
-            <!--  Áª¶¯ÉèÖÃËµÃ÷  -->
-            <TextBlock FontSize="20" Text="{x:Bind lang:Lang.SettingPage_Integration}" />
-            <TextBlock Margin="0,12,0,0"
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       Text="{x:Bind lang:Lang.SettingPage_IntegrationDescription}"
-                       TextWrapping="Wrap" />
+            <!--  Blender/ç•™å½±æœºæ’ä»¶  -->
+            <TextBlock FontSize="20"
+                       FontWeight="Bold"
+                       Text="{x:Bind lang:Lang.SettingPage_BlenderPlugin}" />
 
-            <MenuFlyoutSeparator Margin="0,20,0,0" />
+            <!--  åŽŸç¥žBlender/ç•™å½±æœºæ’ä»¶  -->
+            <StackPanel Spacing="12">
+                <TextBlock FontSize="16"
+                           FontWeight="SemiBold"
+                           Text="{x:Bind lang:Lang.SettingPage_GenshinBlenderPlugin}" />
 
-            <!--  Ô¤ÁôÇøÓòÓÃÓÚºóÐøÌí¼ÓÁª¶¯¹¦ÄÜ  -->
-            <TextBlock Margin="0,20,0,0"
-                       FontSize="16"
-                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                       Text="{x:Bind lang:Lang.SettingPage_IntegrationComingSoon}"
-                       TextWrapping="Wrap" />
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Text="{x:Bind lang:Lang.SettingPage_PluginFolderPath}" />
+
+                    <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="{x:Bind GenshinBlenderPluginPathDisplay, Mode=OneWay}"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTipService.ToolTip="{x:Bind GenshinBlenderPluginPath, Mode=OneWay}" />
+
+                    <Button Grid.Column="2"
+                            MinWidth="120"
+                            Command="{x:Bind SelectGenshinBlenderPluginFolderCommand}"
+                            Content="{x:Bind lang:Lang.SettingPage_SelectFolder}" />
+
+                    <Button Grid.Column="3"
+                            MinWidth="100"
+                            Command="{x:Bind UnbindGenshinBlenderPluginFolderCommand}"
+                            Content="{x:Bind lang:Lang.SettingPage_Unbind}"
+                            IsEnabled="{x:Bind GenshinBlenderPluginPath, Converter={StaticResource ObjectToBoolConverter}, Mode=OneWay}" />
+                </Grid>
+            </StackPanel>
+
+            <!--  ç»åŒºé›¶Blender/ç•™å½±æœºæ’ä»¶  -->
+            <StackPanel Spacing="12">
+                <TextBlock FontSize="16"
+                           FontWeight="SemiBold"
+                           Text="{x:Bind lang:Lang.SettingPage_ZZZBlenderPlugin}" />
+
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Text="{x:Bind lang:Lang.SettingPage_PluginFolderPath}" />
+
+                    <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="{x:Bind ZZZBlenderPluginPathDisplay, Mode=OneWay}"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTipService.ToolTip="{x:Bind ZZZBlenderPluginPath, Mode=OneWay}" />
+
+                    <Button Grid.Column="2"
+                            MinWidth="120"
+                            Command="{x:Bind SelectZZZBlenderPluginFolderCommand}"
+                            Content="{x:Bind lang:Lang.SettingPage_SelectFolder}" />
+
+                    <Button Grid.Column="3"
+                            MinWidth="100"
+                            Command="{x:Bind UnbindZZZBlenderPluginFolderCommand}"
+                            Content="{x:Bind lang:Lang.SettingPage_Unbind}"
+                            IsEnabled="{x:Bind ZZZBlenderPluginPath, Converter={StaticResource ObjectToBoolConverter}, Mode=OneWay}" />
+                </Grid>
+            </StackPanel>
 
         </StackPanel>
     </ScrollViewer>

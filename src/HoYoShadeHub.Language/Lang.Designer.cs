@@ -2777,6 +2777,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_BlenderPlugin {
+            get {
+                return ResourceManager.GetString("SettingPage_BlenderPlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Cannot Connect RPC Service 的本地化字符串。
         /// </summary>
         public static string SettingPage_CannotConnectRPCService {
@@ -2885,6 +2894,42 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Genshin Impact Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_GenshinBlenderPlugin {
+            get {
+                return ResourceManager.GetString("SettingPage_GenshinBlenderPlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Integration 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_Integration {
+            get {
+                return ResourceManager.GetString("SettingPage_Integration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Integration features coming soon... 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_IntegrationComingSoon {
+            get {
+                return ResourceManager.GetString("SettingPage_IntegrationComingSoon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This page is for configuring integrations with other Mods and applications. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_IntegrationDescription {
+            get {
+                return ResourceManager.GetString("SettingPage_IntegrationDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Join Preview Release Channel 的本地化字符串。
         /// </summary>
         public static string SettingPage_JoinPreviewReleaseChannel {
@@ -2939,11 +2984,29 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Not Set 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_NotSet {
+            get {
+                return ResourceManager.GetString("SettingPage_NotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Open Launcher Log Folder 的本地化字符串。
         /// </summary>
         public static string SettingPage_OpenLogFolder {
             get {
                 return ResourceManager.GetString("SettingPage_OpenLogFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Plugin Folder Path 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_PluginFolderPath {
+            get {
+                return ResourceManager.GetString("SettingPage_PluginFolderPath", resourceCulture);
             }
         }
         
@@ -3056,6 +3119,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Select Folder 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_SelectFolder {
+            get {
+                return ResourceManager.GetString("SettingPage_SelectFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Stop Service 的本地化字符串。
         /// </summary>
         public static string SettingPage_StopService {
@@ -3092,6 +3164,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Unbind 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_Unbind {
+            get {
+                return ResourceManager.GetString("SettingPage_Unbind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Other software can use some of HoYoShade Hub&apos;s features through the URL protocol. 的本地化字符串。
         /// </summary>
         public static string SettingPage_URLProtocolDesc {
@@ -3115,6 +3196,15 @@ namespace HoYoShadeHub.Language {
         public static string SettingPage_WouldLikeToReselectDataFolder {
             get {
                 return ResourceManager.GetString("SettingPage_WouldLikeToReselectDataFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zenless Zone Zero Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_ZZZBlenderPlugin {
+            get {
+                return ResourceManager.GetString("SettingPage_ZZZBlenderPlugin", resourceCulture);
             }
         }
         
@@ -3567,33 +3657,6 @@ namespace HoYoShadeHub.Language {
         public static string WelcomeView_WelcomeToHoYoShadeHubDescription {
             get {
                 return ResourceManager.GetString("WelcomeView_WelcomeToHoYoShadeHubDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Integration 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_Integration {
-            get {
-                return ResourceManager.GetString("SettingPage_Integration", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 This page is for configuring integrations with other Mods and applications. 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_IntegrationDescription {
-            get {
-                return ResourceManager.GetString("SettingPage_IntegrationDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Integration features coming soon... 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_IntegrationComingSoon {
-            get {
-                return ResourceManager.GetString("SettingPage_IntegrationComingSoon", resourceCulture);
             }
         }
     }

@@ -1313,4 +1313,25 @@
   <data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
     <value>聯動功能即將推出，敬請期待...</value>
   </data>
+  <data name="SettingPage_BlenderPlugin" xml:space="preserve">
+    <value>Blender/留影機插件</value>
+  </data>
+  <data name="SettingPage_GenshinBlenderPlugin" xml:space="preserve">
+    <value>原神Blender/留影機插件</value>
+  </data>
+  <data name="SettingPage_ZZZBlenderPlugin" xml:space="preserve">
+    <value>絕區零Blender/留影機插件</value>
+  </data>
+  <data name="SettingPage_PluginFolderPath" xml:space="preserve">
+    <value>插件資料夾路徑</value>
+  </data>
+  <data name="SettingPage_SelectFolder" xml:space="preserve">
+    <value>選擇資料夾</value>
+  </data>
+  <data name="SettingPage_Unbind" xml:space="preserve">
+    <value>解除綁定</value>
+  </data>
+  <data name="SettingPage_NotSet" xml:space="preserve">
+    <value>未設定</value>
+  </data>
 </root>
