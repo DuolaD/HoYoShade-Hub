@@ -110,8 +110,8 @@ public sealed partial class IntegrationSetting : PageBase
                 if (!File.Exists(clientExePath))
                 {
                     await ShowErrorDialogAsync(
-                        "原神插件验证失败",
-                        "所选文件夹必须包含 client.exe 文件"
+                        Lang.SettingPage_GenshinBlenderPluginValidationFailed,
+                        Lang.SettingPage_GenshinBlenderPluginMustContainClientExe
                     );
                     return;
                 }
@@ -181,8 +181,8 @@ public sealed partial class IntegrationSetting : PageBase
                 if (!File.Exists(loaderExePath))
                 {
                     await ShowErrorDialogAsync(
-                        "绝区零插件验证失败",
-                        "所选文件夹必须包含 loader.exe 文件"
+                        Lang.SettingPage_ZZZBlenderPluginValidationFailed,
+                        Lang.SettingPage_ZZZBlenderPluginMustContainLoaderExe
                     );
                     return;
                 }

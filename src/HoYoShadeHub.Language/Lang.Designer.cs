@@ -3659,5 +3659,41 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("WelcomeView_WelcomeToHoYoShadeHubDescription", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Genshin Impact Plugin Validation Failed 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_GenshinBlenderPluginValidationFailed {
+            get {
+                return ResourceManager.GetString("SettingPage_GenshinBlenderPluginValidationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The selected folder must contain client.exe 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_GenshinBlenderPluginMustContainClientExe {
+            get {
+                return ResourceManager.GetString("SettingPage_GenshinBlenderPluginMustContainClientExe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zenless Zone Zero Plugin Validation Failed 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_ZZZBlenderPluginValidationFailed {
+            get {
+                return ResourceManager.GetString("SettingPage_ZZZBlenderPluginValidationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The selected folder must contain loader.exe 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_ZZZBlenderPluginMustContainLoaderExe {
+            get {
+                return ResourceManager.GetString("SettingPage_ZZZBlenderPluginMustContainLoaderExe", resourceCulture);
+            }
+        }
     }
 }

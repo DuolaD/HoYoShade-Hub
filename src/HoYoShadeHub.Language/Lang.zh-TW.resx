@@ -1334,4 +1334,16 @@
   <data name="SettingPage_NotSet" xml:space="preserve">
     <value>未設定</value>
   </data>
+  <data name="SettingPage_GenshinBlenderPluginValidationFailed" xml:space="preserve">
+    <value>原神插件驗證失敗</value>
+  </data>
+  <data name="SettingPage_GenshinBlenderPluginMustContainClientExe" xml:space="preserve">
+    <value>所選資料夾必須包含 client.exe 檔案</value>
+  </data>
+  <data name="SettingPage_ZZZBlenderPluginValidationFailed" xml:space="preserve">
+    <value>絕區零插件驗證失敗</value>
+  </data>
+  <data name="SettingPage_ZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
+    <value>所選資料夾必須包含 loader.exe 檔案</value>
+  </data>
 </root>
