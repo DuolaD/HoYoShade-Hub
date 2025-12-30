@@ -24,36 +24,48 @@
                            FontWeight="SemiBold"
                            Text="{x:Bind lang:Lang.SettingPage_GenshinBlenderPlugin}" />
 
-                <Grid ColumnSpacing="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <!--  路径显示（仅在已设置时显示）  -->
+                <StackPanel Spacing="8" Visibility="{x:Bind GenshinBlenderPluginPath, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}">
+                    <TextBlock Text="{x:Bind lang:Lang.SettingPage_PluginFolderPath}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    
+                    <Button Height="40"
+                            Padding="20,0,20,1"
+                            BorderThickness="0"
+                            Command="{x:Bind OpenGenshinBlenderPluginFolderCommand}"
+                            CornerRadius="20">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       IsTextTrimmedChanged="TextBlock_IsTextTrimmedChanged"
+                                       MaxLines="2"
+                                       Text="{x:Bind GenshinBlenderPluginPath, Mode=OneWay}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="Wrap" />
+                            <FontIcon Grid.Column="1"
+                                      Margin="0,2,2,0"
+                                      FontSize="14"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      Glyph="&#xE8A7;" />
+                        </Grid>
+                    </Button>
+                </StackPanel>
 
-                    <TextBlock Grid.Column="0"
-                               VerticalAlignment="Center"
-                               Text="{x:Bind lang:Lang.SettingPage_PluginFolderPath}" />
-
-                    <TextBlock Grid.Column="1"
-                               VerticalAlignment="Center"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind GenshinBlenderPluginPathDisplay, Mode=OneWay}"
-                               TextTrimming="CharacterEllipsis"
-                               ToolTipService.ToolTip="{x:Bind GenshinBlenderPluginPath, Mode=OneWay}" />
-
-                    <Button Grid.Column="2"
-                            MinWidth="120"
+                <!--  操作按钮  -->
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button MinWidth="120"
                             Command="{x:Bind SelectGenshinBlenderPluginFolderCommand}"
                             Content="{x:Bind lang:Lang.SettingPage_SelectFolder}" />
 
-                    <Button Grid.Column="3"
-                            MinWidth="100"
+                    <Button MinWidth="100"
                             Command="{x:Bind UnbindGenshinBlenderPluginFolderCommand}"
                             Content="{x:Bind lang:Lang.SettingPage_Unbind}"
                             IsEnabled="{x:Bind GenshinBlenderPluginPath, Converter={StaticResource ObjectToBoolConverter}, Mode=OneWay}" />
-                </Grid>
+                </StackPanel>
             </StackPanel>
 
             <!--  绝区零Blender/留影机插件  -->
@@ -62,36 +74,48 @@
                            FontWeight="SemiBold"
                            Text="{x:Bind lang:Lang.SettingPage_ZZZBlenderPlugin}" />
 
-                <Grid ColumnSpacing="12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <!--  路径显示（仅在已设置时显示）  -->
+                <StackPanel Spacing="8" Visibility="{x:Bind ZZZBlenderPluginPath, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}">
+                    <TextBlock Text="{x:Bind lang:Lang.SettingPage_PluginFolderPath}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    
+                    <Button Height="40"
+                            Padding="20,0,20,1"
+                            BorderThickness="0"
+                            Command="{x:Bind OpenZZZBlenderPluginFolderCommand}"
+                            CornerRadius="20">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       IsTextTrimmedChanged="TextBlock_IsTextTrimmedChanged"
+                                       MaxLines="2"
+                                       Text="{x:Bind ZZZBlenderPluginPath, Mode=OneWay}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="Wrap" />
+                            <FontIcon Grid.Column="1"
+                                      Margin="0,2,2,0"
+                                      FontSize="14"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      Glyph="&#xE8A7;" />
+                        </Grid>
+                    </Button>
+                </StackPanel>
 
-                    <TextBlock Grid.Column="0"
-                               VerticalAlignment="Center"
-                               Text="{x:Bind lang:Lang.SettingPage_PluginFolderPath}" />
-
-                    <TextBlock Grid.Column="1"
-                               VerticalAlignment="Center"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind ZZZBlenderPluginPathDisplay, Mode=OneWay}"
-                               TextTrimming="CharacterEllipsis"
-                               ToolTipService.ToolTip="{x:Bind ZZZBlenderPluginPath, Mode=OneWay}" />
-
-                    <Button Grid.Column="2"
-                            MinWidth="120"
+                <!--  操作按钮  -->
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button MinWidth="120"
                             Command="{x:Bind SelectZZZBlenderPluginFolderCommand}"
                             Content="{x:Bind lang:Lang.SettingPage_SelectFolder}" />
 
-                    <Button Grid.Column="3"
-                            MinWidth="100"
+                    <Button MinWidth="100"
                             Command="{x:Bind UnbindZZZBlenderPluginFolderCommand}"
                             Content="{x:Bind lang:Lang.SettingPage_Unbind}"
                             IsEnabled="{x:Bind ZZZBlenderPluginPath, Converter={StaticResource ObjectToBoolConverter}, Mode=OneWay}" />
-                </Grid>
+                </StackPanel>
             </StackPanel>
 
         </StackPanel>

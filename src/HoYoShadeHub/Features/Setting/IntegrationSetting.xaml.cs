@@ -1,11 +1,13 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml.Controls;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.System;
 
 
 namespace HoYoShadeHub.Features.Setting;
@@ -115,6 +117,26 @@ public sealed partial class IntegrationSetting : PageBase
 
 
     /// <summary>
+    /// 打开原神Blender插件文件夹
+    /// </summary>
+    [RelayCommand]
+    private async Task OpenGenshinBlenderPluginFolderAsync()
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(GenshinBlenderPluginPath) && Directory.Exists(GenshinBlenderPluginPath))
+            {
+                await Launcher.LaunchUriAsync(new Uri(GenshinBlenderPluginPath));
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Open Genshin Blender plugin folder");
+        }
+    }
+
+
+    /// <summary>
     /// 解绑原神Blender插件文件夹
     /// </summary>
     [RelayCommand]
@@ -155,6 +177,26 @@ public sealed partial class IntegrationSetting : PageBase
 
 
     /// <summary>
+    /// 打开绝区零Blender插件文件夹
+    /// </summary>
+    [RelayCommand]
+    private async Task OpenZZZBlenderPluginFolderAsync()
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(ZZZBlenderPluginPath) && Directory.Exists(ZZZBlenderPluginPath))
+            {
+                await Launcher.LaunchUriAsync(new Uri(ZZZBlenderPluginPath));
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Open ZZZ Blender plugin folder");
+        }
+    }
+
+
+    /// <summary>
     /// 解绑绝区零Blender插件文件夹
     /// </summary>
     [RelayCommand]
@@ -168,6 +210,18 @@ public sealed partial class IntegrationSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unbind ZZZ Blender plugin folder");
+        }
+    }
+
+
+    /// <summary>
+    /// 文本截断时自动缩小字体
+    /// </summary>
+    private void TextBlock_IsTextTrimmedChanged(TextBlock sender, IsTextTrimmedChangedEventArgs args)
+    {
+        if (sender.FontSize > 12)
+        {
+            sender.FontSize -= 1;
         }
     }
 
