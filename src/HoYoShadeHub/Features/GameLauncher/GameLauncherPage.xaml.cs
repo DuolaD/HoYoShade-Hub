@@ -179,8 +179,19 @@ public sealed partial class GameLauncherPage : PageBase
     public bool EnableGameLaunch
     {
         get => _enableGameLaunch;
-        set => SetProperty(ref _enableGameLaunch, value);
+        set
+        {
+            if (SetProperty(ref _enableGameLaunch, value))
+            {
+                OnPropertyChanged(nameof(ShouldEnableStartButton));
+            }
+        }
     }
+
+    /// <summary>
+    /// 启动按钮是否应该可用 - 只要勾选了任何一个启动选项就可用
+    /// </summary>
+    public bool ShouldEnableStartButton => EnableGameLaunch || LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
 
     private bool _useHoYoShade;
     public bool UseHoYoShade
@@ -246,6 +257,7 @@ public sealed partial class GameLauncherPage : PageBase
                 {
                     UpdateGameLaunchCheckboxState();
                 }
+                OnPropertyChanged(nameof(ShouldEnableStartButton));
             }
         }
     }
@@ -269,6 +281,7 @@ public sealed partial class GameLauncherPage : PageBase
                 {
                     UpdateGameLaunchCheckboxState();
                 }
+                OnPropertyChanged(nameof(ShouldEnableStartButton));
             }
         }
     }
@@ -284,6 +297,12 @@ public sealed partial class GameLauncherPage : PageBase
     {
         // Disable game launch checkbox if any Blender plugin is selected
         IsGameLaunchCheckboxEnabled = !LaunchGenshinBlenderPlugin && !LaunchZZZBlenderPlugin;
+        
+        // If no Blender plugin is selected and game launch is unchecked, re-enable it
+        if (IsGameLaunchCheckboxEnabled && !EnableGameLaunch)
+        {
+            EnableGameLaunch = true;
+        }
     }
 
     private bool _isGenshinBlenderPluginConfigured;
@@ -698,14 +717,7 @@ public sealed partial class GameLauncherPage : PageBase
                 return;
             }
 
-            // Check if game launch is enabled
-            if (!EnableGameLaunch)
-            {
-                _logger.LogWarning("Game launch is disabled");
-                InAppToast.MainWindow?.Warning("请勾选\"启动游戏\"选项");
-                return;
-            }
-
+            // If we reach here, we're launching the game (with or without shader)
             Process? process = null;
             
             // Determine which shade to use (if any)

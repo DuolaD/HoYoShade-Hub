@@ -523,7 +523,7 @@
             <local:StartGameButton x:Name="Button_StartGame"
                                    Grid.Column="2"
                                    HorizontalAlignment="Right"
-                                   EnableGameLaunch="{x:Bind EnableGameLaunch}"
+                                   EnableGameLaunch="{x:Bind ShouldEnableStartButton}"
                                    GameCommand="{x:Bind ClickStartGameButtonCommand}"
                                    GameState="{x:Bind GameState}"
                                    RunningGameInfo="{x:Bind RunningGameInfo}"
