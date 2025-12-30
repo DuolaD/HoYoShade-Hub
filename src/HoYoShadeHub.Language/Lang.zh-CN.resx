@@ -1047,7 +1047,7 @@
     <value>（最新版本）</value>
   </data>
   <data name="HoYoShadeDownloadView_LatestVersionTip" xml:space="preserve">
-    <value>除非你知道你自己正在做什么,否则,通常情况下,安装最新版本是最好的选择。</value>
+    <value>除非你知道你自己正在做什么，否则，通常情况下，安装最新版本是最好的选择。</value>
   </data>
   <data name="HoYoShadeDownloadView_ImportFromLocal" xml:space="preserve">
     <value>或者，从本地导入压缩包</value>
@@ -1303,5 +1303,14 @@
   </data>
   <data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
     <value>重置ReShade.ini</value>
+  </data>
+  <data name="SettingPage_Integration" xml:space="preserve">
+    <value>联动</value>
+  </data>
+  <data name="SettingPage_IntegrationDescription" xml:space="preserve">
+    <value>此页面用于配置与其他Mod和应用的联动设置。</value>
+  </data>
+  <data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
+    <value>联动功能即将推出，敬请期待...</value>
   </data>
 </root>

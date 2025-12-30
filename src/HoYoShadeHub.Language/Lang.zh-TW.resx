@@ -1304,4 +1304,13 @@
   <data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
     <value>重設ReShade.ini</value>
   </data>
+  <data name="SettingPage_Integration" xml:space="preserve">
+    <value>聯動</value>
+  </data>
+  <data name="SettingPage_IntegrationDescription" xml:space="preserve">
+    <value>此頁面用於設定與其他Mod和應用程式的聯動功能。</value>
+  </data>
+  <data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
+    <value>聯動功能即將推出，敬請期待...</value>
+  </data>
 </root>

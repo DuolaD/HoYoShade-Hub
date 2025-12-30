@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sf:PageBase x:Class="HoYoShadeHub.Features.Setting.IntegrationSetting"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:lang="using:HoYoShadeHub.Language"
+             xmlns:local="using:HoYoShadeHub.Features.Setting"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sf="using:HoYoShadeHub.Frameworks"
+             x:DefaultBindMode="OneWay"
+             mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Padding="0,0,24,0">
+
+            <!--  联动设置说明  -->
+            <TextBlock FontSize="20" Text="{x:Bind lang:Lang.SettingPage_Integration}" />
+            <TextBlock Margin="0,12,0,0"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind lang:Lang.SettingPage_IntegrationDescription}"
+                       TextWrapping="Wrap" />
+
+            <MenuFlyoutSeparator Margin="0,20,0,0" />
+
+            <!--  预留区域用于后续添加联动功能  -->
+            <TextBlock Margin="0,20,0,0"
+                       FontSize="16"
+                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                       Text="{x:Bind lang:Lang.SettingPage_IntegrationComingSoon}"
+                       TextWrapping="Wrap" />
+
+        </StackPanel>
+    </ScrollViewer>
+
+</sf:PageBase>

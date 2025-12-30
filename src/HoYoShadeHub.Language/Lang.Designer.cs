@@ -3569,5 +3569,32 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("WelcomeView_WelcomeToHoYoShadeHubDescription", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Integration 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_Integration {
+            get {
+                return ResourceManager.GetString("SettingPage_Integration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This page is for configuring integrations with other Mods and applications. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_IntegrationDescription {
+            get {
+                return ResourceManager.GetString("SettingPage_IntegrationDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Integration features coming soon... 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_IntegrationComingSoon {
+            get {
+                return ResourceManager.GetString("SettingPage_IntegrationComingSoon", resourceCulture);
+            }
+        }
     }
 }

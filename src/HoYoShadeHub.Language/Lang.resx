@@ -1304,4 +1304,13 @@ Do you want to continue with the reset operation?</value>
   <data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
     <value>Reset ReShade.ini</value>
   </data>
+  <data name="SettingPage_Integration" xml:space="preserve">
+    <value>Integration</value>
+  </data>
+  <data name="SettingPage_IntegrationDescription" xml:space="preserve">
+    <value>This page is for configuring integrations with other Mods and applications.</value>
+  </data>
+  <data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
+    <value>Integration features coming soon...</value>
+  </data>
 </root>

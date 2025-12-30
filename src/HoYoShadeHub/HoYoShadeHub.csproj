@@ -75,4 +75,10 @@
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Page Update="Features\Setting\IntegrationSetting.xaml">
+	    <BuildAction>Page</BuildAction>
+	  </Page>
+	</ItemGroup>
+
 </Project>
