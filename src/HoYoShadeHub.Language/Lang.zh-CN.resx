@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1333,5 +1333,17 @@
   </data>
   <data name="SettingPage_NotSet" xml:space="preserve">
     <value>未设置</value>
+  </data>
+  <data name="SettingPage_GenshinBlenderPluginValidationFailed" xml:space="preserve">
+    <value>原神插件验证失败</value>
+  </data>
+  <data name="SettingPage_GenshinBlenderPluginMustContainClientExe" xml:space="preserve">
+    <value>所选文件夹必须包含 client.exe 文件</value>
+  </data>
+  <data name="SettingPage_ZZZBlenderPluginValidationFailed" xml:space="preserve">
+    <value>绝区零插件验证失败</value>
+  </data>
+  <data name="SettingPage_ZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
+    <value>所选文件夹必须包含 loader.exe 文件</value>
   </data>
 </root>

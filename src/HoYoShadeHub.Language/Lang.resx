@@ -1334,4 +1334,16 @@ Do you want to continue with the reset operation?</value>
   <data name="SettingPage_NotSet" xml:space="preserve">
     <value>Not Set</value>
   </data>
+  <data name="SettingPage_GenshinBlenderPluginValidationFailed" xml:space="preserve">
+    <value>Genshin Impact Plugin Validation Failed</value>
+  </data>
+  <data name="SettingPage_GenshinBlenderPluginMustContainClientExe" xml:space="preserve">
+    <value>The selected folder must contain client.exe</value>
+  </data>
+  <data name="SettingPage_ZZZBlenderPluginValidationFailed" xml:space="preserve">
+    <value>Zenless Zone Zero Plugin Validation Failed</value>
+  </data>
+  <data name="SettingPage_ZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
+    <value>The selected folder must contain loader.exe</value>
+  </data>
 </root>

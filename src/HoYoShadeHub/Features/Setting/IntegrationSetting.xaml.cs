@@ -105,6 +105,17 @@ public sealed partial class IntegrationSetting : PageBase
             var folder = await FileDialogHelper.PickFolderAsync(this.XamlRoot);
             if (!string.IsNullOrWhiteSpace(folder) && Directory.Exists(folder))
             {
+                // 验证文件夹是否包含client.exe
+                string clientExePath = Path.Combine(folder, "client.exe");
+                if (!File.Exists(clientExePath))
+                {
+                    await ShowErrorDialogAsync(
+                        "原神插件验证失败",
+                        "所选文件夹必须包含 client.exe 文件"
+                    );
+                    return;
+                }
+
                 GenshinBlenderPluginPath = folder;
                 AppConfig.GenshinBlenderPluginPath = folder;
             }
@@ -165,6 +176,17 @@ public sealed partial class IntegrationSetting : PageBase
             var folder = await FileDialogHelper.PickFolderAsync(this.XamlRoot);
             if (!string.IsNullOrWhiteSpace(folder) && Directory.Exists(folder))
             {
+                // 验证文件夹是否包含loader.exe
+                string loaderExePath = Path.Combine(folder, "loader.exe");
+                if (!File.Exists(loaderExePath))
+                {
+                    await ShowErrorDialogAsync(
+                        "绝区零插件验证失败",
+                        "所选文件夹必须包含 loader.exe 文件"
+                    );
+                    return;
+                }
+
                 ZZZBlenderPluginPath = folder;
                 AppConfig.ZZZBlenderPluginPath = folder;
             }
@@ -210,6 +232,30 @@ public sealed partial class IntegrationSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unbind ZZZ Blender plugin folder");
+        }
+    }
+
+
+    /// <summary>
+    /// 显示错误对话框
+    /// </summary>
+    private async Task ShowErrorDialogAsync(string title, string message)
+    {
+        try
+        {
+            var dialog = new ContentDialog
+            {
+                Title = title,
+                Content = message,
+                CloseButtonText = Lang.Common_Confirm,
+                DefaultButton = ContentDialogButton.Close,
+                XamlRoot = this.XamlRoot,
+            };
+            await dialog.ShowAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Show error dialog");
         }
     }
 
