@@ -704,41 +704,73 @@ public sealed partial class GameLauncherPage : PageBase
     {
         try
         {
-            // Check if Blender plugin launch is requested
-            if (LaunchGenshinBlenderPlugin)
+            bool launchingBlenderPlugin = LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
+            bool useShader = UseHoYoShade || UseOpenHoYoShade;
+
+            // Case 1: Both Blender plugin and shader are selected
+            // Start shader injector first, then launch Blender plugin (which will start the game)
+            if (launchingBlenderPlugin && useShader)
             {
-                await LaunchGenshinBlenderPluginAsync();
-                return;
-            }
-            
-            if (LaunchZZZBlenderPlugin)
-            {
-                await LaunchZZZBlenderPluginAsync();
+                // Start shader injector (it will wait for game process)
+                if (UseHoYoShade)
+                {
+                    string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+                    await StartShaderInjectorOnlyAsync(hoYoShadePath, "HoYoShade");
+                }
+                else if (UseOpenHoYoShade)
+                {
+                    string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+                    await StartShaderInjectorOnlyAsync(openHoYoShadePath, "OpenHoYoShade");
+                }
+
+                // Launch Blender plugin (it will start the game itself)
+                if (LaunchGenshinBlenderPlugin)
+                {
+                    await LaunchGenshinBlenderPluginAsync();
+                }
+
+                if (LaunchZZZBlenderPlugin)
+                {
+                    await LaunchZZZBlenderPluginAsync();
+                }
+
+                _logger.LogInformation("Shader injector and Blender plugin launched");
                 return;
             }
 
-            // If we reach here, we're launching the game (with or without shader)
+            // Case 2: Only Blender plugin is selected (no shader)
+            if (launchingBlenderPlugin)
+            {
+                if (LaunchGenshinBlenderPlugin)
+                {
+                    await LaunchGenshinBlenderPluginAsync();
+                }
+
+                if (LaunchZZZBlenderPlugin)
+                {
+                    await LaunchZZZBlenderPluginAsync();
+                }
+                return;
+            }
+
+            // Case 3: Normal game launch with or without shader (no Blender plugin)
             Process? process = null;
-            
-            // Determine which shade to use (if any)
+
             if (UseHoYoShade)
             {
-                // Launch game with HoYoShade
                 string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
                 process = await LaunchGameWithShadeAsync(hoYoShadePath, "HoYoShade");
             }
             else if (UseOpenHoYoShade)
             {
-                // Launch game with OpenHoYoShade
                 string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
                 process = await LaunchGameWithShadeAsync(openHoYoShadePath, "OpenHoYoShade");
             }
             else
             {
-                // Launch game normally (no shade)
                 process = await _gameLauncherService.StartGameAsync(CurrentGameId);
             }
-            
+
             if (process is not null)
             {
                 GameState = GameState.GameIsRunning;
@@ -755,6 +787,52 @@ public sealed partial class GameLauncherPage : PageBase
             _logger.LogError(ex, "Start game");
         }
     }
+
+    // 在 LaunchGameWithShadeAsync 方法后面添加这个新方法
+    private async Task StartShaderInjectorOnlyAsync(string shadePath, string shadeName)
+    {
+        try
+        {
+            if (!Directory.Exists(shadePath))
+            {
+                _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
+                InAppToast.MainWindow?.Error($"{shadeName} 未安装，请先安装后再使用");
+                return;
+            }
+
+            string injectExePath = Path.Combine(shadePath, "inject.exe");
+            if (!File.Exists(injectExePath))
+            {
+                _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
+                InAppToast.MainWindow?.Error($"{shadeName} 中未找到 inject.exe");
+                return;
+            }
+
+            var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+
+            _logger.LogInformation("Starting {ShadeName} injector: {InjectPath} {GameExe}",
+                shadeName, injectExePath, gameExeName);
+
+            var injectStartInfo = new ProcessStartInfo
+            {
+                FileName = injectExePath,
+                Arguments = gameExeName,
+                UseShellExecute = false,
+                WorkingDirectory = shadePath,
+                CreateNoWindow = true
+            };
+
+            Process.Start(injectStartInfo);
+            _logger.LogInformation("{ShadeName} injector started, waiting for game process", shadeName);
+            InAppToast.MainWindow?.Success($"已启动 {shadeName} 注入器");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Start {ShadeName} injector", shadeName);
+            InAppToast.MainWindow?.Error($"启动 {shadeName} 注入器失败: {ex.Message}");
+        }
+    }
+
 
     private async Task LaunchGenshinBlenderPluginAsync()
     {
