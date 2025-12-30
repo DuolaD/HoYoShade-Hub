@@ -601,6 +601,7 @@
             <CheckBox x:Name="CheckBox_EnableGameLaunch"
                       Content="{x:Bind lang:Lang.GameLauncherPage_LaunchGame}"
                       IsChecked="{x:Bind EnableGameLaunch, Mode=TwoWay}"
+                      IsEnabled="{x:Bind IsGameLaunchCheckboxEnabled}"
                       Margin="0,4"
                       FontWeight="SemiBold" />
             
@@ -614,6 +615,20 @@
                       Content="{x:Bind lang:Lang.GameLauncherPage_LaunchOpenHoYoShade}"
                       IsChecked="{x:Bind UseOpenHoYoShade, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsOpenHoYoShadeInstalled}"
+                      Margin="0,4" />
+            
+            <CheckBox x:Name="CheckBox_LaunchGenshinBlenderPlugin"
+                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchGenshinBlenderPlugin}"
+                      IsChecked="{x:Bind LaunchGenshinBlenderPlugin, Mode=TwoWay}"
+                      IsEnabled="{x:Bind IsGenshinBlenderPluginConfigured}"
+                      Visibility="{x:Bind IsGenshinBlenderPluginVisible}"
+                      Margin="0,4" />
+            
+            <CheckBox x:Name="CheckBox_LaunchZZZBlenderPlugin"
+                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchZZZBlenderPlugin}"
+                      IsChecked="{x:Bind LaunchZZZBlenderPlugin, Mode=TwoWay}"
+                      IsEnabled="{x:Bind IsZZZBlenderPluginConfigured}"
+                      Visibility="{x:Bind IsZZZBlenderPluginVisible}"
                       Margin="0,4" />
         </StackPanel>
 

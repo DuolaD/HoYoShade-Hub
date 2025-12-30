@@ -1346,4 +1346,10 @@ Do you want to continue with the reset operation?</value>
   <data name="SettingPage_ZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
     <value>The selected folder must contain loader.exe</value>
   </data>
+  <data name="GameLauncherPage_LaunchGenshinBlenderPlugin" xml:space="preserve">
+    <value>Launch Genshin Impact Blender Plugin</value>
+  </data>
+  <data name="GameLauncherPage_LaunchZZZBlenderPlugin" xml:space="preserve">
+    <value>Launch ZZZ Blender Plugin</value>
+  </data>
 </root>

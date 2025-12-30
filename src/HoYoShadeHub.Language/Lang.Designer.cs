@@ -3695,5 +3695,23 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("SettingPage_ZZZBlenderPluginMustContainLoaderExe", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Launch Genshin Impact Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherPage_LaunchGenshinBlenderPlugin {
+            get {
+                return ResourceManager.GetString("GameLauncherPage_LaunchGenshinBlenderPlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Launch ZZZ Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherPage_LaunchZZZBlenderPlugin {
+            get {
+                return ResourceManager.GetString("GameLauncherPage_LaunchZZZBlenderPlugin", resourceCulture);
+            }
+        }
     }
 }

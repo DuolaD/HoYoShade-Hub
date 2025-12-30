@@ -108,6 +108,9 @@ public sealed partial class GameLauncherPage : PageBase
                 UseOpenHoYoShade = false;
             }
 
+            // Check Blender plugin configurations
+            CheckBlenderPluginConfigurations();
+
             _logger.LogInformation("HoYoShade installed: {HoYoShade}, OpenHoYoShade installed: {OpenHoYoShade}", 
                 IsHoYoShadeInstalled, IsOpenHoYoShadeInstalled);
         }
@@ -116,6 +119,53 @@ public sealed partial class GameLauncherPage : PageBase
             _logger.LogError(ex, "Check shade installation");
             IsHoYoShadeInstalled = false;
             IsOpenHoYoShadeInstalled = false;
+        }
+    }
+
+    private void CheckBlenderPluginConfigurations()
+    {
+        try
+        {
+            // Check Genshin Impact Blender Plugin
+            bool isGenshinGame = CurrentGameBiz.ToGame().Value == GameBiz.hk4e;
+            IsGenshinBlenderPluginVisible = isGenshinGame ? Visibility.Visible : Visibility.Collapsed;
+            
+            if (isGenshinGame)
+            {
+                string? genshinPluginPath = AppConfig.GenshinBlenderPluginPath;
+                IsGenshinBlenderPluginConfigured = !string.IsNullOrWhiteSpace(genshinPluginPath) && 
+                                                   Directory.Exists(genshinPluginPath) &&
+                                                   File.Exists(Path.Combine(genshinPluginPath, "client.exe"));
+                
+                if (!IsGenshinBlenderPluginConfigured && LaunchGenshinBlenderPlugin)
+                {
+                    LaunchGenshinBlenderPlugin = false;
+                }
+            }
+
+            // Check ZZZ Blender Plugin
+            bool isZZZGame = CurrentGameBiz.ToGame().Value == GameBiz.nap;
+            IsZZZBlenderPluginVisible = isZZZGame ? Visibility.Visible : Visibility.Collapsed;
+            
+            if (isZZZGame)
+            {
+                string? zzzPluginPath = AppConfig.ZZZBlenderPluginPath;
+                IsZZZBlenderPluginConfigured = !string.IsNullOrWhiteSpace(zzzPluginPath) && 
+                                               Directory.Exists(zzzPluginPath) &&
+                                               File.Exists(Path.Combine(zzzPluginPath, "loader.exe"));
+                
+                if (!IsZZZBlenderPluginConfigured && LaunchZZZBlenderPlugin)
+                {
+                    LaunchZZZBlenderPlugin = false;
+                }
+            }
+
+            _logger.LogInformation("Blender plugins - Genshin configured: {Genshin}, ZZZ configured: {ZZZ}", 
+                IsGenshinBlenderPluginConfigured, IsZZZBlenderPluginConfigured);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Check blender plugin configurations");
         }
     }
 
@@ -176,6 +226,93 @@ public sealed partial class GameLauncherPage : PageBase
         set => SetProperty(ref _isOpenHoYoShadeInstalled, value);
     }
 
+    // Blender plugin properties
+    private bool _launchGenshinBlenderPlugin;
+    public bool LaunchGenshinBlenderPlugin
+    {
+        get => _launchGenshinBlenderPlugin;
+        set
+        {
+            if (SetProperty(ref _launchGenshinBlenderPlugin, value))
+            {
+                if (value)
+                {
+                    // Disable game launch when Blender plugin is selected
+                    EnableGameLaunch = false;
+                    UpdateGameLaunchCheckboxState();
+                    _logger.LogInformation("LaunchGenshinBlenderPlugin enabled, EnableGameLaunch disabled");
+                }
+                else
+                {
+                    UpdateGameLaunchCheckboxState();
+                }
+            }
+        }
+    }
+
+    private bool _launchZZZBlenderPlugin;
+    public bool LaunchZZZBlenderPlugin
+    {
+        get => _launchZZZBlenderPlugin;
+        set
+        {
+            if (SetProperty(ref _launchZZZBlenderPlugin, value))
+            {
+                if (value)
+                {
+                    // Disable game launch when Blender plugin is selected
+                    EnableGameLaunch = false;
+                    UpdateGameLaunchCheckboxState();
+                    _logger.LogInformation("LaunchZZZBlenderPlugin enabled, EnableGameLaunch disabled");
+                }
+                else
+                {
+                    UpdateGameLaunchCheckboxState();
+                }
+            }
+        }
+    }
+
+    private bool _isGameLaunchCheckboxEnabled = true;
+    public bool IsGameLaunchCheckboxEnabled
+    {
+        get => _isGameLaunchCheckboxEnabled;
+        set => SetProperty(ref _isGameLaunchCheckboxEnabled, value);
+    }
+
+    private void UpdateGameLaunchCheckboxState()
+    {
+        // Disable game launch checkbox if any Blender plugin is selected
+        IsGameLaunchCheckboxEnabled = !LaunchGenshinBlenderPlugin && !LaunchZZZBlenderPlugin;
+    }
+
+    private bool _isGenshinBlenderPluginConfigured;
+    public bool IsGenshinBlenderPluginConfigured
+    {
+        get => _isGenshinBlenderPluginConfigured;
+        set => SetProperty(ref _isGenshinBlenderPluginConfigured, value);
+    }
+
+    private bool _isZZZBlenderPluginConfigured;
+    public bool IsZZZBlenderPluginConfigured
+    {
+        get => _isZZZBlenderPluginConfigured;
+        set => SetProperty(ref _isZZZBlenderPluginConfigured, value);
+    }
+
+    private Visibility _isGenshinBlenderPluginVisible = Visibility.Collapsed;
+    public Visibility IsGenshinBlenderPluginVisible
+    {
+        get => _isGenshinBlenderPluginVisible;
+        set => SetProperty(ref _isGenshinBlenderPluginVisible, value);
+    }
+
+    private Visibility _isZZZBlenderPluginVisible = Visibility.Collapsed;
+    public Visibility IsZZZBlenderPluginVisible
+    {
+        get => _isZZZBlenderPluginVisible;
+        set => SetProperty(ref _isZZZBlenderPluginVisible, value);
+    }
 
     private void ComboBox_LaunchMode_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
     {
@@ -548,6 +685,19 @@ public sealed partial class GameLauncherPage : PageBase
     {
         try
         {
+            // Check if Blender plugin launch is requested
+            if (LaunchGenshinBlenderPlugin)
+            {
+                await LaunchGenshinBlenderPluginAsync();
+                return;
+            }
+            
+            if (LaunchZZZBlenderPlugin)
+            {
+                await LaunchZZZBlenderPluginAsync();
+                return;
+            }
+
             // Check if game launch is enabled
             if (!EnableGameLaunch)
             {
@@ -594,6 +744,85 @@ public sealed partial class GameLauncherPage : PageBase
         }
     }
 
+    private async Task LaunchGenshinBlenderPluginAsync()
+    {
+        try
+        {
+            string? pluginPath = AppConfig.GenshinBlenderPluginPath;
+            if (string.IsNullOrWhiteSpace(pluginPath) || !Directory.Exists(pluginPath))
+            {
+                _logger.LogWarning("Genshin Blender plugin path not configured");
+                InAppToast.MainWindow?.Error("原神Blender/留影机插件路径未配置，请在设置中配置");
+                return;
+            }
+
+            string clientExePath = Path.Combine(pluginPath, "client.exe");
+            if (!File.Exists(clientExePath))
+            {
+                _logger.LogWarning("client.exe not found in {Path}", pluginPath);
+                InAppToast.MainWindow?.Error("未找到 client.exe，请检查插件路径");
+                return;
+            }
+
+            _logger.LogInformation("Launching Genshin Blender plugin: {Path}", clientExePath);
+            
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = clientExePath,
+                WorkingDirectory = pluginPath,
+                UseShellExecute = true
+            };
+
+            Process.Start(startInfo);
+            InAppToast.MainWindow?.Success("已启动原神Blender/留影机插件");
+            _logger.LogInformation("Genshin Blender plugin launched successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Launch Genshin Blender plugin");
+            InAppToast.MainWindow?.Error($"启动原神Blender/留影机插件失败: {ex.Message}");
+        }
+    }
+
+    private async Task LaunchZZZBlenderPluginAsync()
+    {
+        try
+        {
+            string? pluginPath = AppConfig.ZZZBlenderPluginPath;
+            if (string.IsNullOrWhiteSpace(pluginPath) || !Directory.Exists(pluginPath))
+            {
+                _logger.LogWarning("ZZZ Blender plugin path not configured");
+                InAppToast.MainWindow?.Error("绝区零Blender/留影机插件路径未配置，请在设置中配置");
+                return;
+            }
+
+            string loaderExePath = Path.Combine(pluginPath, "loader.exe");
+            if (!File.Exists(loaderExePath))
+            {
+                _logger.LogWarning("loader.exe not found in {Path}", pluginPath);
+                InAppToast.MainWindow?.Error("未找到 loader.exe，请检查插件路径");
+                return;
+            }
+
+            _logger.LogInformation("Launching ZZZ Blender plugin: {Path}", loaderExePath);
+            
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = loaderExePath,
+                WorkingDirectory = pluginPath,
+                UseShellExecute = true
+            };
+
+            Process.Start(startInfo);
+            InAppToast.MainWindow?.Success("已启动绝区零Blender/留影机插件");
+            _logger.LogInformation("ZZZ Blender plugin launched successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Launch ZZZ Blender plugin");
+            InAppToast.MainWindow?.Error($"启动绝区零Blender/留影机插件失败: {ex.Message}");
+        }
+    }
 
     private async Task<Process?> LaunchGameWithShadeAsync(string shadePath, string shadeName)
     {

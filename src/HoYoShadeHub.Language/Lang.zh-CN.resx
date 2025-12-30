@@ -1346,4 +1346,10 @@
   <data name="SettingPage_ZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
     <value>所选文件夹必须包含 loader.exe 文件</value>
   </data>
+  <data name="GameLauncherPage_LaunchGenshinBlenderPlugin" xml:space="preserve">
+    <value>启动原神Blender/留影机插件</value>
+  </data>
+  <data name="GameLauncherPage_LaunchZZZBlenderPlugin" xml:space="preserve">
+    <value>启动绝区零Blender/留影机插件</value>
+  </data>
 </root>
