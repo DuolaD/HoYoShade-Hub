@@ -1400,4 +1400,10 @@ Do you want to continue with the reset operation?</value>
   <data name="GameName_GenshinImpact" xml:space="preserve">
     <value>Genshin Impact</value>
   </data>
+  <data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunning" xml:space="preserve">
+    <value>Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin again.</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
+    <value>Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin or HoYoShade/OpenHoYoShade injector.</value>
+  </data>
 </root>

@@ -700,6 +700,24 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin again. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_BlenderPluginInjectionProcessAlreadyRunning {
+            get {
+                return ResourceManager.GetString("GameLauncher_BlenderPluginInjectionProcessAlreadyRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin or HoYoShade/OpenHoYoShade injector. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader {
+            get {
+                return ResourceManager.GetString("GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 {0} Blender Plugin path not configured. Please configure it in settings 的本地化字符串。
         /// </summary>
         public static string GameLauncher_BlenderPluginNotConfigured {
@@ -2437,7 +2455,7 @@ namespace HoYoShadeHub.Language {
         ///· The Releases page explicitly states that you must/should reset the ReShade.ini configuration file to enable new features/fix bugs.
         ///· HoYoShade developers/contributors explicitly ask you to perform this operation.
         ///
-        ///Apart fr [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///A [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         public static string ResetReShadeIniDialog_WarningMessage1 {
             get {
@@ -2497,7 +2515,7 @@ namespace HoYoShadeHub.Language {
         ///However, for OpenHoYoShade, this step is optional because it is intended for development purposes. If you installed OpenHoYoShade, we recommend skipping this step.
         ///The list of available shaders and addons is synchronized with the official ReShade installer and controlled by ReShade.
         ///
-        ///Due to ReShade version updates, previously available shaders/addons may not appear in this list and cannot be downloaded or installed.  [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///Due to ReShade version updates, previously available shaders/addons may not appear in this list and cannot be downloaded or install [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         public static string ReShadeDownloadView_Description {
             get {

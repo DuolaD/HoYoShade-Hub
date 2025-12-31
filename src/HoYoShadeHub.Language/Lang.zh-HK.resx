@@ -1400,4 +1400,10 @@
   <data name="GameName_GenshinImpact" xml:space="preserve">
     <value>原神</value>
   </data>
+  <data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunning" xml:space="preserve">
+    <value>Blender/留影機插件注入進程 ({0}) 已經運行緊，唔可以再次啟動 Blender/留影機插件。</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
+    <value>Blender/留影機插件注入進程 ({0}) 已經運行緊，唔可以啟動 Blender/留影機插件或者 HoYoShade/OpenHoYoShade 注入器。</value>
+  </data>
 </root>

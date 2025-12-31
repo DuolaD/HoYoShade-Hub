@@ -761,13 +761,13 @@ public sealed partial class GameLauncherPage : PageBase
                 {
                     // Both Blender plugin and shader selected - block both
                     _logger.LogWarning("Blender plugin injection process ({ProcessName}) is already running. Blocking launch of both Blender plugin and HoYoShade/OpenHoYoShade.", runningInjectionProcess);
-                    InAppToast.MainWindow?.Warning(null, $"Blender/Camera plugin injection process ({runningInjectionProcess}) is already running. Cannot launch Blender/Camera plugin or HoYoShade/OpenHoYoShade injector.", 5000);
+                    InAppToast.MainWindow?.Warning(null, string.Format(Lang.GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader, runningInjectionProcess), 5000);
                 }
                 else
                 {
                     // Only Blender plugin selected - block it
                     _logger.LogWarning("Blender plugin injection process ({ProcessName}) is already running. Blocking launch of Blender plugin.", runningInjectionProcess);
-                    InAppToast.MainWindow?.Warning(null, $"Blender/Camera plugin injection process ({runningInjectionProcess}) is already running. Cannot launch Blender/Camera plugin again.", 5000);
+                    InAppToast.MainWindow?.Warning(null, string.Format(Lang.GameLauncher_BlenderPluginInjectionProcessAlreadyRunning, runningInjectionProcess), 5000);
                 }
                 return;
             }
