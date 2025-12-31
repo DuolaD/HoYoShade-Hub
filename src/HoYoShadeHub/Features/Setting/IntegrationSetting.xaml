@@ -118,6 +118,51 @@
                 </StackPanel>
             </StackPanel>
 
+            <!--  Starward启动器  -->
+            <TextBlock FontSize="20"
+                       FontWeight="Bold"
+                       Margin="0,20,0,0"
+                       Text="Starward启动器" />
+
+            <StackPanel Spacing="12">
+
+                <!--  协议状态显示  -->
+                <StackPanel Spacing="8">
+
+                    <TextBlock>
+                        <Run Text="Starward启动器联动：" 
+                             Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <Run Text="{x:Bind ProtocolStatusText, Mode=OneWay}" 
+                             Foreground="{x:Bind ProtocolStatusColor, Mode=OneWay}" />
+                    </TextBlock>
+                </StackPanel>
+
+                <!--  使用Starward启动器开关  -->
+                <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                    <ToggleSwitch Margin="0,8,0,0"
+                                      IsOn="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind IsStarwardProtocolAvailable, Mode=OneWay}" />
+
+                    <StackPanel Grid.Column="1" 
+                                VerticalAlignment="Top"
+                                Spacing="2"
+                                Margin="0,8,0,0">
+                        <TextBlock Text="使用Starward启动器启动公开客户端游戏"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Text="启用后，启动公开客户端游戏时将使用Starward启动器进行启动。你需要确保对应的客户端已在Starward中定位/安装。"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               TextWrapping="Wrap"
+                               FontSize="12" />
+                </StackPanel>
+                </Grid>
+            </StackPanel>
+
         </StackPanel>
     </ScrollViewer>
 

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Win32;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
@@ -27,7 +28,127 @@ public sealed partial class IntegrationSetting : PageBase
     protected override void OnLoaded()
     {
         InitializeBlenderPluginPaths();
+        InitializeStarwardLauncherSettings();
     }
+
+
+    #region Starward Launcher
+
+
+    /// <summary>
+    /// Starward启动器URL协议是否可用
+    /// </summary>
+    public bool IsStarwardProtocolAvailable
+    {
+        get => field;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                UpdateProtocolStatus();
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// 协议状态文本
+    /// </summary>
+    public string ProtocolStatusText
+    {
+        get => field;
+        set => SetProperty(ref field, value);
+    }
+
+
+    /// <summary>
+    /// 协议状态颜色（使用Brush）
+    /// </summary>
+    public Microsoft.UI.Xaml.Media.Brush ProtocolStatusColor
+    {
+        get => field;
+        set => SetProperty(ref field, value);
+    }
+
+
+    /// <summary>
+    /// 使用Starward启动器启动公开客户端游戏
+    /// </summary>
+    public bool UseStarwardLauncher
+    {
+        get => field;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                AppConfig.UseStarwardLauncher = value;
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// 更新协议状态显示
+    /// </summary>
+    private void UpdateProtocolStatus()
+    {
+        if (IsStarwardProtocolAvailable)
+        {
+            ProtocolStatusText = "可用";
+            ProtocolStatusColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Green);
+        }
+        else
+        {
+            ProtocolStatusText = "不可用";
+            ProtocolStatusColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Red);
+        }
+    }
+
+
+    /// <summary>
+    /// 初始化Starward启动器设置
+    /// </summary>
+    private void InitializeStarwardLauncherSettings()
+    {
+        try
+        {
+            IsStarwardProtocolAvailable = CheckStarwardProtocolAvailable();
+            UseStarwardLauncher = AppConfig.UseStarwardLauncher && IsStarwardProtocolAvailable;
+            UpdateProtocolStatus();
+            
+            _logger.LogInformation("Starward protocol available: {Available}, UseStarwardLauncher: {Use}", 
+                IsStarwardProtocolAvailable, UseStarwardLauncher);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Initialize Starward launcher settings");
+        }
+    }
+
+
+    /// <summary>
+    /// 检查starward://协议是否在系统中注册
+    /// </summary>
+    private static bool CheckStarwardProtocolAvailable()
+    {
+        try
+        {
+            using var key = Registry.ClassesRoot.OpenSubKey("starward");
+            if (key != null)
+            {
+                var urlProtocol = key.GetValue("URL Protocol");
+                return urlProtocol != null;
+            }
+        }
+        catch
+        {
+            // Ignore registry access errors
+        }
+        return false;
+    }
+
+
+    #endregion
 
 
     #region Blender Plugin

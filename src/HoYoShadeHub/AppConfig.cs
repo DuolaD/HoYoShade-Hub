@@ -227,8 +227,6 @@ public static class AppConfig
 
 
 
-
-
     #region Service Provider
 
 
@@ -723,6 +721,16 @@ public static class AppConfig
     public static string? ZZZBlenderPluginPath
     {
         get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+
+    /// <summary>
+    /// 使用Starward启动器启动公开客户端游戏
+    /// </summary>
+    public static bool UseStarwardLauncher
+    {
+        get => GetValue<bool>();
         set => SetValue(value);
     }
 
