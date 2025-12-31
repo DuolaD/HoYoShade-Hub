@@ -711,6 +711,39 @@ public sealed partial class GameLauncherPage : PageBase
 
 
 
+    /// <summary>
+    /// 检查Blender插件注入进程是否正在运行
+    /// </summary>
+    /// <returns>如果检测到注入进程正在运行，返回进程名；否则返回null</returns>
+    private string? CheckBlenderPluginInjectionProcessRunning()
+    {
+        try
+        {
+            // Check for Genshin Blender plugin (client.exe)
+            var clientProcesses = Process.GetProcessesByName("client");
+            if (clientProcesses.Length > 0)
+            {
+                _logger.LogWarning("Detected running Genshin Blender plugin injection process (client.exe)");
+                return "client.exe";
+            }
+
+            // Check for ZZZ Blender plugin (loader.exe)
+            var loaderProcesses = Process.GetProcessesByName("loader");
+            if (loaderProcesses.Length > 0)
+            {
+                _logger.LogWarning("Detected running ZZZ Blender plugin injection process (loader.exe)");
+                return "loader.exe";
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error checking for Blender plugin injection processes");
+        }
+        return null;
+    }
+
+
+
     [RelayCommand]
     private async Task StartGameAsync()
     {
@@ -718,6 +751,26 @@ public sealed partial class GameLauncherPage : PageBase
         {
             bool launchingBlenderPlugin = LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
             bool useShader = UseHoYoShade || UseOpenHoYoShade;
+
+            // Check if Blender plugin injection process is already running
+            string? runningInjectionProcess = CheckBlenderPluginInjectionProcessRunning();
+            if (runningInjectionProcess != null && launchingBlenderPlugin)
+            {
+                // Blender plugin injection process is already running
+                if (useShader)
+                {
+                    // Both Blender plugin and shader selected - block both
+                    _logger.LogWarning("Blender plugin injection process ({ProcessName}) is already running. Blocking launch of both Blender plugin and HoYoShade/OpenHoYoShade.", runningInjectionProcess);
+                    InAppToast.MainWindow?.Warning(null, $"Blender/Camera plugin injection process ({runningInjectionProcess}) is already running. Cannot launch Blender/Camera plugin or HoYoShade/OpenHoYoShade injector.", 5000);
+                }
+                else
+                {
+                    // Only Blender plugin selected - block it
+                    _logger.LogWarning("Blender plugin injection process ({ProcessName}) is already running. Blocking launch of Blender plugin.", runningInjectionProcess);
+                    InAppToast.MainWindow?.Warning(null, $"Blender/Camera plugin injection process ({runningInjectionProcess}) is already running. Cannot launch Blender/Camera plugin again.", 5000);
+                }
+                return;
+            }
 
             // Case 1: Both Blender plugin and shader are selected
             if (launchingBlenderPlugin && useShader)
