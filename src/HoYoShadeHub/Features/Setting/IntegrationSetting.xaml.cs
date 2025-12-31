@@ -94,12 +94,12 @@ public sealed partial class IntegrationSetting : PageBase
     {
         if (IsStarwardProtocolAvailable)
         {
-            ProtocolStatusText = "可用";
+            ProtocolStatusText = Lang.SettingPage_ProtocolStatusAvailable;
             ProtocolStatusColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Green);
         }
         else
         {
-            ProtocolStatusText = "不可用";
+            ProtocolStatusText = Lang.SettingPage_ProtocolStatusUnavailable;
             ProtocolStatusColor = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Red);
         }
     }

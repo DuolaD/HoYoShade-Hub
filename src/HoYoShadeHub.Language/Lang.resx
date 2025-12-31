@@ -1406,4 +1406,28 @@ Do you want to continue with the reset operation?</value>
   <data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
     <value>Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin or HoYoShade/OpenHoYoShade injector.</value>
   </data>
+  <data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
+    <value>This plugin is only available in Mainland China/Hong Kong/Macau/Taiwan/Singapore. If you are not in the above countries and regions, the plugin developers/contributors and HoYoShade Hub developers/contributors reserve the right to refuse support.</value>
+  </data>
+  <data name="SettingPage_StarwardLauncher" xml:space="preserve">
+    <value>Starward Launcher</value>
+  </data>
+  <data name="SettingPage_StarwardLauncherIntegration" xml:space="preserve">
+    <value>Starward Launcher Integration:</value>
+  </data>
+  <data name="SettingPage_StarwardProtocolNotAvailableTip" xml:space="preserve">
+    <value>Please enable the "Register URL Protocol" switch in Starward Launcher's Settings - Advanced interface to allow HoYoShade Hub to connect.</value>
+  </data>
+  <data name="SettingPage_UseStarwardLauncherToStartGame" xml:space="preserve">
+    <value>Use Starward Launcher to start public client games</value>
+  </data>
+  <data name="SettingPage_UseStarwardLauncherDescription" xml:space="preserve">
+    <value>When enabled, public client games will be launched using Starward Launcher. You need to ensure that the corresponding client has been located/installed in Starward.</value>
+  </data>
+	<data name="SettingPage_ProtocolStatusAvailable" xml:space="preserve">
+    <value>Available</value>
+  </data>
+	<data name="SettingPage_ProtocolStatusUnavailable" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
 </root>

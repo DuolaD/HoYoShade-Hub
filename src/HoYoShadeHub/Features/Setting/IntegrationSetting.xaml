@@ -18,6 +18,11 @@
                        FontWeight="Bold"
                        Text="{x:Bind lang:Lang.SettingPage_BlenderPlugin}" />
 
+            <TextBlock Text="{x:Bind lang:Lang.SettingPage_BlenderPluginRegionRestriction}"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                TextWrapping="Wrap"
+                FontSize="12" />
+            
             <!--  原神Blender/留影机插件  -->
             <StackPanel Spacing="12">
                 <TextBlock FontSize="16"
@@ -122,7 +127,7 @@
             <TextBlock FontSize="20"
                        FontWeight="Bold"
                        Margin="0,20,0,0"
-                       Text="Starward启动器" />
+                       Text="{x:Bind lang:Lang.SettingPage_StarwardLauncher}" />
 
             <StackPanel Spacing="12">
 
@@ -130,7 +135,7 @@
                 <StackPanel Spacing="8">
 
                     <TextBlock>
-                        <Run Text="Starward启动器联动：" 
+                        <Run Text="{x:Bind lang:Lang.SettingPage_StarwardLauncherIntegration}" 
                              Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                         <Run Text="{x:Bind ProtocolStatusText, Mode=OneWay}" 
                              Foreground="{x:Bind ProtocolStatusColor, Mode=OneWay}" />
@@ -140,9 +145,8 @@
                     <TextBlock Visibility="{x:Bind IsStarwardProtocolAvailable, Converter={StaticResource BoolToVisibilityReversedConverter}, Mode=OneWay}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                TextWrapping="Wrap"
-                               FontSize="12">
-                        <Run Text="请在 Starward 启动器的设置 - 高级界面中启用「注册 URL 协议」开关，以此让 HoYoShade Hub 进行链接。" />
-                    </TextBlock>
+                               FontSize="12"
+                               Text="{x:Bind lang:Lang.SettingPage_StarwardProtocolNotAvailableTip}" />
                 </StackPanel>
 
                 <!--  使用Starward启动器开关  -->
@@ -160,10 +164,10 @@
                                 VerticalAlignment="Top"
                                 Spacing="2"
                                 Margin="0,8,0,0">
-                        <TextBlock Text="使用Starward启动器启动公开客户端游戏"
+                        <TextBlock Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherToStartGame}"
                                    FontWeight="SemiBold"
                                    TextWrapping="Wrap" />
-                        <TextBlock Text="启用后，启动公开客户端游戏时将使用Starward启动器进行启动。你需要确保对应的客户端已在Starward中定位/安装。"
+                        <TextBlock Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherDescription}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                TextWrapping="Wrap"
                                FontSize="12" />

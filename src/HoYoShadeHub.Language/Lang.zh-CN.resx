@@ -1404,6 +1404,30 @@
     <value>Blender/留影机插件注入进程 ({0}) 已经在运行中，无法再次启动 Blender/留影机插件。</value>
   </data>
   <data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
-    <value>Blender/留影机插件注入进程 ({0}) 已经在运行中，无法启动 Blender/留影机插件或 HoYoShade/OpenHoYoShade 注入器。</value>
+    <value>Blender/留影机插件注入进程 ({0}) 已在运行中，无法启动 Blender/留影机插件或 HoYoShade/OpenHoYoShade 注入器。</value>
+  </data>
+  <data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
+    <value>该插件仅在中国大陆/香港/澳门/台湾/新加坡等国家及地区可用。如果你并不位于上述国家及地区，该插件开发者/贡献者及 HoYoShade Hub 的开发者/贡献者有权拒绝提供支持。</value>
+  </data>
+  <data name="SettingPage_StarwardLauncher" xml:space="preserve">
+    <value>Starward启动器</value>
+  </data>
+  <data name="SettingPage_StarwardLauncherIntegration" xml:space="preserve">
+    <value>Starward启动器联动：</value>
+  </data>
+  <data name="SettingPage_StarwardProtocolNotAvailableTip" xml:space="preserve">
+    <value>请在 Starward 启动器的设置 - 高级界面中启用「注册 URL 协议」开关，以此让 HoYoShade Hub 进行链接。</value>
+  </data>
+  <data name="SettingPage_UseStarwardLauncherToStartGame" xml:space="preserve">
+    <value>使用Starward启动器启动公开客户端游戏</value>
+  </data>
+  <data name="SettingPage_UseStarwardLauncherDescription" xml:space="preserve">
+    <value>启用后，启动公开客户端游戏时将使用Starward启动器进行启动。你需要确保对应的客户端已在Starward中定位/安装。</value>
+  </data>
+	<data name="SettingPage_ProtocolStatusAvailable" xml:space="preserve">
+    <value>可用</value>
+  </data>
+	<data name="SettingPage_ProtocolStatusUnavailable" xml:space="preserve">
+    <value>不可用</value>
   </data>
 </root>

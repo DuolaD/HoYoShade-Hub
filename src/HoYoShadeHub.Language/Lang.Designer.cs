@@ -2966,6 +2966,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 This plugin is only available in Mainland China/Hong Kong/Macau/Taiwan/Singapore. If you are not in the above countries and regions, the plugin developers/contributors and HoYoShade Hub developers/contributors reserve the right to refuse support. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_BlenderPluginRegionRestriction {
+            get {
+                return ResourceManager.GetString("SettingPage_BlenderPluginRegionRestriction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Cannot Connect RPC Service 的本地化字符串。
         /// </summary>
         public static string SettingPage_CannotConnectRPCService {
@@ -3227,6 +3236,24 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Available 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_ProtocolStatusAvailable {
+            get {
+                return ResourceManager.GetString("SettingPage_ProtocolStatusAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Unavailable 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_ProtocolStatusUnavailable {
+            get {
+                return ResourceManager.GetString("SettingPage_ProtocolStatusUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Register URL Protocol 的本地化字符串。
         /// </summary>
         public static string SettingPage_RegisterURLProtocol {
@@ -3326,6 +3353,33 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Starward Launcher 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_StarwardLauncher {
+            get {
+                return ResourceManager.GetString("SettingPage_StarwardLauncher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Starward Launcher Integration: 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_StarwardLauncherIntegration {
+            get {
+                return ResourceManager.GetString("SettingPage_StarwardLauncherIntegration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Please enable the &quot;Register URL Protocol&quot; switch in Starward Launcher&apos;s Settings - Advanced interface to allow HoYoShade Hub to connect. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_StarwardProtocolNotAvailableTip {
+            get {
+                return ResourceManager.GetString("SettingPage_StarwardProtocolNotAvailableTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Stop Service 的本地化字符串。
         /// </summary>
         public static string SettingPage_StopService {
@@ -3385,6 +3439,24 @@ namespace HoYoShadeHub.Language {
         public static string SettingPage_URLProtocolExperimental {
             get {
                 return ResourceManager.GetString("SettingPage_URLProtocolExperimental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 When enabled, public client games will be launched using Starward Launcher. You need to ensure that the corresponding client has been located/installed in Starward. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_UseStarwardLauncherDescription {
+            get {
+                return ResourceManager.GetString("SettingPage_UseStarwardLauncherDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use Starward Launcher to start public client games 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_UseStarwardLauncherToStartGame {
+            get {
+                return ResourceManager.GetString("SettingPage_UseStarwardLauncherToStartGame", resourceCulture);
             }
         }
         
