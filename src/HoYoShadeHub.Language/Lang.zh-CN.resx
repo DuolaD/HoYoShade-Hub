@@ -1421,6 +1421,9 @@
   <data name="SettingPage_UseStarwardLauncherToStartGame" xml:space="preserve">
     <value>使用Starward启动器启动公开客户端游戏</value>
   </data>
+  <data name="GameLauncherPage_LaunchWithStarward" xml:space="preserve">
+    <value>使用Starward启动器启动游戏</value>
+  </data>
   <data name="SettingPage_UseStarwardLauncherDescription" xml:space="preserve">
     <value>启用后，启动公开客户端游戏时将使用Starward启动器进行启动。你需要确保对应的客户端已在Starward中定位/安装。</value>
   </data>

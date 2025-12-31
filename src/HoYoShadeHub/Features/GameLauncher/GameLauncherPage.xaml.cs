@@ -9,6 +9,7 @@ using HoYoShadeHub.Core.HoYoPlay;
 using HoYoShadeHub.Features.Background;
 using HoYoShadeHub.Features.HoYoPlay;
 using HoYoShadeHub.Features.Overlay;
+using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Features.ViewHost;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
@@ -39,7 +40,6 @@ public sealed partial class GameLauncherPage : PageBase
     private readonly BackgroundService _backgroundService = AppConfig.GetService<BackgroundService>();
 
     private readonly HoYoPlayService _hoYoPlayService = AppConfig.GetService<HoYoPlayService>();
-
 
     private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _dispatchTimer;
 
@@ -76,6 +76,7 @@ public sealed partial class GameLauncherPage : PageBase
         WeakReferenceMessenger.Default.Register<MainWindowStateChangedMessage>(this, OnMainWindowStateChanged);
         WeakReferenceMessenger.Default.Register<RemovableStorageDeviceChangedMessage>(this, OnRemovableStorageDeviceChanged);
         WeakReferenceMessenger.Default.Register<BackgroundChangedMessage>(this, OnBackgroundChanged);
+        WeakReferenceMessenger.Default.Register<UseStarwardLauncherChangedMessage>(this, OnUseStarwardLauncherChanged);
     }
 
 
@@ -123,6 +124,9 @@ public sealed partial class GameLauncherPage : PageBase
             // Check Blender plugin configurations
             CheckBlenderPluginConfigurations();
 
+            // Check Starward protocol availability
+            CheckStarwardProtocolAvailability();
+
             _logger.LogInformation("HoYoShade installed: {HoYoShade}, OpenHoYoShade installed: {OpenHoYoShade}",
                 IsHoYoShadeInstalled, IsOpenHoYoShadeInstalled);
         }
@@ -131,6 +135,45 @@ public sealed partial class GameLauncherPage : PageBase
             _logger.LogError(ex, "Check shade installation");
             IsHoYoShadeInstalled = false;
             IsOpenHoYoShadeInstalled = false;
+        }
+    }
+
+    private void CheckStarwardProtocolAvailability()
+    {
+        try
+        {
+            using var key = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey("starward");
+            if (key != null)
+            {
+                var urlProtocol = key.GetValue("URL Protocol");
+                IsStarwardProtocolAvailable = urlProtocol != null;
+            }
+            else
+            {
+                IsStarwardProtocolAvailable = false;
+            }
+
+            // 读取设置页面的"使用Starward启动器启动公开客户端游戏"开关状态
+            bool useStarwardLauncherSetting = AppConfig.UseStarwardLauncher;
+
+            // If protocol not available OR setting is disabled, and UseStarwardLauncher is enabled, disable it
+            if ((!IsStarwardProtocolAvailable || !useStarwardLauncherSetting) && UseStarwardLauncher)
+            {
+                UseStarwardLauncher = false;
+            }
+
+            // 通知 IsStarwardLauncherCheckboxEnabled 属性更新
+            OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
+
+            _logger.LogInformation("Starward protocol available: {Available}, Setting enabled: {Setting}", 
+                IsStarwardProtocolAvailable, useStarwardLauncherSetting);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Check Starward protocol availability");
+            IsStarwardProtocolAvailable = false;
+            // 即使发生异常也要通知属性更新
+            OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
         }
     }
 
@@ -186,6 +229,9 @@ public sealed partial class GameLauncherPage : PageBase
     [NotifyPropertyChangedFor(nameof(InstalledLocateGameEnabled))]
     public partial GameState GameState { get; set; }
 
+    // 用于记住用户在启用Blender插件前的启动选项
+    private bool _previousEnableGameLaunch = true;
+    private bool _previousUseStarwardLauncher = false;
 
     private bool _enableGameLaunch = true;
     public bool EnableGameLaunch
@@ -195,6 +241,15 @@ public sealed partial class GameLauncherPage : PageBase
         {
             if (SetProperty(ref _enableGameLaunch, value))
             {
+                if (value)
+                {
+                    // 取消勾选 UseStarwardLauncher
+                    if (_useStarwardLauncher)
+                    {
+                        _useStarwardLauncher = false;
+                        OnPropertyChanged(nameof(UseStarwardLauncher));
+                    }
+                }
                 OnPropertyChanged(nameof(ShouldEnableStartButton));
             }
         }
@@ -203,7 +258,7 @@ public sealed partial class GameLauncherPage : PageBase
     /// <summary>
     /// 启动按钮是否应该可用 - 只要勾选了任何一个启动选项就可用
     /// </summary>
-    public bool ShouldEnableStartButton => EnableGameLaunch || LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
+    public bool ShouldEnableStartButton => EnableGameLaunch || UseStarwardLauncher || LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
 
     private bool _useHoYoShade;
     public bool UseHoYoShade
@@ -260,14 +315,36 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 if (value)
                 {
-                    // Disable game launch when Blender plugin is selected
-                    EnableGameLaunch = false;
+                    // 保存当前的启动选项
+                    _previousEnableGameLaunch = _enableGameLaunch;
+                    _previousUseStarwardLauncher = _useStarwardLauncher;
+                    
+                    // 取消并禁用两个启动选项
+                    _enableGameLaunch = false;
+                    _useStarwardLauncher = false;
+                    OnPropertyChanged(nameof(EnableGameLaunch));
+                    OnPropertyChanged(nameof(UseStarwardLauncher));
+                    
                     UpdateGameLaunchCheckboxState();
-                    _logger.LogInformation("LaunchGenshinBlenderPlugin enabled, EnableGameLaunch disabled");
+                    _logger.LogInformation("LaunchGenshinBlenderPlugin enabled, both EnableGameLaunch and UseStarwardLauncher disabled");
                 }
                 else
                 {
+                    // 恢复之前的启动选项
                     UpdateGameLaunchCheckboxState();
+                    
+                    if (_previousUseStarwardLauncher)
+                    {
+                        _useStarwardLauncher = true;
+                        OnPropertyChanged(nameof(UseStarwardLauncher));
+                    }
+                    else if (_previousEnableGameLaunch)
+                    {
+                        _enableGameLaunch = true;
+                        OnPropertyChanged(nameof(EnableGameLaunch));
+                    }
+                    
+                    _logger.LogInformation("LaunchGenshinBlenderPlugin disabled, restored previous launch option");
                 }
                 OnPropertyChanged(nameof(ShouldEnableStartButton));
             }
@@ -284,18 +361,70 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 if (value)
                 {
-                    // Disable game launch when Blender plugin is selected
-                    EnableGameLaunch = false;
+                    // 保存当前的启动选项
+                    _previousEnableGameLaunch = _enableGameLaunch;
+                    _previousUseStarwardLauncher = _useStarwardLauncher;
+                    
+                    // 取消并禁用两个启动选项
+                    _enableGameLaunch = false;
+                    _useStarwardLauncher = false;
+                    OnPropertyChanged(nameof(EnableGameLaunch));
+                    OnPropertyChanged(nameof(UseStarwardLauncher));
+                    
                     UpdateGameLaunchCheckboxState();
-                    _logger.LogInformation("LaunchZZZBlenderPlugin enabled, EnableGameLaunch disabled");
+                    _logger.LogInformation("LaunchZZZBlenderPlugin enabled, both EnableGameLaunch and UseStarwardLauncher disabled");
                 }
                 else
                 {
+                    // 恢复之前的启动选项
                     UpdateGameLaunchCheckboxState();
+                    
+                    if (_previousUseStarwardLauncher)
+                    {
+                        _useStarwardLauncher = true;
+                        OnPropertyChanged(nameof(UseStarwardLauncher));
+                    }
+                    else if (_previousEnableGameLaunch)
+                    {
+                        _enableGameLaunch = true;
+                        OnPropertyChanged(nameof(EnableGameLaunch));
+                    }
+                    
+                    _logger.LogInformation("LaunchZZZBlenderPlugin disabled, restored previous launch option");
                 }
                 OnPropertyChanged(nameof(ShouldEnableStartButton));
             }
         }
+    }
+
+    private bool _useStarwardLauncher;
+    public bool UseStarwardLauncher
+    {
+        get => _useStarwardLauncher;
+        set
+        {
+            if (SetProperty(ref _useStarwardLauncher, value))
+            {
+                if (value)
+                {
+                    // 取消勾选 EnableGameLaunch
+                    if (_enableGameLaunch)
+                    {
+                        _enableGameLaunch = false;
+                        OnPropertyChanged(nameof(EnableGameLaunch));
+                    }
+                    _logger.LogInformation("UseStarwardLauncher enabled, EnableGameLaunch disabled");
+                }
+                OnPropertyChanged(nameof(ShouldEnableStartButton));
+            }
+        }
+    }
+
+    private bool _isStarwardProtocolAvailable;
+    public bool IsStarwardProtocolAvailable
+    {
+        get => _isStarwardProtocolAvailable;
+        set => SetProperty(ref _isStarwardProtocolAvailable, value);
     }
 
     private bool _isGameLaunchCheckboxEnabled = true;
@@ -307,13 +436,34 @@ public sealed partial class GameLauncherPage : PageBase
 
     private void UpdateGameLaunchCheckboxState()
     {
-        // Disable game launch checkbox if any Blender plugin is selected
-        IsGameLaunchCheckboxEnabled = !LaunchGenshinBlenderPlugin && !LaunchZZZBlenderPlugin;
-
-        // If no Blender plugin is selected and game launch is unchecked, re-enable it
-        if (IsGameLaunchCheckboxEnabled && !EnableGameLaunch)
+        // 只有在没有Blender插件被选中时,两个启动选项才可用
+        bool blenderPluginActive = LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
+        IsGameLaunchCheckboxEnabled = !blenderPluginActive;
+        
+        // 同时更新 Starward 启动器选项的可用状态
+        OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
+    }
+    
+    /// <summary>
+    /// Starward启动器选项是否可用
+    /// 条件: 没有Blender插件被选中 AND Starward协议可用 AND 设置中启用了Starward启动器
+    /// </summary>
+    public bool IsStarwardLauncherCheckboxEnabled
+    { 
+        get
         {
-            EnableGameLaunch = true;
+            bool result = !LaunchGenshinBlenderPlugin && 
+                          !LaunchZZZBlenderPlugin && 
+                          IsStarwardProtocolAvailable && 
+                          AppConfig.UseStarwardLauncher;
+            
+            _logger.LogInformation("IsStarwardLauncherCheckboxEnabled: {Result} (Blender: {Blender}, Protocol: {Protocol}, Setting: {Setting})", 
+                result, 
+                LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin,
+                IsStarwardProtocolAvailable,
+                AppConfig.UseStarwardLauncher);
+            
+            return result;
         }
     }
 
@@ -590,7 +740,6 @@ public sealed partial class GameLauncherPage : PageBase
 
 
 
-
     private void OnGameInstallPathChanged(object _, GameInstallPathChangedMessage message)
     {
         CheckGameVersion();
@@ -623,6 +772,27 @@ public sealed partial class GameLauncherPage : PageBase
         catch { }
     }
 
+
+    private void OnUseStarwardLauncherChanged(object _, UseStarwardLauncherChangedMessage message)
+    {
+        try
+        {
+            // 更新 IsStarwardLauncherCheckboxEnabled 属性
+            OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
+            
+            // 如果设置被禁用，并且当前正在使用 Starward 启动器，则取消勾选
+            if (!message.IsEnabled && UseStarwardLauncher)
+            {
+                UseStarwardLauncher = false;
+            }
+            
+            _logger.LogInformation("UseStarwardLauncher setting changed to: {IsEnabled}", message.IsEnabled);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Handle UseStarwardLauncherChanged message");
+        }
+    }
 
 
 
@@ -662,7 +832,7 @@ public sealed partial class GameLauncherPage : PageBase
         }
     }
 
-
+    
 
     private string? _runningGameInfo;
     public string? RunningGameInfo
@@ -1556,6 +1726,4 @@ public sealed partial class GameLauncherPage : PageBase
 
 
     #endregion
-
-
 }

@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
@@ -82,6 +83,8 @@ public sealed partial class IntegrationSetting : PageBase
             if (SetProperty(ref field, value))
             {
                 AppConfig.UseStarwardLauncher = value;
+                // 发送消息通知启动器页面更新状态
+                WeakReferenceMessenger.Default.Send(new UseStarwardLauncherChangedMessage(value));
             }
         }
     }

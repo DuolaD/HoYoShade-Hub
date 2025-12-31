@@ -605,6 +605,13 @@
                       Margin="0,4"
                       FontWeight="SemiBold" />
             
+            <CheckBox x:Name="CheckBox_UseStarwardLauncher"
+                      Content="使用Starward启动器启动游戏"
+                      IsChecked="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
+                      IsEnabled="{x:Bind IsStarwardLauncherCheckboxEnabled}"
+                      Margin="0,4"
+                      FontWeight="SemiBold" />
+            
             <CheckBox x:Name="CheckBox_UseHoYoShade"
                       Content="{x:Bind lang:Lang.GameLauncherPage_LaunchHoYoShade}"
                       IsChecked="{x:Bind UseHoYoShade, Mode=TwoWay}"
