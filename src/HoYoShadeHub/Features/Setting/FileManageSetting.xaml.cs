@@ -728,7 +728,7 @@ public sealed partial class FileManageSetting : PageBase
     {
         try
         {
-            await Task.Run(() =>
+            var (logSize, imageSize, webSize, gameSize) = await Task.Run(() =>
             {
                 long logSize = 0;
                 long imageSize = 0;
@@ -775,11 +775,17 @@ public sealed partial class FileManageSetting : PageBase
                         .Sum(file => new FileInfo(file).Length);
                 }
 
-                LogCacheSize = FormatSize(logSize);
-                ImageCacheSize = FormatSize(imageSize);
-                WebCacheSize = FormatSize(webSize);
-                GameCacheSize = FormatSize(gameSize);
+                return (logSize, imageSize, webSize, gameSize);
             });
+
+            // Update properties on UI thread
+            LogCacheSize = FormatSize(logSize);
+            ImageCacheSize = FormatSize(imageSize);
+            WebCacheSize = FormatSize(webSize);
+            GameCacheSize = FormatSize(gameSize);
+            
+            _logger.LogInformation("Cache sizes updated - Log: {Log}, Image: {Image}, Web: {Web}, Game: {Game}",
+                LogCacheSize, ImageCacheSize, WebCacheSize, GameCacheSize);
         }
         catch (Exception ex)
         {
