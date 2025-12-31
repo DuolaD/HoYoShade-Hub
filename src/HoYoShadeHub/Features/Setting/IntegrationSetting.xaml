@@ -158,7 +158,9 @@
 
                     <ToggleSwitch Margin="0,8,0,0"
                                       IsOn="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind IsStarwardProtocolAvailable, Mode=OneWay}" />
+                                      IsEnabled="{x:Bind IsStarwardProtocolAvailable, Mode=OneWay}"
+                                      OnContent=""
+                                      OffContent="" />
 
                     <StackPanel Grid.Column="1" 
                                 VerticalAlignment="Top"
