@@ -1352,4 +1352,52 @@ Do you want to continue with the reset operation?</value>
   <data name="GameLauncherPage_LaunchZZZBlenderPlugin" xml:space="preserve">
     <value>Launch ZZZ Blender Plugin</value>
   </data>
+  <data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
+    <value>{0} is not installed. Please install it before use</value>
+  </data>
+  <data name="GameLauncher_InjectExeNotFound" xml:space="preserve">
+    <value>inject.exe not found in {0}</value>
+  </data>
+  <data name="GameLauncher_InjectorStarted" xml:space="preserve">
+    <value>{0} injector started</value>
+  </data>
+  <data name="GameLauncher_InjectorStartFailed" xml:space="preserve">
+    <value>Failed to start {0} injector: {1}</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginNotConfigured" xml:space="preserve">
+    <value>{0} Blender Plugin path not configured. Please configure it in settings</value>
+  </data>
+  <data name="GameLauncher_ClientExeNotFound" xml:space="preserve">
+    <value>client.exe not found. Please check the plugin path</value>
+  </data>
+  <data name="GameLauncher_LoaderExeNotFound" xml:space="preserve">
+    <value>loader.exe not found. Please check the plugin path</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginStarted" xml:space="preserve">
+    <value>{0} Blender Plugin started</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginStartFailed" xml:space="preserve">
+    <value>Failed to start {0} Blender Plugin: {1}</value>
+  </data>
+  <data name="GameLauncher_GameNotStartedKillingInjector" xml:space="preserve">
+    <value>Game not started, HoYoShade/OpenHoYoShade injector process terminated</value>
+  </data>
+  <data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
+    <value>Game launch failed</value>
+  </data>
+  <data name="GameLauncher_GameNotFound" xml:space="preserve">
+    <value>Game install path not found</value>
+  </data>
+  <data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
+    <value>Launched game with {0}</value>
+  </data>
+  <data name="GameLauncher_LaunchWithShaderFailed" xml:space="preserve">
+    <value>Failed to launch game with {0}: {1}</value>
+  </data>
+  <data name="GameName_ZenlessZoneZero" xml:space="preserve">
+    <value>Zenless Zone Zero</value>
+  </data>
+  <data name="GameName_GenshinImpact" xml:space="preserve">
+    <value>Genshin Impact</value>
+  </data>
 </root>

@@ -700,11 +700,146 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 {0} Blender Plugin path not configured. Please configure it in settings 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_BlenderPluginNotConfigured {
+            get {
+                return ResourceManager.GetString("GameLauncher_BlenderPluginNotConfigured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} Blender Plugin started 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_BlenderPluginStarted {
+            get {
+                return ResourceManager.GetString("GameLauncher_BlenderPluginStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to start {0} Blender Plugin: {1} 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_BlenderPluginStartFailed {
+            get {
+                return ResourceManager.GetString("GameLauncher_BlenderPluginStartFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 client.exe not found. Please check the plugin path 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_ClientExeNotFound {
+            get {
+                return ResourceManager.GetString("GameLauncher_ClientExeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Game launch failed 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_GameLaunchFailed {
+            get {
+                return ResourceManager.GetString("GameLauncher_GameLaunchFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Game install path not found 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_GameNotFound {
+            get {
+                return ResourceManager.GetString("GameLauncher_GameNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Game not started, HoYoShade/OpenHoYoShade injector process terminated 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_GameNotStartedKillingInjector {
+            get {
+                return ResourceManager.GetString("GameLauncher_GameNotStartedKillingInjector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 inject.exe not found in {0} 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_InjectExeNotFound {
+            get {
+                return ResourceManager.GetString("GameLauncher_InjectExeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} injector started 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_InjectorStarted {
+            get {
+                return ResourceManager.GetString("GameLauncher_InjectorStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to start {0} injector: {1} 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_InjectorStartFailed {
+            get {
+                return ResourceManager.GetString("GameLauncher_InjectorStartFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Launched game with {0} 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_LaunchedWithShader {
+            get {
+                return ResourceManager.GetString("GameLauncher_LaunchedWithShader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to launch game with {0}: {1} 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_LaunchWithShaderFailed {
+            get {
+                return ResourceManager.GetString("GameLauncher_LaunchWithShaderFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 loader.exe not found. Please check the plugin path 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_LoaderExeNotFound {
+            get {
+                return ResourceManager.GetString("GameLauncher_LoaderExeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} is not installed. Please install it before use 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_ShaderNotInstalled {
+            get {
+                return ResourceManager.GetString("GameLauncher_ShaderNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Launch Game 的本地化字符串。
         /// </summary>
         public static string GameLauncherPage_LaunchGame {
             get {
                 return ResourceManager.GetString("GameLauncherPage_LaunchGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Launch Genshin Impact Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherPage_LaunchGenshinBlenderPlugin {
+            get {
+                return ResourceManager.GetString("GameLauncherPage_LaunchGenshinBlenderPlugin", resourceCulture);
             }
         }
         
@@ -732,6 +867,15 @@ namespace HoYoShadeHub.Language {
         public static string GameLauncherPage_LaunchOptions {
             get {
                 return ResourceManager.GetString("GameLauncherPage_LaunchOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Launch ZZZ Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherPage_LaunchZZZBlenderPlugin {
+            get {
+                return ResourceManager.GetString("GameLauncherPage_LaunchZZZBlenderPlugin", resourceCulture);
             }
         }
         
@@ -858,6 +1002,24 @@ namespace HoYoShadeHub.Language {
         public static string GameLauncherSettingDialog_StartupArguments {
             get {
                 return ResourceManager.GetString("GameLauncherSettingDialog_StartupArguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Genshin Impact 的本地化字符串。
+        /// </summary>
+        public static string GameName_GenshinImpact {
+            get {
+                return ResourceManager.GetString("GameName_GenshinImpact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zenless Zone Zero 的本地化字符串。
+        /// </summary>
+        public static string GameName_ZenlessZoneZero {
+            get {
+                return ResourceManager.GetString("GameName_ZenlessZoneZero", resourceCulture);
             }
         }
         
@@ -2275,7 +2437,7 @@ namespace HoYoShadeHub.Language {
         ///· The Releases page explicitly states that you must/should reset the ReShade.ini configuration file to enable new features/fix bugs.
         ///· HoYoShade developers/contributors explicitly ask you to perform this operation.
         ///
-        ///A [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///Apart fr [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         public static string ResetReShadeIniDialog_WarningMessage1 {
             get {
@@ -2335,7 +2497,7 @@ namespace HoYoShadeHub.Language {
         ///However, for OpenHoYoShade, this step is optional because it is intended for development purposes. If you installed OpenHoYoShade, we recommend skipping this step.
         ///The list of available shaders and addons is synchronized with the official ReShade installer and controlled by ReShade.
         ///
-        ///Due to ReShade version updates, previously available shaders/addons may not appear in this list and cannot be downloaded or install [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///Due to ReShade version updates, previously available shaders/addons may not appear in this list and cannot be downloaded or installed.  [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         public static string ReShadeDownloadView_Description {
             get {
@@ -2903,6 +3065,24 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 The selected folder must contain client.exe 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_GenshinBlenderPluginMustContainClientExe {
+            get {
+                return ResourceManager.GetString("SettingPage_GenshinBlenderPluginMustContainClientExe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Genshin Impact Plugin Validation Failed 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_GenshinBlenderPluginValidationFailed {
+            get {
+                return ResourceManager.GetString("SettingPage_GenshinBlenderPluginValidationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Integration 的本地化字符串。
         /// </summary>
         public static string SettingPage_Integration {
@@ -3205,6 +3385,24 @@ namespace HoYoShadeHub.Language {
         public static string SettingPage_ZZZBlenderPlugin {
             get {
                 return ResourceManager.GetString("SettingPage_ZZZBlenderPlugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The selected folder must contain loader.exe 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_ZZZBlenderPluginMustContainLoaderExe {
+            get {
+                return ResourceManager.GetString("SettingPage_ZZZBlenderPluginMustContainLoaderExe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Zenless Zone Zero Plugin Validation Failed 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_ZZZBlenderPluginValidationFailed {
+            get {
+                return ResourceManager.GetString("SettingPage_ZZZBlenderPluginValidationFailed", resourceCulture);
             }
         }
         
@@ -3657,60 +3855,6 @@ namespace HoYoShadeHub.Language {
         public static string WelcomeView_WelcomeToHoYoShadeHubDescription {
             get {
                 return ResourceManager.GetString("WelcomeView_WelcomeToHoYoShadeHubDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Genshin Impact Plugin Validation Failed 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_GenshinBlenderPluginValidationFailed {
-            get {
-                return ResourceManager.GetString("SettingPage_GenshinBlenderPluginValidationFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 The selected folder must contain client.exe 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_GenshinBlenderPluginMustContainClientExe {
-            get {
-                return ResourceManager.GetString("SettingPage_GenshinBlenderPluginMustContainClientExe", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Zenless Zone Zero Plugin Validation Failed 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_ZZZBlenderPluginValidationFailed {
-            get {
-                return ResourceManager.GetString("SettingPage_ZZZBlenderPluginValidationFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 The selected folder must contain loader.exe 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_ZZZBlenderPluginMustContainLoaderExe {
-            get {
-                return ResourceManager.GetString("SettingPage_ZZZBlenderPluginMustContainLoaderExe", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Launch Genshin Impact Blender Plugin 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherPage_LaunchGenshinBlenderPlugin {
-            get {
-                return ResourceManager.GetString("GameLauncherPage_LaunchGenshinBlenderPlugin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Launch ZZZ Blender Plugin 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherPage_LaunchZZZBlenderPlugin {
-            get {
-                return ResourceManager.GetString("GameLauncherPage_LaunchZZZBlenderPlugin", resourceCulture);
             }
         }
     }

@@ -1146,13 +1146,13 @@
   <data name="ReShadeDownloadView_StatusError" xml:space="preserve">
     <value>錯誤：{0}</value>
   </data>
-	<data name="Common_Shader" xml:space="preserve">
+  <data name="Common_Shader" xml:space="preserve">
     <value>着色器</value>
   </data>
-	<data name="Common_Addon" xml:space="preserve">
+  <data name="Common_Addon" xml:space="preserve">
     <value>插件</value>
   </data>
-	<data name="HoYoShadeDownloadView_PackageAlreadyInstalled" xml:space="preserve">
+  <data name="HoYoShadeDownloadView_PackageAlreadyInstalled" xml:space="preserve">
     <value>無法安裝：{0} 已經安裝咗。</value>
   </data>
   <data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
@@ -1257,10 +1257,10 @@
   <data name="ResetReShadeIniDialog_Title" xml:space="preserve">
     <value>重設ReShade.ini</value>
   </data>
-	<data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">  
+  <data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">  
     <value>你確定要繼續重設 ReShade.ini 嗎？</value>  
 </data>
-	<data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">  
+  <data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">  
     <value>一般情況下，重設 ReShade.ini 嘅操作係全自動檢測並喺後台運行嘅。  
 換句話講，通常你唔需要手動去重設 ReShade.ini。  
 
@@ -1272,7 +1272,7 @@
 
 重設完成之後，你需要重新刪除已經複製到遊戲程式根目錄下嘅 ReShade.ini 設定檔，否則 HoYoShade/OpenHoYoShade 可能無法正常運作。</value>  
 </data>
-	<data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">  
+  <data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">  
     <value>重設 ReShade.ini 並唔會導致你安裝喺 HoYoShade/OpenHoYoShade 嘅著色器、插件、預設同埋遊戲截圖遺失。  
 
 你確定要繼續重設操作嗎？</value>  
@@ -1351,5 +1351,53 @@
   </data>
   <data name="GameLauncherPage_LaunchZZZBlenderPlugin" xml:space="preserve">
     <value>啟動絕區零Blender/留影機插件</value>
+  </data>
+  <data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
+    <value>{0} 未安裝，請先安裝咗先至用得</value>
+  </data>
+  <data name="GameLauncher_InjectExeNotFound" xml:space="preserve">
+    <value>{0} 入面搵唔到 inject.exe</value>
+  </data>
+  <data name="GameLauncher_InjectorStarted" xml:space="preserve">
+    <value>已經啟動 {0} 注入器</value>
+  </data>
+  <data name="GameLauncher_InjectorStartFailed" xml:space="preserve">
+    <value>啟動 {0} 注入器失敗: {1}</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginNotConfigured" xml:space="preserve">
+    <value>{0}Blender/留影機插件路徑未配置，請喺設置入面配置</value>
+  </data>
+  <data name="GameLauncher_ClientExeNotFound" xml:space="preserve">
+    <value>搵唔到 client.exe，請檢查插件路徑</value>
+  </data>
+  <data name="GameLauncher_LoaderExeNotFound" xml:space="preserve">
+    <value>搵唔到 loader.exe，請檢查插件路徑</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginStarted" xml:space="preserve">
+    <value>已經啟動{0}Blender/留影機插件</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginStartFailed" xml:space="preserve">
+    <value>啟動{0}Blender/留影機插件失敗: {1}</value>
+  </data>
+  <data name="GameLauncher_GameNotStartedKillingInjector" xml:space="preserve">
+    <value>遊戲未啟動，已經終止HoYoShade/OpenHoYoShade注入器進程</value>
+  </data>
+  <data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
+    <value>遊戲啟動失敗</value>
+  </data>
+  <data name="GameLauncher_GameNotFound" xml:space="preserve">
+    <value>搵唔到遊戲安裝路徑</value>
+  </data>
+  <data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
+    <value>已經用 {0} 啟動遊戲</value>
+  </data>
+  <data name="GameLauncher_LaunchWithShaderFailed" xml:space="preserve">
+    <value>用 {0} 啟動遊戲失敗: {1}</value>
+  </data>
+  <data name="GameName_ZenlessZoneZero" xml:space="preserve">
+    <value>絕區零</value>
+  </data>
+  <data name="GameName_GenshinImpact" xml:space="preserve">
+    <value>原神</value>
   </data>
 </root>

@@ -43,6 +43,18 @@ public sealed partial class GameLauncherPage : PageBase
 
     private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _dispatchTimer;
 
+    /// <summary>
+    /// 获取本地化的游戏名称
+    /// </summary>
+    private string GetGameName(GameBiz gameBiz)
+    {
+        return gameBiz.ToGame().Value switch
+        {
+            GameBiz.hk4e => Lang.GameName_GenshinImpact,
+            GameBiz.nap => Lang.GameName_ZenlessZoneZero,
+            _ => gameBiz.ToString()
+        };
+    }
 
     public GameLauncherPage()
     {
@@ -807,7 +819,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (!Directory.Exists(shadePath))
             {
                 _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
-                InAppToast.MainWindow?.Error($"{shadeName} 未安装，请先安装后再使用");
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
                 return null;
             }
 
@@ -815,7 +827,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (!File.Exists(injectExePath))
             {
                 _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
-                InAppToast.MainWindow?.Error($"{shadeName} 中未找到 inject.exe");
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
                 return null;
             }
 
@@ -836,14 +848,14 @@ public sealed partial class GameLauncherPage : PageBase
             Process? injectorProcess = Process.Start(injectStartInfo);
             _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for game process",
                 shadeName, injectorProcess?.Id ?? -1);
-            InAppToast.MainWindow?.Success($"已启动 {shadeName} 注入器");
+            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_InjectorStarted, shadeName));
 
             return injectorProcess;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Start {ShadeName} injector", shadeName);
-            InAppToast.MainWindow?.Error($"启动 {shadeName} 注入器失败: {ex.Message}");
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectorStartFailed, shadeName, ex.Message));
             return null;
         }
     }
@@ -880,7 +892,7 @@ public sealed partial class GameLauncherPage : PageBase
                     {
                         shaderInjectorProcess.Kill();
                         _logger.LogInformation("Shader injector process terminated");
-                        InAppToast.MainWindow?.Information("游戏未启动，已终止shader注入器进程");
+                        InAppToast.MainWindow?.Information(Lang.GameLauncher_GameNotStartedKillingInjector);
                     }
                 }
                 catch (Exception ex)
@@ -915,7 +927,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (string.IsNullOrWhiteSpace(pluginPath) || !Directory.Exists(pluginPath))
             {
                 _logger.LogWarning("Genshin Blender plugin path not configured");
-                InAppToast.MainWindow?.Error("原神Blender/留影机插件路径未配置，请在设置中配置");
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_BlenderPluginNotConfigured, GetGameName(GameBiz.hk4e)));
                 return null;
             }
 
@@ -923,7 +935,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (!File.Exists(clientExePath))
             {
                 _logger.LogWarning("client.exe not found in {Path}", pluginPath);
-                InAppToast.MainWindow?.Error("未找到 client.exe，请检查插件路径");
+                InAppToast.MainWindow?.Error(Lang.GameLauncher_ClientExeNotFound);
                 return null;
             }
 
@@ -937,7 +949,7 @@ public sealed partial class GameLauncherPage : PageBase
             };
 
             Process? process = Process.Start(startInfo);
-            InAppToast.MainWindow?.Success("已启动原神Blender/留影机插件");
+            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_BlenderPluginStarted, GetGameName(GameBiz.hk4e)));
             _logger.LogInformation("Genshin Blender plugin launched successfully (PID: {Pid})", process?.Id ?? -1);
 
             return process;
@@ -945,7 +957,7 @@ public sealed partial class GameLauncherPage : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch Genshin Blender plugin");
-            InAppToast.MainWindow?.Error($"启动原神Blender/留影机插件失败: {ex.Message}");
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_BlenderPluginStartFailed, GetGameName(GameBiz.hk4e), ex.Message));
             return null;
         }
     }
@@ -958,7 +970,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (string.IsNullOrWhiteSpace(pluginPath) || !Directory.Exists(pluginPath))
             {
                 _logger.LogWarning("ZZZ Blender plugin path not configured");
-                InAppToast.MainWindow?.Error("绝区零Blender/留影机插件路径未配置，请在设置中配置");
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_BlenderPluginNotConfigured, GetGameName(GameBiz.nap)));
                 return null;
             }
 
@@ -966,7 +978,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (!File.Exists(loaderExePath))
             {
                 _logger.LogWarning("loader.exe not found in {Path}", pluginPath);
-                InAppToast.MainWindow?.Error("未找到 loader.exe，请检查插件路径");
+                InAppToast.MainWindow?.Error(Lang.GameLauncher_LoaderExeNotFound);
                 return null;
             }
 
@@ -980,7 +992,7 @@ public sealed partial class GameLauncherPage : PageBase
             };
 
             Process? process = Process.Start(startInfo);
-            InAppToast.MainWindow?.Success("已启动绝区零Blender/留影机插件");
+            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_BlenderPluginStarted, GetGameName(GameBiz.nap)));
             _logger.LogInformation("ZZZ Blender plugin launched successfully (PID: {Pid})", process?.Id ?? -1);
 
             return process;
@@ -988,7 +1000,7 @@ public sealed partial class GameLauncherPage : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch ZZZ Blender plugin");
-            InAppToast.MainWindow?.Error($"启动绝区零Blender/留影机插件失败: {ex.Message}");
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_BlenderPluginStartFailed, GetGameName(GameBiz.nap), ex.Message));
             return null;
         }
     }
@@ -1000,7 +1012,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (!Directory.Exists(shadePath))
             {
                 _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
-                InAppToast.MainWindow?.Error($"{shadeName} 未安装，请先安装后再使用");
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
                 return null;
             }
 
@@ -1009,7 +1021,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (!File.Exists(injectExePath))
             {
                 _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
-                InAppToast.MainWindow?.Error($"{shadeName} 中未找到 inject.exe");
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
                 return null;
             }
 
@@ -1017,7 +1029,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (string.IsNullOrWhiteSpace(gameInstallPath))
             {
                 _logger.LogWarning("Game install path not found");
-                InAppToast.MainWindow?.Error("未找到游戏安装路径");
+                InAppToast.MainWindow?.Error(Lang.GameLauncher_GameNotFound);
                 return null;
             }
 
@@ -1055,7 +1067,7 @@ public sealed partial class GameLauncherPage : PageBase
 
             if (gameProcess != null)
             {
-                InAppToast.MainWindow?.Success($"已使用 {shadeName} 启动游戏");
+                InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_LaunchedWithShader, shadeName));
                 _logger.LogInformation("Successfully launched game with {ShadeName}, process: {Name} ({Id})",
                     shadeName, gameProcess.ProcessName, gameProcess.Id);
                 return gameProcess;
@@ -1063,14 +1075,14 @@ public sealed partial class GameLauncherPage : PageBase
             else
             {
                 _logger.LogWarning("Failed to start game process");
-                InAppToast.MainWindow?.Error("游戏启动失败");
+                InAppToast.MainWindow?.Error(Lang.GameLauncher_GameLaunchFailed);
                 return null;
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch game with {ShadeName}", shadeName);
-            InAppToast.MainWindow?.Error($"使用 {shadeName} 启动游戏失败: {ex.Message}");
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_LaunchWithShaderFailed, shadeName, ex.Message));
             return null;
         }
     }

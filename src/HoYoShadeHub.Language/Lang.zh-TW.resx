@@ -1146,13 +1146,13 @@
   <data name="ReShadeDownloadView_StatusError" xml:space="preserve">
     <value>錯誤：{0}</value>
   </data>
-	<data name="Common_Shader" xml:space="preserve">
+  <data name="Common_Shader" xml:space="preserve">
     <value>着色器</value>
   </data>
-	<data name="Common_Addon" xml:space="preserve">
+  <data name="Common_Addon" xml:space="preserve">
     <value>插件</value>
   </data>
-	<data name="HoYoShadeDownloadView_PackageAlreadyInstalled" xml:space="preserve">
+  <data name="HoYoShadeDownloadView_PackageAlreadyInstalled" xml:space="preserve">
     <value>無法安裝：{0} 已經安裝。</value>
   </data>
   <data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
@@ -1351,5 +1351,53 @@
   </data>
   <data name="GameLauncherPage_LaunchZZZBlenderPlugin" xml:space="preserve">
     <value>啟動絕區零Blender/留影機插件</value>
+  </data>
+  <data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
+    <value>{0} 未安裝，請先安裝後再使用</value>
+  </data>
+  <data name="GameLauncher_InjectExeNotFound" xml:space="preserve">
+    <value>{0} 中未找到 inject.exe</value>
+  </data>
+  <data name="GameLauncher_InjectorStarted" xml:space="preserve">
+    <value>已啟動 {0} 注入器</value>
+  </data>
+  <data name="GameLauncher_InjectorStartFailed" xml:space="preserve">
+    <value>啟動 {0} 注入器失敗: {1}</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginNotConfigured" xml:space="preserve">
+    <value>{0}Blender/留影機外掛路徑未配置，請在設定中配置</value>
+  </data>
+  <data name="GameLauncher_ClientExeNotFound" xml:space="preserve">
+    <value>未找到 client.exe，請檢查外掛路徑</value>
+  </data>
+  <data name="GameLauncher_LoaderExeNotFound" xml:space="preserve">
+    <value>未找到 loader.exe，請檢查外掛路徑</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginStarted" xml:space="preserve">
+    <value>已啟動{0}Blender/留影機外掛</value>
+  </data>
+  <data name="GameLauncher_BlenderPluginStartFailed" xml:space="preserve">
+    <value>啟動{0}Blender/留影機外掛失敗: {1}</value>
+  </data>
+  <data name="GameLauncher_GameNotStartedKillingInjector" xml:space="preserve">
+    <value>遊戲未啟動，已終止HoYoShade/OpenHoYoShade注入器處理程序</value>
+  </data>
+  <data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
+    <value>遊戲啟動失敗</value>
+  </data>
+  <data name="GameLauncher_GameNotFound" xml:space="preserve">
+    <value>未找到遊戲安裝路徑</value>
+  </data>
+  <data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
+    <value>已使用 {0} 啟動遊戲</value>
+  </data>
+  <data name="GameLauncher_LaunchWithShaderFailed" xml:space="preserve">
+    <value>使用 {0} 啟動遊戲失敗: {1}</value>
+  </data>
+  <data name="GameName_ZenlessZoneZero" xml:space="preserve">
+    <value>絕區零</value>
+  </data>
+  <data name="GameName_GenshinImpact" xml:space="preserve">
+    <value>原神</value>
   </data>
 </root>
