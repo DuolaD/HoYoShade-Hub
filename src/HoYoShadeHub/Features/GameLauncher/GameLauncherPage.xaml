@@ -606,7 +606,7 @@
                       FontWeight="SemiBold" />
             
             <CheckBox x:Name="CheckBox_UseStarwardLauncher"
-                      Content="使用Starward启动器启动游戏"
+                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchWithStarward}"
                       IsChecked="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsStarwardLauncherCheckboxEnabled}"
                       Margin="0,4"

@@ -1105,10 +1105,10 @@
     <value>同時安裝到 HoYoShade 同埋 OpenHoYoShade</value>
   </data>
   <data name="ReShadeDownloadView_OpenHoYoShadeWarning" xml:space="preserve">
-    <value>OpenHoYoShade 係用嚟開發嘅，我哋建議你跳過為佢安裝 ReShade 着色器同埋插件嘅步驟。</value>
+    <value>OpenHoYoShade 係用嚨開發嘅，我哋建議你跳過為佢安裝 ReShade 着色器同埋插件嘅步驟。</value>
   </data>
   <data name="ReShadeDownloadView_BothTargetsWarning" xml:space="preserve">
-    <value>OpenHoYoShade 係用嚟開發嘅，我哋建議你只安裝到 HoYoShade 度。</value>
+    <value>OpenHoYoShade 係用嚨開發嘅，我哋建議你只安裝到 HoYoShade 度。</value>
   </data>
   <data name="ReShadeDownloadView_SelectInstallType" xml:space="preserve">
     <value>選擇安裝類型</value>
@@ -1429,5 +1429,17 @@
   </data>
 	<data name="SettingPage_ProtocolStatusUnavailable" xml:space="preserve">
     <value>用唔到</value>
+  </data>
+  <data name="GameLauncherPage_LaunchWithStarward" xml:space="preserve">
+    <value>用Starward啟動器啟動遊戲</value>
+  </data>
+  <data name="GameLauncher_StarwardLaunchSuccess" xml:space="preserve">
+    <value>已經通過 Starward 啟動器啟動遊戲</value>
+  </data>
+  <data name="GameLauncher_StarwardLaunchFailed" xml:space="preserve">
+    <value>唔可以通過 Starward 啟動遊戲，請確保 Starward 已經正確安裝咗</value>
+  </data>
+  <data name="GameLauncher_StarwardLaunchError" xml:space="preserve">
+    <value>通過 Starward 啟動遊戲失敗: {0}</value>
   </data>
 </root>

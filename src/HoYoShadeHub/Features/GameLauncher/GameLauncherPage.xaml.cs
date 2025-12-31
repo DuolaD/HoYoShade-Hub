@@ -1870,25 +1870,18 @@ public sealed partial class GameLauncherPage : PageBase
             if (success)
             {
                 _logger.LogInformation("Successfully launched game via Starward");
-                if (useShader)
-                {
-                    InAppToast.MainWindow?.Success("已通过 Starward 启动器启动游戏");
-                }
-                else
-                {
-                    InAppToast.MainWindow?.Success("已通过 Starward 启动器启动游戏");
-                }
+                InAppToast.MainWindow?.Success(Lang.GameLauncher_StarwardLaunchSuccess);
             }
             else
             {
                 _logger.LogWarning("Failed to launch game via Starward");
-                InAppToast.MainWindow?.Error("无法通过 Starward 启动游戏，请确保 Starward 已正确安装");
+                InAppToast.MainWindow?.Error(Lang.GameLauncher_StarwardLaunchFailed);
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch game via Starward");
-            InAppToast.MainWindow?.Error($"通过 Starward 启动游戏失败: {ex.Message}");
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_StarwardLaunchError, ex.Message));
         }
     }
 

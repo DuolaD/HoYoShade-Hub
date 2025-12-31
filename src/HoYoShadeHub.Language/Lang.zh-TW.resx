@@ -1409,7 +1409,7 @@
   <data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
     <value>該插件僅在中國大陸/香港/澳門/臺灣/新加坡等國家及地區可用。如果你並不位於上述國家及地區，該插件開發者/貢獻者及 HoYoShade Hub 的開發者/貢獻者有權拒絕提供支持。</value>
   </data>
-	  <data name="SettingPage_StarwardLauncher" xml:space="preserve">
+  <data name="SettingPage_StarwardLauncher" xml:space="preserve">
     <value>Starward啓動器</value>
   </data>
   <data name="SettingPage_StarwardLauncherIntegration" xml:space="preserve">
@@ -1429,5 +1429,17 @@
   </data>
   <data name="SettingPage_ProtocolStatusUnavailable" xml:space="preserve">
     <value>不可用</value>
+  </data>
+  <data name="GameLauncherPage_LaunchWithStarward" xml:space="preserve">
+    <value>使用Starward啓動器啓動遊戲</value>
+  </data>
+  <data name="GameLauncher_StarwardLaunchSuccess" xml:space="preserve">
+    <value>已通過 Starward 啓動器啓動遊戲</value>
+  </data>
+  <data name="GameLauncher_StarwardLaunchFailed" xml:space="preserve">
+    <value>無法通過 Starward 啓動遊戲，請確保 Starward 已正確安裝</value>
+  </data>
+  <data name="GameLauncher_StarwardLaunchError" xml:space="preserve">
+    <value>通過 Starward 啓動遊戲失敗: {0}</value>
   </data>
 </root>
