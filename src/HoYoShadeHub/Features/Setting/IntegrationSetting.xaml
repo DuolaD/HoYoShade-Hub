@@ -135,6 +135,14 @@
                         <Run Text="{x:Bind ProtocolStatusText, Mode=OneWay}" 
                              Foreground="{x:Bind ProtocolStatusColor, Mode=OneWay}" />
                     </TextBlock>
+
+                    <!--  不可用时的提示  -->
+                    <TextBlock Visibility="{x:Bind IsStarwardProtocolAvailable, Converter={StaticResource BoolToVisibilityReversedConverter}, Mode=OneWay}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               TextWrapping="Wrap"
+                               FontSize="12">
+                        <Run Text="请在 Starward 启动器的设置 - 高级界面中启用「注册 URL 协议」开关，以此让 HoYoShade Hub 进行链接。" />
+                    </TextBlock>
                 </StackPanel>
 
                 <!--  使用Starward启动器开关  -->
