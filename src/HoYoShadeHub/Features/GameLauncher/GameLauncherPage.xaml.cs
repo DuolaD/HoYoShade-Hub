@@ -248,6 +248,9 @@ public sealed partial class GameLauncherPage : PageBase
                     {
                         _useStarwardLauncher = false;
                         OnPropertyChanged(nameof(UseStarwardLauncher));
+                        
+                        // 重新检查游戏版本以更新 GameState
+                        CheckGameVersion();
                     }
                 }
                 OnPropertyChanged(nameof(ShouldEnableStartButton));
@@ -257,8 +260,22 @@ public sealed partial class GameLauncherPage : PageBase
 
     /// <summary>
     /// 启动按钮是否应该可用 - 只要勾选了任何一个启动选项就可用
+    /// 如果选择了Starward启动器或Blender插件，即使游戏未定位也应该可以启动
     /// </summary>
-    public bool ShouldEnableStartButton => EnableGameLaunch || UseStarwardLauncher || LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
+    public bool ShouldEnableStartButton
+    {
+        get
+        {
+            // 如果选择了Starward启动器或Blender插件，总是启用启动按钮
+            if (UseStarwardLauncher || LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin)
+            {
+                return true;
+            }
+            
+            // 否则只有在选择了启动游戏时才启用
+            return EnableGameLaunch;
+        }
+    }
 
     private bool _useHoYoShade;
     public bool UseHoYoShade
@@ -325,8 +342,14 @@ public sealed partial class GameLauncherPage : PageBase
                     OnPropertyChanged(nameof(EnableGameLaunch));
                     OnPropertyChanged(nameof(UseStarwardLauncher));
                     
+                    // 如果当前是"定位游戏"状态，改为"启动游戏"状态
+                    if (GameState == GameState.InstallGame)
+                    {
+                        GameState = GameState.StartGame;
+                    }
+                    
                     UpdateGameLaunchCheckboxState();
-                    _logger.LogInformation("LaunchGenshinBlenderPlugin enabled, both EnableGameLaunch and UseStarwardLauncher disabled");
+                    _logger.LogInformation("LaunchGenshinBlenderPlugin enabled, both EnableGameLaunch and UseStarwardLauncher disabled, GameState set to StartGame");
                 }
                 else
                 {
@@ -343,6 +366,9 @@ public sealed partial class GameLauncherPage : PageBase
                         _enableGameLaunch = true;
                         OnPropertyChanged(nameof(EnableGameLaunch));
                     }
+                    
+                    // 取消Blender插件时，重新检查游戏版本
+                    CheckGameVersion();
                     
                     _logger.LogInformation("LaunchGenshinBlenderPlugin disabled, restored previous launch option");
                 }
@@ -371,8 +397,14 @@ public sealed partial class GameLauncherPage : PageBase
                     OnPropertyChanged(nameof(EnableGameLaunch));
                     OnPropertyChanged(nameof(UseStarwardLauncher));
                     
+                    // 如果当前是"定位游戏"状态，改为"启动游戏"状态
+                    if (GameState == GameState.InstallGame)
+                    {
+                        GameState = GameState.StartGame;
+                    }
+                    
                     UpdateGameLaunchCheckboxState();
-                    _logger.LogInformation("LaunchZZZBlenderPlugin enabled, both EnableGameLaunch and UseStarwardLauncher disabled");
+                    _logger.LogInformation("LaunchZZZBlenderPlugin enabled, both EnableGameLaunch and UseStarwardLauncher disabled, GameState set to StartGame");
                 }
                 else
                 {
@@ -389,6 +421,9 @@ public sealed partial class GameLauncherPage : PageBase
                         _enableGameLaunch = true;
                         OnPropertyChanged(nameof(EnableGameLaunch));
                     }
+                    
+                    // 取消Blender插件时，重新检查游戏版本
+                    CheckGameVersion();
                     
                     _logger.LogInformation("LaunchZZZBlenderPlugin disabled, restored previous launch option");
                 }
@@ -413,7 +448,19 @@ public sealed partial class GameLauncherPage : PageBase
                         _enableGameLaunch = false;
                         OnPropertyChanged(nameof(EnableGameLaunch));
                     }
-                    _logger.LogInformation("UseStarwardLauncher enabled, EnableGameLaunch disabled");
+                    
+                    // 如果当前是"定位游戏"状态，改为"启动游戏"状态
+                    if (GameState == GameState.InstallGame)
+                    {
+                        GameState = GameState.StartGame;
+                    }
+                    
+                    _logger.LogInformation("UseStarwardLauncher enabled, EnableGameLaunch disabled, GameState set to StartGame");
+                }
+                else
+                {
+                    // 取消Starward时，重新检查游戏版本
+                    CheckGameVersion();
                 }
                 OnPropertyChanged(nameof(ShouldEnableStartButton));
             }
@@ -669,6 +716,16 @@ public sealed partial class GameLauncherPage : PageBase
         {
             GameInstallPath = GameLauncherService.GetGameInstallPath(CurrentGameId, out bool storageRemoved);
             IsInstallPathRemovableTipEnabled = storageRemoved;
+            
+            // 如果选择了Starward启动器或Blender插件，即使游戏未定位也设置为StartGame状态
+            if (UseStarwardLauncher || LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin)
+            {
+                GameState = GameState.StartGame;
+                await CheckGameRunningAsync();
+                return;
+            }
+            
+            // 常规启动模式：需要检查游戏安装路径
             if (GameInstallPath is null || storageRemoved)
             {
                 GameState = GameState.InstallGame;
@@ -780,7 +837,7 @@ public sealed partial class GameLauncherPage : PageBase
             // 更新 IsStarwardLauncherCheckboxEnabled 属性
             OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
             
-            // 如果设置被禁用，并且当前正在使用 Starward 启动器，则取消勾选
+            // 如果设置被禁用，并且当前正在使用 Starward，则取消勾选
             if (!message.IsEnabled && UseStarwardLauncher)
             {
                 UseStarwardLauncher = false;
@@ -921,6 +978,7 @@ public sealed partial class GameLauncherPage : PageBase
         {
             bool launchingBlenderPlugin = LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
             bool useShader = UseHoYoShade || UseOpenHoYoShade;
+            bool useStarward = UseStarwardLauncher;
 
             // Check if Blender plugin injection process is already running
             string? runningInjectionProcess = CheckBlenderPluginInjectionProcessRunning();
@@ -982,7 +1040,14 @@ public sealed partial class GameLauncherPage : PageBase
                 return;
             }
 
-            // Case 2: Only Blender plugin
+            // Case 2: Use Starward launcher (with optional shader)
+            if (useStarward)
+            {
+                await LaunchGameViaStarwardAsync(useShader);
+                return;
+            }
+
+            // Case 3: Only Blender plugin
             if (launchingBlenderPlugin)
             {
                 if (LaunchGenshinBlenderPlugin)
@@ -1726,4 +1791,127 @@ public sealed partial class GameLauncherPage : PageBase
 
 
     #endregion
+
+    /// <summary>
+    /// 通过 Starward 启动器启动游戏
+    /// </summary>
+    /// <param name="useShader">是否同时启动 HoYoShade/OpenHoYoShade</param>
+    private async Task LaunchGameViaStarwardAsync(bool useShader)
+    {
+        try
+        {
+            var gameInstallPath = GameLauncherService.GetGameInstallPath(CurrentGameId);
+            
+            // 如果需要使用 shader，先启动注入器
+            if (useShader)
+            {
+                string shadePath = "";
+                string shadeName = "";
+                
+                if (UseHoYoShade)
+                {
+                    shadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+                    shadeName = "HoYoShade";
+                }
+                else if (UseOpenHoYoShade)
+                {
+                    shadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+                    shadeName = "OpenHoYoShade";
+                }
+
+                if (!string.IsNullOrEmpty(shadePath))
+                {
+                    if (!Directory.Exists(shadePath))
+                    {
+                        _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
+                        InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
+                        return;
+                    }
+
+                    string injectExePath = Path.Combine(shadePath, "inject.exe");
+                    if (!File.Exists(injectExePath))
+                    {
+                        _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
+                        InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
+                        return;
+                    }
+
+                    var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+                    
+                    _logger.LogInformation("Starting {ShadeName} injector before Starward launch: {InjectPath} {GameExe}",
+                        shadeName, injectExePath, gameExeName);
+
+                    var injectStartInfo = new ProcessStartInfo
+                    {
+                        FileName = injectExePath,
+                        Arguments = gameExeName,
+                        UseShellExecute = false,
+                        WorkingDirectory = shadePath,
+                        CreateNoWindow = true
+                    };
+
+                    Process.Start(injectStartInfo);
+                    _logger.LogInformation("{ShadeName} injector started, waiting before launching Starward...", shadeName);
+                    InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_InjectorStarted, shadeName));
+
+                    // 等待注入器初始化
+                    await Task.Delay(500);
+                }
+            }
+
+            // 构建 Starward URL 协议命令
+            string starwardUrl = BuildStarwardProtocolUrl(CurrentGameBiz, gameInstallPath);
+            
+            _logger.LogInformation("Launching game via Starward: {Url}", starwardUrl);
+
+            // 调用 Starward URL 协议启动游戏
+            bool success = await Launcher.LaunchUriAsync(new Uri(starwardUrl));
+            
+            if (success)
+            {
+                _logger.LogInformation("Successfully launched game via Starward");
+                if (useShader)
+                {
+                    InAppToast.MainWindow?.Success("已通过 Starward 启动器启动游戏");
+                }
+                else
+                {
+                    InAppToast.MainWindow?.Success("已通过 Starward 启动器启动游戏");
+                }
+            }
+            else
+            {
+                _logger.LogWarning("Failed to launch game via Starward");
+                InAppToast.MainWindow?.Error("无法通过 Starward 启动游戏，请确保 Starward 已正确安装");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Launch game via Starward");
+            InAppToast.MainWindow?.Error($"通过 Starward 启动游戏失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 构建 Starward URL 协议命令
+    /// </summary>
+    /// <param name="gameBiz">游戏区服</param>
+    /// <param name="installPath">游戏安装路径（可选）</param>
+    /// <returns>Starward URL 协议字符串</returns>
+    private string BuildStarwardProtocolUrl(GameBiz gameBiz, string? installPath = null)
+    {
+        // 根据 UrlProtocol.md 文档，格式为：
+        // starward://startgame/{game_biz}?install_path={install_path}
+        
+        string url = $"starward://startgame/{gameBiz}";
+        
+        if (!string.IsNullOrWhiteSpace(installPath))
+        {
+            // URL 编码安装路径
+            string encodedPath = Uri.EscapeDataString(installPath);
+            url += $"?install_path={encodedPath}";
+        }
+        
+        return url;
+    }
 }
