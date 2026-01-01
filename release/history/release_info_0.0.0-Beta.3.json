@@ -1,0 +1,29 @@
+{
+  "version": "0.0.0-Beta.3",
+  "releases": {
+    "x64-portable": {
+      "version": "0.0.0-Beta.3",
+      "architecture": "x64",
+      "install_type": "portable",
+      "build_time": "2026-01-01T18:28:54.7284846+00:00",
+      "disable_auto_update": false,
+      "package_url": "https://cdn.cf.storage.hub.hoyosha.de/release/package/HoYoShadeHub_Portable_0.0.0-Beta.3_x64.7z",
+      "package_size": 76172486,
+      "package_hash": "bc56452b631ef939c726f9be191efb68c55730302b058ab9582ccc2f9f42a9a0",
+      "manifest_url": "https://cdn.cf.storage.hub.hoyosha.de/release/manifest/manifest_0.0.0-beta.3_x64_portable.json",
+      "diffs": {}
+    },
+    "arm64-portable": {
+      "version": "0.0.0-Beta.3",
+      "architecture": "arm64",
+      "install_type": "portable",
+      "build_time": "2026-01-01T18:29:01.8101507+00:00",
+      "disable_auto_update": false,
+      "package_url": "https://cdn.cf.storage.hub.hoyosha.de/release/package/HoYoShadeHub_Portable_0.0.0-Beta.3_arm64.7z",
+      "package_size": 72144556,
+      "package_hash": "01a0aa11cbfc6808565bc0daffce7a71f358f175a95c65b7f2c8984c49efc5fe",
+      "manifest_url": "https://cdn.cf.storage.hub.hoyosha.de/release/manifest/manifest_0.0.0-beta.3_arm64_portable.json",
+      "diffs": {}
+    }
+  }
+}
