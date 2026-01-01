@@ -1,0 +1,13 @@
+{
+  "Version": "11.45.14",
+  "Architecture": "x64",
+  "BuildTime": "2026-01-01T16:13:58.6951513+00:00",
+  "DisableAutoUpdate": false,
+  "Install": null,
+  "InstallSize": 0,
+  "InstallHash": null,
+  "Portable": "https://cdn.cf.storage.hub.hoyosha.de/release/package/HoYoShadeHub_Portable_11.45.14_x64.7z",
+  "PortableSize": 76169998,
+  "PortableHash": "09759C9C6326B119797523327861A5F706CFB9D78853B13E79B42F543413AD64",
+  "SeparatePrefix": "https://cdn.cf.storage.hub.hoyosha.de/release/separate_files/"
+}
