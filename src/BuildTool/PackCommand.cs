@@ -79,7 +79,7 @@ public class PackCommand
             Architecture = arch,
             InstallType = type,
             DiffVersion = null,
-            UrlPrefix = "https://starward-static.scighost.com/release/file/",
+            UrlPrefix = "https://cdn.cf.storage.hub.hoyosha.de/release/file/",
             Files = new(),
         };
 

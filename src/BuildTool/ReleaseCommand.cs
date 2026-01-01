@@ -107,13 +107,13 @@ public class ReleaseCommand
             Architecture = arch,
             InstallType = type,
             BuildTime = buildTime,
-            ManifestUrl = $"https://starward-static.scighost.com/release/manifest/{manifestName}.json",
+            ManifestUrl = $"https://cdn.cf.storage.hub.hoyosha.de/release/manifest/{manifestName}.json",
         };
 
         if (File.Exists(package))
         {
             byte[] bytes = await File.ReadAllBytesAsync(package);
-            detail.PackageUrl = $"https://starward-static.scighost.com/release/package/{Path.GetFileName(package)}";
+            detail.PackageUrl = $"https://cdn.cf.storage.hub.hoyosha.de/release/package/{Path.GetFileName(package)}";
             detail.PackageSize = bytes.Length;
             detail.PackageHash = Convert.ToHexStringLower(SHA256.HashData(bytes));
         }
@@ -126,7 +126,7 @@ public class ReleaseCommand
                 var diff = new ReleaseInfoDiff
                 {
                     DiffVersion = diffVersion,
-                    ManifestUrl = $"https://starward-static.scighost.com/release/manifest/{manifestName}_diff_{diffVersion}.json",
+                    ManifestUrl = $"https://cdn.cf.storage.hub.hoyosha.de/release/manifest/{manifestName}_diff_{diffVersion}.json",
                 };
                 detail.Diffs.Add(diffVersion, diff);
             }

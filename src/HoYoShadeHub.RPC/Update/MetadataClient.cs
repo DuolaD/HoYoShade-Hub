@@ -20,7 +20,7 @@ public class MetadataClient
 
 
 
-    private string API_PREFIX = "https://starward-static.scighost.com/release";
+    private string API_PREFIX = "https://cdn.cf.storage.hub.hoyosha.de/release";
 
 
 
