@@ -1,5 +1,4 @@
-
-name: Publish Preview 2
+﻿name: Publish Preview 2
 
 on:
   push:
@@ -128,8 +127,46 @@ jobs:
     - name: Combine Release Info
       shell: pwsh
       run: |
+        # 合并 x64 和 arm64 的 release info
         dotnet run --project 'src/BuildTool' -c Release -- release combine "static/release/history/release_info_${{ env.Version }}.json" -i "build/release_info_${{ env.Version }}_x64.json" "build/release_info_${{ env.Version }}_arm64.json"
+        
+        # 复制为 preview 版本
         Copy-Item "static/release/history/release_info_${{ env.Version }}.json" "static/release/release_info_preview.json" -Force
+        Write-Host "✅ Created release_info_preview.json" -ForegroundColor Green
+        
+        # 如果是稳定版（tag 不包含 '-'），也复制为 stable 版本
+        if ("${{ env.Version }}" -notlike '*-*') {
+          Copy-Item "static/release/history/release_info_${{ env.Version }}.json" "static/release/release_info_stable.json" -Force
+          Write-Host "✅ Created release_info_stable.json (stable release)" -ForegroundColor Green
+        }
+
+    - name: Setup AWS CLI for R2
+      run: |
+        choco install awscli -y
+        aws configure set aws_access_key_id ${{ secrets.R2_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        aws configure set region auto
+
+    - name: Upload Release Info to Cloudflare R2
+      shell: pwsh
+      run: |
+        Write-Host "📤 Uploading release info files to Cloudflare R2..." -ForegroundColor Cyan
+        
+        # 上传历史版本的 release info
+        aws s3 cp "./static/release/history/release_info_${{ env.Version }}.json" "s3://${{ secrets.R2_BUCKET_NAME }}/release/history/release_info_${{ env.Version }}.json" --endpoint-url "https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+        Write-Host "✅ Uploaded history/release_info_${{ env.Version }}.json" -ForegroundColor Green
+        
+        # 上传 preview 版本
+        aws s3 cp "./static/release/release_info_preview.json" "s3://${{ secrets.R2_BUCKET_NAME }}/release/release_info_preview.json" --endpoint-url "https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+        Write-Host "✅ Uploaded release_info_preview.json" -ForegroundColor Green
+        
+        # 如果是稳定版，也上传 stable 版本
+        if ("${{ env.Version }}" -notlike '*-*') {
+          aws s3 cp "./static/release/release_info_stable.json" "s3://${{ secrets.R2_BUCKET_NAME }}/release/release_info_stable.json" --endpoint-url "https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+          Write-Host "✅ Uploaded release_info_stable.json" -ForegroundColor Green
+        }
+        
+        Write-Host "🎉 All release info files uploaded successfully!" -ForegroundColor Green
 
     - name: Create Static Pull Request
       uses: peter-evans/create-pull-request@v5
