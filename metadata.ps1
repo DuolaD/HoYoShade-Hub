@@ -45,18 +45,18 @@ $release = [ordered]@{
     Install           = $null
     InstallSize       = 0
     InstallHash       = $null
-    Portable          = "https://github.com/DuolaD/HoYoShade-Hub/releases/download/v$Version/$portableName"
+    Portable          = "https://cdn.cf.storage.hub.hoyosha.de/release/package/$portableName"
     PortableSize      = (Get-Item $portableFile).Length
     PortableHash      = (Get-FileHash $portableFile).Hash
-    SeparatePrefix    = "https://github.com/DuolaD/HoYoShade-Hub/releases/download/v$Version/"
+    SeparatePrefix    = "https://cdn.cf.storage.hub.hoyosha.de/release/separate_files/"
 };
 
 if ($Dev) {
-    $release.Portable = "https://github.com/DuolaD/HoYoShade-Hub/releases/download/v$Version-dev/$portableName";
-    $release.SeparatePrefix = "https://github.com/DuolaD/HoYoShade-Hub/releases/download/v$Version-dev/";
+    $release.Portable = "https://cdn.cf.storage.hub.hoyosha.de/release/package/dev/$portableName";
+    $release.SeparatePrefix = "https://cdn.cf.storage.hub.hoyosha.de/release/separate_files/dev/";
 }
 
-Out-File -FilePath "$metadata/version_preview_$Architecture.json" -InputObject (ConvertTo-Json $release);
+Out-File -Path "$metadata/version_preview_$Architecture.json" -InputObject (ConvertTo-Json $release);
 
 $path = @{l = "Path"; e = { [System.IO.Path]::GetRelativePath($starward, $_.FullName) } };
 $size = @{l = "Size"; e = { $_.Length } };
