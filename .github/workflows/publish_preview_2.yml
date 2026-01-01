@@ -52,6 +52,9 @@ jobs:
         Move-Item -Path ${{runner.temp}}/hdiffpatch/windows64/hdiffz.exe -Destination C:/Windows/System32/hdiffz.exe -Force
         Move-Item -Path ${{runner.temp}}/hdiffpatch/windows64/hpatchz.exe -Destination C:/Windows/System32/hpatchz.exe -Force
 
+    - name: Install 7Zip4Powershell
+      run: Install-Module -Name 7Zip4Powershell -Force -Scope CurrentUser
+
     - name: Build and Pack
       run: ./publish.ps1 -Architecture $env:Platform -Version $env:Version
       env:
@@ -76,18 +79,18 @@ jobs:
         prerelease: true
         files: build/release/package/*
 
-    - name: Setup ossutil
+    - name: Setup AWS CLI for R2
+      if: ${{ secrets.R2_ACCESS_KEY_ID != '' }}
       run: |
-        Invoke-WebRequest https://gosspublic.alicdn.com/ossutil/v2/2.2.0/ossutil-2.2.0-windows-amd64.zip -OutFile ${{runner.temp}}/ossutil.zip
-        Expand-Archive -Path ${{runner.temp}}/ossutil.zip -DestinationPath ${{runner.temp}}
-        Move-Item -Path ${{runner.temp}}/ossutil-2.2.0-windows-amd64/ossutil.exe -Destination C:/Windows/System32/ossutil.exe -Force
+        choco install awscli -y
+        aws configure set aws_access_key_id ${{ secrets.R2_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        aws configure set region auto
 
-    - name: Upload to OSS
-      run: ossutil cp ./build/release/ oss://starward-static/release/ -r -f -j 20
-      env:
-        OSS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-        OSS_ACCESS_KEY_SECRET: ${{ secrets.ACCESS_KEY_SECRET }}
-        OSS_REGION: ${{ secrets.OSS_REGION }}
+    - name: Upload to Cloudflare R2
+      if: ${{ secrets.R2_ACCESS_KEY_ID != '' }}
+      run: |
+        aws s3 sync ./build/release/ s3://${{ secrets.R2_BUCKET_NAME }}/release/ --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
 
 
   static:
