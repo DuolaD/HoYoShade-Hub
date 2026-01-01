@@ -227,7 +227,7 @@ public class DiffCommand
     private async Task<ReleaseManifest> GetManifestAsync(string version, Architecture arch, InstallType type)
     {
         string name = $"manifest_{version}_{arch}_{type}".ToLower();
-        string url = $"https://starward-static.scighost.com/release/manifest/{name}.json";
+        string url = $"https://github.com/DuolaD/HoYoShade-Hub/releases/download/{version}/{name}.json";
         var manifest = await _polly.ExecuteAsync(async _ => await _httpClient.GetFromJsonAsync<ReleaseManifest>(url));
         return manifest ?? throw new NullReferenceException($"Manifest {name} not exists.");
     }
