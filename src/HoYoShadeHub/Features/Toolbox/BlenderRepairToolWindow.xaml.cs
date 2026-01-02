@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using HoYoShadeHub.Frameworks;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,6 +48,19 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         
         // Set window size
         AppWindow.Resize(new Windows.Graphics.SizeInt32(800, 600));
+        
+        // 监听窗口激活事件以刷新配置
+        this.Activated += BlenderRepairToolWindow_Activated;
+    }
+
+    private void BlenderRepairToolWindow_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        // 窗口激活时刷新配置（例如从其他窗口切换回来时）
+        if (args.WindowActivationState != WindowActivationState.Deactivated)
+        {
+            // 可以在这里添加配置刷新逻辑，但为了性能考虑，我们只在按钮点击时检测
+            _logger.LogDebug("Window activated, plugin configurations will be checked on button click");
+        }
     }
 
     private void InitializeTimeSyncControls()
@@ -334,5 +348,391 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
     {
         // Placeholder for future functionality
         ShowInfoBar("Feature under development...", InfoBarSeverity.Informational);
+    }
+
+    private async void Button_ResetClientTarget_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // 清除配置缓存，重新从数据库读取最新配置
+            AppConfig.ClearCache();
+            
+            // 使用正确的配置属性名
+            string? genshinPath = AppConfig.GenshinBlenderPluginPath;
+            string? zzzPath = AppConfig.ZZZBlenderPluginPath;
+            
+            bool hasGenshin = !string.IsNullOrEmpty(genshinPath) && Directory.Exists(genshinPath);
+            bool hasZZZ = !string.IsNullOrEmpty(zzzPath) && Directory.Exists(zzzPath);
+
+            _logger.LogInformation("Plugin path detection: Genshin={GenshinPath} (exists={HasGenshin}), ZZZ={ZzzPath} (exists={HasZZZ})", 
+                genshinPath ?? "null", hasGenshin, zzzPath ?? "null", hasZZZ);
+
+            if (!hasGenshin && !hasZZZ)
+            {
+                ShowPluginRepairError("No Blender plugin path configured. Please configure plugin paths in the launcher first.");
+                return;
+            }
+
+            // 创建选择界面
+            var dialogContent = new StackPanel { Spacing = 12 };
+            
+            // 警告信息
+            dialogContent.Children.Add(new TextBlock
+            {
+                Text = "Are you sure you want to continue?\n\n" +
+                       "After deletion, you need to restart the client once to let the drone re-acquire the game process root directory.",
+                TextWrapping = TextWrapping.Wrap
+            });
+
+            // 游戏选择标题
+            dialogContent.Children.Add(new TextBlock
+            {
+                Text = "Select game(s) to repair:",
+                Margin = new Thickness(0, 8, 0, 0),
+                FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
+            });
+
+            // 原神复选框
+            var genshinCheckBox = new CheckBox
+            {
+                Content = hasGenshin ? "Genshin Impact" : "Genshin Impact (Not configured)",
+                IsEnabled = hasGenshin,
+                Margin = new Thickness(0, 4, 0, 0)
+            };
+
+            // 绝区零复选框
+            var zzzCheckBox = new CheckBox
+            {
+                Content = hasZZZ ? "Zenless Zone Zero" : "Zenless Zone Zero (Not configured)",
+                IsEnabled = hasZZZ,
+                Margin = new Thickness(0, 4, 0, 0)
+            };
+
+            dialogContent.Children.Add(genshinCheckBox);
+            dialogContent.Children.Add(zzzCheckBox);
+
+            var dialog = new ContentDialog
+            {
+                XamlRoot = Content.XamlRoot,
+                Title = "Reset Plugin Client Target",
+                Content = dialogContent,
+                PrimaryButtonText = "Continue",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            var result = await dialog.ShowAsync();
+
+            if (result != ContentDialogResult.Primary)
+            {
+                return; // 用户取消
+            }
+
+            // 检查是否选择了游戏
+            bool selectedGenshin = genshinCheckBox.IsChecked == true;
+            bool selectedZZZ = zzzCheckBox.IsChecked == true;
+
+            if (!selectedGenshin && !selectedZZZ)
+            {
+                ShowPluginRepairError("Please select at least one game to repair.");
+                return;
+            }
+
+            // 执行删除操作
+            int successCount = 0;
+            int failCount = 0;
+
+            if (selectedGenshin)
+            {
+                if (await DeletePluginConfigFileInternal(true, genshinPath!))
+                    successCount++;
+                else
+                    failCount++;
+            }
+
+            if (selectedZZZ)
+            {
+                if (await DeletePluginConfigFileInternal(false, zzzPath!))
+                    successCount++;
+                else
+                    failCount++;
+            }
+
+            // 显示结果
+            if (successCount > 0 && failCount == 0)
+            {
+                ShowPluginRepairSuccess($"Successfully deleted config file(s) for {successCount} game(s).\nPlease restart the client.");
+            }
+            else if (successCount > 0 && failCount > 0)
+            {
+                ShowPluginRepairError($"Partially completed: {successCount} succeeded, {failCount} failed. Check logs for details.");
+            }
+            else
+            {
+                ShowPluginRepairError("All operations failed. Check logs for details.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowPluginRepairError($"Failed: {ex.Message}");
+            _logger.LogError(ex, "Failed to reset client target");
+        }
+    }
+
+    private async void Button_FixLoginError_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // 清除配置缓存，重新从数据库读取最新配置
+            AppConfig.ClearCache();
+            
+            // 使用正确的配置属性名
+            string? genshinPath = AppConfig.GenshinBlenderPluginPath;
+            string? zzzPath = AppConfig.ZZZBlenderPluginPath;
+            
+            bool hasGenshin = !string.IsNullOrEmpty(genshinPath) && Directory.Exists(genshinPath);
+            bool hasZZZ = !string.IsNullOrEmpty(zzzPath) && Directory.Exists(zzzPath);
+
+            _logger.LogInformation("Plugin path detection: Genshin={GenshinPath} (exists={HasGenshin}), ZZZ={ZzzPath} (exists={HasZZZ})", 
+                genshinPath ?? "null", hasGenshin, zzzPath ?? "null", hasZZZ);
+
+            if (!hasGenshin && !hasZZZ)
+            {
+                ShowPluginRepairError("No Blender plugin path configured. Please configure plugin paths in the launcher first.");
+                return;
+            }
+
+            // 创建选择界面
+            var dialogContent = new StackPanel { Spacing = 12 };
+            
+            // 警告信息
+            dialogContent.Children.Add(new TextBlock
+            {
+                Text = "Are you sure you want to delete the cookie file?\n\n" +
+                       "After deletion, you need to scan the QR code again to log in to your Bilibili account.",
+                TextWrapping = TextWrapping.Wrap
+            });
+
+            // 游戏选择标题
+            dialogContent.Children.Add(new TextBlock
+            {
+                Text = "Select game(s) to repair:",
+                Margin = new Thickness(0, 8, 0, 0),
+                FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
+            });
+
+            // 原神复选框
+            var genshinCheckBox = new CheckBox
+            {
+                Content = hasGenshin ? "Genshin Impact (cookie.txt)" : "Genshin Impact (Not configured)",
+                IsEnabled = hasGenshin,
+                Margin = new Thickness(0, 4, 0, 0)
+            };
+
+            // 绝区零复选框
+            var zzzCheckBox = new CheckBox
+            {
+                Content = hasZZZ ? "Zenless Zone Zero (cookies.json)" : "Zenless Zone Zero (Not configured)",
+                IsEnabled = hasZZZ,
+                Margin = new Thickness(0, 4, 0, 0)
+            };
+
+            dialogContent.Children.Add(genshinCheckBox);
+            dialogContent.Children.Add(zzzCheckBox);
+
+            var dialog = new ContentDialog
+            {
+                XamlRoot = Content.XamlRoot,
+                Title = "Fix 'Account Not Logged In' Error",
+                Content = dialogContent,
+                PrimaryButtonText = "Continue",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            var result = await dialog.ShowAsync();
+
+            if (result != ContentDialogResult.Primary)
+            {
+                return; // 用户取消
+            }
+
+            // 检查是否选择了游戏
+            bool selectedGenshin = genshinCheckBox.IsChecked == true;
+            bool selectedZZZ = zzzCheckBox.IsChecked == true;
+
+            if (!selectedGenshin && !selectedZZZ)
+            {
+                ShowPluginRepairError("Please select at least one game to repair.");
+                return;
+            }
+
+            // 执行删除操作
+            int successCount = 0;
+            int failCount = 0;
+
+            if (selectedGenshin)
+            {
+                if (await DeletePluginCookieFileInternal(true, genshinPath!))
+                    successCount++;
+                else
+                    failCount++;
+            }
+
+            if (selectedZZZ)
+            {
+                if (await DeletePluginCookieFileInternal(false, zzzPath!))
+                    successCount++;
+                else
+                    failCount++;
+            }
+
+            // 显示结果
+            if (successCount > 0 && failCount == 0)
+            {
+                ShowPluginRepairSuccess($"Successfully deleted cookie file(s) for {successCount} game(s).\nPlease scan QR code to login again.");
+            }
+            else if (successCount > 0 && failCount > 0)
+            {
+                ShowPluginRepairError($"Partially completed: {successCount} succeeded, {failCount} failed. Check logs for details.");
+            }
+            else
+            {
+                ShowPluginRepairError("All operations failed. Check logs for details.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowPluginRepairError($"Failed: {ex.Message}");
+            _logger.LogError(ex, "Failed to fix login error");
+        }
+    }
+
+    private async Task<bool> DeletePluginConfigFileInternal(bool isGenshin, string pluginPath)
+    {
+        string gameName = isGenshin ? "Genshin Impact" : "Zenless Zone Zero";
+        string configFile = Path.Combine(pluginPath, "config");
+        
+        if (!File.Exists(configFile))
+        {
+            _logger.LogWarning("Config file not found for {Game} at {Path}", gameName, configFile);
+            return false;
+        }
+
+        try
+        {
+            File.Delete(configFile);
+            _logger.LogInformation("Deleted config file for {Game} at {Path}", gameName, configFile);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete config file for {Game}", gameName);
+            return false;
+        }
+    }
+
+    private async Task<bool> DeletePluginCookieFileInternal(bool isGenshin, string pluginPath)
+    {
+        string gameName = isGenshin ? "Genshin Impact" : "Zenless Zone Zero";
+        string cookieFileName = isGenshin ? "cookie.txt" : "cookies.json";
+        string cookieFile = Path.Combine(pluginPath, cookieFileName);
+        
+        if (!File.Exists(cookieFile))
+        {
+            _logger.LogWarning("Cookie file ({FileName}) not found for {Game} at {Path}", cookieFileName, gameName, cookieFile);
+            return false;
+        }
+
+        try
+        {
+            File.Delete(cookieFile);
+            _logger.LogInformation("Deleted cookie file {FileName} for {Game} at {Path}", cookieFileName, gameName, cookieFile);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete cookie file for {Game}", gameName);
+            return false;
+        }
+    }
+
+    private async Task DeletePluginConfigFile(bool isGenshin)
+    {
+        string gameName = isGenshin ? "Genshin Impact" : "Zenless Zone Zero";
+        string? pluginPath = isGenshin ? AppConfig.GenshinBlenderPluginPath : AppConfig.ZZZBlenderPluginPath;
+        
+        if (string.IsNullOrEmpty(pluginPath) || !Directory.Exists(pluginPath))
+        {
+            ShowPluginRepairError($"{gameName} plugin path not configured or not found.");
+            return;
+        }
+
+        string configFile = Path.Combine(pluginPath, "config");
+        
+        if (!File.Exists(configFile))
+        {
+            ShowPluginRepairError($"Config file not found at: {configFile}");
+            return;
+        }
+
+        try
+        {
+            File.Delete(configFile);
+            ShowPluginRepairSuccess($"Successfully deleted config file for {gameName}.\nPlease restart the client.");
+            _logger.LogInformation("Deleted config file for {Game} at {Path}", gameName, configFile);
+        }
+        catch (Exception ex)
+        {
+            ShowPluginRepairError($"Failed to delete config file: {ex.Message}");
+            _logger.LogError(ex, "Failed to delete config file for {Game}", gameName);
+        }
+    }
+
+    private async Task DeletePluginCookieFile(bool isGenshin)
+    {
+        string gameName = isGenshin ? "Genshin Impact" : "Zenless Zone Zero";
+        string cookieFileName = isGenshin ? "cookie.txt" : "cookies.json";
+        string? pluginPath = isGenshin ? AppConfig.GenshinBlenderPluginPath : AppConfig.ZZZBlenderPluginPath;
+        
+        if (string.IsNullOrEmpty(pluginPath) || !Directory.Exists(pluginPath))
+        {
+            ShowPluginRepairError($"{gameName} plugin path not configured or not found.");
+            return;
+        }
+
+        string cookieFile = Path.Combine(pluginPath, cookieFileName);
+        
+        if (!File.Exists(cookieFile))
+        {
+            ShowPluginRepairError($"Cookie file ({cookieFileName}) not found at: {cookieFile}");
+            return;
+        }
+
+        try
+        {
+            File.Delete(cookieFile);
+            ShowPluginRepairSuccess($"Successfully deleted {cookieFileName} for {gameName}.\nPlease scan QR code to login again.");
+            _logger.LogInformation("Deleted cookie file {FileName} for {Game} at {Path}", cookieFileName, gameName, cookieFile);
+        }
+        catch (Exception ex)
+        {
+            ShowPluginRepairError($"Failed to delete cookie file: {ex.Message}");
+            _logger.LogError(ex, "Failed to delete cookie file for {Game}", gameName);
+        }
+    }
+
+    private void ShowPluginRepairSuccess(string message)
+    {
+        InfoBar_PluginRepair.Message = message;
+        InfoBar_PluginRepair.Severity = InfoBarSeverity.Success;
+        InfoBar_PluginRepair.IsOpen = true;
+    }
+
+    private void ShowPluginRepairError(string message)
+    {
+        InfoBar_PluginRepair.Message = message;
+        InfoBar_PluginRepair.Severity = InfoBarSeverity.Error;
+        InfoBar_PluginRepair.IsOpen = true;
     }
 }

@@ -171,7 +171,38 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!--  Other Tools Placeholder  -->
+                <!--  Blender Plugin Repair Tools  -->
+                <StackPanel Spacing="16">
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
+                               Text="Blender Plugin Repair Tools" />
+
+                    <InfoBar x:Name="InfoBar_PluginRepair"
+                             IsClosable="True"
+                             IsOpen="False"
+                             Severity="Informational" />
+
+                    <StackPanel Spacing="12">
+                        <Button x:Name="Button_ResetClientTarget"
+                                HorizontalAlignment="Stretch"
+                                Click="Button_ResetClientTarget_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="16" Glyph="&#xE8BA;" />
+                                <TextBlock Text="Reset Plugin Client Target (Delete config file)" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="Button_FixLoginError"
+                                HorizontalAlignment="Stretch"
+                                Click="Button_FixLoginError_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="16" Glyph="&#xE8D7;" />
+                                <TextBlock Text="Fix 'Account Not Logged In' Error (Delete cookie file)" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  Future Tools Placeholder  -->
                 <StackPanel Spacing="16">
                     <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
                                Text="Other Tools (Coming Soon)" />
