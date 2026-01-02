@@ -40,70 +40,120 @@
         </Grid>
 
         <!--  Content  -->
-        <Grid Grid.Row="1" Padding="24">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="16" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <!--  Title  -->
-            <TextBlock Grid.Row="0"
-                       Style="{ThemeResource TitleTextBlockStyle}"
-                       Text="Blender Repair Tool" />
-
-            <!--  Description  -->
-            <TextBlock Grid.Row="2"
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       Text="Fix Blender renderer and screenshot tool issues"
-                       TextWrapping="Wrap" />
-
-            <!--  Main Content  -->
-            <StackPanel Grid.Row="4"
-                        Spacing="16"
-                        VerticalAlignment="Top">
-
-                <InfoBar Title="About"
-                         IsClosable="False"
-                         IsOpen="True"
-                         Message="This tool helps diagnose and fix common issues with Blender renderer and screenshot functionality. More features will be added in future versions."
-                         Severity="Informational" />
-
-                <StackPanel Spacing="12">
-                    <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Features (Coming Soon)" />
-
-                    <Button x:Name="Button_Placeholder"
-                            HorizontalAlignment="Stretch"
-                            Click="Button_Placeholder_Click"
-                            IsEnabled="False">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon FontSize="16" Glyph="&#xE90F;" />
-                            <TextBlock Text="Diagnose Issues" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button x:Name="Button_Placeholder2"
-                            HorizontalAlignment="Stretch"
-                            IsEnabled="False">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon FontSize="16" Glyph="&#xE72C;" />
-                            <TextBlock Text="Fix Configuration" />
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-
+        <ScrollViewer Grid.Row="1" Padding="24">
+            <StackPanel Spacing="24">
+                
+                <!--  Page Title  -->
                 <StackPanel Spacing="8">
-                    <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Status" />
-
-                    <TextBlock x:Name="TextBlock_Status"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="Waiting..."
+                    <TextBlock Style="{ThemeResource TitleTextBlockStyle}"
+                               Text="Blender Repair Tool" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Fix Blender renderer and screenshot tool issues"
                                TextWrapping="Wrap" />
                 </StackPanel>
 
+                <!--  Time Sync Tool  -->
+                <StackPanel Spacing="16">
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
+                               Text="Time Synchronization Tool" />
+                    
+                    <InfoBar x:Name="InfoBar_TimeSync"
+                             IsClosable="True"
+                             IsOpen="False"
+                             Severity="Informational" />
+
+                    <StackPanel Spacing="12">
+                        <!--  Current Time Display  -->
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="16,12">
+                            <StackPanel Spacing="4">
+                                <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           Text="Current Local Time" />
+                                <TextBlock x:Name="TextBlock_LocalTime"
+                                           FontSize="20"
+                                           FontWeight="SemiBold"
+                                           Text="--:--:--" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  NTP Server Selection  -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="NTP Server" />
+                            <ComboBox x:Name="ComboBox_NtpServer"
+                                      HorizontalAlignment="Stretch"
+                                      PlaceholderText="Select NTP Server" />
+                        </StackPanel>
+
+                        <!--  Sync Button  -->
+                        <Button x:Name="Button_SyncTime"
+                                HorizontalAlignment="Stretch"
+                                Click="Button_SyncTime_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="16" Glyph="&#xE895;" />
+                                <TextBlock Text="Sync Time Now" />
+                            </StackPanel>
+                        </Button>
+
+                        <!--  Auto Sync Options  -->
+                        <StackPanel Spacing="8">
+                            <CheckBox x:Name="CheckBox_AutoSync"
+                                      Content="Enable Auto Sync"
+                                      Checked="CheckBox_AutoSync_CheckedChanged"
+                                      Unchecked="CheckBox_AutoSync_CheckedChanged" />
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="8"
+                                        Visibility="{x:Bind CheckBox_AutoSync.IsChecked, Mode=OneWay}">
+                                <TextBlock VerticalAlignment="Center" Text="Sync Interval (minutes):" />
+                                <NumberBox x:Name="NumberBox_SyncInterval"
+                                           Width="120"
+                                           Maximum="1440"
+                                           Minimum="1"
+                                           SpinButtonPlacementMode="Inline"
+                                           Value="60"
+                                           ValueChanged="NumberBox_SyncInterval_ValueChanged" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  Other Tools Placeholder  -->
+                <StackPanel Spacing="16">
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
+                               Text="Other Tools (Coming Soon)" />
+
+                    <InfoBar Title="More Features"
+                             IsClosable="False"
+                             IsOpen="True"
+                             Message="Additional diagnostic and repair tools will be added in future versions."
+                             Severity="Informational" />
+
+                    <StackPanel Spacing="12">
+                        <Button x:Name="Button_Placeholder"
+                                HorizontalAlignment="Stretch"
+                                Click="Button_Placeholder_Click"
+                                IsEnabled="False">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="16" Glyph="&#xE90F;" />
+                                <TextBlock Text="Diagnose Issues" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="Button_Placeholder2"
+                                HorizontalAlignment="Stretch"
+                                IsEnabled="False">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="16" Glyph="&#xE72C;" />
+                                <TextBlock Text="Fix Configuration" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+
             </StackPanel>
-        </Grid>
+        </ScrollViewer>
     </Grid>
 </sf:WindowEx>
