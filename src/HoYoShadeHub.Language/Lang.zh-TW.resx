@@ -1550,4 +1550,16 @@
   <data name="ToolboxSetting_BlenderRepairToolDescription" xml:space="preserve">
     <value>修復 Blender/留影機插件 功能問題</value>
   </data>
+  <data name="UninstallShadersDialog_Title" xml:space="preserve">
+    <value>解安裝 {0} 著色器和插件</value>
+  </data>
+  <data name="UninstallShadersDialog_Message1" xml:space="preserve">
+    <value>確定要解安裝 {0} 的著色器和插件嗎？</value>
+  </data>
+  <data name="UninstallShadersDialog_Message2" xml:space="preserve">
+    <value>此操作不會導致預設和遊戲截圖被刪除，解安裝後，你可以通過「安裝ReShade著色器及插件」重新安裝，但此前可供安裝的著色器和插件可能不再可用。</value>
+  </data>
+  <data name="FileSettingPage_UninstallShadersAndPlugins" xml:space="preserve">
+    <value>解安裝著色器和插件</value>
+  </data>
 </root>

@@ -260,7 +260,7 @@
                             Style="{ThemeResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE74D;" />
-                            <TextBlock Text="卸载着色器和插件" />
+                            <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}" />
                         </StackPanel>
                     </Button>
                     
@@ -384,7 +384,7 @@
                             Style="{ThemeResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE74D;" />
-                            <TextBlock Text="卸载着色器和插件" />
+                            <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}" />
                         </StackPanel>
                     </Button>
                     
@@ -469,9 +469,6 @@
                               IsIndeterminate="{x:Bind ClearCacheCommand.IsRunning}"
                               Visibility="{x:Bind ClearCacheCommand.IsRunning}" />
             </StackPanel>
-
-
-
         </StackPanel>
     </ScrollViewer>
 

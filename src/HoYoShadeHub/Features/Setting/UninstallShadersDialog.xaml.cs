@@ -50,11 +50,11 @@ public sealed partial class UninstallShadersDialog : ContentDialog
     }
     
     // 警告标题
-    public string WarningTitle => $"卸载 {ShadeName} 着色器和插件";
+    public string WarningTitle => string.Format(Lang.UninstallShadersDialog_Title, ShadeName);
     
-    public string WarningMessage1 => $"确定要卸载 {ShadeName} 的着色器和插件吗？";
+    public string WarningMessage1 => string.Format(Lang.UninstallShadersDialog_Message1, ShadeName);
     
-    public string WarningMessage2 => "此操作不会导致预设和游戏截图被删除，卸载后，你可以通过“安装ReShade着色器和插件”重新安装，但此前可供安装的着色器和插件可能不再可用。";
+    public string WarningMessage2 => Lang.UninstallShadersDialog_Message2;
 
     public bool IsUninstalling { get => field; set => SetProperty(ref field, value); }
 

@@ -1550,4 +1550,16 @@ Please scan QR code while Injector run next time to login again.</value>
   <data name="ToolboxSetting_BlenderRepairToolDescription" xml:space="preserve">
     <value>Fix Blender Plugin issues</value>
   </data>
+  <data name="UninstallShadersDialog_Title" xml:space="preserve">
+    <value>Uninstall {0} shaders and plugins</value>
+  </data>
+  <data name="UninstallShadersDialog_Message1" xml:space="preserve">
+    <value>Are you sure you want to uninstall shaders and plugins for {0}?</value>
+  </data>
+  <data name="UninstallShadersDialog_Message2" xml:space="preserve">
+    <value>This operation will not delete presets and screenshots. You can reinstall them via 'Install ReShade shaders &amp; addons', but previously available shaders might not be available anymore.</value>
+  </data>
+  <data name="FileSettingPage_UninstallShadersAndPlugins" xml:space="preserve">
+    <value>Uninstall Shaders and Plugins</value>
+  </data>
 </root>

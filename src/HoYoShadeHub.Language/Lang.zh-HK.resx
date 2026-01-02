@@ -1550,4 +1550,16 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="ToolboxSetting_BlenderRepairToolDescription" xml:space="preserve">
     <value>修復 Blender/留影機插件 功能問題</value>
   </data>
+  <data name="UninstallShadersDialog_Title" xml:space="preserve">
+    <value>解安裝 {0} 嘅著色器同插件</value>
+  </data>
+  <data name="UninstallShadersDialog_Message1" xml:space="preserve">
+    <value>你係咪確定要解安裝 {0} 嘅著色器同插件呀？</value>
+  </data>
+  <data name="UninstallShadersDialog_Message2" xml:space="preserve">
+    <value>呢個操作唔會刪除預設同遊戲截圖。解安裝之後，你可以透過「安裝ReShade著色器同插件」重新安裝，但係之前有得裝嘅著色器同插件可能已經冇咗㗎啦。</value>
+  </data>
+  <data name="FileSettingPage_UninstallShadersAndPlugins" xml:space="preserve">
+    <value>解安裝著色器同插件</value>
+  </data>
 </root>

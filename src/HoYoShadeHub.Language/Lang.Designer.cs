@@ -154,7 +154,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Genshin Impact (cookie.txt) 的本地化字符串。
+        ///   查找类似 Genshin Impact (cookies.json) 的本地化字符串。
         /// </summary>
         public static string BlenderRepairTool_GenshinCookie {
             get {
@@ -972,6 +972,15 @@ namespace HoYoShadeHub.Language {
         public static string FileSettingPage_UninstallOpenHoYoShade {
             get {
                 return ResourceManager.GetString("FileSettingPage_UninstallOpenHoYoShade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Uninstall Shaders and Plugins 的本地化字符串。
+        /// </summary>
+        public static string FileSettingPage_UninstallShadersAndPlugins {
+            get {
+                return ResourceManager.GetString("FileSettingPage_UninstallShadersAndPlugins", resourceCulture);
             }
         }
         
@@ -4012,6 +4021,33 @@ namespace HoYoShadeHub.Language {
         public static string UninstallShadeDialog_WarningMessage2 {
             get {
                 return ResourceManager.GetString("UninstallShadeDialog_WarningMessage2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Are you sure you want to uninstall shaders and plugins for {0}? 的本地化字符串。
+        /// </summary>
+        public static string UninstallShadersDialog_Message1 {
+            get {
+                return ResourceManager.GetString("UninstallShadersDialog_Message1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This operation will not delete presets and screenshots. You can reinstall them via &apos;Install ReShade shaders &amp; addons&apos;, but previously available shaders might not be available anymore. 的本地化字符串。
+        /// </summary>
+        public static string UninstallShadersDialog_Message2 {
+            get {
+                return ResourceManager.GetString("UninstallShadersDialog_Message2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Uninstall {0} shaders and plugins 的本地化字符串。
+        /// </summary>
+        public static string UninstallShadersDialog_Title {
+            get {
+                return ResourceManager.GetString("UninstallShadersDialog_Title", resourceCulture);
             }
         }
         
