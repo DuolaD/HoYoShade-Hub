@@ -587,6 +587,34 @@ public sealed partial class FileManageSetting : PageBase
 
 
     /// <summary>
+    /// 卸载HoYoShade着色器和插件
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    private async Task UninstallHoYoShadeShadersAsync()
+    {
+        try
+        {
+            var dialog = new UninstallShadersDialog
+            {
+                ShadePath = HoYoShadePath,
+                ShadeName = "HoYoShade",
+                XamlRoot = this.XamlRoot,
+            };
+            
+            await dialog.ShowAsync();
+            
+            // 刷新安装状态
+            await UpdateHoYoShadeSizeAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Uninstall HoYoShade shaders");
+        }
+    }
+
+
+    /// <summary>
     /// 打开HoYoShade文件夹
     /// </summary>
     /// <returns></returns>
@@ -632,6 +660,34 @@ public sealed partial class FileManageSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Uninstall OpenHoYoShade");
+        }
+    }
+
+
+    /// <summary>
+    /// 卸载OpenHoYoShade着色器和插件
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    private async Task UninstallOpenHoYoShadeShadersAsync()
+    {
+        try
+        {
+            var dialog = new UninstallShadersDialog
+            {
+                ShadePath = OpenHoYoShadePath,
+                ShadeName = "OpenHoYoShade",
+                XamlRoot = this.XamlRoot,
+            };
+            
+            await dialog.ShowAsync();
+            
+            // 刷新安装状态
+            await UpdateHoYoShadeSizeAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Uninstall OpenHoYoShade shaders");
         }
     }
 
