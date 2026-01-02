@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using HoYoShadeHub.Features.Screenshot;
+using HoYoShadeHub.Features.Toolbox;
 using HoYoShadeHub.Frameworks;
 using System.Collections.Generic;
 
@@ -30,6 +31,12 @@ public sealed partial class ToolboxSetting : PageBase
                             nameof(ImageViewWindow2),
                             nameof(Lang.ToolboxSetting_ImageViewer),
                             nameof(Lang.ToolboxSetting_ViewOrEditImage)),
+            new ToolboxItem("\xE90F",
+                            null,
+                            nameof(BlenderRepairToolWindow),
+                            "Blender/留影机修复工具",
+                            "修复游戏中的 Blender 渲染器和留影机功能问题",
+                            false),
         ];
     }
 
@@ -56,7 +63,6 @@ public sealed partial class ToolboxSetting : PageBase
 
 
 
-
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -66,6 +72,10 @@ public sealed partial class ToolboxSetting : PageBase
                 if (item.Tag is nameof(ImageViewWindow2))
                 {
                     new ImageViewWindow2().ShowWindow(XamlRoot.ContentIslandEnvironment.AppWindowId);
+                }
+                else if (item.Tag is nameof(BlenderRepairToolWindow))
+                {
+                    new BlenderRepairToolWindow().ShowWindow(XamlRoot.ContentIslandEnvironment.AppWindowId);
                 }
             }
         }

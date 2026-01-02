@@ -26,7 +26,6 @@
 		<Product>HoYoShade Hub</Product>
 		<Copyright>Copyright © 2025 HoYoShade Hub Team</Copyright>
 	</PropertyGroup>
-	
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />

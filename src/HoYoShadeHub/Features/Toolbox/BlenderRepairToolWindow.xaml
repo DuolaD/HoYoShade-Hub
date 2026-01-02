@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sf:WindowEx x:Class="HoYoShadeHub.Features.Toolbox.BlenderRepairToolWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:HoYoShadeHub.Features.Toolbox"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sf="using:HoYoShadeHub.Frameworks"
+             mc:Ignorable="d">
+
+    <Grid x:Name="RootGrid" Loaded="RootGrid_Loaded">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!--  Title Bar  -->
+        <Grid x:Name="CustomTitleBar"
+              Grid.Row="0"
+              Background="{ThemeResource LayerFillColorDefaultBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0"
+                   Width="16"
+                   Height="16"
+                   Margin="16,0,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Source="ms-appx:///Assets/logo.ico" />
+
+            <TextBlock Grid.Column="1"
+                       Margin="12,0,0,0"
+                       VerticalAlignment="Center"
+                       Style="{ThemeResource CaptionTextBlockStyle}"
+                       Text="Blender Repair Tool" />
+        </Grid>
+
+        <!--  Content  -->
+        <Grid Grid.Row="1" Padding="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="16" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!--  Title  -->
+            <TextBlock Grid.Row="0"
+                       Style="{ThemeResource TitleTextBlockStyle}"
+                       Text="Blender Repair Tool" />
+
+            <!--  Description  -->
+            <TextBlock Grid.Row="2"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="Fix Blender renderer and screenshot tool issues"
+                       TextWrapping="Wrap" />
+
+            <!--  Main Content  -->
+            <StackPanel Grid.Row="4"
+                        Spacing="16"
+                        VerticalAlignment="Top">
+
+                <InfoBar Title="About"
+                         IsClosable="False"
+                         IsOpen="True"
+                         Message="This tool helps diagnose and fix common issues with Blender renderer and screenshot functionality. More features will be added in future versions."
+                         Severity="Informational" />
+
+                <StackPanel Spacing="12">
+                    <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Features (Coming Soon)" />
+
+                    <Button x:Name="Button_Placeholder"
+                            HorizontalAlignment="Stretch"
+                            Click="Button_Placeholder_Click"
+                            IsEnabled="False">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon FontSize="16" Glyph="&#xE90F;" />
+                            <TextBlock Text="Diagnose Issues" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="Button_Placeholder2"
+                            HorizontalAlignment="Stretch"
+                            IsEnabled="False">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon FontSize="16" Glyph="&#xE72C;" />
+                            <TextBlock Text="Fix Configuration" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Spacing="8">
+                    <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Status" />
+
+                    <TextBlock x:Name="TextBlock_Status"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Waiting..."
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+            </StackPanel>
+        </Grid>
+    </Grid>
+</sf:WindowEx>
