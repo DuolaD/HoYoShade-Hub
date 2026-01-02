@@ -1551,4 +1551,25 @@
   <data name="FileSettingPage_UninstallShadersAndPlugins" xml:space="preserve">
     <value>卸载着色器和插件</value>
   </data>
+  <data name="CustomInjectDialog_Title" xml:space="preserve">
+    <value>自定义注入</value>
+  </data>
+  <data name="CustomInjectDialog_ProcessNameInput" xml:space="preserve">
+    <value>请输入目标进程名称（包含 .exe 后缀）：</value>
+  </data>
+  <data name="CustomInjectDialog_ProcessNamePlaceholder" xml:space="preserve">
+    <value>例如：GenshinImpact.exe</value>
+  </data>
+  <data name="CustomInjectDialog_Description" xml:space="preserve">
+    <value>注入器将尝试向该进程注入 ReShade。</value>
+  </data>
+  <data name="CustomInjectDialog_Inject" xml:space="preserve">
+    <value>注入</value>
+  </data>
+  <data name="CustomInjectDialog_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="FileSettingPage_CustomInject" xml:space="preserve">
+    <value>自定义注入</value>
+  </data>
 </root>

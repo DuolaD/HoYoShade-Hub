@@ -9,6 +9,8 @@ using HoYoShadeHub.Features.Database;
 using HoYoShadeHub.Features.GameLauncher;
 using HoYoShadeHub.Features.ViewHost;
 using HoYoShadeHub.Frameworks;
+using HoYoShadeHub.Helpers;
+using HoYoShadeHub.Language;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -757,6 +759,106 @@ public sealed partial class FileManageSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Reset OpenHoYoShade ReShade.ini");
+        }
+    }
+
+
+    /// <summary>
+    /// 自定义注入HoYoShade
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    private async Task CustomInjectHoYoShadeAsync()
+    {
+        try
+        {
+            var dialog = new CustomInjectDialog
+            {
+                XamlRoot = this.XamlRoot,
+            };
+            
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary && !string.IsNullOrWhiteSpace(dialog.ProcessName))
+            {
+                await StartShaderInjectorAsync(HoYoShadePath, "HoYoShade", dialog.ProcessName);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Custom inject HoYoShade");
+        }
+    }
+
+
+    /// <summary>
+    /// 自定义注入OpenHoYoShade
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    private async Task CustomInjectOpenHoYoShadeAsync()
+    {
+        try
+        {
+            var dialog = new CustomInjectDialog
+            {
+                XamlRoot = this.XamlRoot,
+            };
+            
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary && !string.IsNullOrWhiteSpace(dialog.ProcessName))
+            {
+                await StartShaderInjectorAsync(OpenHoYoShadePath, "OpenHoYoShade", dialog.ProcessName);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Custom inject OpenHoYoShade");
+        }
+    }
+
+
+    private async Task StartShaderInjectorAsync(string shadePath, string shadeName, string processName)
+    {
+        try
+        {
+            if (!Directory.Exists(shadePath))
+            {
+                _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
+                return;
+            }
+
+            string injectExePath = Path.Combine(shadePath, "inject.exe");
+            if (!File.Exists(injectExePath))
+            {
+                _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
+                return;
+            }
+
+            _logger.LogInformation("Starting {ShadeName} injector: {InjectPath} {ProcessName}",
+                shadeName, injectExePath, processName);
+
+            var injectStartInfo = new ProcessStartInfo
+            {
+                FileName = injectExePath,
+                Arguments = processName,
+                UseShellExecute = false,
+                WorkingDirectory = shadePath,
+                CreateNoWindow = true
+            };
+
+            Process? injectorProcess = Process.Start(injectStartInfo);
+            _logger.LogInformation("{ShadeName} injector started (PID: {Pid})",
+                shadeName, injectorProcess?.Id ?? -1);
+            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_InjectorStarted, shadeName));
+            
+            await Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Start {ShadeName} injector", shadeName);
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectorStartFailed, shadeName, ex.Message));
         }
     }
 

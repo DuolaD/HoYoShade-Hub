@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog x:Class="HoYoShadeHub.Features.Setting.CustomInjectDialog"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               xmlns:lang="using:HoYoShadeHub.Language"
+               x:DefaultBindMode="OneWay"
+               DefaultButton="Primary"
+               PrimaryButtonText="{x:Bind lang:Lang.CustomInjectDialog_Inject}"
+               SecondaryButtonText="{x:Bind lang:Lang.CustomInjectDialog_Cancel}"
+               Title="{x:Bind lang:Lang.CustomInjectDialog_Title}"
+               mc:Ignorable="d">
+
+    <Grid MinWidth="400">
+        <StackPanel Spacing="12">
+            <TextBlock Text="{x:Bind lang:Lang.CustomInjectDialog_ProcessNameInput}" 
+                       TextWrapping="Wrap" />
+            <TextBox x:Name="ProcessNameTextBox" 
+                     PlaceholderText="{x:Bind lang:Lang.CustomInjectDialog_ProcessNamePlaceholder}"
+                     Text="{x:Bind ProcessName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind lang:Lang.CustomInjectDialog_Description}"
+                       TextWrapping="Wrap" 
+                       FontSize="12"/>
+        </StackPanel>
+    </Grid>
+</ContentDialog>

@@ -625,6 +625,60 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Cancel 的本地化字符串。
+        /// </summary>
+        public static string CustomInjectDialog_Cancel {
+            get {
+                return ResourceManager.GetString("CustomInjectDialog_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The injector will attempt to inject ReShade into this process. 的本地化字符串。
+        /// </summary>
+        public static string CustomInjectDialog_Description {
+            get {
+                return ResourceManager.GetString("CustomInjectDialog_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Inject 的本地化字符串。
+        /// </summary>
+        public static string CustomInjectDialog_Inject {
+            get {
+                return ResourceManager.GetString("CustomInjectDialog_Inject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Please enter the target process name (including .exe suffix): 的本地化字符串。
+        /// </summary>
+        public static string CustomInjectDialog_ProcessNameInput {
+            get {
+                return ResourceManager.GetString("CustomInjectDialog_ProcessNameInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 e.g. GenshinImpact.exe 的本地化字符串。
+        /// </summary>
+        public static string CustomInjectDialog_ProcessNamePlaceholder {
+            get {
+                return ResourceManager.GetString("CustomInjectDialog_ProcessNamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Custom Inject 的本地化字符串。
+        /// </summary>
+        public static string CustomInjectDialog_Title {
+            get {
+                return ResourceManager.GetString("CustomInjectDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Close 的本地化字符串。
         /// </summary>
         public static string DownloadGamePage_Close {
@@ -819,6 +873,15 @@ namespace HoYoShadeHub.Language {
         public static string FileSettingPage_ClearCache {
             get {
                 return ResourceManager.GetString("FileSettingPage_ClearCache", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Custom Inject 的本地化字符串。
+        /// </summary>
+        public static string FileSettingPage_CustomInject {
+            get {
+                return ResourceManager.GetString("FileSettingPage_CustomInject", resourceCulture);
             }
         }
         
