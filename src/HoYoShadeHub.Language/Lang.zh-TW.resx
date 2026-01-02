@@ -849,7 +849,7 @@
     <value>無法刪除檔案</value>
   </data>
   <data name="ImageViewWindow2_InsufficientPermissionsOrTheFileIsInUse" xml:space="preserve">
-    <value>沒有權限或檔案正在使用</value>
+    <value>没有权限或檔案正在使用</value>
   </data>
   <data name="HotkeyInput_ClickToSetShortcutKeys" xml:space="preserve">
     <value>點擊設定快捷鍵</value>
@@ -1441,5 +1441,104 @@
   </data>
   <data name="GameLauncher_StarwardLaunchError" xml:space="preserve">
     <value>通過 Starward 啓動遊戲失敗: {0}</value>
+  </data>
+  <data name="BlenderRepairTool_WindowTitle" xml:space="preserve">
+    <value>Blender/留影機插件 修復工具</value>
+  </data>
+  <data name="BlenderRepairTool_TimeSyncSection" xml:space="preserve">
+    <value>時間同步</value>
+  </data>
+  <data name="BlenderRepairTool_LocalTime" xml:space="preserve">
+    <value>本地時間</value>
+  </data>
+  <data name="BlenderRepairTool_AccurateTime" xml:space="preserve">
+    <value>準確時間</value>
+  </data>
+  <data name="BlenderRepairTool_Refresh" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="BlenderRepairTool_SyncMethod" xml:space="preserve">
+    <value>同步方式</value>
+  </data>
+  <data name="BlenderRepairTool_NTPSync" xml:space="preserve">
+    <value>NTP 同步</value>
+  </data>
+  <data name="BlenderRepairTool_HTTPSync" xml:space="preserve">
+    <value>HTTP 同步 (Cloudflare Trace API)</value>
+  </data>
+  <data name="BlenderRepairTool_NTPServer" xml:space="preserve">
+    <value>NTP 伺服器</value>
+  </data>
+  <data name="BlenderRepairTool_TraceEndpoint" xml:space="preserve">
+    <value>Trace 端點</value>
+  </data>
+  <data name="BlenderRepairTool_SyncTimeNow" xml:space="preserve">
+    <value>立即同步時間</value>
+  </data>
+  <data name="BlenderRepairTool_EnableAutoSync" xml:space="preserve">
+    <value>啟用自動同步</value>
+  </data>
+  <data name="BlenderRepairTool_SyncInterval" xml:space="preserve">
+    <value>同步間隔（分鐘）</value>
+  </data>
+  <data name="BlenderRepairTool_PluginRepairTools" xml:space="preserve">
+    <value>Blender/留影機插件修復工具</value>
+  </data>
+  <data name="BlenderRepairTool_ResetClientTarget" xml:space="preserve">
+    <value>重設插件客戶端目標（刪除 config 檔）</value>
+  </data>
+  <data name="BlenderRepairTool_FixLoginError" xml:space="preserve">
+    <value>修復「帳號未登入」錯誤（刪除 cookie 檔）</value>
+  </data>
+  <data name="BlenderRepairTool_ResetConfirmTitle" xml:space="preserve">
+    <value>重設插件客戶端目標</value>
+  </data>
+  <data name="BlenderRepairTool_ResetConfirmMessage" xml:space="preserve">
+    <value>你確定要繼續嗎？
+
+刪除後，你需要重新啟動一次客戶端，以便讓無人機重新獲取遊戲程序根目錄。</value>
+  </data>
+  <data name="BlenderRepairTool_SelectGamesToRepair" xml:space="preserve">
+    <value>選擇要修復的遊戲：</value>
+  </data>
+  <data name="BlenderRepairTool_GenshinImpact" xml:space="preserve">
+    <value>原神</value>
+  </data>
+  <data name="BlenderRepairTool_ZenlessZoneZero" xml:space="preserve">
+    <value>絕區零</value>
+  </data>
+  <data name="BlenderRepairTool_NotConfigured" xml:space="preserve">
+    <value>未設定</value>
+  </data>
+  <data name="BlenderRepairTool_NoPluginPathConfigured" xml:space="preserve">
+    <value>未設定 Blender/留影機插件 路徑，請先在啟動器中設定插件路徑。</value>
+  </data>
+  <data name="BlenderRepairTool_SelectAtLeastOneGame" xml:space="preserve">
+    <value>請至少選擇一個遊戲進行修復。</value>
+  </data>
+  <data name="BlenderRepairTool_SuccessMessage" xml:space="preserve">
+    <value>已成功刪除 {0} 個遊戲的 config 檔。
+請重新啟動客戶端。</value>
+  </data>
+  <data name="BlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
+    <value>部分完成：{0} 個成功，{1} 個失敗。請檢視日誌了解詳情。</value>
+  </data>
+  <data name="BlenderRepairTool_AllFailedMessage" xml:space="preserve">
+    <value>所有操作均失敗。請檢視日誌了解詳情。</value>
+  </data>
+  <data name="BlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
+    <value>你確定要刪除 cookie 檔嗎？
+
+刪除後，你需要重新掃碼登入嗶哩嗶哩帳號。</value>
+  </data>
+  <data name="BlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
+    <value>已成功刪除 {0} 個遊戲的 cookie 檔。
+請重新掃碼登入。</value>
+  </data>
+  <data name="BlenderRepairTool_GenshinCookie" xml:space="preserve">
+    <value>原神 (cookie.txt)</value>
+  </data>
+  <data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
+    <value>絕區零 (cookies.json)</value>
   </data>
 </root>

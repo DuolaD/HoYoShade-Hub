@@ -5,6 +5,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using HoYoShadeHub.Frameworks;
+using HoYoShadeHub.Language;
 using System;
 using System.IO;
 using System.Linq;
@@ -39,7 +40,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
     private void InitializeWindow()
     {
-        Title = "Blender Repair Tool";
+        Title = Lang.BlenderRepairTool_WindowTitle;
         AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
         AppWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
         AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
@@ -344,12 +345,6 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         InfoBar_TimeSync.IsOpen = true;
     }
 
-    private void Button_Placeholder_Click(object sender, RoutedEventArgs e)
-    {
-        // Placeholder for future functionality
-        ShowInfoBar("Feature under development...", InfoBarSeverity.Informational);
-    }
-
     private async void Button_ResetClientTarget_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -369,7 +364,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
             if (!hasGenshin && !hasZZZ)
             {
-                ShowPluginRepairError("No Blender plugin path configured. Please configure plugin paths in the launcher first.");
+                ShowPluginRepairError(Lang.BlenderRepairTool_NoPluginPathConfigured);
                 return;
             }
 
@@ -379,15 +374,14 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 警告信息
             dialogContent.Children.Add(new TextBlock
             {
-                Text = "Are you sure you want to continue?\n\n" +
-                       "After deletion, you need to restart the client once to let the drone re-acquire the game process root directory.",
+                Text = Lang.BlenderRepairTool_ResetConfirmMessage,
                 TextWrapping = TextWrapping.Wrap
             });
 
             // 游戏选择标题
             dialogContent.Children.Add(new TextBlock
             {
-                Text = "Select game(s) to repair:",
+                Text = Lang.BlenderRepairTool_SelectGamesToRepair,
                 Margin = new Thickness(0, 8, 0, 0),
                 FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
             });
@@ -395,7 +389,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 原神复选框
             var genshinCheckBox = new CheckBox
             {
-                Content = hasGenshin ? "Genshin Impact" : "Genshin Impact (Not configured)",
+                Content = hasGenshin ? Lang.BlenderRepairTool_GenshinImpact : $"{Lang.BlenderRepairTool_GenshinImpact} ({Lang.BlenderRepairTool_NotConfigured})",
                 IsEnabled = hasGenshin,
                 Margin = new Thickness(0, 4, 0, 0)
             };
@@ -403,7 +397,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 绝区零复选框
             var zzzCheckBox = new CheckBox
             {
-                Content = hasZZZ ? "Zenless Zone Zero" : "Zenless Zone Zero (Not configured)",
+                Content = hasZZZ ? Lang.BlenderRepairTool_ZenlessZoneZero : $"{Lang.BlenderRepairTool_ZenlessZoneZero} ({Lang.BlenderRepairTool_NotConfigured})",
                 IsEnabled = hasZZZ,
                 Margin = new Thickness(0, 4, 0, 0)
             };
@@ -414,10 +408,10 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             var dialog = new ContentDialog
             {
                 XamlRoot = Content.XamlRoot,
-                Title = "Reset Plugin Client Target",
+                Title = Lang.BlenderRepairTool_ResetConfirmTitle,
                 Content = dialogContent,
-                PrimaryButtonText = "Continue",
-                CloseButtonText = "Cancel",
+                PrimaryButtonText = Lang.Common_Continue,
+                CloseButtonText = Lang.Common_Cancel,
                 DefaultButton = ContentDialogButton.Close
             };
 
@@ -434,7 +428,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
             if (!selectedGenshin && !selectedZZZ)
             {
-                ShowPluginRepairError("Please select at least one game to repair.");
+                ShowPluginRepairError(Lang.BlenderRepairTool_SelectAtLeastOneGame);
                 return;
             }
 
@@ -461,15 +455,15 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 显示结果
             if (successCount > 0 && failCount == 0)
             {
-                ShowPluginRepairSuccess($"Successfully deleted config file(s) for {successCount} game(s).\nPlease restart the client.");
+                ShowPluginRepairSuccess(string.Format(Lang.BlenderRepairTool_SuccessMessage, successCount));
             }
             else if (successCount > 0 && failCount > 0)
             {
-                ShowPluginRepairError($"Partially completed: {successCount} succeeded, {failCount} failed. Check logs for details.");
+                ShowPluginRepairError(string.Format(Lang.BlenderRepairTool_PartialSuccessMessage, successCount, failCount));
             }
             else
             {
-                ShowPluginRepairError("All operations failed. Check logs for details.");
+                ShowPluginRepairError(Lang.BlenderRepairTool_AllFailedMessage);
             }
         }
         catch (Exception ex)
@@ -498,7 +492,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
             if (!hasGenshin && !hasZZZ)
             {
-                ShowPluginRepairError("No Blender plugin path configured. Please configure plugin paths in the launcher first.");
+                ShowPluginRepairError(Lang.BlenderRepairTool_NoPluginPathConfigured);
                 return;
             }
 
@@ -508,15 +502,14 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 警告信息
             dialogContent.Children.Add(new TextBlock
             {
-                Text = "Are you sure you want to delete the cookie file?\n\n" +
-                       "After deletion, you need to scan the QR code again to log in to your Bilibili account.",
+                Text = Lang.BlenderRepairTool_FixLoginConfirmMessage,
                 TextWrapping = TextWrapping.Wrap
             });
 
             // 游戏选择标题
             dialogContent.Children.Add(new TextBlock
             {
-                Text = "Select game(s) to repair:",
+                Text = Lang.BlenderRepairTool_SelectGamesToRepair,
                 Margin = new Thickness(0, 8, 0, 0),
                 FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
             });
@@ -524,7 +517,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 原神复选框
             var genshinCheckBox = new CheckBox
             {
-                Content = hasGenshin ? "Genshin Impact (cookie.txt)" : "Genshin Impact (Not configured)",
+                Content = hasGenshin ? Lang.BlenderRepairTool_GenshinCookie : $"{Lang.BlenderRepairTool_GenshinImpact} ({Lang.BlenderRepairTool_NotConfigured})",
                 IsEnabled = hasGenshin,
                 Margin = new Thickness(0, 4, 0, 0)
             };
@@ -532,7 +525,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 绝区零复选框
             var zzzCheckBox = new CheckBox
             {
-                Content = hasZZZ ? "Zenless Zone Zero (cookies.json)" : "Zenless Zone Zero (Not configured)",
+                Content = hasZZZ ? Lang.BlenderRepairTool_ZZZCookie : $"{Lang.BlenderRepairTool_ZenlessZoneZero} ({Lang.BlenderRepairTool_NotConfigured})",
                 IsEnabled = hasZZZ,
                 Margin = new Thickness(0, 4, 0, 0)
             };
@@ -543,10 +536,10 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             var dialog = new ContentDialog
             {
                 XamlRoot = Content.XamlRoot,
-                Title = "Fix 'Account Not Logged In' Error",
+                Title = Lang.BlenderRepairTool_FixLoginError,
                 Content = dialogContent,
-                PrimaryButtonText = "Continue",
-                CloseButtonText = "Cancel",
+                PrimaryButtonText = Lang.Common_Continue,
+                CloseButtonText = Lang.Common_Cancel,
                 DefaultButton = ContentDialogButton.Close
             };
 
@@ -563,7 +556,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
             if (!selectedGenshin && !selectedZZZ)
             {
-                ShowPluginRepairError("Please select at least one game to repair.");
+                ShowPluginRepairError(Lang.BlenderRepairTool_SelectAtLeastOneGame);
                 return;
             }
 
@@ -590,15 +583,15 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 显示结果
             if (successCount > 0 && failCount == 0)
             {
-                ShowPluginRepairSuccess($"Successfully deleted cookie file(s) for {successCount} game(s).\nPlease scan QR code to login again.");
+                ShowPluginRepairSuccess(string.Format(Lang.BlenderRepairTool_CookieSuccessMessage, successCount));
             }
             else if (successCount > 0 && failCount > 0)
             {
-                ShowPluginRepairError($"Partially completed: {successCount} succeeded, {failCount} failed. Check logs for details.");
+                ShowPluginRepairError(string.Format(Lang.BlenderRepairTool_PartialSuccessMessage, successCount, failCount));
             }
             else
             {
-                ShowPluginRepairError("All operations failed. Check logs for details.");
+                ShowPluginRepairError(Lang.BlenderRepairTool_AllFailedMessage);
             }
         }
         catch (Exception ex)
