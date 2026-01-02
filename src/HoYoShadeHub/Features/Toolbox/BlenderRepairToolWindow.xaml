@@ -63,7 +63,34 @@
                              Severity="Informational" />
 
                     <StackPanel Spacing="12">
-                        <!--  Current Time Display  -->
+                        <!--  Accurate Time Display (from Cloudflare API)  -->
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="16,12">
+                            <StackPanel Spacing="4">
+                                <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           Text="Accurate Network Time" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock x:Name="TextBlock_AccurateTime"
+                                               FontSize="20"
+                                               FontWeight="SemiBold"
+                                               Text="Loading..." />
+                                    <Button x:Name="Button_RefreshAccurateTime"
+                                            Width="32"
+                                            Height="32"
+                                            Padding="0"
+                                            VerticalAlignment="Center"
+                                            Click="Button_RefreshAccurateTime_Click"
+                                            ToolTipService.ToolTip="Refresh">
+                                        <FontIcon FontSize="14" Glyph="&#xE72C;" />
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Current Local Time Display  -->
                         <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                 BorderThickness="1"
@@ -86,29 +113,29 @@
                                           MaxColumns="2"
                                           SelectedIndex="0"
                                           SelectionChanged="RadioButtons_SyncMethod_SelectionChanged">
-                                <RadioButton Content="HTTP (Cloudflare)" Tag="HTTP" />
                                 <RadioButton Content="NTP Server" Tag="NTP" />
+                                <RadioButton Content="HTTP (Cloudflare)" Tag="HTTP" />
                             </RadioButtons>
+                        </StackPanel>
+
+                        <!--  NTP Server Selection (visible when NTP is selected - default)  -->
+                        <StackPanel x:Name="StackPanel_NtpOptions"
+                                    Spacing="8"
+                                    Visibility="Visible">
+                            <TextBlock Text="NTP Server" />
+                            <ComboBox x:Name="ComboBox_NtpServer"
+                                      HorizontalAlignment="Stretch"
+                                      PlaceholderText="Select NTP Server" />
                         </StackPanel>
 
                         <!--  HTTP Endpoint Selection (visible when HTTP is selected)  -->
                         <StackPanel x:Name="StackPanel_HttpOptions"
                                     Spacing="8"
-                                    Visibility="Visible">
+                                    Visibility="Collapsed">
                             <TextBlock Text="Cloudflare Trace Endpoint" />
                             <ComboBox x:Name="ComboBox_HttpEndpoint"
                                       HorizontalAlignment="Stretch"
                                       PlaceholderText="Select Trace Endpoint" />
-                        </StackPanel>
-
-                        <!--  NTP Server Selection (visible when NTP is selected)  -->
-                        <StackPanel x:Name="StackPanel_NtpOptions"
-                                    Spacing="8"
-                                    Visibility="Collapsed">
-                            <TextBlock Text="NTP Server" />
-                            <ComboBox x:Name="ComboBox_NtpServer"
-                                      HorizontalAlignment="Stretch"
-                                      PlaceholderText="Select NTP Server" />
                         </StackPanel>
 
                         <!--  Sync Button  -->
