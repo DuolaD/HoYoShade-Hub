@@ -1518,7 +1518,7 @@ Delete咗之後，你要重新啟動一次客戶端，等無人機重新攞遊�
   </data>
   <data name="BlenderRepairTool_SuccessMessage" xml:space="preserve">
     <value>已經成功 delete咗 {0} 個遊戲嘅 config 檔。
-請重新啟動客戶端。</value>
+請在注入器啓動後重新指定客戶端。</value>
   </data>
   <data name="BlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
     <value>部分完成：{0} 個成功，{1} 個失敗。請睇日誌了解詳情。</value>
@@ -1533,16 +1533,16 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   </data>
   <data name="BlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
     <value>已經成功 delete咗 {0} 個遊戲嘅 cookie 檔。
-請重新掃碼登入。</value>
+請在注入器啓動後重新掃碼登錄。</value>
   </data>
   <data name="BlenderRepairTool_GenshinCookie" xml:space="preserve">
-    <value>原神 (cookie.txt)</value>
+    <value>原神 (cookies.json)</value>
   </data>
   <data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
     <value>絕區零 (cookies.json)</value>
   </data>
   <data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
-    <value>修復遊戲中的 Blender 渲染器和留影機功能問題</value>
+    <value>修復 Blender/留影機插件 功能問題</value>
   </data>
   <data name="ToolboxSetting_BlenderRepairTool" xml:space="preserve">
     <value>Blender/留影機插件 修復工具</value>

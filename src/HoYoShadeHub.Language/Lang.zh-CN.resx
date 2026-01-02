@@ -1507,7 +1507,7 @@
   </data>
   <data name="BlenderRepairTool_SuccessMessage" xml:space="preserve">
     <value>已成功删除 {0} 个游戏的 config 文件。
-请重启客户端。</value>
+请在注入器启动后重新指定客户端。</value>
   </data>
   <data name="BlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
     <value>部分完成：{0} 个成功，{1} 个失败。请查看日志了解详情。</value>
@@ -1522,16 +1522,16 @@
   </data>
   <data name="BlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
     <value>已成功删除 {0} 个游戏的 cookie 文件。
-请重新扫码登录。</value>
+请在注入器启动后重新扫码登录。</value>
   </data>
   <data name="BlenderRepairTool_GenshinCookie" xml:space="preserve">
-    <value>原神 (cookie.txt)</value>
+    <value>原神 (cookies.json)</value>
   </data>
   <data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
     <value>绝区零 (cookies.json)</value>
   </data>
   <data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
-    <value>修复游戏中的 Blender 渲染器和留影机功能问题</value>
+    <value>修复 Blender/留影机插件 的功能问题</value>
   </data>
   <data name="ToolboxSetting_BlenderRepairTool" xml:space="preserve">
     <value>Blender/留影机插件 修复工具</value>

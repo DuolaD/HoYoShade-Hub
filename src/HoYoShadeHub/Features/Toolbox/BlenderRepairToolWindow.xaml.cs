@@ -16,6 +16,13 @@ using Windows.UI;
 
 namespace HoYoShadeHub.Features.Toolbox;
 
+enum FileDeleteResult
+{
+    Success,
+    NotFound,
+    Failed
+}
+
 [INotifyPropertyChanged]
 public sealed partial class BlenderRepairToolWindow : WindowEx
 {
@@ -410,14 +417,14 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
                 XamlRoot = Content.XamlRoot,
                 Title = Lang.BlenderRepairTool_ResetConfirmTitle,
                 Content = dialogContent,
-                PrimaryButtonText = Lang.Common_Continue,
-                CloseButtonText = Lang.Common_Cancel,
-                DefaultButton = ContentDialogButton.Close
+                PrimaryButtonText = Lang.Common_Cancel,
+                SecondaryButtonText = Lang.Common_Continue,
+                DefaultButton = ContentDialogButton.Secondary
             };
 
             var result = await dialog.ShowAsync();
 
-            if (result != ContentDialogResult.Primary)
+            if (result != ContentDialogResult.Secondary)
             {
                 return; // 用户取消
             }
@@ -435,31 +442,46 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 执行删除操作
             int successCount = 0;
             int failCount = 0;
+            int notFoundCount = 0;
 
             if (selectedGenshin)
             {
-                if (await DeletePluginConfigFileInternal(true, genshinPath!))
+                var deleteResult = await DeletePluginConfigFileInternal(true, genshinPath!);
+                if (deleteResult == FileDeleteResult.Success)
                     successCount++;
+                else if (deleteResult == FileDeleteResult.NotFound)
+                    notFoundCount++;
                 else
                     failCount++;
             }
 
             if (selectedZZZ)
             {
-                if (await DeletePluginConfigFileInternal(false, zzzPath!))
+                var deleteResult = await DeletePluginConfigFileInternal(false, zzzPath!);
+                if (deleteResult == FileDeleteResult.Success)
                     successCount++;
+                else if (deleteResult == FileDeleteResult.NotFound)
+                    notFoundCount++;
                 else
                     failCount++;
             }
 
             // 显示结果
-            if (successCount > 0 && failCount == 0)
+            if (successCount > 0 && failCount == 0 && notFoundCount == 0)
             {
                 ShowPluginRepairSuccess(string.Format(Lang.BlenderRepairTool_SuccessMessage, successCount));
             }
-            else if (successCount > 0 && failCount > 0)
+            else if (notFoundCount > 0 && successCount == 0 && failCount == 0)
             {
-                ShowPluginRepairError(string.Format(Lang.BlenderRepairTool_PartialSuccessMessage, successCount, failCount));
+                ShowPluginRepairError($"选中的游戏插件中未找到 config 文件。");
+            }
+            else if (successCount > 0)
+            {
+                string message = $"成功删除 {successCount} 个文件";
+                if (notFoundCount > 0) message += $"，{notFoundCount} 个文件未找到";
+                if (failCount > 0) message += $"，{failCount} 个文件删除失败";
+                message += "。";
+                ShowPluginRepairSuccess(message);
             }
             else
             {
@@ -538,14 +560,14 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
                 XamlRoot = Content.XamlRoot,
                 Title = Lang.BlenderRepairTool_FixLoginError,
                 Content = dialogContent,
-                PrimaryButtonText = Lang.Common_Continue,
-                CloseButtonText = Lang.Common_Cancel,
-                DefaultButton = ContentDialogButton.Close
+                PrimaryButtonText = Lang.Common_Cancel,
+                SecondaryButtonText = Lang.Common_Continue,
+                DefaultButton = ContentDialogButton.Secondary
             };
 
             var result = await dialog.ShowAsync();
 
-            if (result != ContentDialogResult.Primary)
+            if (result != ContentDialogResult.Secondary)
             {
                 return; // 用户取消
             }
@@ -563,31 +585,46 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             // 执行删除操作
             int successCount = 0;
             int failCount = 0;
+            int notFoundCount = 0;
 
             if (selectedGenshin)
             {
-                if (await DeletePluginCookieFileInternal(true, genshinPath!))
+                var deleteResult = await DeletePluginCookieFileInternal(true, genshinPath!);
+                if (deleteResult == FileDeleteResult.Success)
                     successCount++;
+                else if (deleteResult == FileDeleteResult.NotFound)
+                    notFoundCount++;
                 else
                     failCount++;
             }
 
             if (selectedZZZ)
             {
-                if (await DeletePluginCookieFileInternal(false, zzzPath!))
+                var deleteResult = await DeletePluginCookieFileInternal(false, zzzPath!);
+                if (deleteResult == FileDeleteResult.Success)
                     successCount++;
+                else if (deleteResult == FileDeleteResult.NotFound)
+                    notFoundCount++;
                 else
                     failCount++;
             }
 
             // 显示结果
-            if (successCount > 0 && failCount == 0)
+            if (successCount > 0 && failCount == 0 && notFoundCount == 0)
             {
                 ShowPluginRepairSuccess(string.Format(Lang.BlenderRepairTool_CookieSuccessMessage, successCount));
             }
-            else if (successCount > 0 && failCount > 0)
+            else if (notFoundCount > 0 && successCount == 0 && failCount == 0)
             {
-                ShowPluginRepairError(string.Format(Lang.BlenderRepairTool_PartialSuccessMessage, successCount, failCount));
+                ShowPluginRepairError($"选中的游戏插件中未找到 cookies.json 文件。");
+            }
+            else if (successCount > 0)
+            {
+                string message = $"成功删除 {successCount} 个文件";
+                if (notFoundCount > 0) message += $"，{notFoundCount} 个文件未找到";
+                if (failCount > 0) message += $"，{failCount} 个文件删除失败";
+                message += "。";
+                ShowPluginRepairSuccess(message);
             }
             else
             {
@@ -601,7 +638,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         }
     }
 
-    private async Task<bool> DeletePluginConfigFileInternal(bool isGenshin, string pluginPath)
+    private async Task<FileDeleteResult> DeletePluginConfigFileInternal(bool isGenshin, string pluginPath)
     {
         string gameName = isGenshin ? "Genshin Impact" : "Zenless Zone Zero";
         string configFile = Path.Combine(pluginPath, "config");
@@ -609,44 +646,43 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         if (!File.Exists(configFile))
         {
             _logger.LogWarning("Config file not found for {Game} at {Path}", gameName, configFile);
-            return false;
+            return FileDeleteResult.NotFound;
         }
 
         try
         {
             File.Delete(configFile);
             _logger.LogInformation("Deleted config file for {Game} at {Path}", gameName, configFile);
-            return true;
+            return FileDeleteResult.Success;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to delete config file for {Game}", gameName);
-            return false;
+            return FileDeleteResult.Failed;
         }
     }
 
-    private async Task<bool> DeletePluginCookieFileInternal(bool isGenshin, string pluginPath)
+    private async Task<FileDeleteResult> DeletePluginCookieFileInternal(bool isGenshin, string pluginPath)
     {
         string gameName = isGenshin ? "Genshin Impact" : "Zenless Zone Zero";
-        string cookieFileName = isGenshin ? "cookie.txt" : "cookies.json";
-        string cookieFile = Path.Combine(pluginPath, cookieFileName);
+        string cookieFile = Path.Combine(pluginPath, "cookies.json");
         
         if (!File.Exists(cookieFile))
         {
-            _logger.LogWarning("Cookie file ({FileName}) not found for {Game} at {Path}", cookieFileName, gameName, cookieFile);
-            return false;
+            _logger.LogWarning("Cookie file (cookies.json) not found for {Game} at {Path}", gameName, cookieFile);
+            return FileDeleteResult.NotFound;
         }
 
         try
         {
             File.Delete(cookieFile);
-            _logger.LogInformation("Deleted cookie file {FileName} for {Game} at {Path}", cookieFileName, gameName, cookieFile);
-            return true;
+            _logger.LogInformation("Deleted cookie file cookies.json for {Game} at {Path}", gameName, cookieFile);
+            return FileDeleteResult.Success;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to delete cookie file for {Game}", gameName);
-            return false;
+            return FileDeleteResult.Failed;
         }
     }
 

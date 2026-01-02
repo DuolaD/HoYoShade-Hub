@@ -116,7 +116,7 @@ namespace HoYoShadeHub.Language {
         
         /// <summary>
         ///   查找类似 Successfully deleted cookie file(s) for {0} game(s).
-        ///Please scan QR code to login again. 的本地化字符串。
+        ///Please scan QR code while Injector run next time to login again. 的本地化字符串。
         /// </summary>
         public static string BlenderRepairTool_CookieSuccessMessage {
             get {
@@ -301,7 +301,7 @@ namespace HoYoShadeHub.Language {
         
         /// <summary>
         ///   查找类似 Successfully deleted config file(s) for {0} game(s).
-        ///Please restart the client. 的本地化字符串。
+        ///Please re-select the client while Injector run next time. 的本地化字符串。
         /// </summary>
         public static string BlenderRepairTool_SuccessMessage {
             get {

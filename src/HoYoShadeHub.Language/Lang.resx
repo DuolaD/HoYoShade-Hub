@@ -1521,7 +1521,7 @@ After deletion, you need to restart the client once to let the drone re-acquire 
   </data>
   <data name="BlenderRepairTool_SuccessMessage" xml:space="preserve">
     <value>Successfully deleted config file(s) for {0} game(s).
-Please restart the client.</value>
+Please re-select the client while Injector run next time.</value>
   </data>
   <data name="BlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
     <value>Partially completed: {0} succeeded, {1} failed. Check logs for details.</value>
@@ -1536,10 +1536,10 @@ After deletion, you need to scan the QR code again to log in to your Bilibili ac
   </data>
   <data name="BlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
     <value>Successfully deleted cookie file(s) for {0} game(s).
-Please scan QR code to login again.</value>
+Please scan QR code while Injector run next time to login again.</value>
   </data>
   <data name="BlenderRepairTool_GenshinCookie" xml:space="preserve">
-    <value>Genshin Impact (cookie.txt)</value>
+    <value>Genshin Impact (cookies.json)</value>
   </data>
   <data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
     <value>Zenless Zone Zero (cookies.json)</value>
