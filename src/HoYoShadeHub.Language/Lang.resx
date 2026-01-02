@@ -1445,6 +1445,9 @@ Do you want to continue with the reset operation?</value>
   <data name="BlenderRepairTool_WindowTitle" xml:space="preserve">
     <value>Blender Plugin Repair Tools</value>
   </data>
+  <data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
+    <value>Fix Blender renderer and screenshot tool issues</value>
+  </data>
   <data name="BlenderRepairTool_TimeSyncSection" xml:space="preserve">
     <value>Time Synchronization</value>
   </data>
@@ -1540,5 +1543,11 @@ Please scan QR code to login again.</value>
   </data>
   <data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
     <value>Zenless Zone Zero (cookies.json)</value>
+  </data>
+  <data name="ToolboxSetting_BlenderRepairTool" xml:space="preserve">
+    <value>Blender Plugin Repair Tool</value>
+  </data>
+  <data name="ToolboxSetting_BlenderRepairToolDescription" xml:space="preserve">
+    <value>Fix Blender Plugin issues</value>
   </data>
 </root>

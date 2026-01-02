@@ -49,7 +49,7 @@
                     <TextBlock Style="{ThemeResource TitleTextBlockStyle}"
                                Text="{x:Bind lang:Lang.BlenderRepairTool_WindowTitle}" />
                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="Fix Blender renderer and screenshot tool issues"
+                               Text="{x:Bind lang:Lang.BlenderRepairTool_WindowSubtitle}"
                                TextWrapping="Wrap" />
                 </StackPanel>
 

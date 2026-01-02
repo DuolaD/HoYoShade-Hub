@@ -1471,7 +1471,7 @@
     <value>同步间隔（分钟）</value>
   </data>
   <data name="BlenderRepairTool_PluginRepairTools" xml:space="preserve">
-    <value>Blender/留影机插件修复工具</value>
+    <value>Blender/留影机插件 修复工具</value>
   </data>
   <data name="BlenderRepairTool_ResetClientTarget" xml:space="preserve">
     <value>重置插件客户端目标（删除 config 文件）</value>
@@ -1529,5 +1529,14 @@
   </data>
   <data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
     <value>绝区零 (cookies.json)</value>
+  </data>
+  <data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
+    <value>修复游戏中的 Blender 渲染器和留影机功能问题</value>
+  </data>
+  <data name="ToolboxSetting_BlenderRepairTool" xml:space="preserve">
+    <value>Blender/留影机插件 修复工具</value>
+  </data>
+  <data name="ToolboxSetting_BlenderRepairToolDescription" xml:space="preserve">
+    <value>修复 Blender/留影机插件 的功能问题</value>
   </data>
 </root>

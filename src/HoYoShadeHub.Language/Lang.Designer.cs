@@ -355,6 +355,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Fix Blender renderer and screenshot tool issues 的本地化字符串。
+        /// </summary>
+        public static string BlenderRepairTool_WindowSubtitle {
+            get {
+                return ResourceManager.GetString("BlenderRepairTool_WindowSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Blender Plugin Repair Tools 的本地化字符串。
         /// </summary>
         public static string BlenderRepairTool_WindowTitle {
@@ -3859,6 +3868,24 @@ namespace HoYoShadeHub.Language {
         public static string StartGameButton_Waiting {
             get {
                 return ResourceManager.GetString("StartGameButton_Waiting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Blender Plugin Repair Tool 的本地化字符串。
+        /// </summary>
+        public static string ToolboxSetting_BlenderRepairTool {
+            get {
+                return ResourceManager.GetString("ToolboxSetting_BlenderRepairTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Fix Blender Plugin issues 的本地化字符串。
+        /// </summary>
+        public static string ToolboxSetting_BlenderRepairToolDescription {
+            get {
+                return ResourceManager.GetString("ToolboxSetting_BlenderRepairToolDescription", resourceCulture);
             }
         }
         

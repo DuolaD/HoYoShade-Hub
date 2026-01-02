@@ -34,9 +34,8 @@ public sealed partial class ToolboxSetting : PageBase
             new ToolboxItem("\xE90F",
                             null,
                             nameof(BlenderRepairToolWindow),
-                            "Blender/留影机修复工具",
-                            "修复游戏中的 Blender 渲染器和留影机功能问题",
-                            false),
+                            nameof(Lang.ToolboxSetting_BlenderRepairTool),
+                            nameof(Lang.ToolboxSetting_BlenderRepairToolDescription)),
         ];
     }
 
@@ -49,7 +48,7 @@ public sealed partial class ToolboxSetting : PageBase
 
 
 
-    public List<ToolboxItem> ToolboxItems { get; set => SetProperty(ref field, value); }
+    public List<ToolboxItem> ToolboxItems { get => field; set => SetProperty(ref field, value); }
 
 
 
