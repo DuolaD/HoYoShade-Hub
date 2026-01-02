@@ -45,6 +45,13 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
     private void InitializeTimeSyncControls()
     {
+        // Initialize HTTP trace endpoints
+        foreach (var endpoint in HttpTimeSyncService.TraceEndpoints)
+        {
+            ComboBox_HttpEndpoint.Items.Add(endpoint);
+        }
+        ComboBox_HttpEndpoint.SelectedIndex = 0;
+
         // Initialize NTP server list
         foreach (var server in NtpTimeSyncService.NtpServers)
         {
@@ -98,17 +105,30 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         }
     }
 
+    private void RadioButtons_SyncMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (RadioButtons_SyncMethod.SelectedItem is RadioButton selectedButton)
+        {
+            string? method = selectedButton.Tag?.ToString();
+            
+            if (method == "HTTP")
+            {
+                StackPanel_HttpOptions.Visibility = Visibility.Visible;
+                StackPanel_NtpOptions.Visibility = Visibility.Collapsed;
+            }
+            else if (method == "NTP")
+            {
+                StackPanel_HttpOptions.Visibility = Visibility.Collapsed;
+                StackPanel_NtpOptions.Visibility = Visibility.Visible;
+            }
+        }
+    }
+
     private async void Button_SyncTime_Click(object sender, RoutedEventArgs e)
     {
         if (_isSyncing)
         {
             ShowInfoBar("Please wait for current sync to complete", InfoBarSeverity.Warning);
-            return;
-        }
-
-        if (ComboBox_NtpServer.SelectedItem == null)
-        {
-            ShowInfoBar("Please select an NTP server", InfoBarSeverity.Warning);
             return;
         }
 
@@ -122,25 +142,58 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         _syncCts?.Cancel();
         _syncCts = new CancellationTokenSource();
 
-        string server = ComboBox_NtpServer.SelectedItem.ToString()!;
-        ShowInfoBar($"Syncing with {server}...", InfoBarSeverity.Informational);
-
         try
         {
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(_syncCts.Token);
-            cts.CancelAfter(TimeSpan.FromSeconds(10));
+            cts.CancelAfter(TimeSpan.FromSeconds(15));
 
-            var localTime = await NtpTimeSyncService.SyncSystemTimeAsync(server, cts.Token);
+            DateTime localTime;
+            string source;
+
+            // Check which sync method is selected
+            if (RadioButtons_SyncMethod.SelectedItem is RadioButton selectedButton && 
+                selectedButton.Tag?.ToString() == "HTTP")
+            {
+                // HTTP sync method
+                if (ComboBox_HttpEndpoint.SelectedItem == null)
+                {
+                    ShowInfoBar("Please select a trace endpoint", InfoBarSeverity.Warning);
+                    return;
+                }
+
+                string endpoint = ComboBox_HttpEndpoint.SelectedItem.ToString()!;
+                ShowInfoBar($"Syncing with {endpoint}...", InfoBarSeverity.Informational);
+
+                localTime = await HttpTimeSyncService.SyncSystemTimeAsync(endpoint, cts.Token);
+                source = "Cloudflare trace API";
+                
+                _logger.LogInformation("Time synced successfully with HTTP endpoint {Endpoint}", endpoint);
+            }
+            else
+            {
+                // NTP sync method
+                if (ComboBox_NtpServer.SelectedItem == null)
+                {
+                    ShowInfoBar("Please select an NTP server", InfoBarSeverity.Warning);
+                    return;
+                }
+
+                string server = ComboBox_NtpServer.SelectedItem.ToString()!;
+                ShowInfoBar($"Syncing with {server}...", InfoBarSeverity.Informational);
+
+                localTime = await NtpTimeSyncService.SyncSystemTimeAsync(server, cts.Token);
+                source = "NTP server";
+                
+                _logger.LogInformation("Time synced successfully with NTP server {Server}", server);
+            }
             
-            ShowInfoBar($"Sync successful: {localTime:yyyy-MM-dd HH:mm:ss}", InfoBarSeverity.Success);
+            ShowInfoBar($"Sync successful from {source}: {localTime:yyyy-MM-dd HH:mm:ss}", InfoBarSeverity.Success);
             UpdateLocalTimeDisplay();
-            
-            _logger.LogInformation("Time synced successfully with {Server}", server);
         }
         catch (OperationCanceledException)
         {
-            ShowInfoBar("Sync operation was cancelled", InfoBarSeverity.Warning);
-            _logger.LogWarning("Time sync cancelled for server {Server}", server);
+            ShowInfoBar("Sync operation was cancelled or timed out", InfoBarSeverity.Warning);
+            _logger.LogWarning("Time sync cancelled or timed out");
         }
         catch (InvalidOperationException ex)
         {
@@ -150,7 +203,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         catch (Exception ex)
         {
             ShowInfoBar($"Sync failed: {ex.Message}", InfoBarSeverity.Error);
-            _logger.LogError(ex, "Time sync failed for server {Server}", server);
+            _logger.LogError(ex, "Time sync failed");
         }
         finally
         {

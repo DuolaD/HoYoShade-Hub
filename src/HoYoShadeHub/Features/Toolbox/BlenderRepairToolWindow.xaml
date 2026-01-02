@@ -79,8 +79,32 @@
                             </StackPanel>
                         </Border>
 
-                        <!--  NTP Server Selection  -->
+                        <!--  Time Sync Method Selection  -->
                         <StackPanel Spacing="8">
+                            <TextBlock Text="Sync Method" />
+                            <RadioButtons x:Name="RadioButtons_SyncMethod"
+                                          MaxColumns="2"
+                                          SelectedIndex="0"
+                                          SelectionChanged="RadioButtons_SyncMethod_SelectionChanged">
+                                <RadioButton Content="HTTP (Cloudflare)" Tag="HTTP" />
+                                <RadioButton Content="NTP Server" Tag="NTP" />
+                            </RadioButtons>
+                        </StackPanel>
+
+                        <!--  HTTP Endpoint Selection (visible when HTTP is selected)  -->
+                        <StackPanel x:Name="StackPanel_HttpOptions"
+                                    Spacing="8"
+                                    Visibility="Visible">
+                            <TextBlock Text="Cloudflare Trace Endpoint" />
+                            <ComboBox x:Name="ComboBox_HttpEndpoint"
+                                      HorizontalAlignment="Stretch"
+                                      PlaceholderText="Select Trace Endpoint" />
+                        </StackPanel>
+
+                        <!--  NTP Server Selection (visible when NTP is selected)  -->
+                        <StackPanel x:Name="StackPanel_NtpOptions"
+                                    Spacing="8"
+                                    Visibility="Collapsed">
                             <TextBlock Text="NTP Server" />
                             <ComboBox x:Name="ComboBox_NtpServer"
                                       HorizontalAlignment="Stretch"

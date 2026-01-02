@@ -35,13 +35,13 @@ public class NtpTimeSyncService
     /// </summary>
     public static readonly string[] NtpServers = new[]
     {
+        "time.windows.com",      // 微软时间服务器（默认）
         "ntp.aliyun.com",        // 阿里云时间服务器
         "ntp.ntsc.ac.cn",        // 中国科学院国家授时中心
         "ntp.tencent.com",       // 腾讯云公共NTP
         "ntp.sjtu.edu.cn",       // 上海交通大学
         "cn.pool.ntp.org",       // 国内自动分配NTP池项目
-        "ntp.cnnic.cn",          // CNNIC（中国互联网信息中心）
-        "time.windows.com"       // 微软时间服务器
+        "ntp.cnnic.cn"           // CNNIC（中国互联网信息中心）
     };
 
     /// <summary>
