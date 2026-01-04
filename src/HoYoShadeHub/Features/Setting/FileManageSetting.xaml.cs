@@ -777,8 +777,8 @@ public sealed partial class FileManageSetting : PageBase
                 XamlRoot = this.XamlRoot,
             };
             
-            var result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary && !string.IsNullOrWhiteSpace(dialog.ProcessName))
+            await dialog.ShowAsync();
+            if (dialog.Result == ContentDialogResult.Primary && !string.IsNullOrWhiteSpace(dialog.ProcessName))
             {
                 await StartShaderInjectorAsync(HoYoShadePath, "HoYoShade", dialog.ProcessName);
             }
@@ -804,8 +804,8 @@ public sealed partial class FileManageSetting : PageBase
                 XamlRoot = this.XamlRoot,
             };
             
-            var result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary && !string.IsNullOrWhiteSpace(dialog.ProcessName))
+            await dialog.ShowAsync();
+            if (dialog.Result == ContentDialogResult.Primary && !string.IsNullOrWhiteSpace(dialog.ProcessName))
             {
                 await StartShaderInjectorAsync(OpenHoYoShadePath, "OpenHoYoShade", dialog.ProcessName);
             }
