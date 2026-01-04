@@ -265,19 +265,6 @@
                     </StackPanel>
                     
                     <StackPanel Margin="0,8,0,0" Orientation="Horizontal" Spacing="12">
-                        <!--  卸载着色器和插件按钮  -->
-                        <Button Height="40"
-                                Padding="16,0,16,0"
-                                BorderThickness="0"
-                                Command="{x:Bind UninstallHoYoShadeShadersCommand}"
-                                CornerRadius="8,20,20,8"
-                                Style="{ThemeResource AccentButtonStyle}">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <FontIcon Glyph="&#xE74D;" />
-                                <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}" />
-                            </StackPanel>
-                        </Button>
-                        
                         <!--  HoYoShade卸载按钮  -->
                         <Button Height="40"
                                 Padding="16,0,16,0"
@@ -288,6 +275,19 @@
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon Glyph="&#xE74D;" />
                                 <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_UninstallHoYoShade}" />
+                            </StackPanel>
+                        </Button>
+
+                        <!--  卸载着色器和插件按钮  -->
+                        <Button Height="40"
+                                Padding="16,0,16,0"
+                                BorderThickness="0"
+                                Command="{x:Bind UninstallHoYoShadeShadersCommand}"
+                                CornerRadius="8,20,20,8"
+                                Style="{ThemeResource AccentButtonStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE74D;" />
+                                <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}" />
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -403,19 +403,6 @@
                     </StackPanel>
                     
                     <StackPanel Margin="0,8,0,0" Orientation="Horizontal" Spacing="12">
-                        <!--  卸载着色器和插件按钮  -->
-                        <Button Height="40"
-                                Padding="16,0,16,0"
-                                BorderThickness="0"
-                                Command="{x:Bind UninstallOpenHoYoShadeShadersCommand}"
-                                CornerRadius="8,20,20,8"
-                                Style="{ThemeResource AccentButtonStyle}">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <FontIcon Glyph="&#xE74D;" />
-                                <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}" />
-                            </StackPanel>
-                        </Button>
-                        
                         <!--  OpenHoYoShade卸载按钮  -->
                         <Button Height="40"
                                 Padding="16,0,16,0"
@@ -426,6 +413,19 @@
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon Glyph="&#xE74D;" />
                                 <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_UninstallOpenHoYoShade}" />
+                            </StackPanel>
+                        </Button>
+
+                        <!--  卸载着色器和插件按钮  -->
+                        <Button Height="40"
+                                Padding="16,0,16,0"
+                                BorderThickness="0"
+                                Command="{x:Bind UninstallOpenHoYoShadeShadersCommand}"
+                                CornerRadius="8,20,20,8"
+                                Style="{ThemeResource AccentButtonStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE74D;" />
+                                <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}" />
                             </StackPanel>
                         </Button>
                     </StackPanel>
