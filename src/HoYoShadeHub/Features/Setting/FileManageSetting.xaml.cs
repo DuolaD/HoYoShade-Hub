@@ -845,7 +845,7 @@ public sealed partial class FileManageSetting : PageBase
                 Arguments = processName,
                 UseShellExecute = false,
                 WorkingDirectory = shadePath,
-                CreateNoWindow = true
+                CreateNoWindow = false
             };
 
             Process? injectorProcess = Process.Start(injectStartInfo);
