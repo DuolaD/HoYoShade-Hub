@@ -1262,20 +1262,20 @@
   </data>
   <data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">
     <value>正常情況下，重設ReShade.ini的操作是全自動檢測並後台運行的。
-也就是說，通常情況下你都不需要再手動進行重設ReShade.ini。
+    也就是說，通常情況下你都不需要再手動進行重設ReShade.ini。
 
-一般只有以下兩種情況，你才需要重設ReShade.ini設定檔：
-· Releases介面中明確寫明了必須/建議重設ReShade.ini設定檔，以此開啟新功能/修復Bug。
-· HoYoShade開發者/貢獻者明確要求你進行這個操作。
+    一般只有以下兩種情況，你才需要重設ReShade.ini設定檔：
+    · Releases介面中明確寫明了必須/建議重設ReShade.ini設定檔，以此開啟新功能/修復Bug。
+    · HoYoShade開發者/貢獻者明確要求你進行這個操作。
 
-除此之外，一般情況下你都不需要進行重設ReShade.ini操作。
+    除此之外，一般情況下你都不需要進行重設ReShade.ini操作。
 
-重設完畢後，你需要重新刪除已經複製到遊戲程序根目錄下的ReShade.ini設定檔，否則HoYoShade/OpenHoYoShade將無法按照預期正常工作。</value>
+    重設完畢後，你需要重新刪除已經複製到遊戲程序根目錄下的ReShade.ini設定檔，否則HoYoShade/OpenHoYoShade將無法按照預期正常工作。</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">
     <value>重設ReShade.ini並不會導致你安裝在HoYoShade/OpenHoYoShade的著色器，外掛程式，預設及遊戲截圖遺失。
 
-是否繼續重設操作？</value>
+    是否繼續重設操作？</value>
   </data>
   <data name="ResetReShadeIniDialog_Reset" xml:space="preserve">
     <value>重設</value>
@@ -1561,5 +1561,26 @@
   </data>
   <data name="FileSettingPage_UninstallShadersAndPlugins" xml:space="preserve">
     <value>解安裝著色器和插件</value>
+  </data>
+  <data name="CustomInjectDialog_Title" xml:space="preserve">
+    <value>自訂注入</value>
+  </data>
+  <data name="CustomInjectDialog_ProcessNameInput" xml:space="preserve">
+    <value>請輸入目標處理程序名稱（包含 .exe 後綴），或使用快捷方式：</value>
+  </data>
+  <data name="CustomInjectDialog_ProcessNamePlaceholder" xml:space="preserve">
+    <value>例如：GenshinImpact.exe 或者：-GI</value>
+  </data>
+  <data name="CustomInjectDialog_Description" xml:space="preserve">
+    <value>注入器將嘗試向該處理程序注入 ReShade。</value>
+  </data>
+  <data name="CustomInjectDialog_Inject" xml:space="preserve">
+    <value>注入</value>
+  </data>
+  <data name="CustomInjectDialog_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="FileSettingPage_CustomInject" xml:space="preserve">
+    <value>自訂注入</value>
   </data>
 </root>

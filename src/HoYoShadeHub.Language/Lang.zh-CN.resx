@@ -1555,10 +1555,10 @@
     <value>自定义注入</value>
   </data>
   <data name="CustomInjectDialog_ProcessNameInput" xml:space="preserve">
-    <value>请输入目标进程名称（包含 .exe 后缀）：</value>
+    <value>请输入目标进程名称（包含 .exe 后缀），或者使用快捷方式：</value>
   </data>
   <data name="CustomInjectDialog_ProcessNamePlaceholder" xml:space="preserve">
-    <value>例如：GenshinImpact.exe</value>
+    <value>例如：GenshinImpact.exe 或者 -GI</value>
   </data>
   <data name="CustomInjectDialog_Description" xml:space="preserve">
     <value>注入器将尝试向该进程注入 ReShade。</value>

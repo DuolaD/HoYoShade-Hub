@@ -1562,4 +1562,25 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="FileSettingPage_UninstallShadersAndPlugins" xml:space="preserve">
     <value>解安裝著色器同插件</value>
   </data>
+  <data name="CustomInjectDialog_Title" xml:space="preserve">
+    <value>自訂注入</value>
+  </data>
+  <data name="CustomInjectDialog_ProcessNameInput" xml:space="preserve">
+    <value>請輸入目標進程名稱（包含 .exe 後綴），或使用快捷方式：</value>
+  </data>
+  <data name="CustomInjectDialog_ProcessNamePlaceholder" xml:space="preserve">
+    <value>例如：GenshinImpact.exe 或者：-GI</value>
+  </data>
+  <data name="CustomInjectDialog_Description" xml:space="preserve">
+    <value>注入器會嘗試向呢個進程注入 ReShade。</value>
+  </data>
+  <data name="CustomInjectDialog_Inject" xml:space="preserve">
+    <value>注入</value>
+  </data>
+  <data name="CustomInjectDialog_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="FileSettingPage_CustomInject" xml:space="preserve">
+    <value>自訂注入</value>
+  </data>
 </root>

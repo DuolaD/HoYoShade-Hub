@@ -652,7 +652,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Please enter the target process name (including .exe suffix): 的本地化字符串。
+        ///   查找类似 Please enter the target process name (including .exe suffix), or use shortcut: 的本地化字符串。
         /// </summary>
         public static string CustomInjectDialog_ProcessNameInput {
             get {
@@ -661,7 +661,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 e.g. GenshinImpact.exe 的本地化字符串。
+        ///   查找类似 e.g. GenshinImpact.exe or -GI 的本地化字符串。
         /// </summary>
         public static string CustomInjectDialog_ProcessNamePlaceholder {
             get {
