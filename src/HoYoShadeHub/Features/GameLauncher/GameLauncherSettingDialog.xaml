@@ -217,10 +217,10 @@
                                    TextWrapping="Wrap"
                                    Visibility="Collapsed" />
 
-                        <!--  游戏安装位置  -->
+                        <!--  游戏安装位置 - 隐藏路径显示  -->
                         <Grid Height="40"
                               CornerRadius="8"
-                              Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
+                              Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
@@ -265,8 +265,8 @@
                             </Button>
                         </Grid>
 
-                        <!--  多游戏目录标题和说明  -->
-                        <StackPanel Spacing="4" Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
+                        <!--  多游戏目录标题和说明 - 隐藏提示文字  -->
+                        <StackPanel Spacing="4" Visibility="Collapsed">
                             <TextBlock FontSize="14"
                                        FontWeight="SemiBold"
                                        Text="多游戏目录" />
@@ -281,64 +281,73 @@
                                       Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="local:GameInstallPathItemDialog">
-                                    <Grid Height="40"
-                                          Margin="0,0,0,4"
-                                          CornerRadius="8">
+                                    <Grid Margin="0,0,0,4">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         
                                         <!--  单选按钮  -->
                                         <RadioButton Grid.Column="0"
-                                                     Margin="8,0,0,0"
+                                                     Margin="0,0,8,0"
+                                                     Padding="0"
+                                                     MinWidth="0"
                                                      VerticalAlignment="Center"
                                                      IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
                                                      GroupName="GameInstallPath" />
                                         
-                                        <!--  路径显示按钮  -->
-                                        <Button Grid.Column="1"
-                                                Height="40"
-                                                Padding="8,0,8,1"
-                                                HorizontalAlignment="Stretch"
-                                                HorizontalContentAlignment="Left"
-                                                BorderThickness="0"
-                                                Command="{x:Bind OpenFolderCommand}"
-                                                CornerRadius="0">
-                                            <TextBlock VerticalAlignment="Center"
-                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                       Text="{x:Bind Path, Mode=OneWay}"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       ToolTipService.ToolTip="{x:Bind Path, Mode=OneWay}" />
-                                        </Button>
-                                        
-                                        <!--  打开文件夹按钮  -->
-                                        <Button Grid.Column="2"
-                                                Width="40"
-                                                Height="40"
-                                                Padding="0"
-                                                BorderThickness="0"
-                                                Command="{x:Bind OpenFolderCommand}"
-                                                CornerRadius="0">
-                                            <FontIcon FontSize="14"
-                                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                      Glyph="&#xE8A7;" />
-                                        </Button>
-                                        
-                                        <!--  删除按钮  -->
-                                        <Button Grid.Column="3"
-                                                Width="40"
-                                                Height="40"
-                                                Padding="0"
-                                                BorderThickness="0"
-                                                Command="{x:Bind RemoveCommand}"
-                                                CornerRadius="0">
-                                            <FontIcon FontSize="14"
-                                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                      Glyph="&#xE711;" />
-                                        </Button>
+                                        <!--  路径卡片容器  -->
+                                        <Grid Grid.Column="1"
+                                              Height="40"
+                                              CornerRadius="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <!--  路径显示按钮  -->
+                                            <Button Grid.Column="0"
+                                                    Height="40"
+                                                    Padding="16,0,8,1"
+                                                    HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="Left"
+                                                    BorderThickness="0"
+                                                    Command="{x:Bind OpenFolderCommand}"
+                                                    CornerRadius="8,0,0,8">
+                                                <TextBlock VerticalAlignment="Center"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                           Text="{x:Bind Path, Mode=OneWay}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTipService.ToolTip="{x:Bind Path, Mode=OneWay}" />
+                                            </Button>
+                                            
+                                            <!--  打开文件夹按钮  -->
+                                            <Button Grid.Column="1"
+                                                    Width="40"
+                                                    Height="40"
+                                                    Padding="0"
+                                                    BorderThickness="0"
+                                                    Command="{x:Bind OpenFolderCommand}"
+                                                    CornerRadius="0">
+                                                <FontIcon FontSize="14"
+                                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                          Glyph="&#xE8A7;" />
+                                            </Button>
+                                            
+                                            <!--  删除按钮  -->
+                                            <Button Grid.Column="2"
+                                                    Width="40"
+                                                    Height="40"
+                                                    Padding="0"
+                                                    BorderThickness="0"
+                                                    Command="{x:Bind RemoveCommand}"
+                                                    CornerRadius="0,8,8,0">
+                                                <FontIcon FontSize="14"
+                                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                          Glyph="&#xE711;" />
+                                            </Button>
+                                        </Grid>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
