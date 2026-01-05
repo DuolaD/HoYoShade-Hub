@@ -58,6 +58,7 @@ We sincerely express our heartfelt gratitude to all contributors whose work has 
 | **Starward** | HoYoShade Hub is based on this for secondary development. "Standing on the shoulders of giants." | [Official Repository](https://github.com/Scighost/Starward/) \ [Official Website](https://starward.scighost.com/) |
 | **HoYoShade** | HoYoShade Framework | [Official Repository](https://github.com/DuolaD/HoYoShade/) \ [Official Website](https://hoyosha.de) |
 | **MiSans Font Series** | Default font for HoYoShade Hub, copyright owned by Xiaomi Group. | [Official Website](https://www.mi.com) \ [MiSans Font Series Official Website](https://hyperos.mi.com/font/) |
+| **Time Sync Tool** | Develop on it and Built into the Blender Plugins fix tool. | [Official Repository](https://gitee.com/haitangyunchi/TimeSyncTool) |
 
 And the [third-party libraries](./docs/ThirdParty.md) used in this project.
 

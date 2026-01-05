@@ -58,6 +58,7 @@ HoYoShade Hub 是一个为了解决 HoYoShade 当前 Bat 启动器的缺点而�
 | **Starward** | HoYoShade Hub基于此进行二次开发。前人栽树，后人乘凉。 | [官方仓库](https://github.com/Scighost/Starward/) \ [官方网站](https://starward.scighost.com/) |
 | **HoYoShade** | HoYoShade 框架 | [官方仓库](https://github.com/DuolaD/HoYoShade/) \ [官方网站](https://hoyosha.de) |
 | **MiSans系列字体** | HoYoShade Hub默认字体，版权归小米集团所有。  | [官方网站](https://www.mi.com) \ [MiSans系列字体官方网站](https://hyperos.mi.com/font/) |
+| **时间同步工具** | 在此基础上进行开发，并将其集成到 Blender/留影机插件 修复工具中。 | [官方仓库](https://gitee.com/haitangyunchi/TimeSyncTool) |
 
 
 以及本项目中使用的[第三方库](./docs/ThirdParty.md)。
