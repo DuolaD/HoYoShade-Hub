@@ -182,6 +182,11 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     public string? GameSize { get; set => SetProperty(ref field, value); }
 
     /// <summary>
+    /// 添加游戏目录错误信息
+    /// </summary>
+    public string? AddGameInstallPathError { get; set => SetProperty(ref field, value); }
+
+    /// <summary>
     /// 是否可以卸载和修复
     /// </summary>
     public bool UninstallAndRepairEnabled { get; set => SetProperty(ref field, value); }
@@ -956,6 +961,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     {
         try
         {
+            AddGameInstallPathError = null;
             string? folder = await FileDialogHelper.PickFolderAsync(this.XamlRoot);
             if (!string.IsNullOrWhiteSpace(folder))
             {
@@ -965,7 +971,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
                 
                 if (!File.Exists(exePath))
                 {
-                    InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncherSettingDialog_GameExeNotFoundInFolder, exeName));
+                    AddGameInstallPathError = string.Format(Lang.GameLauncherSettingDialog_GameExeNotFoundInFolder, exeName);
                     return;
                 }
 
@@ -978,7 +984,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         catch (Exception ex)
         {
             _logger.LogError(ex, "Add game install path");
-            InAppToast.MainWindow?.Error(Lang.GameLauncherSettingDialog_AddGameDirectoryFailed);
+            AddGameInstallPathError = Lang.GameLauncherSettingDialog_AddGameDirectoryFailed;
         }
     }
 

@@ -217,6 +217,12 @@
                                    TextWrapping="Wrap"
                                    Visibility="Collapsed" />
 
+                        <!--  添加目录错误提示  -->
+                        <TextBlock Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                   Text="{x:Bind AddGameInstallPathError, Mode=OneWay}"
+                                   TextWrapping="Wrap"
+                                   Visibility="{x:Bind AddGameInstallPathError, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
+
                         <!--  游戏安装位置 - 隐藏路径显示  -->
                         <Grid Height="40"
                               CornerRadius="8"
