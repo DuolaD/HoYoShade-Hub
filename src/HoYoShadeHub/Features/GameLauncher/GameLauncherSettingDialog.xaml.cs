@@ -15,6 +15,7 @@ using HoYoShadeHub.Helpers;
 using HoYoShadeHub.RPC.GameInstall;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -62,6 +63,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
 
     public GameBiz CurrentGameBiz { get; set; }
 
+    public ObservableCollection<GameInstallPathItemDialog> GameInstallPaths { get; set; } = new ObservableCollection<GameInstallPathItemDialog>();
 
 
 
@@ -130,6 +132,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         CurrentGameBiz = CurrentGameId?.GameBiz ?? GameBiz.None;
         CheckCanRepairGame();
         await InitializeBasicInfoAsync();
+        await InitializeGameInstallPathsAsync();
         InitializeStartArgument();
         InitializeCustomBg();
         await InitializeGamePackagesAsync();
@@ -905,7 +908,6 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
 
 
 
-
     private void TextBlock_IsTextTrimmedChanged(TextBlock sender, IsTextTrimmedChangedEventArgs args)
     {
         if (sender.FontSize > 12)
@@ -913,6 +915,119 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
             sender.FontSize -= 1;
         }
     }
+
+    #region 游戏目录管理
+
+    private async Task InitializeGameInstallPathsAsync()
+    {
+        try
+        {
+            GameInstallPaths.Clear();
+            var paths = GameLauncherService.GetAllGameInstallPaths(CurrentGameBiz);
+            var selectedIndex = AppConfig.GetSelectedGameInstallPathIndex(CurrentGameBiz);
+
+            for (int i = 0; i < paths.Count; i++)
+            {
+                var pathItem = new GameInstallPathItemDialog(this, CurrentGameBiz, i)
+                {
+                    Path = paths[i],
+                    IsSelected = i == selectedIndex
+                };
+                GameInstallPaths.Add(pathItem);
+            }
+
+            // 验证游戏exe是否存在
+            foreach (var pathItem in GameInstallPaths)
+            {
+                var fullPath = GameLauncherService.GetFullPathIfRelativePath(pathItem.Path);
+                var exeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+                var exePath = System.IO.Path.Combine(fullPath, exeName);
+                pathItem.IsValid = File.Exists(exePath);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Initialize game install paths");
+        }
+    }
+
+    [RelayCommand]
+    private async Task AddGameInstallPathAsync()
+    {
+        try
+        {
+            string? folder = await FileDialogHelper.PickFolderAsync(this.XamlRoot);
+            if (!string.IsNullOrWhiteSpace(folder))
+            {
+                // 验证是否包含游戏exe
+                var exeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+                var exePath = System.IO.Path.Combine(folder, exeName);
+                
+                if (!File.Exists(exePath))
+                {
+                    InAppToast.MainWindow?.Error($"所选文件夹中未找到 {exeName}");
+                    return;
+                }
+
+                GameLauncherService.AddGameInstallPath(CurrentGameBiz, folder);
+                await InitializeGameInstallPathsAsync();
+                await InitializeBasicInfoAsync();
+                WeakReferenceMessenger.Default.Send(new GameInstallPathChangedMessage());
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Add game install path");
+            InAppToast.MainWindow?.Error("添加游戏目录失败");
+        }
+    }
+
+    internal void OnPathSelected(GameInstallPathItemDialog item)
+    {
+        try
+        {
+            var index = GameInstallPaths.IndexOf(item);
+            if (index >= 0)
+            {
+                GameLauncherService.SetSelectedGameInstallPathIndex(CurrentGameBiz, index);
+                
+                // 更新所有项的选中状态
+                for (int i = 0; i < GameInstallPaths.Count; i++)
+                {
+                    GameInstallPaths[i].IsSelected = i == index;
+                }
+                
+                // 更新显示的安装路径
+                _ = InitializeBasicInfoAsync();
+                WeakReferenceMessenger.Default.Send(new GameInstallPathChangedMessage());
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Select game install path");
+        }
+    }
+
+    internal async Task RemoveGameInstallPathAsync(GameInstallPathItemDialog item)
+    {
+        try
+        {
+            var index = GameInstallPaths.IndexOf(item);
+            if (index >= 0)
+            {
+                GameLauncherService.RemoveGameInstallPath(CurrentGameBiz, index);
+                await InitializeGameInstallPathsAsync();
+                await InitializeBasicInfoAsync();
+                WeakReferenceMessenger.Default.Send(new GameInstallPathChangedMessage());
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Remove game install path");
+        }
+    }
+
+    #endregion
 
 
 }

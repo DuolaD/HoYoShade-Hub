@@ -157,6 +157,7 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <!--  游戏图标  -->
                             <Grid Width="40"
@@ -176,8 +177,23 @@
                                        VerticalAlignment="Center"
                                        FontSize="16"
                                        Text="{x:Bind CurrentGameBizIcon.GameName}" />
-                            <!--  定位游戏  -->
+                            <!--  添加游戏目录  -->
                             <Button Grid.Column="2"
+                                    Height="36"
+                                    Command="{x:Bind AddGameInstallPathCommand}"
+                                    CornerRadius="8"
+                                    Style="{ThemeResource DateTimePickerFlyoutButtonStyle}"
+                                    Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Width="20"
+                                              Height="20"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              Glyph="&#xE710;" />
+                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="添加游戏目录" />
+                                </StackPanel>
+                            </Button>
+                            <!--  定位游戏  -->
+                            <Button Grid.Column="3"
                                     Height="36"
                                     Command="{x:Bind LocateGameCommand}"
                                     CornerRadius="8"
@@ -249,6 +265,85 @@
                             </Button>
                         </Grid>
 
+                        <!--  多游戏目录标题和说明  -->
+                        <StackPanel Spacing="4" Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
+                            <TextBlock FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Text="多游戏目录" />
+                            <TextBlock FontSize="12"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="为该游戏添加多个安装目录，快速切换不同版本"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                        
+                        <!--  多目录列表 - 使用与主目录相同的卡片样式  -->
+                        <ItemsControl ItemsSource="{x:Bind GameInstallPaths, Mode=OneWay}"
+                                      Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="local:GameInstallPathItemDialog">
+                                    <Grid Height="40"
+                                          Margin="0,0,0,4"
+                                          CornerRadius="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <!--  单选按钮  -->
+                                        <RadioButton Grid.Column="0"
+                                                     Margin="8,0,0,0"
+                                                     VerticalAlignment="Center"
+                                                     IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                                     GroupName="GameInstallPath" />
+                                        
+                                        <!--  路径显示按钮  -->
+                                        <Button Grid.Column="1"
+                                                Height="40"
+                                                Padding="8,0,8,1"
+                                                HorizontalAlignment="Stretch"
+                                                HorizontalContentAlignment="Left"
+                                                BorderThickness="0"
+                                                Command="{x:Bind OpenFolderCommand}"
+                                                CornerRadius="0">
+                                            <TextBlock VerticalAlignment="Center"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                       Text="{x:Bind Path, Mode=OneWay}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       ToolTipService.ToolTip="{x:Bind Path, Mode=OneWay}" />
+                                        </Button>
+                                        
+                                        <!--  打开文件夹按钮  -->
+                                        <Button Grid.Column="2"
+                                                Width="40"
+                                                Height="40"
+                                                Padding="0"
+                                                BorderThickness="0"
+                                                Command="{x:Bind OpenFolderCommand}"
+                                                CornerRadius="0">
+                                            <FontIcon FontSize="14"
+                                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                      Glyph="&#xE8A7;" />
+                                        </Button>
+                                        
+                                        <!--  删除按钮  -->
+                                        <Button Grid.Column="3"
+                                                Width="40"
+                                                Height="40"
+                                                Padding="0"
+                                                BorderThickness="0"
+                                                Command="{x:Bind RemoveCommand}"
+                                                CornerRadius="0">
+                                            <FontIcon FontSize="14"
+                                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                      Glyph="&#xE711;" />
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
                         <!--  一些操作  -->
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <!--  游戏大小  -->
@@ -293,9 +388,6 @@
                                                Content="{x:Bind lang:Lang.Language_Korean}"
                                                Tag="ko-kr" />
                         </cwc:Segmented>
-
-
-
 
                         <!--  使用 CMD 启动游戏  -->
                         <StackPanel Margin="0,-12,0,0"

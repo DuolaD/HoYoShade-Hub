@@ -6,6 +6,7 @@ using HoYoShadeHub.Features.HoYoPlay;
 using HoYoShadeHub.Features.PlayTime;
 using HoYoShadeHub.Helpers;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -56,6 +57,25 @@ internal partial class GameLauncherService
     /// <returns></returns>
     public static string? GetGameInstallPath(GameBiz gameBiz)
     {
+        // 首先尝试获取多路径配置
+        var paths = AppConfig.GetGameInstallPaths(gameBiz);
+        if (!string.IsNullOrWhiteSpace(paths))
+        {
+            var pathList = paths.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            var selectedIndex = AppConfig.GetSelectedGameInstallPathIndex(gameBiz);
+            
+            if (pathList.Length > 0 && selectedIndex >= 0 && selectedIndex < pathList.Length)
+            {
+                var selectedPath = pathList[selectedIndex].Trim();
+                selectedPath = GetFullPathIfRelativePath(selectedPath);
+                if (Directory.Exists(selectedPath))
+                {
+                    return Path.GetFullPath(selectedPath);
+                }
+            }
+        }
+
+        // 回退到单一路径配置
         var path = AppConfig.GetGameInstallPath(gameBiz);
         if (string.IsNullOrWhiteSpace(path))
         {
@@ -88,6 +108,31 @@ internal partial class GameLauncherService
     public static string? GetGameInstallPath(GameId gameId, out bool storageRemoved)
     {
         storageRemoved = false;
+
+        // 首先尝试获取多路径配置
+        var paths = AppConfig.GetGameInstallPaths(gameId.GameBiz);
+        if (!string.IsNullOrWhiteSpace(paths))
+        {
+            var pathList = paths.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            var selectedIndex = AppConfig.GetSelectedGameInstallPathIndex(gameId.GameBiz);
+            
+            if (pathList.Length > 0 && selectedIndex >= 0 && selectedIndex < pathList.Length)
+            {
+                var selectedPath = pathList[selectedIndex].Trim();
+                selectedPath = GetFullPathIfRelativePath(selectedPath);
+                if (Directory.Exists(selectedPath))
+                {
+                    return selectedPath;
+                }
+                else if (AppConfig.GetGameInstallPathRemovable(gameId.GameBiz))
+                {
+                    storageRemoved = true;
+                    return selectedPath;
+                }
+            }
+        }
+
+        // 回退到单一路径配置
         var path = AppConfig.GetGameInstallPath(gameId.GameBiz);
         if (string.IsNullOrWhiteSpace(path))
         {
@@ -525,6 +570,121 @@ internal partial class GameLauncherService
             AppConfig.SetThirdPartyToolPath(gameId.GameBiz, null);
         }
         return path;
+    }
+
+    /// <summary>
+    /// 获取游戏的所有安装路径（自动迁移单一路径）
+    /// </summary>
+    public static List<string> GetAllGameInstallPaths(GameBiz gameBiz)
+    {
+        var paths = AppConfig.GetGameInstallPaths(gameBiz);
+        var pathList = new List<string>();
+        
+        if (!string.IsNullOrWhiteSpace(paths))
+        {
+            pathList = paths.Split('|', StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Trim())
+                .Where(p => !string.IsNullOrWhiteSpace(p))
+                .ToList();
+        }
+        
+        // 如果多目录列表为空，尝试从单一路径配置迁移
+        if (pathList.Count == 0)
+        {
+            var singlePath = AppConfig.GetGameInstallPath(gameBiz);
+            if (!string.IsNullOrWhiteSpace(singlePath))
+            {
+                pathList.Add(singlePath.Trim());
+                // 自动保存到多目录配置
+                AppConfig.SetGameInstallPaths(gameBiz, singlePath.Trim());
+                AppConfig.SetSelectedGameInstallPathIndex(gameBiz, 0);
+            }
+        }
+        
+        return pathList;
+    }
+
+    /// <summary>
+    /// 添加游戏安装路径（智能模式：自动迁移单一路径）
+    /// </summary>
+    public static void AddGameInstallPath(GameBiz gameBiz, string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            return;
+        }
+
+        path = Path.GetFullPath(path);
+        string relativePath = GetRelativePathIfInRemovableStorage(path, out bool removable);
+        
+        var existingPaths = GetAllGameInstallPaths(gameBiz);
+        
+        // 如果多目录列表为空，检查是否有单一路径配置需要迁移
+        if (existingPaths.Count == 0)
+        {
+            var singlePath = AppConfig.GetGameInstallPath(gameBiz);
+            if (!string.IsNullOrWhiteSpace(singlePath))
+            {
+                // 迁移单一路径到多目录列表
+                existingPaths.Add(singlePath.Trim());
+            }
+        }
+        
+        // 检查是否已存在（不区分大小写比较）
+        var fullExistingPaths = existingPaths.Select(p => {
+            var fullPath = GetFullPathIfRelativePath(p);
+            return Path.GetFullPath(fullPath);
+        }).ToList();
+        
+        var fullNewPath = Path.GetFullPath(path);
+        
+        if (!fullExistingPaths.Contains(fullNewPath, StringComparer.OrdinalIgnoreCase))
+        {
+            existingPaths.Add(relativePath);
+            AppConfig.SetGameInstallPaths(gameBiz, string.Join("|", existingPaths));
+            
+            // 如果这是第一次添加多目录，设置选中索引为0（原有路径）
+            if (existingPaths.Count == 2)
+            {
+                AppConfig.SetSelectedGameInstallPathIndex(gameBiz, 0);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 移除游戏安装路径
+    /// </summary>
+    public static void RemoveGameInstallPath(GameBiz gameBiz, int index)
+    {
+        var existingPaths = GetAllGameInstallPaths(gameBiz);
+        if (index >= 0 && index < existingPaths.Count)
+        {
+            existingPaths.RemoveAt(index);
+            AppConfig.SetGameInstallPaths(gameBiz, string.Join("|", existingPaths));
+            
+            // 如果移除的是当前选中的路径，重置为第一个
+            var selectedIndex = AppConfig.GetSelectedGameInstallPathIndex(gameBiz);
+            if (selectedIndex == index)
+            {
+                AppConfig.SetSelectedGameInstallPathIndex(gameBiz, 0);
+            }
+            else if (selectedIndex > index)
+            {
+                AppConfig.SetSelectedGameInstallPathIndex(gameBiz, selectedIndex - 1);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 设置选中的游戏安装路径索引
+    /// </summary>
+    public static void SetSelectedGameInstallPathIndex(GameBiz gameBiz, int index)
+    {
+        var existingPaths = GetAllGameInstallPaths(gameBiz);
+        if (index >= 0 && index < existingPaths.Count)
+        {
+            AppConfig.SetSelectedGameInstallPathIndex(gameBiz, index);
+        }
     }
 
 

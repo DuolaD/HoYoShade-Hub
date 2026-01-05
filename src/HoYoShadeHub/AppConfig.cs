@@ -929,6 +929,38 @@ public static class AppConfig
         SetValue(value, $"game_background_ids_{biz}");
     }
 
+    /// <summary>
+    /// 获取游戏的多个安装路径列表（用|分隔）
+    /// </summary>
+    public static string? GetGameInstallPaths(GameBiz biz)
+    {
+        return GetValue<string>(default, $"install_paths_{biz}");
+    }
+
+    /// <summary>
+    /// 设置游戏的多个安装路径列表（用|分隔）
+    /// </summary>
+    public static void SetGameInstallPaths(GameBiz biz, string? value)
+    {
+        SetValue(value, $"install_paths_{biz}");
+    }
+
+    /// <summary>
+    /// 获取当前选中的游戏安装路径索引
+    /// </summary>
+    public static int GetSelectedGameInstallPathIndex(GameBiz biz)
+    {
+        return GetValue(0, $"selected_install_path_index_{biz}");
+    }
+
+    /// <summary>
+    /// 设置当前选中的游戏安装路径索引
+    /// </summary>
+    public static void SetSelectedGameInstallPathIndex(GameBiz biz, int value)
+    {
+        SetValue(value, $"selected_install_path_index_{biz}");
+    }
+
 
     #endregion
 
