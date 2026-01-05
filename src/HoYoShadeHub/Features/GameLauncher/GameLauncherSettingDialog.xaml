@@ -189,7 +189,7 @@
                                               Height="20"
                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                               Glyph="&#xE710;" />
-                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="添加游戏目录" />
+                                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind lang:Lang.GameLauncherSettingDialog_AddGameDirectory}" />
                                 </StackPanel>
                             </Button>
                             <!--  定位游戏  -->

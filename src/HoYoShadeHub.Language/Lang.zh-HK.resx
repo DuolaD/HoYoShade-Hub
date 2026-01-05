@@ -1583,4 +1583,13 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="FileSettingPage_CustomInject" xml:space="preserve">
     <value>自訂注入</value>
   </data>
+  <data name="GameLauncherSettingDialog_GameExeNotFoundInFolder" xml:space="preserve">
+    <value>喺揀咗嘅資料夾入面搵唔到 {0}</value>
+  </data>
+  <data name="GameLauncherSettingDialog_AddGameDirectoryFailed" xml:space="preserve">
+    <value>加遊戲目錄失敗咗</value>
+  </data>
+  <data name="GameLauncherSettingDialog_AddGameDirectory" xml:space="preserve">
+    <value>加遊戲目錄</value>
+  </data>
 </root>

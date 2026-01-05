@@ -1583,4 +1583,13 @@
   <data name="FileSettingPage_CustomInject" xml:space="preserve">
     <value>自訂注入</value>
   </data>
+  <data name="GameLauncherSettingDialog_GameExeNotFoundInFolder" xml:space="preserve">
+    <value>在所選資料夾中未找到 {0}</value>
+  </data>
+  <data name="GameLauncherSettingDialog_AddGameDirectoryFailed" xml:space="preserve">
+    <value>新增遊戲目錄失敗</value>
+  </data>
+  <data name="GameLauncherSettingDialog_AddGameDirectory" xml:space="preserve">
+    <value>新增遊戲目錄</value>
+  </data>
 </root>

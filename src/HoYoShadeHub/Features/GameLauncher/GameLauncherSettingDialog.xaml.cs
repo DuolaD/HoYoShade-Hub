@@ -788,22 +788,22 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     /// <summary>
     /// 最新版本
     /// </summary>
-    public string LatestVersion { get; set => SetProperty(ref field, value); }
+    public string LatestVersion { get => field; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// 最新版本包体
     /// </summary>
-    public List<PackageGroup> LatestPackageGroups { get; set => SetProperty(ref field, value); }
+    public List<PackageGroup> LatestPackageGroups { get => field; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// 预下载版本
     /// </summary>
-    public string PreInstallVersion { get; set => SetProperty(ref field, value); }
+    public string PreInstallVersion { get => field; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// 预下载版本包体
     /// </summary>
-    public List<PackageGroup> PreInstallPackageGroups { get; set => SetProperty(ref field, value); }
+    public List<PackageGroup> PreInstallPackageGroups { get => field; set => SetProperty(ref field, value); }
 
 
 
@@ -965,7 +965,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
                 
                 if (!File.Exists(exePath))
                 {
-                    InAppToast.MainWindow?.Error($"所选文件夹中未找到 {exeName}");
+                    InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncherSettingDialog_GameExeNotFoundInFolder, exeName));
                     return;
                 }
 
@@ -978,7 +978,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         catch (Exception ex)
         {
             _logger.LogError(ex, "Add game install path");
-            InAppToast.MainWindow?.Error("添加游戏目录失败");
+            InAppToast.MainWindow?.Error(Lang.GameLauncherSettingDialog_AddGameDirectoryFailed);
         }
     }
 

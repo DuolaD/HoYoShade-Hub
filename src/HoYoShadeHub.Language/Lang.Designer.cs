@@ -1318,6 +1318,24 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Add Game Directory 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_AddGameDirectory {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_AddGameDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to add game directory 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_AddGameDirectoryFailed {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_AddGameDirectoryFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 An unknown error occurred. Please check the logs. 的本地化字符串。
         /// </summary>
         public static string GameLauncherSettingDialog_AnUnknownErrorOccurredPleaseCheckTheLogs {
@@ -1377,6 +1395,15 @@ namespace HoYoShadeHub.Language {
         public static string GameLauncherSettingDialog_DragAndDropImageOrVideoFiles {
             get {
                 return ResourceManager.GetString("GameLauncherSettingDialog_DragAndDropImageOrVideoFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} not found in the selected folder 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_GameExeNotFoundInFolder {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_GameExeNotFoundInFolder", resourceCulture);
             }
         }
         
