@@ -2093,6 +2093,24 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Alibaba Cloud 的本地化字符串。
+        /// </summary>
+        public static string HoYoShadeDownloadView_Server_AlibabaCloud {
+            get {
+                return ResourceManager.GetString("HoYoShadeDownloadView_Server_AlibabaCloud", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Cloudflare 的本地化字符串。
+        /// </summary>
+        public static string HoYoShadeDownloadView_Server_Cloudflare {
+            get {
+                return ResourceManager.GetString("HoYoShadeDownloadView_Server_Cloudflare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 GitHub (Direct) 的本地化字符串。
         /// </summary>
         public static string HoYoShadeDownloadView_Server_GithubDirect {
@@ -2107,6 +2125,15 @@ namespace HoYoShadeHub.Language {
         public static string HoYoShadeDownloadView_Server_GithubProxy {
             get {
                 return ResourceManager.GetString("HoYoShadeDownloadView_Server_GithubProxy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Tencent Cloud 的本地化字符串。
+        /// </summary>
+        public static string HoYoShadeDownloadView_Server_TencentCloud {
+            get {
+                return ResourceManager.GetString("HoYoShadeDownloadView_Server_TencentCloud", resourceCulture);
             }
         }
         

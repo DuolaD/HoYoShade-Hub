@@ -81,8 +81,10 @@ public sealed partial class ReShadeDownloadView : UserControl
     {
         var selectedIndex = DownloadServers.IndexOf(SelectedDownloadServer);
         DownloadServers.Clear();
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubDirect);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubProxy);
+        DownloadServers.Add("GitHub");
+        DownloadServers.Add("Cloudflare");
+        DownloadServers.Add("Tencent Cloud");
+        DownloadServers.Add("Alibaba Cloud");
         if (selectedIndex >= 0 && selectedIndex < DownloadServers.Count)
         {
             SelectedDownloadServer = DownloadServers[selectedIndex];
@@ -411,10 +413,18 @@ public sealed partial class ReShadeDownloadView : UserControl
         {
             StatusMessage = "Fetching package lists...";
             using var client = new HttpClient();
-            bool useProxy = SelectedDownloadServer.Contains("ghproxy", StringComparison.OrdinalIgnoreCase);
+            
+            // Get proxy URL based on selected server
+            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
 
             // Fetch Effects
-            var effectsUrl = ReShadeDownloadServer.GetEffectPackagesUrl(useProxy);
+            string effectsUrl = ReShadeDownloadServer.EffectPackagesUrl;
+            if (!string.IsNullOrWhiteSpace(proxyUrl))
+            {
+                effectsUrl = CloudProxyManager.ApplyProxy(effectsUrl, proxyUrl);
+            }
+            
             using var effectsStream = await client.GetStreamAsync(effectsUrl);
             var effectsIni = new IniFile(effectsStream);
             _cachedEffectPackages = new List<EffectPackage>();
@@ -455,7 +465,12 @@ public sealed partial class ReShadeDownloadView : UserControl
             }
 
             // Fetch Addons
-            var addonsUrl = ReShadeDownloadServer.GetAddonsUrl(useProxy);
+            string addonsUrl = ReShadeDownloadServer.AddonsUrl;
+            if (!string.IsNullOrWhiteSpace(proxyUrl))
+            {
+                addonsUrl = CloudProxyManager.ApplyProxy(addonsUrl, proxyUrl);
+            }
+            
             using var addonsStream = await client.GetStreamAsync(addonsUrl);
             var addonsIni = new IniFile(addonsStream);
             _cachedAddons = new List<Addon>();
@@ -535,10 +550,15 @@ public sealed partial class ReShadeDownloadView : UserControl
                 }
             }
 
-            // Determine download server
-            string downloadServer = SelectedDownloadServer == DownloadServers[0]
-                ? "https://raw.githubusercontent.com/crosire/reshade-shaders/master/"
-                : "https://ghproxy.com/https://raw.githubusercontent.com/crosire/reshade-shaders/master/";
+            // Determine download server - pass the server index to RPC
+            // RPC will use CloudProxyManager to handle proxy selection
+            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+            bool useProxy = !string.IsNullOrWhiteSpace(proxyUrl);
+            
+            // For backward compatibility with RPC, pass a proxy indicator string
+            // The RPC service will need to be updated to use the same CloudProxyManager logic
+            string downloadServer = SelectedDownloadServer;
 
             var basePath = AppConfig.UserDataFolder;
 
@@ -1115,7 +1135,7 @@ public sealed partial class ReShadeDownloadView : UserControl
                 _hasInstalledHoYoShadeTarget = true;
                 _hasInstalledOpenHoYoShadeTarget = true;
 
-                // Disable all options
+                // Disable all options and don't select anything
                 OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
                 OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
                 OnPropertyChanged(nameof(CanInstallToBoth));

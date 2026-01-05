@@ -85,8 +85,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
      {
          var selectedIndex = DownloadServers.IndexOf(SelectedDownloadServer);
          DownloadServers.Clear();
-         DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubDirect);
-         DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubProxy);
+         DownloadServers.Add("GitHub");
+         DownloadServers.Add("Cloudflare");
+         DownloadServers.Add("Tencent Cloud");
+         DownloadServers.Add("Alibaba Cloud");
          if (selectedIndex >= 0 && selectedIndex < DownloadServers.Count)
          {
              SelectedDownloadServer = DownloadServers[selectedIndex];
@@ -294,9 +296,13 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
             
             string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
-            if (DownloadServers.IndexOf(SelectedDownloadServer) == 1)
+            
+            // Apply proxy based on selected server
+            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+            if (!string.IsNullOrWhiteSpace(proxyUrl))
             {
-                apiUrl = "https://ghproxy.com/" + apiUrl;
+                apiUrl = CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
             }
             
             var releases = await client.GetFromJsonAsync<GithubRelease[]>(apiUrl, _loadVersionsCts.Token);
@@ -482,9 +488,12 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             return;
         }
 
-        if (DownloadServers.IndexOf(SelectedDownloadServer) == 1)
+        // Apply proxy based on selected server
+        int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+        string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+        if (!string.IsNullOrWhiteSpace(proxyUrl))
         {
-            assetUrl = "https://ghproxy.com/" + assetUrl;
+            assetUrl = CloudProxyManager.ApplyProxy(assetUrl, proxyUrl);
         }
 
         if (!RpcClientFactory.CheckRpcServerRunning())
@@ -888,9 +897,13 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
                 
                 string sha256Url = sha256Asset.BrowserDownloadUrl;
-                if (DownloadServers.IndexOf(SelectedDownloadServer) == 1)
+                
+                // Apply proxy based on selected server
+                int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+                string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+                if (!string.IsNullOrWhiteSpace(proxyUrl))
                 {
-                    sha256Url = "https://ghproxy.com/" + sha256Url;
+                    sha256Url = CloudProxyManager.ApplyProxy(sha256Url, proxyUrl);
                 }
                 
                 Debug.WriteLine($"Downloading SHA256 from: {sha256Url}");

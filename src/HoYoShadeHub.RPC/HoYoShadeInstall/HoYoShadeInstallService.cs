@@ -295,6 +295,9 @@ public class HoYoShadeInstallService
             }
 
             CurrentFile = package.Name;
+            
+            // Apply proxy URL if needed (legacy ghproxy support for backward compatibility)
+            // New proxy logic should use CloudProxyManager on client side
             var downloadUrl = useProxy ? $"https://ghproxy.com/{package.DownloadUrl}" : package.DownloadUrl;
             
             _logger.LogInformation(">>> Downloading effect package: {Package}", package.Name);
