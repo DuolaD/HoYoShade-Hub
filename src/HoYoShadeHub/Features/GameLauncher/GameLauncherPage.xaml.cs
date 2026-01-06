@@ -198,11 +198,14 @@ public sealed partial class GameLauncherPage : PageBase
                 }
             }
 
-            // Check ZZZ Blender Plugin
+            // Check ZZZ Blender Plugin - 隐藏Beta客户端的Blender插件选项
             bool isZZZGame = CurrentGameBiz.ToGame().Value == GameBiz.nap;
-            IsZZZBlenderPluginVisible = isZZZGame ? Visibility.Visible : Visibility.Collapsed;
+            bool isZZZBetaClient = CurrentGameBiz.IsBetaServer();
+            
+            // 只有非Beta客户端的绝区零才显示Blender插件选项
+            IsZZZBlenderPluginVisible = (isZZZGame && !isZZZBetaClient) ? Visibility.Visible : Visibility.Collapsed;
 
-            if (isZZZGame)
+            if (isZZZGame && !isZZZBetaClient)
             {
                 string? zzzPluginPath = AppConfig.ZZZBlenderPluginPath;
                 IsZZZBlenderPluginConfigured = !string.IsNullOrWhiteSpace(zzzPluginPath) &&
@@ -214,9 +217,17 @@ public sealed partial class GameLauncherPage : PageBase
                     LaunchZZZBlenderPlugin = false;
                 }
             }
+            else if (isZZZBetaClient)
+            {
+                // Beta客户端强制取消Blender插件选项
+                if (LaunchZZZBlenderPlugin)
+                {
+                    LaunchZZZBlenderPlugin = false;
+                }
+            }
 
-            _logger.LogInformation("Blender plugins - Genshin configured: {Genshin}, ZZZ configured: {ZZZ}",
-                IsGenshinBlenderPluginConfigured, IsZZZBlenderPluginConfigured);
+            _logger.LogInformation("Blender plugins - Genshin configured: {Genshin}, ZZZ configured: {ZZZ}, ZZZ Beta client: {IsBeta}",
+                IsGenshinBlenderPluginConfigured, IsZZZBlenderPluginConfigured, isZZZBetaClient);
         }
         catch (Exception ex)
         {
