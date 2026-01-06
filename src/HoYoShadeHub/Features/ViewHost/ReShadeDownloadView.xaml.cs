@@ -81,10 +81,10 @@ public sealed partial class ReShadeDownloadView : UserControl
     {
         var selectedIndex = DownloadServers.IndexOf(SelectedDownloadServer);
         DownloadServers.Clear();
-        DownloadServers.Add("GitHub");
-        DownloadServers.Add("Cloudflare");
-        DownloadServers.Add("Tencent Cloud");
-        DownloadServers.Add("Alibaba Cloud");
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubDirect);
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_Cloudflare);
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_TencentCloud);
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_AlibabaCloud);
         if (selectedIndex >= 0 && selectedIndex < DownloadServers.Count)
         {
             SelectedDownloadServer = DownloadServers[selectedIndex];

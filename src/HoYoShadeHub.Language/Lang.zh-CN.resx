@@ -1034,6 +1034,15 @@
   <data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
     <value>GitHub (代理)</value>
   </data>
+  <data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
+    <value>Cloudflare</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_TencentCloud" xml:space="preserve">
+    <value>腾讯云</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_AlibabaCloud" xml:space="preserve">
+    <value>阿里云</value>
+  </data>
   <data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
     <value>{0}/s - {1}%</value>
   </data>

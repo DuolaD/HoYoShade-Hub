@@ -157,7 +157,7 @@
     <value>解壓file中</value>
   </data>
   <data name="DownloadGamePage_SomethingError" xml:space="preserve">
-    <value>發生錯誤</value>
+    <value>発生錯誤</value>
   </data>
   <data name="DownloadGamePage_Retry" xml:space="preserve">
     <value>嚟多次</value>
@@ -1034,6 +1034,15 @@
   <data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
     <value>GitHub (代理)</value>
   </data>
+  <data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
+    <value>Cloudflare</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_TencentCloud" xml:space="preserve">
+    <value>騰訊雲</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_AlibabaCloud" xml:space="preserve">
+    <value>阿里雲</value>
+  </data>
   <data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
     <value>{0}/s - {1}%</value>
   </data>
@@ -1105,10 +1114,10 @@
     <value>同時安裝到 HoYoShade 同埋 OpenHoYoShade</value>
   </data>
   <data name="ReShadeDownloadView_OpenHoYoShadeWarning" xml:space="preserve">
-    <value>OpenHoYoShade 係用嚨開發嘅，我哋建議你跳過為佢安裝 ReShade 着色器同埋插件嘅步驟。</value>
+    <value>OpenHoYoShade 係用嚕開發嘅，我哋建議你跳過為佢安裝 ReShade 着色器同埋插件嘅步驟。</value>
   </data>
   <data name="ReShadeDownloadView_BothTargetsWarning" xml:space="preserve">
-    <value>OpenHoYoShade 係用嚨開發嘅，我哋建議你只安裝到 HoYoShade 度。</value>
+    <value>OpenHoYoShade 係用嚕開發嘅，我哋建議你只安裝到 HoYoShade 度。</value>
   </data>
   <data name="ReShadeDownloadView_SelectInstallType" xml:space="preserve">
     <value>選擇安裝類型</value>

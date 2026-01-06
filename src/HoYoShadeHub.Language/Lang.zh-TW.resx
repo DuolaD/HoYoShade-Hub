@@ -633,7 +633,7 @@
     <value>親愛的玩家，歡迎來到 HoYoShade Hub！</value>
   </data>
   <data name="WelcomeView_WelcomeToHoYoShadeHubDescription" xml:space="preserve">
-    <value>這是一個專爲 HoYoShade 打造的 GUI 啓動器，幫助您更加輕鬆的安裝並管理它，享受更好的體驗。</value>
+    <value>這是一個專爲 HoYoShade 打造的 GUI 啔動器，幫助您更加輕鬆的安裝並管理它，享受更好的體驗。</value>
   </data>
   <data name="WelcomeView_SelectUserDataFolderDescription" xml:space="preserve">
     <value>您的所有個人資料將會被儲存在以下資料夾中。它很重要，您也可以點選下方的按鍵選擇其他資料夾。</value>
@@ -1033,6 +1033,15 @@
   </data>
   <data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
     <value>GitHub (代理)</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
+    <value>Cloudflare</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_TencentCloud" xml:space="preserve">
+    <value>騰訊雲</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_AlibabaCloud" xml:space="preserve">
+    <value>阿里雲</value>
   </data>
   <data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
     <value>{0}/s - {1}%</value>
