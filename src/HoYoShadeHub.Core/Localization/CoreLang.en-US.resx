@@ -230,4 +230,85 @@
   <data name="GachaType_EventOde" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="GameServer_Bilibili" xml:space="preserve">
+    <value>Bilibili</value>
+  </data>
+  <data name="GameServer_BetaPreBeta" xml:space="preserve">
+    <value>Pre-Beta Test Client</value>
+  </data>
+  <data name="GameServer_BetaPostBeta" xml:space="preserve">
+    <value>Beta Test / Creator Experience Client</value>
+  </data>
+  <data name="GameServer_BilibiliServer" xml:space="preserve">
+    <value>Bilibili Server</value>
+  </data>
+  <data name="GameServer_ChinaOfficial" xml:space="preserve">
+    <value>China Official</value>
+  </data>
+  <data name="GameServer_GlobalOfficial" xml:space="preserve">
+    <value>Global Official</value>
+  </data>
+  <data name="GameServer_ChinaCloud" xml:space="preserve">
+    <value>China Cloud</value>
+  </data>
+  <data name="GameServer_EuropeAmericas" xml:space="preserve">
+    <value>Europe &amp; Americas</value>
+  </data>
+  <data name="GameServer_Japan" xml:space="preserve">
+    <value>Japan</value>
+  </data>
+  <data name="GameServer_Korea" xml:space="preserve">
+    <value>Korea</value>
+  </data>
+  <data name="GameServer_SoutheastAsia" xml:space="preserve">
+    <value>Southeast Asia</value>
+  </data>
+  <data name="GameServer_TraditionalChinese" xml:space="preserve">
+    <value>Traditional Chinese</value>
+  </data>
+  <data name="GameServer_ZZZCBT3" xml:space="preserve">
+    <value>CBT3</value>
+  </data>
+  <data name="GachaType_ChronicledWish" xml:space="preserve">
+    <value>Chronicled Wish</value>
+  </data>
+  <data name="Game_ZZZ" xml:space="preserve">
+    <value>Zenless Zone Zero</value>
+  </data>
+  <data name="GachaType_StandardChannel" xml:space="preserve">
+    <value>Standard Channel</value>
+  </data>
+  <data name="GachaType_ExclusiveChannel" xml:space="preserve">
+    <value>Exclusive Channel</value>
+  </data>
+  <data name="GachaType_WEngineChannel" xml:space="preserve">
+    <value>W-Engine Channel</value>
+  </data>
+  <data name="GachaType_BangbooChannel" xml:space="preserve">
+    <value>Bangboo Channel</value>
+  </data>
+  <data name="ZZZQueryType_Monochrome" xml:space="preserve">
+    <value>Monochrome</value>
+  </data>
+  <data name="ZZZQueryType_Ploychrome" xml:space="preserve">
+    <value>Polychrome</value>
+  </data>
+  <data name="ZZZQueryType_Bundle" xml:space="preserve">
+    <value>Bundle</value>
+  </data>
+  <data name="ZZZQueryType_BatteryCharge" xml:space="preserve">
+    <value>Battery Charge</value>
+  </data>
+  <data name="ZZZQueryType_WEngine" xml:space="preserve">
+    <value>W-Engine</value>
+  </data>
+  <data name="ZZZQueryType_DriveDisc" xml:space="preserve">
+    <value>Drive Disc</value>
+  </data>
+  <data name="GachaType_CharacterCollaborationWarp" xml:space="preserve">
+    <value>Character Collaboration Warp</value>
+  </data>
+  <data name="GachaType_LightConeCollaborationWarp" xml:space="preserve">
+    <value>Light Cone Collaboration Warp</value>
+  </data>
 </root>

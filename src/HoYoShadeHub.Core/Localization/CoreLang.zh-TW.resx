@@ -304,4 +304,10 @@
   <data name="GachaType_EventOde" xml:space="preserve">
     <value>Event Ode</value>
   </data>
+  <data name="GameServer_BetaPreBeta" xml:space="preserve">
+    <value>公測前測試服</value>
+  </data>
+  <data name="GameServer_BetaPostBeta" xml:space="preserve">
+    <value>公測後測試服/創作者體驗服</value>
+  </data>
 </root>
