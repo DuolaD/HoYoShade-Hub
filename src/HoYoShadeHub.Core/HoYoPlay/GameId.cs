@@ -37,6 +37,8 @@ public class GameId : IEquatable<GameId>
             GameBiz.nap_cn => new GameId { Id = "x6znKlJ0xK", GameBiz = "nap_cn" },
             GameBiz.nap_global => new GameId { Id = "U5hbdsT9W7", GameBiz = "nap_global" },
             GameBiz.nap_bilibili => new GameId { Id = "HXAFlmYa17", GameBiz = "nap_bilibili" },
+            GameBiz.nap_beta_prebeta => new GameId { Id = "nap_beta_pre", GameBiz = "nap_beta_prebeta" },
+            GameBiz.nap_beta_postbeta => new GameId { Id = "nap_beta_post", GameBiz = "nap_beta_postbeta" },
             _ => null,
         };
     }

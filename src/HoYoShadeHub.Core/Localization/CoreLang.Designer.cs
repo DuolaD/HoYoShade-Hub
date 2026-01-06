@@ -286,6 +286,24 @@ namespace HoYoShadeHub.Core.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Pre-Beta Test Client 的本地化字符串。
+        /// </summary>
+        public static string GameServer_BetaPreBeta {
+            get {
+                return ResourceManager.GetString("GameServer_BetaPreBeta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Beta Test / Creator Experience Client 的本地化字符串。
+        /// </summary>
+        public static string GameServer_BetaPostBeta {
+            get {
+                return ResourceManager.GetString("GameServer_BetaPostBeta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Bilibili Server 的本地化字符串。
         /// </summary>
         public static string GameServer_BilibiliServer {

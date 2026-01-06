@@ -247,6 +247,12 @@
   <data name="GameServer_Bilibili" xml:space="preserve">
     <value>Bilibili</value>
   </data>
+  <data name="GameServer_BetaPreBeta" xml:space="preserve">
+    <value>Pre-Beta Test Client</value>
+  </data>
+  <data name="GameServer_BetaPostBeta" xml:space="preserve">
+    <value>Beta Test / Creator Experience Client</value>
+  </data>
   <data name="GameServer_EuropeAmericas" xml:space="preserve">
     <value>Europe &amp; Americas</value>
   </data>

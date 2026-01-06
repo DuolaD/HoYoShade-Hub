@@ -597,7 +597,18 @@ public sealed partial class GameSelector : UserControl
             foreach (var item in list)
             {
                 string game = item.GameInfo.GameBiz.Game;
-                foreach (string suffix in (string[])["_cn", "_global", "_bilibili"])
+                
+                // 根据游戏类型确定要检查的服务器后缀
+                List<string> suffixes = new() { "_cn", "_global", "_bilibili" };
+                
+                // 绝区零需要额外添加测试服
+                if (game == GameBiz.nap)
+                {
+                    suffixes.Add("_beta_prebeta");
+                    suffixes.Add("_beta_postbeta");
+                }
+                
+                foreach (string suffix in suffixes)
                 {
                     GameBiz biz = game + suffix;
                     if (biz.IsKnown())
@@ -922,6 +933,11 @@ public sealed partial class GameSelector : UserControl
                 {
                     key = $@"HKEY_CURRENT_USER\Software\Cognosphere\HYP\1_0\{gameBiz}";
                 }
+                else if (gameBiz.IsBetaServer())
+                {
+                    // 测试服使用与中国服相同的注册表位置
+                    key = gameBiz.GetGameRegistryKey();
+                }
                 if (!string.IsNullOrWhiteSpace(key))
                 {
                     path = Registry.GetValue(key, "GameInstallPath", null) as string;
@@ -934,6 +950,40 @@ public sealed partial class GameSelector : UserControl
                     }
                 }
             }
+            
+            // 手动检查测试服（因为它们可能不在 gameInfos 中）
+            foreach (GameBiz betaBiz in new[] { GameBiz.nap_beta_prebeta, GameBiz.nap_beta_postbeta })
+            {
+                string? path = GameLauncherService.GetGameInstallPath(betaBiz);
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    if (Directory.Exists(path) || AppConfig.GetGameInstallPathRemovable(betaBiz))
+                    {
+                        if (!sb.ToString().Contains(betaBiz.Value))
+                        {
+                            sb.Append(betaBiz);
+                            sb.Append(',');
+                        }
+                        continue;
+                    }
+                }
+                
+                string key = betaBiz.GetGameRegistryKey();
+                if (!string.IsNullOrWhiteSpace(key) && key != "HKEY_CURRENT_USER")
+                {
+                    path = Registry.GetValue(key, "GameInstallPath", null) as string;
+                    if (Directory.Exists(path))
+                    {
+                        AppConfig.SetGameInstallPath(betaBiz, path);
+                        if (!sb.ToString().Contains(betaBiz.Value))
+                        {
+                            sb.Append(betaBiz);
+                            sb.Append(',');
+                        }
+                    }
+                }
+            }
+            
             AppConfig.SelectedGameBizs = sb.ToString().TrimEnd(',');
             InitializeGameSelector();
             if (!IsPinned)

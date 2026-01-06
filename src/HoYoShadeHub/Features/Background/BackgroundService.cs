@@ -198,8 +198,31 @@ public class BackgroundService
         if (!File.Exists(bg))
         {
             string baseFolder = AppContext.BaseDirectory;
-            string path = Path.Combine(baseFolder, @"Assets\Image\UI_CutScene_1130320101A.png");
-            bg = File.Exists(path) ? path : null;
+            
+            // 为测试服提供随机背景图片
+            if (gameId.GameBiz.IsBetaServer())
+            {
+                // 从 backround_for_beta_client_1.png 到 backround_for_beta_client_8.png 随机选择
+                Random random = new Random();
+                int randomIndex = random.Next(1, 7); // 1-6
+                string betaBackground = $"backround_for_beta_client_{randomIndex}.png";
+                string path = Path.Combine(baseFolder, "Assets", "Image", betaBackground);
+                if (File.Exists(path))
+                {
+                    bg = path;
+                }
+                else
+                {
+                    // 如果测试服背景图片不存在，使用默认背景
+                    path = Path.Combine(baseFolder, @"Assets\Image\UI_CutScene_1130320101A.png");
+                    bg = File.Exists(path) ? path : null;
+                }
+            }
+            else
+            {
+                string path = Path.Combine(baseFolder, @"Assets\Image\UI_CutScene_1130320101A.png");
+                bg = File.Exists(path) ? path : null;
+            }
         }
         return bg;
     }

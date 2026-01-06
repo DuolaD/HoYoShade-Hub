@@ -14,7 +14,7 @@ public record struct GameBiz
 
     public string Server => Value.Contains('_') ? Value.Substring(Value.IndexOf('_') + 1) : "";
 
-
+  
 
     public GameBiz(string? value)
     {
@@ -51,6 +51,8 @@ public record struct GameBiz
     public const string nap_cn = "nap_cn";
     public const string nap_global = "nap_global";
     public const string nap_bilibili = "nap_bilibili";
+    public const string nap_beta_prebeta = "nap_beta_prebeta";   // 公测前测试服
+    public const string nap_beta_postbeta = "nap_beta_postbeta"; // 公测后测试服/创作者体验服
 
 
     public const string None = "";
@@ -78,6 +80,8 @@ public record struct GameBiz
         nap_cn,
         nap_global,
         nap_bilibili,
+        nap_beta_prebeta,
+        nap_beta_postbeta,
     }.AsReadOnly();
 
 
@@ -104,7 +108,7 @@ public record struct GameBiz
         hk4e_cn or hk4e_global or hk4e_bilibili => true,
         //clgm_cn or clgm_global => true,
         hkrpg_cn or hkrpg_global or hkrpg_bilibili => true,
-        nap_cn or nap_global or nap_bilibili => true,
+        nap_cn or nap_global or nap_bilibili or nap_beta_prebeta or nap_beta_postbeta => true,
         _ => false,
     };
 
@@ -116,6 +120,8 @@ public record struct GameBiz
 
 
     public bool IsBilibili() => Server is "bilibili";
+
+    public bool IsBetaServer() => Server is "beta_prebeta" or "beta_postbeta";
 
 
 
@@ -137,6 +143,8 @@ public record struct GameBiz
         "cn" => CoreLang.GameServer_ChinaServer,
         "global" => CoreLang.GameServer_GlobalServer,
         "bilibili" => CoreLang.GameServer_Bilibili,
+        "beta_prebeta" => CoreLang.GameServer_BetaPreBeta,
+        "beta_postbeta" => CoreLang.GameServer_BetaPostBeta,
         _ => "",
     };
 
@@ -156,6 +164,8 @@ public record struct GameBiz
         bh3_asia => GameRegistry.GamePath_bh3_tw,
         nap_cn or nap_bilibili => GameRegistry.GamePath_nap_cn,
         nap_global => GameRegistry.GamePath_nap_global,
+        nap_beta_prebeta => GameRegistry.GamePath_nap_beta_prebeta,
+        nap_beta_postbeta => GameRegistry.GamePath_nap_beta_postbeta,
         _ => "HKEY_CURRENT_USER",
     };
 

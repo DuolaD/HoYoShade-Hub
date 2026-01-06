@@ -247,6 +247,12 @@
   <data name="GameServer_Bilibili" xml:space="preserve">
     <value>哔哩哔哩</value>
   </data>
+  <data name="GameServer_BetaPreBeta" xml:space="preserve">
+    <value>公测前测试服</value>
+  </data>
+  <data name="GameServer_BetaPostBeta" xml:space="preserve">
+    <value>公测后测试服/创作者体验服</value>
+  </data>
   <data name="GameServer_EuropeAmericas" xml:space="preserve">
     <value>欧美</value>
   </data>

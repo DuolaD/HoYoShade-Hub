@@ -112,6 +112,7 @@ public partial class GameBizIcon : ObservableObject, IEquatable<GameBizIcon>
             "cn" => "ms-appx:///Assets/Image/gameicon_hyperion.png",
             "global" => "ms-appx:///Assets/Image/gameicon_hoyolab.png",
             "bilibili" => "ms-appx:///Assets/Image/gameicon_bilibili.png",
+            "beta_prebeta" or "beta_postbeta" => "ms-appx:///Assets/Image/gameicon_Hollow.png",
             _ => "ms-appx:///Assets/Image/Transparent.png",
         };
     }
