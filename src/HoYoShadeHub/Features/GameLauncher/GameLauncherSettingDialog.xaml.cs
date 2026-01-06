@@ -63,7 +63,12 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
 
     public GameBiz CurrentGameBiz { get; set; }
 
-    public ObservableCollection<GameInstallPathItemDialog> GameInstallPaths { get; set; } = new ObservableCollection<GameInstallPathItemDialog>();
+    private ObservableCollection<GameInstallPathItemDialog> _gameInstallPaths = new();
+    public ObservableCollection<GameInstallPathItemDialog> GameInstallPaths
+    {
+        get => _gameInstallPaths;
+        set => SetProperty(ref _gameInstallPaths, value);
+    }
 
 
 
@@ -342,6 +347,21 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
                 else
                 {
                     TextBlock_NetworkDriveWarning.Visibility = Visibility.Collapsed;
+                    
+                    // 验证游戏exe是否存在
+                    var exeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+                    var exePath = System.IO.Path.Combine(folder, exeName);
+                    
+                    if (!File.Exists(exePath))
+                    {
+                        // 验证失败：显示错误，不修改路径
+                        AddGameInstallPathError = string.Format(Lang.GameLauncherSettingDialog_GameExeNotFoundInFolder, exeName);
+                        _logger.LogWarning("Game exe not found in selected folder: {Path}, expected: {ExeName}", folder, exeName);
+                        return;
+                    }
+                    
+                    // 验证成功后才修改路径
+                    AddGameInstallPathError = null;
                     GameLauncherService.ChangeGameInstallPath(CurrentGameId, folder);
                     await InitializeBasicInfoAsync();
                     WeakReferenceMessenger.Default.Send(new GameInstallPathChangedMessage());
@@ -358,7 +378,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         }
     }
 
-
+    
 
     private void CheckCanRepairGame()
     {
@@ -389,8 +409,8 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
 
 
 
-
-    public string? UninstallError { get; set => SetProperty(ref field, value); }
+    private string? _uninstallError;
+    public string? UninstallError { get => _uninstallError; set => SetProperty(ref _uninstallError, value); }
 
 
 
@@ -418,6 +438,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
             CanRepairGame = segmented.SelectedItems.Count > 0;
         }
     }
+
 
 
 
@@ -927,7 +948,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     {
         try
         {
-            GameInstallPaths.Clear();
+            var list = new ObservableCollection<GameInstallPathItemDialog>();
             var paths = GameLauncherService.GetAllGameInstallPaths(CurrentGameBiz);
             var selectedIndex = AppConfig.GetSelectedGameInstallPathIndex(CurrentGameBiz);
 
@@ -938,17 +959,19 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
                     Path = paths[i],
                     IsSelected = i == selectedIndex
                 };
-                GameInstallPaths.Add(pathItem);
+                list.Add(pathItem);
             }
 
             // 验证游戏exe是否存在
-            foreach (var pathItem in GameInstallPaths)
+            foreach (var pathItem in list)
             {
                 var fullPath = GameLauncherService.GetFullPathIfRelativePath(pathItem.Path);
                 var exeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
                 var exePath = System.IO.Path.Combine(fullPath, exeName);
                 pathItem.IsValid = File.Exists(exePath);
             }
+            
+            GameInstallPaths = list;
         }
         catch (Exception ex)
         {
@@ -978,6 +1001,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
                 GameLauncherService.AddGameInstallPath(CurrentGameBiz, folder);
                 await InitializeGameInstallPathsAsync();
                 await InitializeBasicInfoAsync();
+                this.Bindings.Update();
                 WeakReferenceMessenger.Default.Send(new GameInstallPathChangedMessage());
             }
         }
@@ -1021,7 +1045,19 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
             var index = GameInstallPaths.IndexOf(item);
             if (index >= 0)
             {
-                GameLauncherService.RemoveGameInstallPath(CurrentGameBiz, index);
+                // 如果是最后一个路径，直接清空所有配置
+                if (GameInstallPaths.Count == 1)
+                {
+                    GameLauncherService.ChangeGameInstallPath(CurrentGameBiz, null);
+                    // 清空多路径配置
+                    AppConfig.SetGameInstallPaths(CurrentGameBiz, null);
+                }
+                else
+                {
+                    // 否则正常移除
+                    GameLauncherService.RemoveGameInstallPath(CurrentGameBiz, index);
+                }
+                
                 await InitializeGameInstallPathsAsync();
                 await InitializeBasicInfoAsync();
                 WeakReferenceMessenger.Default.Send(new GameInstallPathChangedMessage());

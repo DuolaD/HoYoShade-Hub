@@ -771,6 +771,19 @@ public sealed partial class GameLauncherPage : PageBase
                 }
                 else
                 {
+                    // 验证游戏exe是否存在
+                    var exeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+                    var exePath = Path.Combine(folder, exeName);
+                    
+                    if (!File.Exists(exePath))
+                    {
+                        // 游戏exe不存在，显示错误提示，不进行定位
+                        InAppToast.MainWindow?.Warning(null, string.Format(Lang.GameLauncherSettingDialog_GameExeNotFoundInFolder, exeName), 5000);
+                        _logger.LogWarning("Game exe not found in selected folder: {Path}, expected: {ExeName}", folder, exeName);
+                        return;
+                    }
+                    
+                    // 验证成功，执行定位
                     GameLauncherService.ChangeGameInstallPath(CurrentGameId, folder);
                     CheckGameVersion();
                     WeakReferenceMessenger.Default.Send(new GameInstallPathChangedMessage());

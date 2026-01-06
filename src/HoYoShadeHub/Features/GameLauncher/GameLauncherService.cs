@@ -645,8 +645,15 @@ internal partial class GameLauncherService
             existingPaths.Add(relativePath);
             AppConfig.SetGameInstallPaths(gameBiz, string.Join("|", existingPaths));
             
-            // 如果这是第一次添加多目录，设置选中索引为0（原有路径）
-            if (existingPaths.Count == 2)
+            // 如果只有1个路径（即刚刚添加的第一个路径），同步设置到单路径配置中，确保回退逻辑和 UI 刷新正常工作
+            if (existingPaths.Count == 1)
+            {
+                AppConfig.SetGameInstallPath(gameBiz, relativePath);
+                AppConfig.SetGameInstallPathRemovable(gameBiz, removable);
+                AppConfig.SetSelectedGameInstallPathIndex(gameBiz, 0);
+            }
+            // 如果这是添加的第二个目录（总数变2），设置默认选中索引为0（维持原有路径为选中状态）
+            else if (existingPaths.Count == 2)
             {
                 AppConfig.SetSelectedGameInstallPathIndex(gameBiz, 0);
             }
