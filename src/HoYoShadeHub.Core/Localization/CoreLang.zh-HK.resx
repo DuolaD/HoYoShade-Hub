@@ -175,7 +175,7 @@
     <value>國際版 server</value>
   </data>
   <data name="GameServer_ChinaCloudServer" xml:space="preserve">
-    <value>大陸雲端เกมส์</value>
+    <value>大陸雲端游戲</value>
   </data>
   <data name="GameServer_EuropeAmericasServers" xml:space="preserve">
     <value>歐美 server</value>
@@ -248,7 +248,7 @@
     <value>國際官方</value>
   </data>
   <data name="GameServer_ChinaCloud" xml:space="preserve">
-    <value>大陸雲端เกมส์</value>
+    <value>大陸雲端游戲</value>
   </data>
   <data name="GameServer_Bilibili" xml:space="preserve">
     <value>嗶哩嗶哩</value>
