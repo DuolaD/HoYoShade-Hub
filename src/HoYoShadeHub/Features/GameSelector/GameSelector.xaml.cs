@@ -618,7 +618,7 @@ public sealed partial class GameSelector : UserControl
                         Name = HoYoShadeHub.Core.Localization.CoreLang.Game_NexusAnima,
                         Icon = new GameImage { Url = "ms-appx:///Assets/Image/icon_hna.jpg" },
                         Background = new GameImage { Url = "ms-appx:///Assets/Image/background_hna.png" },
-                        Logo = null,  // 不显示Logo，直接显示背景图
+                        Logo = new GameImage { Url = GetHnaLogoPath() },  // 使用语言特定的Logo
                         Thumbnail = new GameImage { Url = "ms-appx:///Assets/Image/background_hna.png" },
                     },
                     DisplayStatus = GameInfoDisplayStatus.LAUNCHER_GAME_DISPLAY_STATUS_AVAILABLE
@@ -721,7 +721,6 @@ public sealed partial class GameSelector : UserControl
         }
         catch { }
     }
-
 
 
 
