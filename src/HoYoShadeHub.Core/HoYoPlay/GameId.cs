@@ -24,6 +24,7 @@ public class GameId : IEquatable<GameId>
         {
             GameBiz.bh3_cn => new GameId { Id = "osvnlOc0S8", GameBiz = "bh3_cn" },
             GameBiz.bh3_global => new GameId { Id = "5TIVvvcwtM", GameBiz = "bh3_global" },
+            GameBiz.bh3_beta => new GameId { Id = "bh3_beta", GameBiz = "bh3_beta" },
             //GameBiz.bh3_jp => new GameId { Id = "g0mMIvshDb", GameBiz = "bh3_global" },
             //GameBiz.bh3_kr => new GameId { Id = "uxB4MC7nzC", GameBiz = "bh3_global" },
             //GameBiz.bh3_os => new GameId { Id = "bxPTXSET5t", GameBiz = "bh3_global" },

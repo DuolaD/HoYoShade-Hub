@@ -275,6 +275,7 @@ internal partial class GameLauncherService
             GameBiz.hk4e_cn_beta => "YuanShen.exe",
             GameBiz.hk4e_os_beta => "GenshinImpact.exe",
             GameBiz.hkrpg_beta => "StarRail.exe",
+            GameBiz.bh3_beta => "BH3.exe",
             GameBiz.nap_beta_prebeta => "ZZZ.exe",
             GameBiz.nap_beta_postbeta => "ZenlessZoneZeroBeta.exe",
             _ => gameBiz.Game switch

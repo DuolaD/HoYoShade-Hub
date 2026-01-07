@@ -45,6 +45,7 @@ internal partial class GameFeatureConfig
         {
             GameBiz.bh3_cn => bh3_cn,
             GameBiz.bh3_global => bh3_global,
+            GameBiz.bh3_beta => bh3_beta,
             GameBiz.hk4e_cn => hk4e_cn,
             GameBiz.hk4e_global => hk4e_global,
             GameBiz.hk4e_bilibili => hk4e_bilibili,
@@ -97,6 +98,17 @@ internal partial class GameFeatureConfig
             nameof(ScreenshotPage),
         ],
         SupportDailyNote = true,
+    };
+
+
+    private static readonly GameFeatureConfig bh3_beta = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
+        ],
     };
 
 

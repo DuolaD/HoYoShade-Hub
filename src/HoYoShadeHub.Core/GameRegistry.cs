@@ -41,6 +41,7 @@ public class GameRegistry
     public const string GamePath_bh3_cn = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏3";
     public const string GamePath_bh3_overseas = @"HKEY_CURRENT_USER\Software\miHoYo\Honkai Impact 3";
     public const string GamePath_bh3_global = @"HKEY_CURRENT_USER\Software\miHoYo\Honkai Impact 3rd";
+    public const string GamePath_bh3_beta = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏3测试服";
     public const string GamePath_bh3_tw = @"HKEY_CURRENT_USER\Software\miHoYo\崩壊3rd";
     public const string GamePath_bh3_kr = @"HKEY_CURRENT_USER\Software\miHoYo\붕괴3rd";
     public const string GamePath_bh3_jp = @"HKEY_CURRENT_USER\Software\miHoYo\崩壊3rd";

@@ -601,6 +601,12 @@ public sealed partial class GameSelector : UserControl
                 // 根据游戏类型确定要检查的服务器后缀
                 List<string> suffixes = new() { "_cn", "_global", "_bilibili" };
                 
+                // 崩坏三需要额外添加测试服
+                if (game == GameBiz.bh3)
+                {
+                    suffixes.Add("_beta");
+                }
+                
                 // 原神需要额外添加测试服
                 if (game == GameBiz.hk4e)
                 {
@@ -966,6 +972,7 @@ public sealed partial class GameSelector : UserControl
             
             // 手动检查测试服（因为它们可能不在 gameInfos 中）
             foreach (GameBiz betaBiz in new[] { 
+                GameBiz.bh3_beta,
                 GameBiz.hk4e_cn_beta, 
                 GameBiz.hk4e_os_beta,
                 GameBiz.hkrpg_beta,

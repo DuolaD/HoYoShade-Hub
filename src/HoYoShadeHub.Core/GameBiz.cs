@@ -25,6 +25,7 @@ public record struct GameBiz
     public const string bh3 = "bh3";
     public const string bh3_cn = "bh3_cn";
     public const string bh3_global = "bh3_global";
+    public const string bh3_beta = "bh3_beta";   // 内测/创作者体验服（通用）
 
     public const string bh3_os = "bh3_os";      // 东南亚
     public const string bh3_jp = "bh3_jp";
@@ -66,6 +67,7 @@ public record struct GameBiz
     {
         bh3_cn,
         bh3_global,
+        bh3_beta,
         //bh3_os,
         //bh3_jp,
         //bh3_kr,
@@ -110,7 +112,7 @@ public record struct GameBiz
 
     public bool IsKnown() => Value switch
     {
-        bh3_cn or bh3_global => true,
+        bh3_cn or bh3_global or bh3_beta => true,
         hk4e_cn or hk4e_global or hk4e_bilibili or hk4e_cn_beta or hk4e_os_beta => true,
         //clgm_cn or clgm_global => true,
         hkrpg_cn or hkrpg_global or hkrpg_bilibili or hkrpg_beta => true,
@@ -170,6 +172,7 @@ public record struct GameBiz
         hkrpg_beta => GameRegistry.GamePath_hkrpg_beta,
         bh3_cn => GameRegistry.GamePath_bh3_cn,
         bh3_global => GameRegistry.GamePath_bh3_global,
+        bh3_beta => GameRegistry.GamePath_bh3_beta,
         bh3_jp => GameRegistry.GamePath_bh3_jp,
         bh3_kr => GameRegistry.GamePath_bh3_kr,
         bh3_os => GameRegistry.GamePath_bh3_overseas,
