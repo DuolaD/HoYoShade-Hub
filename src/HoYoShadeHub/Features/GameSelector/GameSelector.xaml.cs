@@ -621,7 +621,7 @@ public sealed partial class GameSelector : UserControl
                 }
             }
 
-            // 手动添加星布谷地（因为它可能不在HoYoPlay API中）
+            // 手动添加星布谷地（因为它不在HoYoPlay API中）
             // 将其插入到列表的开头，成为第一个游戏
             var ppDisplay = new GameBizDisplay 
             { 

@@ -268,24 +268,6 @@ namespace HoYoShadeHub.Core.Localization {
         }
         
         /// <summary>
-        ///   查找类似 Zenless Zone Zero 的本地化字符串。
-        /// </summary>
-        public static string Game_ZZZ {
-            get {
-                return ResourceManager.GetString("Game_ZZZ", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Honkai: Petit Planet 的本地化字符串。
-        /// </summary>
-        public static string Game_PetitPlanet {
-            get {
-                return ResourceManager.GetString("Game_PetitPlanet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 Honkai: Nexus Anima 的本地化字符串。
         /// </summary>
         public static string Game_NexusAnima {
@@ -295,47 +277,20 @@ namespace HoYoShadeHub.Core.Localization {
         }
         
         /// <summary>
-        ///   查找类似 Bilibili 的本地化字符串。
+        ///   查找类似 Petit Planet 的本地化字符串。
         /// </summary>
-        public static string GameServer_Bilibili {
+        public static string Game_PetitPlanet {
             get {
-                return ResourceManager.GetString("GameServer_Bilibili", resourceCulture);
+                return ResourceManager.GetString("Game_PetitPlanet", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Pre-Beta Test Client 的本地化字符串。
+        ///   查找类似 Zenless Zone Zero 的本地化字符串。
         /// </summary>
-        public static string GameServer_BetaPreBeta {
+        public static string Game_ZZZ {
             get {
-                return ResourceManager.GetString("GameServer_BetaPreBeta", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Beta Test / Creator Experience Client 的本地化字符串。
-        /// </summary>
-        public static string GameServer_BetaPostBeta {
-            get {
-                return ResourceManager.GetString("GameServer_BetaPostBeta", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 China Server Beta / Creator Experience Client 的本地化字符串。
-        /// </summary>
-        public static string GameServer_CNBeta {
-            get {
-                return ResourceManager.GetString("GameServer_CNBeta", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Global Server Beta / Creator Experience Client 的本地化字符串。
-        /// </summary>
-        public static string GameServer_OSBeta {
-            get {
-                return ResourceManager.GetString("GameServer_OSBeta", resourceCulture);
+                return ResourceManager.GetString("Game_ZZZ", resourceCulture);
             }
         }
         
@@ -349,11 +304,29 @@ namespace HoYoShadeHub.Core.Localization {
         }
         
         /// <summary>
-        ///   查找类似 First Closed Beta Test 的本地化字符串。
+        ///   查找类似 Beta Test / Creator Experience Client 的本地化字符串。
         /// </summary>
-        public static string GameServer_CBT1 {
+        public static string GameServer_BetaPostBeta {
             get {
-                return ResourceManager.GetString("GameServer_CBT1", resourceCulture);
+                return ResourceManager.GetString("GameServer_BetaPostBeta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Pre-Beta Test Client 的本地化字符串。
+        /// </summary>
+        public static string GameServer_BetaPreBeta {
+            get {
+                return ResourceManager.GetString("GameServer_BetaPreBeta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Bilibili 的本地化字符串。
+        /// </summary>
+        public static string GameServer_Bilibili {
+            get {
+                return ResourceManager.GetString("GameServer_Bilibili", resourceCulture);
             }
         }
         
@@ -363,6 +336,15 @@ namespace HoYoShadeHub.Core.Localization {
         public static string GameServer_BilibiliServer {
             get {
                 return ResourceManager.GetString("GameServer_BilibiliServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 First Closed Beta Test 的本地化字符串。
+        /// </summary>
+        public static string GameServer_CBT1 {
+            get {
+                return ResourceManager.GetString("GameServer_CBT1", resourceCulture);
             }
         }
         
@@ -399,6 +381,15 @@ namespace HoYoShadeHub.Core.Localization {
         public static string GameServer_ChinaServer {
             get {
                 return ResourceManager.GetString("GameServer_ChinaServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 CN Beta / Creator Experience Client 的本地化字符串。
+        /// </summary>
+        public static string GameServer_CNBeta {
+            get {
+                return ResourceManager.GetString("GameServer_CNBeta", resourceCulture);
             }
         }
         
@@ -471,6 +462,15 @@ namespace HoYoShadeHub.Core.Localization {
         public static string GameServer_KoreaServer {
             get {
                 return ResourceManager.GetString("GameServer_KoreaServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 OS Beta / Creator Experience Client 的本地化字符串。
+        /// </summary>
+        public static string GameServer_OSBeta {
+            get {
+                return ResourceManager.GetString("GameServer_OSBeta", resourceCulture);
             }
         }
         
