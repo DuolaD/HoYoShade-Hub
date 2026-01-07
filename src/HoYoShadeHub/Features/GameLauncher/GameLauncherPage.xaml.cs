@@ -181,11 +181,14 @@ public sealed partial class GameLauncherPage : PageBase
     {
         try
         {
-            // Check Genshin Impact Blender Plugin
+            // Check Genshin Impact Blender Plugin - 隐藏Beta客户端的Blender插件选项
             bool isGenshinGame = CurrentGameBiz.ToGame().Value == GameBiz.hk4e;
-            IsGenshinBlenderPluginVisible = isGenshinGame ? Visibility.Visible : Visibility.Collapsed;
+            bool isGenshinBetaClient = CurrentGameBiz.IsBetaServer();
+            
+            // 只有非Beta客户端的原神才显示Blender插件选项
+            IsGenshinBlenderPluginVisible = (isGenshinGame && !isGenshinBetaClient) ? Visibility.Visible : Visibility.Collapsed;
 
-            if (isGenshinGame)
+            if (isGenshinGame && !isGenshinBetaClient)
             {
                 string? genshinPluginPath = AppConfig.GenshinBlenderPluginPath;
                 IsGenshinBlenderPluginConfigured = !string.IsNullOrWhiteSpace(genshinPluginPath) &&
@@ -193,6 +196,14 @@ public sealed partial class GameLauncherPage : PageBase
                                                    File.Exists(Path.Combine(genshinPluginPath, "client.exe"));
 
                 if (!IsGenshinBlenderPluginConfigured && LaunchGenshinBlenderPlugin)
+                {
+                    LaunchGenshinBlenderPlugin = false;
+                }
+            }
+            else if (isGenshinBetaClient)
+            {
+                // Beta客户端强制取消Blender插件选项
+                if (LaunchGenshinBlenderPlugin)
                 {
                     LaunchGenshinBlenderPlugin = false;
                 }
@@ -226,8 +237,8 @@ public sealed partial class GameLauncherPage : PageBase
                 }
             }
 
-            _logger.LogInformation("Blender plugins - Genshin configured: {Genshin}, ZZZ configured: {ZZZ}, ZZZ Beta client: {IsBeta}",
-                IsGenshinBlenderPluginConfigured, IsZZZBlenderPluginConfigured, isZZZBetaClient);
+            _logger.LogInformation("Blender plugins - Genshin configured: {Genshin}, ZZZ configured: {ZZZ}, Genshin Beta: {GenshinBeta}, ZZZ Beta: {ZZZBeta}",
+                IsGenshinBlenderPluginConfigured, IsZZZBlenderPluginConfigured, isGenshinBetaClient, isZZZBetaClient);
         }
         catch (Exception ex)
         {
