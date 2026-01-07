@@ -155,9 +155,12 @@ public sealed partial class GameLauncherPage : PageBase
 
             // 读取设置页面的"使用Starward启动器启动公开客户端游戏"开关状态
             bool useStarwardLauncherSetting = AppConfig.UseStarwardLauncher;
+            
+            // 检查是否为Beta客户端
+            bool isBetaClient = CurrentGameBiz.IsBetaServer();
 
-            // If protocol not available OR setting is disabled, and UseStarwardLauncher is enabled, disable it
-            if ((!IsStarwardProtocolAvailable || !useStarwardLauncherSetting) && UseStarwardLauncher)
+            // If protocol not available OR setting is disabled OR is beta client, and UseStarwardLauncher is enabled, disable it
+            if ((!IsStarwardProtocolAvailable || !useStarwardLauncherSetting || isBetaClient) && UseStarwardLauncher)
             {
                 UseStarwardLauncher = false;
             }
@@ -165,8 +168,8 @@ public sealed partial class GameLauncherPage : PageBase
             // 通知 IsStarwardLauncherCheckboxEnabled 属性更新
             OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
 
-            _logger.LogInformation("Starward protocol available: {Available}, Setting enabled: {Setting}", 
-                IsStarwardProtocolAvailable, useStarwardLauncherSetting);
+            _logger.LogInformation("Starward protocol available: {Available}, Setting enabled: {Setting}, IsBeta: {IsBeta}", 
+                IsStarwardProtocolAvailable, useStarwardLauncherSetting, isBetaClient);
         }
         catch (Exception ex)
         {
@@ -515,22 +518,27 @@ public sealed partial class GameLauncherPage : PageBase
     
     /// <summary>
     /// Starward启动器选项是否可用
-    /// 条件: 没有Blender插件被选中 AND Starward协议可用 AND 设置中启用了Starward启动器
+    /// 条件: 没有Blender插件被选中 AND Starward协议可用 AND 设置中启用了Starward启动器 AND 不是Beta客户端
     /// </summary>
     public bool IsStarwardLauncherCheckboxEnabled
     { 
         get
         {
+            // Beta客户端不支持Starward启动器
+            bool isBetaClient = CurrentGameBiz.IsBetaServer();
+            
             bool result = !LaunchGenshinBlenderPlugin && 
                           !LaunchZZZBlenderPlugin && 
                           IsStarwardProtocolAvailable && 
-                          AppConfig.UseStarwardLauncher;
+                          AppConfig.UseStarwardLauncher &&
+                          !isBetaClient;
             
-            _logger.LogInformation("IsStarwardLauncherCheckboxEnabled: {Result} (Blender: {Blender}, Protocol: {Protocol}, Setting: {Setting})", 
+            _logger.LogInformation("IsStarwardLauncherCheckboxEnabled: {Result} (Blender: {Blender}, Protocol: {Protocol}, Setting: {Setting}, IsBeta: {IsBeta})", 
                 result, 
                 LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin,
                 IsStarwardProtocolAvailable,
-                AppConfig.UseStarwardLauncher);
+                AppConfig.UseStarwardLauncher,
+                isBetaClient);
             
             return result;
         }

@@ -609,6 +609,7 @@
                       Content="{x:Bind lang:Lang.GameLauncherPage_LaunchWithStarward}"
                       IsChecked="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsStarwardLauncherCheckboxEnabled}"
+                      Visibility="{x:Bind IsStarwardLauncherCheckboxEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                       Margin="0,4"
                       FontWeight="SemiBold" />
             
