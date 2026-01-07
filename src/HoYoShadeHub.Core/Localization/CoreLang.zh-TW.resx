@@ -316,4 +316,7 @@
   <data name="GameServer_OSBeta" xml:space="preserve">
     <value>國際伺服器 內測/創作者體驗服</value>
   </data>
+  <data name="GameServer_Beta" xml:space="preserve">
+    <value>內測/創作者體驗服</value>
+  </data>
 </root>

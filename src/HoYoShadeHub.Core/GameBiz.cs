@@ -47,6 +47,7 @@ public record struct GameBiz
     public const string hkrpg_cn = "hkrpg_cn";
     public const string hkrpg_global = "hkrpg_global";
     public const string hkrpg_bilibili = "hkrpg_bilibili";
+    public const string hkrpg_beta = "hkrpg_beta";   // 内测/创作者体验服（通用）
 
 
     public const string nap = "nap";
@@ -81,6 +82,7 @@ public record struct GameBiz
         hkrpg_cn,
         hkrpg_global,
         hkrpg_bilibili,
+        hkrpg_beta,
         nap_cn,
         nap_global,
         nap_bilibili,
@@ -111,7 +113,7 @@ public record struct GameBiz
         bh3_cn or bh3_global => true,
         hk4e_cn or hk4e_global or hk4e_bilibili or hk4e_cn_beta or hk4e_os_beta => true,
         //clgm_cn or clgm_global => true,
-        hkrpg_cn or hkrpg_global or hkrpg_bilibili => true,
+        hkrpg_cn or hkrpg_global or hkrpg_bilibili or hkrpg_beta => true,
         nap_cn or nap_global or nap_bilibili or nap_beta_prebeta or nap_beta_postbeta => true,
         _ => false,
     };
@@ -125,7 +127,7 @@ public record struct GameBiz
 
     public bool IsBilibili() => Server is "bilibili";
 
-    public bool IsBetaServer() => Server is "beta_prebeta" or "beta_postbeta" or "cn_beta" or "os_beta";
+    public bool IsBetaServer() => Server is "beta_prebeta" or "beta_postbeta" or "cn_beta" or "os_beta" or "beta";
 
 
 
@@ -151,6 +153,7 @@ public record struct GameBiz
         "beta_postbeta" => CoreLang.GameServer_BetaPostBeta,
         "cn_beta" => CoreLang.GameServer_CNBeta,
         "os_beta" => CoreLang.GameServer_OSBeta,
+        "beta" => CoreLang.GameServer_Beta,
         _ => "",
     };
 
@@ -164,6 +167,7 @@ public record struct GameBiz
         //clgm_cn => GameRegistry.GamePath_hk4e_cloud,
         hkrpg_cn or hkrpg_bilibili => GameRegistry.GamePath_hkrpg_cn,
         hkrpg_global => GameRegistry.GamePath_hkrpg_global,
+        hkrpg_beta => GameRegistry.GamePath_hkrpg_beta,
         bh3_cn => GameRegistry.GamePath_bh3_cn,
         bh3_global => GameRegistry.GamePath_bh3_global,
         bh3_jp => GameRegistry.GamePath_bh3_jp,

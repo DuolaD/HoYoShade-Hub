@@ -317,4 +317,7 @@
   <data name="GameServer_OSBeta" xml:space="preserve">
     <value>Global Server Beta / Creator Experience Client</value>
   </data>
+  <data name="GameServer_Beta" xml:space="preserve">
+    <value>Beta / Creator Experience Client</value>
+  </data>
 </root>

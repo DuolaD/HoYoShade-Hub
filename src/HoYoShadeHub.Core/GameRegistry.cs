@@ -36,6 +36,7 @@ public class GameRegistry
 
     public const string GamePath_hkrpg_cn = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏：星穹铁道";
     public const string GamePath_hkrpg_global = @"HKEY_CURRENT_USER\Software\Cognosphere\Star Rail";
+    public const string GamePath_hkrpg_beta = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏：星穹铁道测试服";
 
     public const string GamePath_bh3_cn = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏3";
     public const string GamePath_bh3_overseas = @"HKEY_CURRENT_USER\Software\miHoYo\Honkai Impact 3";

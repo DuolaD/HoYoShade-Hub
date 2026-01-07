@@ -36,6 +36,7 @@ public class GameId : IEquatable<GameId>
             GameBiz.hkrpg_cn => new GameId { Id = "64kMb5iAWu", GameBiz = "hkrpg_cn" },
             GameBiz.hkrpg_global => new GameId { Id = "4ziysqXOQ8", GameBiz = "hkrpg_global" },
             GameBiz.hkrpg_bilibili => new GameId { Id = "EdtUqXfCHh", GameBiz = "hkrpg_bilibili" },
+            GameBiz.hkrpg_beta => new GameId { Id = "hkrpg_beta", GameBiz = "hkrpg_beta" },
             GameBiz.nap_cn => new GameId { Id = "x6znKlJ0xK", GameBiz = "nap_cn" },
             GameBiz.nap_global => new GameId { Id = "U5hbdsT9W7", GameBiz = "nap_global" },
             GameBiz.nap_bilibili => new GameId { Id = "HXAFlmYa17", GameBiz = "nap_bilibili" },

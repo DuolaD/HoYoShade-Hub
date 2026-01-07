@@ -608,6 +608,12 @@ public sealed partial class GameSelector : UserControl
                     suffixes.Add("_os_beta");
                 }
                 
+                // 崩坏：星穹铁道需要额外添加测试服
+                if (game == GameBiz.hkrpg)
+                {
+                    suffixes.Add("_beta");
+                }
+                
                 // 绝区零需要额外添加测试服
                 if (game == GameBiz.nap)
                 {
@@ -961,7 +967,8 @@ public sealed partial class GameSelector : UserControl
             // 手动检查测试服（因为它们可能不在 gameInfos 中）
             foreach (GameBiz betaBiz in new[] { 
                 GameBiz.hk4e_cn_beta, 
-                GameBiz.hk4e_os_beta, 
+                GameBiz.hk4e_os_beta,
+                GameBiz.hkrpg_beta,
                 GameBiz.nap_beta_prebeta, 
                 GameBiz.nap_beta_postbeta 
             })

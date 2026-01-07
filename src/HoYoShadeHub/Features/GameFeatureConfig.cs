@@ -48,12 +48,17 @@ internal partial class GameFeatureConfig
             GameBiz.hk4e_cn => hk4e_cn,
             GameBiz.hk4e_global => hk4e_global,
             GameBiz.hk4e_bilibili => hk4e_bilibili,
+            GameBiz.hk4e_cn_beta => hk4e_beta,
+            GameBiz.hk4e_os_beta => hk4e_beta,
             GameBiz.hkrpg_cn => hkrpg_cn,
             GameBiz.hkrpg_global => hkrpg_global,
             GameBiz.hkrpg_bilibili => hkrpg_bilibili,
+            GameBiz.hkrpg_beta => hkrpg_beta,
             GameBiz.nap_cn => nap_cn,
             GameBiz.nap_global => nap_global,
             GameBiz.nap_bilibili => nap_bilibili,
+            GameBiz.nap_beta_prebeta => nap_beta,
+            GameBiz.nap_beta_postbeta => nap_beta,
             _ => Default,
         };
         return config;
@@ -134,6 +139,15 @@ internal partial class GameFeatureConfig
     };
 
 
+    private static readonly GameFeatureConfig hk4e_beta = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+        ],
+    };
+
+
     private static readonly GameFeatureConfig hkrpg_cn = new()
     {
         SupportedPages =
@@ -170,6 +184,15 @@ internal partial class GameFeatureConfig
         ],
         SupportHardLink = true,
         SupportDailyNote = true,
+    };
+
+
+    private static readonly GameFeatureConfig hkrpg_beta = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+        ],
     };
 
 
@@ -213,5 +236,12 @@ internal partial class GameFeatureConfig
     };
 
 
+    private static readonly GameFeatureConfig nap_beta = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+        ],
+    };
 
 }
