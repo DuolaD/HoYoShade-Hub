@@ -601,6 +601,13 @@ public sealed partial class GameSelector : UserControl
                 // 根据游戏类型确定要检查的服务器后缀
                 List<string> suffixes = new() { "_cn", "_global", "_bilibili" };
                 
+                // 原神需要额外添加测试服
+                if (game == GameBiz.hk4e)
+                {
+                    suffixes.Add("_cn_beta");
+                    suffixes.Add("_os_beta");
+                }
+                
                 // 绝区零需要额外添加测试服
                 if (game == GameBiz.nap)
                 {
@@ -952,7 +959,12 @@ public sealed partial class GameSelector : UserControl
             }
             
             // 手动检查测试服（因为它们可能不在 gameInfos 中）
-            foreach (GameBiz betaBiz in new[] { GameBiz.nap_beta_prebeta, GameBiz.nap_beta_postbeta })
+            foreach (GameBiz betaBiz in new[] { 
+                GameBiz.hk4e_cn_beta, 
+                GameBiz.hk4e_os_beta, 
+                GameBiz.nap_beta_prebeta, 
+                GameBiz.nap_beta_postbeta 
+            })
             {
                 string? path = GameLauncherService.GetGameInstallPath(betaBiz);
                 if (!string.IsNullOrWhiteSpace(path))

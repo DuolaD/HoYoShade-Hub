@@ -31,6 +31,8 @@ public class GameRegistry
     public const string GamePath_hk4e_cn = @"HKEY_CURRENT_USER\Software\miHoYo\原神";
     public const string GamePath_hk4e_global = @"HKEY_CURRENT_USER\Software\miHoYo\Genshin Impact";
     public const string GamePath_hk4e_cloud = @"HKEY_CURRENT_USER\Software\miHoYo\云·原神";
+    public const string GamePath_hk4e_cn_beta = @"HKEY_CURRENT_USER\Software\miHoYo\原神测试服";
+    public const string GamePath_hk4e_os_beta = @"HKEY_CURRENT_USER\Software\miHoYo\Genshin Impact Beta";
 
     public const string GamePath_hkrpg_cn = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏：星穹铁道";
     public const string GamePath_hkrpg_global = @"HKEY_CURRENT_USER\Software\Cognosphere\Star Rail";

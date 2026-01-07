@@ -36,6 +36,8 @@ public record struct GameBiz
     public const string hk4e_cn = "hk4e_cn";
     public const string hk4e_global = "hk4e_global";
     public const string hk4e_bilibili = "hk4e_bilibili";
+    public const string hk4e_cn_beta = "hk4e_cn_beta";   // 中国服 公测/创作者体验服
+    public const string hk4e_os_beta = "hk4e_os_beta";   // 国际服 公测/创作者体验服
 
     //public const string clgm_cn = "clgm_cn";
     //public const string clgm_global = "clgm_global";
@@ -72,6 +74,8 @@ public record struct GameBiz
         hk4e_cn,
         hk4e_global,
         hk4e_bilibili,
+        hk4e_cn_beta,
+        hk4e_os_beta,
         //clgm_cn,
         //clgm_global,
         hkrpg_cn,
@@ -105,7 +109,7 @@ public record struct GameBiz
     public bool IsKnown() => Value switch
     {
         bh3_cn or bh3_global => true,
-        hk4e_cn or hk4e_global or hk4e_bilibili => true,
+        hk4e_cn or hk4e_global or hk4e_bilibili or hk4e_cn_beta or hk4e_os_beta => true,
         //clgm_cn or clgm_global => true,
         hkrpg_cn or hkrpg_global or hkrpg_bilibili => true,
         nap_cn or nap_global or nap_bilibili or nap_beta_prebeta or nap_beta_postbeta => true,
@@ -121,7 +125,7 @@ public record struct GameBiz
 
     public bool IsBilibili() => Server is "bilibili";
 
-    public bool IsBetaServer() => Server is "beta_prebeta" or "beta_postbeta";
+    public bool IsBetaServer() => Server is "beta_prebeta" or "beta_postbeta" or "cn_beta" or "os_beta";
 
 
 
@@ -145,6 +149,8 @@ public record struct GameBiz
         "bilibili" => CoreLang.GameServer_Bilibili,
         "beta_prebeta" => CoreLang.GameServer_BetaPreBeta,
         "beta_postbeta" => CoreLang.GameServer_BetaPostBeta,
+        "cn_beta" => "中国服 内测/创作者体验服",  // 暂时使用硬编码字符串，等待资源文件重新生成
+        "os_beta" => "国际服 内测/创作者体验服",  // 暂时使用硬编码字符串，等待资源文件重新生成
         _ => "",
     };
 
@@ -153,6 +159,8 @@ public record struct GameBiz
     {
         hk4e_cn or hk4e_bilibili => GameRegistry.GamePath_hk4e_cn,
         hk4e_global => GameRegistry.GamePath_hk4e_global,
+        hk4e_cn_beta => GameRegistry.GamePath_hk4e_cn_beta,
+        hk4e_os_beta => GameRegistry.GamePath_hk4e_os_beta,
         //clgm_cn => GameRegistry.GamePath_hk4e_cloud,
         hkrpg_cn or hkrpg_bilibili => GameRegistry.GamePath_hkrpg_cn,
         hkrpg_global => GameRegistry.GamePath_hkrpg_global,

@@ -253,6 +253,12 @@
   <data name="GameServer_BetaPostBeta" xml:space="preserve">
     <value>Beta Test / Creator Experience Client</value>
   </data>
+  <data name="GameServer_CNBeta" xml:space="preserve">
+    <value>CN Beta / Creator Experience Client</value>
+  </data>
+  <data name="GameServer_OSBeta" xml:space="preserve">
+    <value>OS Beta / Creator Experience Client</value>
+  </data>
   <data name="GameServer_EuropeAmericas" xml:space="preserve">
     <value>Europe &amp; Americas</value>
   </data>

@@ -31,6 +31,8 @@ public class GameId : IEquatable<GameId>
             GameBiz.hk4e_cn => new GameId { Id = "1Z8W5NHUQb", GameBiz = "hk4e_cn" },
             GameBiz.hk4e_global => new GameId { Id = "gopR6Cufr3", GameBiz = "hk4e_global" },
             GameBiz.hk4e_bilibili => new GameId { Id = "T2S0Gz4Dr2", GameBiz = "hk4e_bilibili" },
+            GameBiz.hk4e_cn_beta => new GameId { Id = "hk4e_cn_beta", GameBiz = "hk4e_cn_beta" },
+            GameBiz.hk4e_os_beta => new GameId { Id = "hk4e_os_beta", GameBiz = "hk4e_os_beta" },
             GameBiz.hkrpg_cn => new GameId { Id = "64kMb5iAWu", GameBiz = "hkrpg_cn" },
             GameBiz.hkrpg_global => new GameId { Id = "4ziysqXOQ8", GameBiz = "hkrpg_global" },
             GameBiz.hkrpg_bilibili => new GameId { Id = "EdtUqXfCHh", GameBiz = "hkrpg_bilibili" },

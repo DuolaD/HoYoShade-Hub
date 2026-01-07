@@ -45,6 +45,9 @@ public abstract class LauncherId
             GameBiz.hk4e_bilibili => BilibiliGenshin,
             GameBiz.hkrpg_bilibili => BilibiliStarRail,
             GameBiz.nap_bilibili => BilibiliZZZ,
+            GameBiz.hk4e_cn_beta => ChinaOfficial,  // 中国服测试服使用中国服启动器
+            GameBiz.hk4e_os_beta => GlobalOfficial, // 国际服测试服使用国际服启动器
+            GameBiz.nap_beta_prebeta or GameBiz.nap_beta_postbeta => ChinaOfficial,
             string value when value.EndsWith("_cn") => ChinaOfficial,
             string value when value.EndsWith("_global") => GlobalOfficial,
             _ => null,
