@@ -144,7 +144,10 @@ internal partial class GameFeatureConfig
         SupportedPages =
         [
             nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
         ],
+        SupportHardLink = true,
     };
 
 
@@ -192,7 +195,10 @@ internal partial class GameFeatureConfig
         SupportedPages =
         [
             nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
         ],
+        SupportHardLink = true,
     };
 
 
@@ -241,7 +247,10 @@ internal partial class GameFeatureConfig
         SupportedPages =
         [
             nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
         ],
+        SupportHardLink = true,
     };
 
 }
