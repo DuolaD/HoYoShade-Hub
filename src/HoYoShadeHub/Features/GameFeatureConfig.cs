@@ -60,6 +60,7 @@ internal partial class GameFeatureConfig
             GameBiz.nap_bilibili => nap_bilibili,
             GameBiz.nap_beta_prebeta => nap_beta,
             GameBiz.nap_beta_postbeta => nap_beta,
+            GameBiz.hna_cbt1 => hna_cbt1,
             _ => Default,
         };
         return config;
@@ -263,6 +264,16 @@ internal partial class GameFeatureConfig
             nameof(ScreenshotPage),
         ],
         SupportHardLink = true,
+    };
+
+    private static readonly GameFeatureConfig hna_cbt1 = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
+        ],
     };
 
 }

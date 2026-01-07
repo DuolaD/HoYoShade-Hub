@@ -232,6 +232,9 @@
   <data name="Game_ZZZ" xml:space="preserve">
     <value>绝区零</value>
   </data>
+  <data name="Game_NexusAnima" xml:space="preserve">
+    <value>崩坏：因缘精灵</value>
+  </data>
   <data name="GameServer_ZZZCBT3" xml:space="preserve">
     <value>喧响测试</value>
   </data>
@@ -261,5 +264,8 @@
   </data>
   <data name="GameServer_Beta" xml:space="preserve">
     <value>内测/创作者体验服</value>
+  </data>
+  <data name="GameServer_CBT1" xml:space="preserve">
+    <value>第一次内测</value>
   </data>
 </root>

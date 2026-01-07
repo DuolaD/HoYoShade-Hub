@@ -275,6 +275,9 @@
   <data name="Game_ZZZ" xml:space="preserve">
     <value>Zenless Zone Zero</value>
   </data>
+  <data name="Game_NexusAnima" xml:space="preserve">
+    <value>Honkai: Nexus Anima</value>
+  </data>
   <data name="GachaType_StandardChannel" xml:space="preserve">
     <value>Standard Channel</value>
   </data>
@@ -319,5 +322,8 @@
   </data>
   <data name="GameServer_Beta" xml:space="preserve">
     <value>Beta / Creator Experience Client</value>
+  </data>
+  <data name="GameServer_CBT1" xml:space="preserve">
+    <value>First Closed Beta Test</value>
   </data>
 </root>

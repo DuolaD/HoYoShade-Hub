@@ -100,6 +100,7 @@ public partial class GameBizIcon : ObservableObject, IEquatable<GameBizIcon>
             GameBiz.hk4e => "ms-appx:///Assets/Image/icon_ys.jpg",
             GameBiz.hkrpg => "ms-appx:///Assets/Image/icon_sr.jpg",
             GameBiz.nap => "ms-appx:///Assets/Image/icon_zzz.jpg",
+            GameBiz.hna => "ms-appx:///Assets/Image/icon_hna.jpg",
             _ => "ms-appx:///Assets/Image/Transparent.png",
         };
     }
@@ -112,7 +113,7 @@ public partial class GameBizIcon : ObservableObject, IEquatable<GameBizIcon>
             "cn" => "ms-appx:///Assets/Image/gameicon_hyperion.png",
             "global" => "ms-appx:///Assets/Image/gameicon_hoyolab.png",
             "bilibili" => "ms-appx:///Assets/Image/gameicon_bilibili.png",
-            "beta_prebeta" or "beta_postbeta" or "cn_beta" or "os_beta" or "beta" => "ms-appx:///Assets/Image/gameicon_Hollow.png",
+            "beta_prebeta" or "beta_postbeta" or "cn_beta" or "os_beta" or "beta" or "cbt1" => "ms-appx:///Assets/Image/gameicon_Hollow.png",
             _ => "ms-appx:///Assets/Image/Transparent.png",
         };
     }

@@ -78,6 +78,19 @@ public sealed partial class GameSelector : UserControl
 
     private double lastScale = 1;
 
+    /// <summary>
+    /// 根据当前语言获取因缘精灵的Logo路径
+    /// </summary>
+    private string GetHnaLogoPath()
+    {
+        string language = LanguageUtil.FilterLanguage(CultureInfo.CurrentUICulture.Name);
+        return language switch
+        {
+            "zh-cn" => "ms-appx:///Assets/Image/logo_hna-zh-cn.png",
+            "zh-tw" => "ms-appx:///Assets/Image/logo_hna-zh-tw.png",
+            _ => "ms-appx:///Assets/Image/logo_hna-en-us.png",
+        };
+    }
 
 
     public void InitializeGameSelector()
@@ -593,6 +606,26 @@ public sealed partial class GameSelector : UserControl
                 }
             }
 
+            // 手动添加崩坏：因缘精灵（因为它可能不在HoYoPlay API中）
+            var hnaDisplay = new GameBizDisplay 
+            { 
+                GameInfo = new GameInfo 
+                { 
+                    Id = "hna_cbt1",
+                    GameBiz = GameBiz.hna_cbt1,
+                    Display = new GameInfoDisplay
+                    {
+                        Name = HoYoShadeHub.Core.Localization.CoreLang.Game_NexusAnima,
+                        Icon = new GameImage { Url = "ms-appx:///Assets/Image/icon_hna.jpg" },
+                        Background = new GameImage { Url = "ms-appx:///Assets/Image/background_hna.png" },
+                        Logo = null,  // 不显示Logo，直接显示背景图
+                        Thumbnail = new GameImage { Url = "ms-appx:///Assets/Image/background_hna.png" },
+                    },
+                    DisplayStatus = GameInfoDisplayStatus.LAUNCHER_GAME_DISPLAY_STATUS_AVAILABLE
+                }
+            };
+            list.Add(hnaDisplay);
+
             // 分类每个游戏的服务器信息
             foreach (var item in list)
             {
@@ -625,6 +658,13 @@ public sealed partial class GameSelector : UserControl
                 {
                     suffixes.Add("_beta_prebeta");
                     suffixes.Add("_beta_postbeta");
+                }
+                
+                // 崩坏：因缘精灵（仅有第一次内测）
+                if (game == GameBiz.hna)
+                {
+                    suffixes.Clear(); // 因缘精灵没有正式服，只有内测
+                    suffixes.Add("_cbt1");
                 }
                 
                 foreach (string suffix in suffixes)
@@ -977,7 +1017,8 @@ public sealed partial class GameSelector : UserControl
                 GameBiz.hk4e_os_beta,
                 GameBiz.hkrpg_beta,
                 GameBiz.nap_beta_prebeta, 
-                GameBiz.nap_beta_postbeta 
+                GameBiz.nap_beta_postbeta,
+                GameBiz.hna_cbt1
             })
             {
                 string? path = GameLauncherService.GetGameInstallPath(betaBiz);

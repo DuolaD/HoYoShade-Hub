@@ -277,6 +277,15 @@ namespace HoYoShadeHub.Core.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Honkai: Nexus Anima 的本地化字符串。
+        /// </summary>
+        public static string Game_NexusAnima {
+            get {
+                return ResourceManager.GetString("Game_NexusAnima", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Bilibili 的本地化字符串。
         /// </summary>
         public static string GameServer_Bilibili {
@@ -327,6 +336,15 @@ namespace HoYoShadeHub.Core.Localization {
         public static string GameServer_Beta {
             get {
                 return ResourceManager.GetString("GameServer_Beta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 First Closed Beta Test 的本地化字符串。
+        /// </summary>
+        public static string GameServer_CBT1 {
+            get {
+                return ResourceManager.GetString("GameServer_CBT1", resourceCulture);
             }
         }
         

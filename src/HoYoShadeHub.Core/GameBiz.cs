@@ -59,6 +59,10 @@ public record struct GameBiz
     public const string nap_beta_postbeta = "nap_beta_postbeta"; // 公测后测试服/创作者体验服
 
 
+    public const string hna = "hna";
+    public const string hna_cbt1 = "hna_cbt1";   // 第一次内测
+
+
     public const string None = "";
 
 
@@ -90,6 +94,7 @@ public record struct GameBiz
         nap_bilibili,
         nap_beta_prebeta,
         nap_beta_postbeta,
+        hna_cbt1,
     }.AsReadOnly();
 
 
@@ -117,6 +122,7 @@ public record struct GameBiz
         //clgm_cn or clgm_global => true,
         hkrpg_cn or hkrpg_global or hkrpg_bilibili or hkrpg_beta => true,
         nap_cn or nap_global or nap_bilibili or nap_beta_prebeta or nap_beta_postbeta => true,
+        hna_cbt1 => true,
         _ => false,
     };
 
@@ -129,7 +135,7 @@ public record struct GameBiz
 
     public bool IsBilibili() => Server is "bilibili";
 
-    public bool IsBetaServer() => Server is "beta_prebeta" or "beta_postbeta" or "cn_beta" or "os_beta" or "beta";
+    public bool IsBetaServer() => Server is "beta_prebeta" or "beta_postbeta" or "cn_beta" or "os_beta" or "beta" or "cbt1";
 
 
 
@@ -142,6 +148,7 @@ public record struct GameBiz
         hk4e => CoreLang.Game_GenshinImpact,
         hkrpg => CoreLang.Game_HonkaiStarRail,
         nap => CoreLang.Game_ZZZ,
+        hna => CoreLang.Game_NexusAnima,
         _ => "",
     };
 
@@ -156,6 +163,7 @@ public record struct GameBiz
         "cn_beta" => CoreLang.GameServer_CNBeta,
         "os_beta" => CoreLang.GameServer_OSBeta,
         "beta" => CoreLang.GameServer_Beta,
+        "cbt1" => CoreLang.GameServer_CBT1,
         _ => "",
     };
 
@@ -181,6 +189,7 @@ public record struct GameBiz
         nap_global => GameRegistry.GamePath_nap_global,
         nap_beta_prebeta => GameRegistry.GamePath_nap_beta_prebeta,
         nap_beta_postbeta => GameRegistry.GamePath_nap_beta_postbeta,
+        hna_cbt1 => GameRegistry.GamePath_hna_cbt1,
         _ => "HKEY_CURRENT_USER",
     };
 

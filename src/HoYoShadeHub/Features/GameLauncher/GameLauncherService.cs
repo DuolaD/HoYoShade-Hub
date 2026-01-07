@@ -278,11 +278,13 @@ internal partial class GameLauncherService
             GameBiz.bh3_beta => "BH3.exe",
             GameBiz.nap_beta_prebeta => "ZZZ.exe",
             GameBiz.nap_beta_postbeta => "ZenlessZoneZeroBeta.exe",
+            GameBiz.hna_cbt1 => "NexusAnima.exe",
             _ => gameBiz.Game switch
             {
                 GameBiz.hkrpg => "StarRail.exe",
                 GameBiz.bh3 => "BH3.exe",
                 GameBiz.nap => "ZenlessZoneZero.exe",
+                GameBiz.hna => "NexusAnima.exe",
                 _ => null,
             },
         };
