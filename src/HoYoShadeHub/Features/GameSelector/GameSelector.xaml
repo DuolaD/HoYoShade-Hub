@@ -108,7 +108,9 @@
                     <ItemsControl ItemsSource="{x:Bind GameBizDisplays}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" Spacing="16" />
+                                <ItemsWrapGrid Orientation="Horizontal" 
+                                               ItemWidth="208" 
+                                               ItemHeight="124" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
