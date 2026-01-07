@@ -172,11 +172,17 @@
                                                 VerticalAlignment="Bottom"
                                                 Source="{x:Bind CurrentGameBizIcon.ServerIcon, FallbackValue={x:Null}}" />
                             </Grid>
-                            <!--  游戏名  -->
-                            <TextBlock Grid.Column="1"
-                                       VerticalAlignment="Center"
-                                       FontSize="16"
-                                       Text="{x:Bind CurrentGameBizIcon.GameName}" />
+                            <!--  游戏名和服务器类型  -->
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal"
+                                        Spacing="8">
+                                <TextBlock FontSize="16"
+                                           Text="{x:Bind CurrentGameBizIcon.GameName}" />
+                                <TextBlock FontSize="16"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           Text="{x:Bind CurrentGameBiz.ToGameServerName()}" />
+                            </StackPanel>
                             <!--  添加游戏目录  -->
                             <Button Grid.Column="2"
                                     Height="36"

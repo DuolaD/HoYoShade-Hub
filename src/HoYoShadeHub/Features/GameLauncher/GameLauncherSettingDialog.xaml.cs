@@ -61,7 +61,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     public GameId CurrentGameId { get; set; }
 
 
-    public GameBiz CurrentGameBiz { get; set; }
+    public GameBiz CurrentGameBiz { get { return field; } set { SetProperty(ref field, value); } }
 
     private ObservableCollection<GameInstallPathItemDialog> _gameInstallPaths = new();
     public ObservableCollection<GameInstallPathItemDialog> GameInstallPaths
