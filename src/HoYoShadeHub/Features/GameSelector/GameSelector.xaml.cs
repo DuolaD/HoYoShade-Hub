@@ -607,6 +607,7 @@ public sealed partial class GameSelector : UserControl
             }
 
             // 手动添加崩坏：因缘精灵（因为它可能不在HoYoPlay API中）
+            // 将其插入到列表的开头，成为第一个游戏
             var hnaDisplay = new GameBizDisplay 
             { 
                 GameInfo = new GameInfo 
@@ -624,7 +625,7 @@ public sealed partial class GameSelector : UserControl
                     DisplayStatus = GameInfoDisplayStatus.LAUNCHER_GAME_DISPLAY_STATUS_AVAILABLE
                 }
             };
-            list.Add(hnaDisplay);
+            list.Insert(0, hnaDisplay);  // 插入到列表开头，成为第一个
 
             // 分类每个游戏的服务器信息
             foreach (var item in list)
