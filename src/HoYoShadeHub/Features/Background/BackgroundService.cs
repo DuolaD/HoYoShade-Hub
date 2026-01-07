@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
+using HoYoShadeHub.Core;
 using HoYoShadeHub.Core.HoYoPlay;
 using HoYoShadeHub.Features.HoYoPlay;
 using HoYoShadeHub.Helpers;
@@ -199,10 +200,16 @@ public class BackgroundService
         {
             string baseFolder = AppContext.BaseDirectory;
             
-            // 为测试服提供随机背景图片
-            if (gameId.GameBiz.IsBetaServer())
+            // 崩坏：因缘精灵使用固定的背景图
+            if (gameId.GameBiz == GameBiz.hna_cbt1)
             {
-                // 从 backround_for_beta_client_1.png 到 backround_for_beta_client_8.png 随机选择
+                string hnaPath = Path.Combine(baseFolder, @"Assets\Image\background_hna.png");
+                bg = File.Exists(hnaPath) ? hnaPath : null;
+            }
+            // 其他测试服提供随机背景图片
+            else if (gameId.GameBiz.IsBetaServer())
+            {
+                // 从 backround_for_beta_client_1.png 到 backround_for_beta_client_6.png 随机选择
                 Random random = new Random();
                 int randomIndex = random.Next(1, 7); // 1-6
                 string betaBackground = $"backround_for_beta_client_{randomIndex}.png";
