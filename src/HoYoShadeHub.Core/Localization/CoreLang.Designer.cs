@@ -304,6 +304,24 @@ namespace HoYoShadeHub.Core.Localization {
         }
         
         /// <summary>
+        ///   查找类似 China Server Beta / Creator Experience Client 的本地化字符串。
+        /// </summary>
+        public static string GameServer_CNBeta {
+            get {
+                return ResourceManager.GetString("GameServer_CNBeta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Global Server Beta / Creator Experience Client 的本地化字符串。
+        /// </summary>
+        public static string GameServer_OSBeta {
+            get {
+                return ResourceManager.GetString("GameServer_OSBeta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Bilibili Server 的本地化字符串。
         /// </summary>
         public static string GameServer_BilibiliServer {

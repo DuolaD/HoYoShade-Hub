@@ -310,4 +310,10 @@
   <data name="GameServer_BetaPostBeta" xml:space="preserve">
     <value>公測後測試服/創作者體驗服</value>
   </data>
+  <data name="GameServer_CNBeta" xml:space="preserve">
+    <value>大陸版 內測/創作者體驗服</value>
+  </data>
+  <data name="GameServer_OSBeta" xml:space="preserve">
+    <value>國際版 內測/創作者體驗服</value>
+  </data>
 </root>

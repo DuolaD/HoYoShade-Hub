@@ -149,8 +149,8 @@ public record struct GameBiz
         "bilibili" => CoreLang.GameServer_Bilibili,
         "beta_prebeta" => CoreLang.GameServer_BetaPreBeta,
         "beta_postbeta" => CoreLang.GameServer_BetaPostBeta,
-        "cn_beta" => "中国服 内测/创作者体验服",  // 暂时使用硬编码字符串，等待资源文件重新生成
-        "os_beta" => "国际服 内测/创作者体验服",  // 暂时使用硬编码字符串，等待资源文件重新生成
+        "cn_beta" => CoreLang.GameServer_CNBeta,
+        "os_beta" => CoreLang.GameServer_OSBeta,
         _ => "",
     };
 

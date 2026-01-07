@@ -311,4 +311,10 @@
   <data name="GachaType_LightConeCollaborationWarp" xml:space="preserve">
     <value>Light Cone Collaboration Warp</value>
   </data>
+  <data name="GameServer_CNBeta" xml:space="preserve">
+    <value>China Server Beta / Creator Experience Client</value>
+  </data>
+  <data name="GameServer_OSBeta" xml:space="preserve">
+    <value>Global Server Beta / Creator Experience Client</value>
+  </data>
 </root>
