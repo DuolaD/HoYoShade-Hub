@@ -100,6 +100,7 @@ public partial class GameBizIcon : ObservableObject, IEquatable<GameBizIcon>
             GameBiz.hk4e => "ms-appx:///Assets/Image/icon_ys.jpg",
             GameBiz.hkrpg => "ms-appx:///Assets/Image/icon_sr.jpg",
             GameBiz.nap => "ms-appx:///Assets/Image/icon_zzz.jpg",
+            GameBiz.pp => "ms-appx:///Assets/Image/icon_pp.jpg",
             GameBiz.hna => "ms-appx:///Assets/Image/icon_hna.jpg",
             _ => "ms-appx:///Assets/Image/Transparent.png",
         };

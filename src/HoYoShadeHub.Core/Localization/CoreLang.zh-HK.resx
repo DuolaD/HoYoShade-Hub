@@ -232,6 +232,9 @@
   <data name="Game_ZZZ" xml:space="preserve">
     <value>絕區零</value>
   </data>
+  <data name="Game_PetitPlanet" xml:space="preserve">
+    <value>星布谷地</value>
+  </data>
   <data name="Game_NexusAnima" xml:space="preserve">
     <value>崩壞：因緣精靈</value>
   </data>

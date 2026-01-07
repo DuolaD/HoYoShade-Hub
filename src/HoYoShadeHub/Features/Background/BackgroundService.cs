@@ -200,8 +200,14 @@ public class BackgroundService
         {
             string baseFolder = AppContext.BaseDirectory;
             
+            // 星布谷地使用固定的背景图
+            if (gameId.GameBiz == GameBiz.pp_cbt1)
+            {
+                string ppPath = Path.Combine(baseFolder, @"Assets\Image\background_pp.png");
+                bg = File.Exists(ppPath) ? ppPath : null;
+            }
             // 崩坏：因缘精灵使用固定的背景图
-            if (gameId.GameBiz == GameBiz.hna_cbt1)
+            else if (gameId.GameBiz == GameBiz.hna_cbt1)
             {
                 string hnaPath = Path.Combine(baseFolder, @"Assets\Image\background_hna.png");
                 bg = File.Exists(hnaPath) ? hnaPath : null;

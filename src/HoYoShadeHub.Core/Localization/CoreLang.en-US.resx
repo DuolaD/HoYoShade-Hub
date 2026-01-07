@@ -275,6 +275,9 @@
   <data name="Game_ZZZ" xml:space="preserve">
     <value>Zenless Zone Zero</value>
   </data>
+  <data name="Game_PetitPlanet" xml:space="preserve">
+    <value>Honkai: Petit Planet</value>
+  </data>
   <data name="Game_NexusAnima" xml:space="preserve">
     <value>Honkai: Nexus Anima</value>
   </data>

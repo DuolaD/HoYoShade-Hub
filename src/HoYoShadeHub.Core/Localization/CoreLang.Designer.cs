@@ -277,6 +277,15 @@ namespace HoYoShadeHub.Core.Localization {
         }
         
         /// <summary>
+        ///   查找类似 Honkai: Petit Planet 的本地化字符串。
+        /// </summary>
+        public static string Game_PetitPlanet {
+            get {
+                return ResourceManager.GetString("Game_PetitPlanet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Honkai: Nexus Anima 的本地化字符串。
         /// </summary>
         public static string Game_NexusAnima {

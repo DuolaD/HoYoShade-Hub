@@ -93,6 +93,21 @@ public sealed partial class GameSelector : UserControl
     }
 
 
+    /// <summary>
+    /// 根据当前语言获取星布谷地的Logo路径
+    /// </summary>
+    private string GetPpLogoPath()
+    {
+        string language = LanguageUtil.FilterLanguage(CultureInfo.CurrentUICulture.Name);
+        return language switch
+        {
+            "zh-cn" => "ms-appx:///Assets/Image/logo_pp-zh-cn.png",
+            "zh-tw" => "ms-appx:///Assets/Image/logo_pp-zh-tw.png",
+            _ => "ms-appx:///Assets/Image/logo_pp-en-us.png",
+        };
+    }
+
+
     public void InitializeGameSelector()
     {
         List<GameInfo> gameInfos = GetCachedGameInfos();
@@ -606,8 +621,29 @@ public sealed partial class GameSelector : UserControl
                 }
             }
 
-            // 手动添加崩坏：因缘精灵（因为它可能不在HoYoPlay API中）
+            // 手动添加星布谷地（因为它可能不在HoYoPlay API中）
             // 将其插入到列表的开头，成为第一个游戏
+            var ppDisplay = new GameBizDisplay 
+            { 
+                GameInfo = new GameInfo 
+                { 
+                    Id = "pp_cbt1",
+                    GameBiz = GameBiz.pp_cbt1,
+                    Display = new GameInfoDisplay
+                    {
+                        Name = HoYoShadeHub.Core.Localization.CoreLang.Game_PetitPlanet,
+                        Icon = new GameImage { Url = "ms-appx:///Assets/Image/icon_pp.jpg" },
+                        Background = new GameImage { Url = "ms-appx:///Assets/Image/background_pp.png" },
+                        Logo = new GameImage { Url = GetPpLogoPath() },  // 使用语言特定的Logo
+                        Thumbnail = new GameImage { Url = "ms-appx:///Assets/Image/background_pp.png" },
+                    },
+                    DisplayStatus = GameInfoDisplayStatus.LAUNCHER_GAME_DISPLAY_STATUS_AVAILABLE
+                }
+            };
+            list.Insert(0, ppDisplay);  // 插入到列表开头，成为第一个
+
+            // 手动添加崩坏：因缘精灵（因为它可能不在HoYoPlay API中）
+            // 将其插入到第二个位置
             var hnaDisplay = new GameBizDisplay 
             { 
                 GameInfo = new GameInfo 
@@ -625,7 +661,7 @@ public sealed partial class GameSelector : UserControl
                     DisplayStatus = GameInfoDisplayStatus.LAUNCHER_GAME_DISPLAY_STATUS_AVAILABLE
                 }
             };
-            list.Insert(0, hnaDisplay);  // 插入到列表开头，成为第一个
+            list.Insert(1, hnaDisplay);  // 插入到第二个位置
 
             // 分类每个游戏的服务器信息
             foreach (var item in list)
@@ -659,6 +695,13 @@ public sealed partial class GameSelector : UserControl
                 {
                     suffixes.Add("_beta_prebeta");
                     suffixes.Add("_beta_postbeta");
+                }
+                
+                // 星布谷地（仅有第一次内测）
+                if (game == GameBiz.pp)
+                {
+                    suffixes.Clear(); // 星布谷地没有正式服，只有内测
+                    suffixes.Add("_cbt1");
                 }
                 
                 // 崩坏：因缘精灵（仅有第一次内测）
@@ -1018,6 +1061,7 @@ public sealed partial class GameSelector : UserControl
                 GameBiz.hkrpg_beta,
                 GameBiz.nap_beta_prebeta, 
                 GameBiz.nap_beta_postbeta,
+                GameBiz.pp_cbt1,
                 GameBiz.hna_cbt1
             })
             {

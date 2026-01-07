@@ -51,6 +51,8 @@ public class GameRegistry
     public const string GamePath_nap_beta_prebeta = @"HKEY_CURRENT_USER\Software\miHoYo\绝区零测试服";
     public const string GamePath_nap_beta_postbeta = @"HKEY_CURRENT_USER\Software\miHoYo\绝区零测试服";
 
+    public const string GamePath_pp_cbt1 = @"HKEY_CURRENT_USER\Software\miHoYo\星布谷地";
+
     public const string GamePath_hna_cbt1 = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏：因缘精灵";
 
 
