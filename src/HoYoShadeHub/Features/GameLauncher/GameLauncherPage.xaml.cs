@@ -165,8 +165,9 @@ public sealed partial class GameLauncherPage : PageBase
                 UseStarwardLauncher = false;
             }
 
-            // 通知 IsStarwardLauncherCheckboxEnabled 属性更新
+            // 通知 IsStarwardLauncherCheckboxEnabled 和 Visibility 属性更新
             OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
+            OnPropertyChanged(nameof(IsStarwardLauncherCheckboxVisible));
 
             _logger.LogInformation("Starward protocol available: {Available}, Setting enabled: {Setting}, IsBeta: {IsBeta}", 
                 IsStarwardProtocolAvailable, useStarwardLauncherSetting, isBetaClient);
@@ -177,6 +178,7 @@ public sealed partial class GameLauncherPage : PageBase
             IsStarwardProtocolAvailable = false;
             // 即使发生异常也要通知属性更新
             OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
+            OnPropertyChanged(nameof(IsStarwardLauncherCheckboxVisible));
         }
     }
 
@@ -512,8 +514,9 @@ public sealed partial class GameLauncherPage : PageBase
         bool blenderPluginActive = LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin;
         IsGameLaunchCheckboxEnabled = !blenderPluginActive;
         
-        // 同时更新 Starward 启动器选项的可用状态
+        // 同时更新 Starward 启动器选项的可用状态和可见状态
         OnPropertyChanged(nameof(IsStarwardLauncherCheckboxEnabled));
+        OnPropertyChanged(nameof(IsStarwardLauncherCheckboxVisible));
     }
     
     /// <summary>
@@ -541,6 +544,19 @@ public sealed partial class GameLauncherPage : PageBase
                 isBetaClient);
             
             return result;
+        }
+    }
+
+    /// <summary>
+    /// Starward启动器选项是否可见
+    /// 公开客户端始终可见，Beta客户端隐藏
+    /// </summary>
+    public Visibility IsStarwardLauncherCheckboxVisible
+    {
+        get
+        {
+            bool isBetaClient = CurrentGameBiz.IsBetaServer();
+            return isBetaClient ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 
