@@ -518,7 +518,7 @@ public sealed partial class GameLauncherPage : PageBase
     
     /// <summary>
     /// Starward启动器选项是否可用
-    /// 条件: 没有Blender插件被选中 AND Starward协议可用 AND 设置中启用了Starward启动器 AND 不是Beta客户端
+    /// 条件: 没有Blender插件被选中 AND Starward协议可用 AND  设置中启用了Starward启动器 AND 不是Beta客户端
     /// </summary>
     public bool IsStarwardLauncherCheckboxEnabled
     { 
@@ -862,7 +862,6 @@ public sealed partial class GameLauncherPage : PageBase
 
 
 
-
     private void OnRemovableStorageDeviceChanged(object _, RemovableStorageDeviceChangedMessage message)
     {
         try
@@ -1046,23 +1045,89 @@ public sealed partial class GameLauncherPage : PageBase
             // Case 1: Both Blender plugin and shader are selected
             if (launchingBlenderPlugin && useShader)
             {
-                Process? shaderInjectorProcess = null;
-
-                // Start shader injector
+                // Step 1: Start and check shader injector FIRST
+                string shadePath = "";
+                string shadeName = "";
+                
                 if (UseHoYoShade)
                 {
-                    string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
-                    shaderInjectorProcess = await StartShaderInjectorOnlyAsync(hoYoShadePath, "HoYoShade");
+                    shadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+                    shadeName = "HoYoShade";
                 }
                 else if (UseOpenHoYoShade)
                 {
-                    string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
-                    shaderInjectorProcess = await StartShaderInjectorOnlyAsync(openHoYoShadePath, "OpenHoYoShade");
+                    shadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+                    shadeName = "OpenHoYoShade";
                 }
 
+                if (!string.IsNullOrEmpty(shadePath))
+                {
+                    if (!Directory.Exists(shadePath))
+                    {
+                        _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
+                        InAppToast.MainWindow?.Error($"{shadeName} not installed");
+                        return;
+                    }
+
+                    string injectExePath = Path.Combine(shadePath, "inject.exe");
+                    if (!File.Exists(injectExePath))
+                    {
+                        _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
+                        InAppToast.MainWindow?.Error($"inject.exe not found in {shadeName}");
+                        return;
+                    }
+
+                    var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+
+                    _logger.LogInformation("Starting {ShadeName} injector before Blender plugin: {InjectPath} {GameExe}",
+                        shadeName, injectExePath, gameExeName);
+
+                    var injectStartInfo = new ProcessStartInfo
+                    {
+                        FileName = injectExePath,
+                        Arguments = gameExeName,
+                        UseShellExecute = false,
+                        WorkingDirectory = shadePath,
+                        CreateNoWindow = true
+                    };
+
+                    Process? injectorProcess = Process.Start(injectStartInfo);
+                    if (injectorProcess == null)
+                    {
+                        _logger.LogError("Failed to start {ShadeName} injector process", shadeName);
+                        InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
+                        return;
+                    }
+
+                    _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for injector to complete...",
+                        shadeName, injectorProcess.Id);
+
+                    // Wait for injector to complete and check exit code
+                    int exitCode = await InjectorHelper.MonitorInjectorExitCodeAsync(injectorProcess, _logger, shadeName);
+                    
+                    // If injector failed with an error code, stop launching Blender plugin
+                    if (InjectorErrorCodes.IsInjectorError(exitCode))
+                    {
+                        string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
+                        _logger.LogError("{ShadeName} injector failed with exit code {ExitCode}, Blender plugin launch CANCELLED", shadeName, exitCode);
+                        InAppToast.MainWindow?.Error(errorMessage, null, 8000);
+                        // Do NOT launch Blender plugin
+                        return;
+                    }
+                    
+                    if (exitCode != 0)
+                    {
+                        _logger.LogWarning("{ShadeName} injector exited with non-zero code {ExitCode}, but will attempt to launch Blender plugin anyway", shadeName, exitCode);
+                    }
+                    else
+                    {
+                        InAppToast.MainWindow?.Success($"{shadeName} injector started");
+                    }
+                }
+
+                // Step 2: Launch Blender plugin (only if injector succeeded)
                 Process? blenderPluginProcess = null;
 
-                // Launch Blender plugin
                 if (LaunchGenshinBlenderPlugin)
                 {
                     blenderPluginProcess = await LaunchGenshinBlenderPluginAsync();
@@ -1072,13 +1137,7 @@ public sealed partial class GameLauncherPage : PageBase
                     blenderPluginProcess = await LaunchZZZBlenderPluginAsync();
                 }
 
-                _logger.LogInformation("Shader injector and Blender plugin launched, starting process monitoring");
-
-                // Start monitoring
-                if (shaderInjectorProcess != null && blenderPluginProcess != null)
-                {
-                    _ = MonitorInjectorProcessesAsync(shaderInjectorProcess, blenderPluginProcess);
-                }
+                _logger.LogInformation("Blender plugin launched");
 
                 return;
             }
@@ -1139,116 +1198,6 @@ public sealed partial class GameLauncherPage : PageBase
             _logger.LogError(ex, "Start game");
         }
     }
-
-    /// <summary>
-    /// 只启动shader注入器，不启动游戏（供Blender插件使用）
-    /// </summary>
-    private async Task<Process?> StartShaderInjectorOnlyAsync(string shadePath, string shadeName)
-    {
-        try
-        {
-            if (!Directory.Exists(shadePath))
-            {
-                _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
-                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
-                return null;
-            }
-
-            string injectExePath = Path.Combine(shadePath, "inject.exe");
-            if (!File.Exists(injectExePath))
-            {
-                _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
-                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
-                return null;
-            }
-
-            var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
-
-            _logger.LogInformation("Starting {ShadeName} injector: {InjectPath} {GameExe}",
-                shadeName, injectExePath, gameExeName);
-
-            var injectStartInfo = new ProcessStartInfo
-            {
-                FileName = injectExePath,
-                Arguments = gameExeName,
-                UseShellExecute = false,
-                WorkingDirectory = shadePath,
-                CreateNoWindow = true
-            };
-
-            Process? injectorProcess = Process.Start(injectStartInfo);
-            _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for game process",
-                shadeName, injectorProcess?.Id ?? -1);
-            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_InjectorStarted, shadeName));
-
-            return injectorProcess;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Start {ShadeName} injector", shadeName);
-            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectorStartFailed, shadeName, ex.Message));
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// 监控注入器进程：如果Blender插件进程退出但游戏未启动，则关闭shader注入器
-    /// </summary>
-    private async Task MonitorInjectorProcessesAsync(Process shaderInjectorProcess, Process blenderPluginProcess)
-    {
-        try
-        {
-            _logger.LogInformation("Started monitoring injector processes - Shader: {ShaderPid}, Blender: {BlenderPid}",
-                shaderInjectorProcess.Id, blenderPluginProcess.Id);
-
-            // Wait for Blender plugin process to exit
-            await Task.Run(() => blenderPluginProcess.WaitForExit());
-
-            _logger.LogInformation("Blender plugin process exited, checking game status...");
-
-            // Give the game time to start
-            await Task.Delay(2000);
-
-            // Check if game is running
-            Process? gameProcess = await _gameLauncherService.GetGameProcessAsync(CurrentGameId);
-
-            if (gameProcess == null)
-            {
-                // Game not running, kill shader injector
-                _logger.LogInformation("Game not started, terminating shader injector process");
-
-                try
-                {
-                    if (!shaderInjectorProcess.HasExited)
-                    {
-                        shaderInjectorProcess.Kill();
-                        _logger.LogInformation("Shader injector process terminated");
-                        InAppToast.MainWindow?.Information(Lang.GameLauncher_GameNotStartedKillingInjector);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to terminate shader injector process");
-                }
-            }
-            else
-            {
-                // Game is running
-                _logger.LogInformation("Game started successfully with shader injection");
-                DispatcherQueue.TryEnqueue(() =>
-                {
-                    GameState = GameState.GameIsRunning;
-                    GameProcess = gameProcess;
-                    WeakReferenceMessenger.Default.Send(new GameStartedMessage());
-                });
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error monitoring injector processes");
-        }
-    }
-
 
     private async Task<Process?> LaunchGenshinBlenderPluginAsync()
     {
@@ -1343,7 +1292,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (!Directory.Exists(shadePath))
             {
                 _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
-                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
+                InAppToast.MainWindow?.Error($"{shadeName} not installed");
                 return null;
             }
 
@@ -1352,7 +1301,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (!File.Exists(injectExePath))
             {
                 _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
-                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
+                InAppToast.MainWindow?.Error($"inject.exe not found in {shadeName}");
                 return null;
             }
 
@@ -1360,7 +1309,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (string.IsNullOrWhiteSpace(gameInstallPath))
             {
                 _logger.LogWarning("Game install path not found");
-                InAppToast.MainWindow?.Error(Lang.GameLauncher_GameNotFound);
+                InAppToast.MainWindow?.Error("Game not found");
                 return null;
             }
 
@@ -1373,7 +1322,7 @@ public sealed partial class GameLauncherPage : PageBase
                 throw new FileNotFoundException("Game exe not found", gameExeName);
             }
 
-            // Step 1: Start inject.exe (don't wait for it to finish)
+            // Step 1: Start inject.exe and monitor its exit code
             _logger.LogInformation("Starting {ShadeName} injector: {InjectPath} {GameExe}",
                 shadeName, injectExePath, gameExeName);
 
@@ -1386,19 +1335,42 @@ public sealed partial class GameLauncherPage : PageBase
                 CreateNoWindow = true
             };
 
-            Process.Start(injectStartInfo);
-            _logger.LogInformation("Injector started, waiting before launching game...");
+            Process? injectorProcess = Process.Start(injectStartInfo);
+            if (injectorProcess == null)
+            {
+                _logger.LogError("Failed to start {ShadeName} injector process", shadeName);
+                InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
+                return null;
+            }
 
-            // Step 2: Wait a short delay to let injector initialize
-            await Task.Delay(500);
+            _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for injector to complete...",
+                shadeName, injectorProcess.Id);
 
-            // Step 3: Launch the game normally
+            // Step 2: Wait for injector to complete and check exit code
+            int exitCode = await InjectorHelper.MonitorInjectorExitCodeAsync(injectorProcess, _logger, shadeName);
+            
+            // Step 3: Check if injector returned an error
+            if (InjectorErrorCodes.IsInjectorError(exitCode))
+            {
+                string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
+                _logger.LogError("{ShadeName} injector failed with exit code {ExitCode}, game will NOT be launched", shadeName, exitCode);
+                InAppToast.MainWindow?.Error(errorMessage, null, 8000);
+                // Do NOT launch the game - return null
+                return null;
+            }
+            
+            if (exitCode != 0)
+            {
+                _logger.LogWarning("{ShadeName} injector exited with non-zero code {ExitCode}, but will attempt to launch game anyway", shadeName, exitCode);
+            }
+
+            // Step 4: Launch the game only if injector succeeded or had non-critical error
             _logger.LogInformation("Launching game normally");
             var gameProcess = await _gameLauncherService.StartGameAsync(CurrentGameId, gameInstallPath);
 
             if (gameProcess != null)
             {
-                InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_LaunchedWithShader, shadeName));
+                InAppToast.MainWindow?.Success($"Game launched with {shadeName}");
                 _logger.LogInformation("Successfully launched game with {ShadeName}, process: {Name} ({Id})",
                     shadeName, gameProcess.ProcessName, gameProcess.Id);
                 return gameProcess;
@@ -1406,16 +1378,155 @@ public sealed partial class GameLauncherPage : PageBase
             else
             {
                 _logger.LogWarning("Failed to start game process");
-                InAppToast.MainWindow?.Error(Lang.GameLauncher_GameLaunchFailed);
+                InAppToast.MainWindow?.Error("Game launch failed");
                 return null;
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch game with {ShadeName}", shadeName);
-            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_LaunchWithShaderFailed, shadeName, ex.Message));
+            InAppToast.MainWindow?.Error($"Failed to launch game with {shadeName}: {ex.Message}");
             return null;
         }
+    }
+
+
+    /// <summary>
+    /// 通过 Starward 启动器启动游戏
+    /// </summary>
+    /// <param name="useShader">是否同时启动 HoYoShade/OpenHoYoShade</param>
+    private async Task LaunchGameViaStarwardAsync(bool useShader)
+    {
+        try
+        {
+            var gameInstallPath = GameLauncherService.GetGameInstallPath(CurrentGameId);
+            
+            // 如果需要使用 shader，先启动注入器并等待检查
+            if (useShader)
+            {
+                string shadePath = "";
+                string shadeName = "";
+                
+                if (UseHoYoShade)
+                {
+                    shadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+                    shadeName = "HoYoShade";
+                }
+                else if (UseOpenHoYoShade)
+                {
+                    shadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+                    shadeName = "OpenHoYoShade";
+                }
+
+                if (!string.IsNullOrEmpty(shadePath))
+                {
+                    if (!Directory.Exists(shadePath))
+                    {
+                        _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
+                        InAppToast.MainWindow?.Error($"{shadeName} not installed");
+                        return;
+                    }
+
+                    string injectExePath = Path.Combine(shadePath, "inject.exe");
+                    if (!File.Exists(injectExePath))
+                    {
+                        _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
+                        InAppToast.MainWindow?.Error($"inject.exe not found in {shadeName}");
+                        return;
+                    }
+
+                    var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+                    
+                    _logger.LogInformation("Starting {ShadeName} injector before Starward launch: {InjectPath} {GameExe}",
+                        shadeName, injectExePath, gameExeName);
+
+                    var injectStartInfo = new ProcessStartInfo
+                    {
+                        FileName = injectExePath,
+                        Arguments = gameExeName,
+                        UseShellExecute = false,
+                        WorkingDirectory = shadePath,
+                        CreateNoWindow = true
+                    };
+
+                    Process? injectorProcess = Process.Start(injectStartInfo);
+                    if (injectorProcess == null)
+                    {
+                        _logger.LogError("Failed to start {ShadeName} injector process", shadeName);
+                        InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
+                        return;
+                    }
+
+                    _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for injector to complete...",
+                        shadeName, injectorProcess.Id);
+
+                    // 等待注入器完成并检查退出码
+                    int exitCode = await InjectorHelper.MonitorInjectorExitCodeAsync(injectorProcess, _logger, shadeName);
+                    
+                    // 如果注入器返回错误，停止启动游戏
+                    if (InjectorErrorCodes.IsInjectorError(exitCode))
+                    {
+                        string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
+                        _logger.LogError("{ShadeName} injector failed with exit code {ExitCode}, game will NOT be launched", shadeName, exitCode);
+                        InAppToast.MainWindow?.Error(errorMessage, null, 8000);
+                        // 不继续启动游戏
+                        return;
+                    }
+                    
+                    if (exitCode != 0)
+                    {
+                        _logger.LogWarning("{ShadeName} injector exited with non-zero code {ExitCode}, but will attempt to launch game anyway", shadeName, exitCode);
+                    }
+                }
+            }
+
+            // 构建 Starward URL 协议命令
+            string starwardUrl = BuildStarwardProtocolUrl(CurrentGameBiz, gameInstallPath);
+            
+            _logger.LogInformation("Launching game via Starward: {Url}", starwardUrl);
+
+            // 调用 Starward URL 协议启动游戏
+            bool success = await Launcher.LaunchUriAsync(new Uri(starwardUrl));
+            
+            if (success)
+            {
+                _logger.LogInformation("Successfully launched game via Starward");
+                InAppToast.MainWindow?.Success(Lang.GameLauncher_StarwardLaunchSuccess);
+            }
+            else
+            {
+                _logger.LogWarning("Failed to launch game via Starward");
+                InAppToast.MainWindow?.Error(Lang.GameLauncher_StarwardLaunchFailed);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Launch game via Starward");
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_StarwardLaunchError, ex.Message));
+        }
+    }
+
+    /// <summary>
+    /// 构建 Starward URL 协议命令
+    /// </summary>
+    /// <param name="gameBiz">游戏区服</param>
+    /// <param name="installPath">游戏安装路径（可选）</param>
+    /// <returns>Starward URL 协议字符串</returns>
+    private string BuildStarwardProtocolUrl(GameBiz gameBiz, string? installPath = null)
+    {
+        // 根据 UrlProtocol.md 文档，格式为：
+        // starward://startgame/{game_biz}?install_path={install_path}
+        
+        string url = $"starward://startgame/{gameBiz}";
+        
+        if (!string.IsNullOrWhiteSpace(installPath))
+        {
+            // URL 编码安装路径
+            string encodedPath = Uri.EscapeDataString(installPath);
+            url += $"?install_path={encodedPath}";
+        }
+        
+        return url;
     }
 
 
@@ -1834,120 +1945,4 @@ public sealed partial class GameLauncherPage : PageBase
 
 
     #endregion
-
-    /// <summary>
-    /// 通过 Starward 启动器启动游戏
-    /// </summary>
-    /// <param name="useShader">是否同时启动 HoYoShade/OpenHoYoShade</param>
-    private async Task LaunchGameViaStarwardAsync(bool useShader)
-    {
-        try
-        {
-            var gameInstallPath = GameLauncherService.GetGameInstallPath(CurrentGameId);
-            
-            // 如果需要使用 shader，先启动注入器
-            if (useShader)
-            {
-                string shadePath = "";
-                string shadeName = "";
-                
-                if (UseHoYoShade)
-                {
-                    shadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
-                    shadeName = "HoYoShade";
-                }
-                else if (UseOpenHoYoShade)
-                {
-                    shadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
-                    shadeName = "OpenHoYoShade";
-                }
-
-                if (!string.IsNullOrEmpty(shadePath))
-                {
-                    if (!Directory.Exists(shadePath))
-                    {
-                        _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
-                        InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
-                        return;
-                    }
-
-                    string injectExePath = Path.Combine(shadePath, "inject.exe");
-                    if (!File.Exists(injectExePath))
-                    {
-                        _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
-                        InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
-                        return;
-                    }
-
-                    var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
-                    
-                    _logger.LogInformation("Starting {ShadeName} injector before Starward launch: {InjectPath} {GameExe}",
-                        shadeName, injectExePath, gameExeName);
-
-                    var injectStartInfo = new ProcessStartInfo
-                    {
-                        FileName = injectExePath,
-                        Arguments = gameExeName,
-                        UseShellExecute = false,
-                        WorkingDirectory = shadePath,
-                        CreateNoWindow = true
-                    };
-
-                    Process.Start(injectStartInfo);
-                    _logger.LogInformation("{ShadeName} injector started, waiting before launching Starward...", shadeName);
-                    InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_InjectorStarted, shadeName));
-
-                    // 等待注入器初始化
-                    await Task.Delay(500);
-                }
-            }
-
-            // 构建 Starward URL 协议命令
-            string starwardUrl = BuildStarwardProtocolUrl(CurrentGameBiz, gameInstallPath);
-            
-            _logger.LogInformation("Launching game via Starward: {Url}", starwardUrl);
-
-            // 调用 Starward URL 协议启动游戏
-            bool success = await Launcher.LaunchUriAsync(new Uri(starwardUrl));
-            
-            if (success)
-            {
-                _logger.LogInformation("Successfully launched game via Starward");
-                InAppToast.MainWindow?.Success(Lang.GameLauncher_StarwardLaunchSuccess);
-            }
-            else
-            {
-                _logger.LogWarning("Failed to launch game via Starward");
-                InAppToast.MainWindow?.Error(Lang.GameLauncher_StarwardLaunchFailed);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Launch game via Starward");
-            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_StarwardLaunchError, ex.Message));
-        }
-    }
-
-    /// <summary>
-    /// 构建 Starward URL 协议命令
-    /// </summary>
-    /// <param name="gameBiz">游戏区服</param>
-    /// <param name="installPath">游戏安装路径（可选）</param>
-    /// <returns>Starward URL 协议字符串</returns>
-    private string BuildStarwardProtocolUrl(GameBiz gameBiz, string? installPath = null)
-    {
-        // 根据 UrlProtocol.md 文档，格式为：
-        // starward://startgame/{game_biz}?install_path={install_path}
-        
-        string url = $"starward://startgame/{gameBiz}";
-        
-        if (!string.IsNullOrWhiteSpace(installPath))
-        {
-            // URL 编码安装路径
-            string encodedPath = Uri.EscapeDataString(installPath);
-            url += $"?install_path={encodedPath}";
-        }
-        
-        return url;
-    }
 }

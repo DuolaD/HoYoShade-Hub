@@ -824,7 +824,7 @@ public sealed partial class FileManageSetting : PageBase
             if (!Directory.Exists(shadePath))
             {
                 _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
-                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
+                InAppToast.MainWindow?.Error($"{shadeName} not installed");
                 return;
             }
 
@@ -832,7 +832,7 @@ public sealed partial class FileManageSetting : PageBase
             if (!File.Exists(injectExePath))
             {
                 _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
-                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
+                InAppToast.MainWindow?.Error($"inject.exe not found in {shadeName}");
                 return;
             }
 
@@ -849,16 +849,57 @@ public sealed partial class FileManageSetting : PageBase
             };
 
             Process? injectorProcess = Process.Start(injectStartInfo);
+            if (injectorProcess == null)
+            {
+                _logger.LogError("Failed to start {ShadeName} injector process", shadeName);
+                InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
+                return;
+            }
+
             _logger.LogInformation("{ShadeName} injector started (PID: {Pid})",
-                shadeName, injectorProcess?.Id ?? -1);
-            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_InjectorStarted, shadeName));
+                shadeName, injectorProcess.Id);
+            InAppToast.MainWindow?.Success($"{shadeName} injector started");
+
+            // Monitor injector process exit code asynchronously
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await injectorProcess.WaitForExitAsync();
+                    int exitCode = injectorProcess.ExitCode;
+
+                    if (exitCode == 0)
+                    {
+                        _logger.LogInformation("{ShadeName} injector exited successfully", shadeName);
+                    }
+                    else if (InjectorErrorCodes.IsInjectorError(exitCode))
+                    {
+                        _logger.LogWarning("{ShadeName} injector exited with error code: {ExitCode}", shadeName, exitCode);
+                        string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
+                        
+                        // Notify user on UI thread
+                        DispatcherQueue.TryEnqueue(() =>
+                        {
+                            InAppToast.MainWindow?.Error(errorMessage, null, 8000);
+                        });
+                    }
+                    else
+                    {
+                        _logger.LogInformation("{ShadeName} injector exited with code: {ExitCode}", shadeName, exitCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error monitoring {ShadeName} injector exit code", shadeName);
+                }
+            });
             
             await Task.CompletedTask;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Start {ShadeName} injector", shadeName);
-            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectorStartFailed, shadeName, ex.Message));
+            InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector: {ex.Message}");
         }
     }
 
