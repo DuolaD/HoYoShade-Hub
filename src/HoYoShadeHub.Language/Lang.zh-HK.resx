@@ -1601,4 +1601,19 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="GameLauncherSettingDialog_AddGameDirectory" xml:space="preserve">
     <value>加遊戲目錄</value>
   </data>
+  <data name="Injector_FileIntegrityCheckFailed" xml:space="preserve">
+    <value>{0} 檔案完整性檢查失敗咗。某啲必需檔案可能唔見咗或者損壞咗。</value>
+  </data>
+  <data name="Injector_BlacklistProcess" xml:space="preserve">
+    <value>{0} 唔可以注入呢個處理程序。呢個處理程序名喺黑名單入面。</value>
+  </data>
+  <data name="Injector_InvalidParameters" xml:space="preserve">
+    <value>{0} 收到咗無效參數。</value>
+  </data>
+  <data name="Injector_MissingExeSuffix" xml:space="preserve">
+    <value>{0} 錯誤：處理程序名一定要以 .exe 結尾</value>
+  </data>
+  <data name="Injector_UnknownError" xml:space="preserve">
+    <value>{0} 注入器退出咗，錯誤代碼：0x{1:X}</value>
+  </data>
 </root>

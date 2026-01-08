@@ -1590,4 +1590,19 @@
   <data name="GameLauncherSettingDialog_AddGameDirectory" xml:space="preserve">
     <value>添加游戏目录</value>
   </data>
+  <data name="Injector_FileIntegrityCheckFailed" xml:space="preserve">
+    <value>{0} 文件完整性检查失败。某些必需文件可能已丢失或损坏。</value>
+  </data>
+  <data name="Injector_BlacklistProcess" xml:space="preserve">
+    <value>{0} 无法注入该进程。该进程名称在黑名单中。</value>
+  </data>
+  <data name="Injector_InvalidParameters" xml:space="preserve">
+    <value>{0} 收到无效参数。</value>
+  </data>
+  <data name="Injector_MissingExeSuffix" xml:space="preserve">
+    <value>{0} 错误：进程名必须以 .exe 结尾</value>
+  </data>
+  <data name="Injector_UnknownError" xml:space="preserve">
+    <value>{0} 注入器退出，错误代码：0x{1:X}</value>
+  </data>
 </root>

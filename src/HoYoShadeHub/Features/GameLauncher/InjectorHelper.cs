@@ -17,22 +17,21 @@ public static class InjectorHelper
     /// <returns>Localized error message</returns>
     public static string GetErrorMessage(int exitCode, string shadeName)
     {
-        // Inline error messages - can be moved to Lang resource files later
         return exitCode switch
         {
             InjectorErrorCodes.INJECTION_ERROR_FILE_INTEGRITY => 
-                $"{shadeName} file integrity check failed. Some required files may be missing or corrupted.",
+                string.Format(Lang.Injector_FileIntegrityCheckFailed, shadeName),
             
             InjectorErrorCodes.INJECTION_ERROR_BLACKLIST_PROCESS => 
-                $"{shadeName} cannot inject into this process. The process name is blacklisted.",
+                string.Format(Lang.Injector_BlacklistProcess, shadeName),
             
             InjectorErrorCodes.INJECTION_ERROR_INVALID_PARAM => 
-                $"{shadeName} received invalid parameters.",
+                string.Format(Lang.Injector_InvalidParameters, shadeName),
             
             InjectorErrorCodes.INJECTION_ERROR_MISSING_EXE_SUFFIX => 
-                $"{shadeName} error: Process name must end with .exe",
+                string.Format(Lang.Injector_MissingExeSuffix, shadeName),
             
-            _ => $"{shadeName} injector exited with error code: 0x{exitCode:X}"
+            _ => string.Format(Lang.Injector_UnknownError, shadeName, exitCode)
         };
     }
 
