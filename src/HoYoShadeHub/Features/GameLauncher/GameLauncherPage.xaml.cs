@@ -1386,7 +1386,7 @@ public sealed partial class GameLauncherPage : PageBase
 
             if (gameProcess != null)
             {
-                InAppToast.MainWindow?.Success($"Game launched with {shadeName}");
+                InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_LaunchedWithShader, shadeName));
                 _logger.LogInformation("Successfully launched game with {ShadeName}, process: {Name} ({Id})",
                     shadeName, gameProcess.ProcessName, gameProcess.Id);
                 return gameProcess;
@@ -1394,14 +1394,14 @@ public sealed partial class GameLauncherPage : PageBase
             else
             {
                 _logger.LogWarning("Failed to start game process");
-                InAppToast.MainWindow?.Error("Game launch failed");
+                InAppToast.MainWindow?.Error(Lang.GameLauncher_GameLaunchFailed);
                 return null;
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch game with {ShadeName}", shadeName);
-            InAppToast.MainWindow?.Error($"Failed to launch game with {shadeName}: {ex.Message}");
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_LaunchWithShaderFailed, shadeName, ex.Message));
             return null;
         }
     }
