@@ -627,7 +627,6 @@ public sealed partial class GameLauncherPage : PageBase
 
 
 
-
     #region Game Server
 
 
@@ -1061,7 +1060,6 @@ public sealed partial class GameLauncherPage : PageBase
             // Case 1: Both Blender plugin and shader are selected
             if (launchingBlenderPlugin && useShader)
             {
-                // Step 1: Start and check shader injector FIRST
                 string shadePath = "";
                 string shadeName = "";
                 
@@ -1095,53 +1093,36 @@ public sealed partial class GameLauncherPage : PageBase
 
                     var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
 
-                    _logger.LogInformation("Starting {ShadeName} injector before Blender plugin: {InjectPath} {GameExe}",
-                        shadeName, injectExePath, gameExeName);
+                    // Start injector and wait for ready
+                    _logger.LogInformation("Starting {ShadeName} injector and waiting for ready signal...", shadeName);
 
-                    var injectStartInfo = new ProcessStartInfo
-                    {
-                        FileName = injectExePath,
-                        Arguments = gameExeName,
-                        UseShellExecute = false,
-                        WorkingDirectory = shadePath,
-                        CreateNoWindow = true
-                    };
+                    var (success, exitCode, injectorProcess) = await InjectorHelper.StartAndWaitForReadyAsync(
+                        injectExePath, gameExeName, shadePath, _logger, shadeName);
 
-                    Process? injectorProcess = Process.Start(injectStartInfo);
-                    if (injectorProcess == null)
+                    if (!success)
                     {
-                        _logger.LogError("Failed to start {ShadeName} injector process", shadeName);
-                        InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
+                        if (InjectorErrorCodes.IsInjectorError(exitCode))
+                        {
+                            string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
+                            _logger.LogError("{ShadeName} validation failed (exit code: {ExitCode}), Blender plugin launch CANCELLED", 
+                                shadeName, exitCode);
+                            InAppToast.MainWindow?.Error(errorMessage, null, 8000);
+                        }
+                        else
+                        {
+                            _logger.LogError("{ShadeName} injector failed to start or timed out", shadeName);
+                            InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
+                        }
                         return;
                     }
 
-                    _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for injector to complete...",
-                        shadeName, injectorProcess.Id);
-
-                    // Wait for injector to complete and check exit code
-                    int exitCode = await InjectorHelper.MonitorInjectorExitCodeAsync(injectorProcess, _logger, shadeName);
-                    
-                    // If injector failed with an error code, stop launching Blender plugin
-                    if (InjectorErrorCodes.IsInjectorError(exitCode))
-                    {
-                        string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
-                        _logger.LogError("{ShadeName} injector failed with exit code {ExitCode}, Blender plugin launch CANCELLED", shadeName, exitCode);
-                        InAppToast.MainWindow?.Error(errorMessage, null, 8000);
-                        // Do NOT launch Blender plugin
-                        return;
-                    }
-                    
-                    if (exitCode != 0)
-                    {
-                        _logger.LogWarning("{ShadeName} injector exited with non-zero code {ExitCode}, but will attempt to launch Blender plugin anyway", shadeName, exitCode);
-                    }
-                    else
-                    {
-                        InAppToast.MainWindow?.Success($"{shadeName} injector started");
-                    }
+                    _logger.LogInformation("{ShadeName} injector is ready", shadeName);
+                    InAppToast.MainWindow?.Success($"{shadeName} injector started");
                 }
 
-                // Step 2: Launch Blender plugin (only if injector succeeded)
+                // Launch Blender plugin (which will start the game)
+                _logger.LogInformation("Launching Blender plugin...");
+                
                 Process? blenderPluginProcess = null;
 
                 if (LaunchGenshinBlenderPlugin)
@@ -1338,56 +1319,38 @@ public sealed partial class GameLauncherPage : PageBase
                 throw new FileNotFoundException("Game exe not found", gameExeName);
             }
 
-            // Step 1: Start inject.exe and monitor its exit code
-            _logger.LogInformation("Starting {ShadeName} injector: {InjectPath} {GameExe}",
-                shadeName, injectExePath, gameExeName);
-
-            var injectStartInfo = new ProcessStartInfo
-            {
-                FileName = injectExePath,
-                Arguments = gameExeName,
-                UseShellExecute = false,
-                WorkingDirectory = shadePath,
-                CreateNoWindow = true
-            };
-
-            Process? injectorProcess = Process.Start(injectStartInfo);
-            if (injectorProcess == null)
-            {
-                _logger.LogError("Failed to start {ShadeName} injector process", shadeName);
-                InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
-                return null;
-            }
-
-            _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for injector to complete...",
-                shadeName, injectorProcess.Id);
-
-            // Step 2: Wait for injector to complete and check exit code
-            int exitCode = await InjectorHelper.MonitorInjectorExitCodeAsync(injectorProcess, _logger, shadeName);
+            // Start injector and wait for it to be ready
+            _logger.LogInformation("Starting {ShadeName} injector and waiting for ready signal...", shadeName);
             
-            // Step 3: Check if injector returned an error
-            if (InjectorErrorCodes.IsInjectorError(exitCode))
+            var (success, exitCode, injectorProcess) = await InjectorHelper.StartAndWaitForReadyAsync(
+                injectExePath, gameExeName, shadePath, _logger, shadeName);
+            
+            if (!success)
             {
-                string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
-                _logger.LogError("{ShadeName} injector failed with exit code {ExitCode}, game will NOT be launched", shadeName, exitCode);
-                InAppToast.MainWindow?.Error(errorMessage, null, 8000);
-                // Do NOT launch the game - return null
+                // Validation failed or timeout
+                if (InjectorErrorCodes.IsInjectorError(exitCode))
+                {
+                    string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
+                    _logger.LogError("{ShadeName} validation failed (exit code: {ExitCode})", shadeName, exitCode);
+                    InAppToast.MainWindow?.Error(errorMessage, null, 8000);
+                }
+                else
+                {
+                    _logger.LogError("{ShadeName} injector failed to start or timed out", shadeName);
+                    InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
+                }
                 return null;
             }
             
-            if (exitCode != 0)
-            {
-                _logger.LogWarning("{ShadeName} injector exited with non-zero code {ExitCode}, but will attempt to launch game anyway", shadeName, exitCode);
-            }
+            _logger.LogInformation("{ShadeName} injector is ready, launching game...", shadeName);
 
-            // Step 4: Launch the game only if injector succeeded or had non-critical error
-            _logger.LogInformation("Launching game normally");
+            // Injector is ready and waiting for game process - now launch the game
             var gameProcess = await _gameLauncherService.StartGameAsync(CurrentGameId, gameInstallPath);
 
             if (gameProcess != null)
             {
                 InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_LaunchedWithShader, shadeName));
-                _logger.LogInformation("Successfully launched game with {ShadeName}, process: {Name} ({Id})",
+                _logger.LogInformation("Game launched with {ShadeName}, process: {Name} ({Id})",
                     shadeName, gameProcess.ProcessName, gameProcess.Id);
                 return gameProcess;
             }
@@ -1395,6 +1358,8 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 _logger.LogWarning("Failed to start game process");
                 InAppToast.MainWindow?.Error(Lang.GameLauncher_GameLaunchFailed);
+                // Kill injector since game didn't start
+                try { injectorProcess?.Kill(); } catch { }
                 return null;
             }
         }
@@ -1416,8 +1381,9 @@ public sealed partial class GameLauncherPage : PageBase
         try
         {
             var gameInstallPath = GameLauncherService.GetGameInstallPath(CurrentGameId);
+            Process? injectorProcess = null;
             
-            // 如果需要使用 shader，先启动注入器并等待检查
+            // 如果需要使用 shader，先启动注入器并等待就绪
             if (useShader)
             {
                 string shadePath = "";
@@ -1452,59 +1418,42 @@ public sealed partial class GameLauncherPage : PageBase
                     }
 
                     var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+
+                    // Start injector and wait for ready
+                    _logger.LogInformation("Starting {ShadeName} injector and waiting for ready signal...", shadeName);
                     
-                    _logger.LogInformation("Starting {ShadeName} injector before Starward launch: {InjectPath} {GameExe}",
-                        shadeName, injectExePath, gameExeName);
-
-                    var injectStartInfo = new ProcessStartInfo
-                    {
-                        FileName = injectExePath,
-                        Arguments = gameExeName,
-                        UseShellExecute = false,
-                        WorkingDirectory = shadePath,
-                        CreateNoWindow = true
-                    };
-
-                    Process? injectorProcess = Process.Start(injectStartInfo);
-                    if (injectorProcess == null)
-                    {
-                        _logger.LogError("Failed to start {ShadeName} injector process", shadeName);
-                        InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
-                        return;
-                    }
-
-                    _logger.LogInformation("{ShadeName} injector started (PID: {Pid}), waiting for injector to complete...",
-                        shadeName, injectorProcess.Id);
-
-                    // 等待注入器完成并检查退出码
-                    int exitCode = await InjectorHelper.MonitorInjectorExitCodeAsync(injectorProcess, _logger, shadeName);
+                    var (success, exitCode, process) = await InjectorHelper.StartAndWaitForReadyAsync(
+                        injectExePath, gameExeName, shadePath, _logger, shadeName);
                     
-                    // 如果注入器返回错误，停止启动游戏
-                    if (InjectorErrorCodes.IsInjectorError(exitCode))
+                    if (!success)
                     {
-                        string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
-                        _logger.LogError("{ShadeName} injector failed with exit code {ExitCode}, game will NOT be launched", shadeName, exitCode);
-                        InAppToast.MainWindow?.Error(errorMessage, null, 8000);
-                        // 不继续启动游戏
+                        if (InjectorErrorCodes.IsInjectorError(exitCode))
+                        {
+                            string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
+                            _logger.LogError("{ShadeName} validation failed (exit code: {ExitCode})", shadeName, exitCode);
+                            InAppToast.MainWindow?.Error(errorMessage, null, 8000);
+                        }
+                        else
+                        {
+                            _logger.LogError("{ShadeName} injector failed to start or timed out", shadeName);
+                            InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector");
+                        }
                         return;
                     }
                     
-                    if (exitCode != 0)
-                    {
-                        _logger.LogWarning("{ShadeName} injector exited with non-zero code {ExitCode}, but will attempt to launch game anyway", shadeName, exitCode);
-                    }
+                    injectorProcess = process;
+                    _logger.LogInformation("{ShadeName} injector is ready", shadeName);
                 }
             }
 
-            // 构建 Starward URL 协议命令
+            // Launch via Starward
             string starwardUrl = BuildStarwardProtocolUrl(CurrentGameBiz, gameInstallPath);
             
             _logger.LogInformation("Launching game via Starward: {Url}", starwardUrl);
 
-            // 调用 Starward URL 协议启动游戏
-            bool success = await Launcher.LaunchUriAsync(new Uri(starwardUrl));
+            bool success2 = await Launcher.LaunchUriAsync(new Uri(starwardUrl));
             
-            if (success)
+            if (success2)
             {
                 _logger.LogInformation("Successfully launched game via Starward");
                 InAppToast.MainWindow?.Success(Lang.GameLauncher_StarwardLaunchSuccess);
@@ -1513,6 +1462,8 @@ public sealed partial class GameLauncherPage : PageBase
             {
                 _logger.LogWarning("Failed to launch game via Starward");
                 InAppToast.MainWindow?.Error(Lang.GameLauncher_StarwardLaunchFailed);
+                // Kill injector since game didn't start
+                try { injectorProcess?.Kill(); } catch { }
             }
         }
         catch (Exception ex)

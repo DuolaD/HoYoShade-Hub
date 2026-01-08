@@ -27,11 +27,24 @@ public static class InjectorErrorCodes
     public const int INJECTION_ERROR_MISSING_EXE_SUFFIX = 1004;
 
     /// <summary>
+    /// Initialization successful, ready to inject (初始化成功，准备注入)
+    /// </summary>
+    public const int INJECTION_READY = 9999;
+
+    /// <summary>
     /// Check if the given exit code represents an injector error
     /// </summary>
     public static bool IsInjectorError(int exitCode)
     {
         return exitCode >= 1001 && exitCode <= 1004;
+    }
+
+    /// <summary>
+    /// Check if the injector is ready (validation passed)
+    /// </summary>
+    public static bool IsInjectorReady(int exitCode)
+    {
+        return exitCode == INJECTION_READY;
     }
 
     /// <summary>
