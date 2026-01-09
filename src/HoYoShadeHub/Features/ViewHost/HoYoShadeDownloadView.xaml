@@ -75,13 +75,13 @@
                       SelectionChanged="ComboBox_Language_SelectionChanged" />
         </StackPanel>
 
-        <StackPanel Margin="48,80,48,120" VerticalAlignment="Center" Spacing="14">
+        <StackPanel Margin="48,40,48,80" VerticalAlignment="Center" Spacing="8">
             <TextBlock FontSize="24" 
                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                        Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Title}" />
 
             <!-- Version Selection -->
-            <StackPanel Spacing="6">
+            <StackPanel Spacing="4">
                 <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectVersion}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 <ComboBox ItemsSource="{x:Bind Versions}" 
                           SelectedItem="{x:Bind SelectedVersion, Mode=TwoWay}"
@@ -99,12 +99,18 @@
                            TextWrapping="Wrap"
                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                            FontSize="11" />
+                
+                <!-- Preview Channel Toggle -->
+                <ToggleSwitch IsOn="{x:Bind EnablePreviewChannel, Mode=TwoWay}"
+                              OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
+                              OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
+                              Margin="0,2,0,0" />
             </StackPanel>
 
             <!-- Flavor Selection -->
-            <StackPanel Spacing="6">
+            <StackPanel Spacing="4">
                 <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectType}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                <StackPanel Spacing="10">
+                <StackPanel Spacing="8">
                     <StackPanel Spacing="3">
                         <CheckBox Content="{x:Bind lang:Lang.HoYoShadeDownloadView_Option_HoYoShade}" 
                                   IsChecked="{x:Bind IsHoYoShadeSelected, Mode=TwoWay}"
@@ -129,7 +135,7 @@
             </StackPanel>
 
             <!-- Server Selection -->
-            <StackPanel Spacing="6">
+            <StackPanel Spacing="4">
                 <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 <ComboBox ItemsSource="{x:Bind DownloadServers}" 
                           SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}" 

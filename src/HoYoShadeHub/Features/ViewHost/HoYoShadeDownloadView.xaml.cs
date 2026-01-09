@@ -194,6 +194,14 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [NotifyCanExecuteChangedFor(nameof(ImportFromLocalCommand))]
     private bool isOpenHoYoShadeInstalled;
 
+    [ObservableProperty]
+    private bool enablePreviewChannel;
+
+    partial void OnEnablePreviewChannelChanged(bool value)
+    {
+        _ = LoadVersionsAsync();
+    }
+
     public bool CanRefresh => !IsDownloading;
     
     // Can import if:
@@ -316,13 +324,17 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                     // Filter: only allow V3 and above
                     if (IsVersionV3OrAbove(release.TagName))
                     {
-                        // Mark the first version as latest
-                        if (isFirst)
+                        // Filter pre-release versions based on EnablePreviewChannel toggle
+                        if (!release.Prerelease || EnablePreviewChannel)
                         {
-                            release.LatestVersionTag = Lang.HoYoShadeDownloadView_LatestVersion;
-                            isFirst = false;
+                            // Mark the first version as latest
+                            if (isFirst)
+                            {
+                                release.LatestVersionTag = Lang.HoYoShadeDownloadView_LatestVersion;
+                                isFirst = false;
+                            }
+                            Versions.Add(release);
                         }
-                        Versions.Add(release);
                     }
                 }
                 if (Versions.Count > 0)
