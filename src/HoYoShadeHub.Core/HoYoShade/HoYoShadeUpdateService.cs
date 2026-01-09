@@ -1,0 +1,208 @@
+using HoYoShadeHub.Core.Metadata.Github;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace HoYoShadeHub.Core.HoYoShade;
+
+/// <summary>
+/// HoYoShade 更新检测服务
+/// </summary>
+public class HoYoShadeUpdateService
+{
+    private readonly HoYoShadeVersionService _versionService;
+
+    public HoYoShadeUpdateService(HoYoShadeVersionService versionService)
+    {
+        _versionService = versionService;
+    }
+
+    /// <summary>
+    /// 检查 HoYoShade 更新
+    /// </summary>
+    /// <param name="includePrerelease">是否包含预览版</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
+    public async Task<GithubRelease?> CheckHoYoShadeUpdateAsync(bool includePrerelease = false, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var currentVersion = await _versionService.GetHoYoShadeVersionAsync();
+            if (currentVersion == null)
+            {
+                return null;
+            }
+
+            var latestRelease = await GetLatestReleaseAsync(includePrerelease, cancellationToken);
+            if (latestRelease == null)
+            {
+                return null;
+            }
+
+            // Compare versions
+            if (CompareVersions(latestRelease.TagName, currentVersion.Version) > 0)
+            {
+                return latestRelease;
+            }
+
+            return null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 检查 OpenHoYoShade 更新
+    /// </summary>
+    /// <param name="includePrerelease">是否包含预览版</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
+    public async Task<GithubRelease?> CheckOpenHoYoShadeUpdateAsync(bool includePrerelease = false, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var currentVersion = await _versionService.GetOpenHoYoShadeVersionAsync();
+            if (currentVersion == null)
+            {
+                return null;
+            }
+
+            var latestRelease = await GetLatestReleaseAsync(includePrerelease, cancellationToken);
+            if (latestRelease == null)
+            {
+                return null;
+            }
+
+            // Compare versions
+            if (CompareVersions(latestRelease.TagName, currentVersion.Version) > 0)
+            {
+                return latestRelease;
+            }
+
+            return null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 从 GitHub 获取最新版本
+    /// </summary>
+    private async Task<GithubRelease?> GetLatestReleaseAsync(bool includePrerelease, CancellationToken cancellationToken)
+    {
+        try
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
+
+            string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
+            var releases = await client.GetFromJsonAsync<GithubRelease[]>(apiUrl, cancellationToken);
+
+            if (releases == null || releases.Length == 0)
+            {
+                return null;
+            }
+
+            // Filter and find latest version
+            var validReleases = releases
+                .Where(r => IsVersionV3OrAbove(r.TagName))
+                .Where(r => includePrerelease || !r.Prerelease)
+                .OrderByDescending(r => r.PublishedAt)
+                .ToList();
+
+            return validReleases.FirstOrDefault();
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 检查版本是否为 V3 或以上
+    /// </summary>
+    private bool IsVersionV3OrAbove(string tagName)
+    {
+        if (string.IsNullOrWhiteSpace(tagName))
+        {
+            return false;
+        }
+
+        string versionStr = tagName.TrimStart('v', 'V').Trim();
+        var parts = versionStr.Split('.');
+        if (parts.Length > 0 && int.TryParse(parts[0], out int majorVersion))
+        {
+            return majorVersion >= 3;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 比较两个版本号
+    /// </summary>
+    /// <param name="version1">版本1（例如 "V3.0.1"）</param>
+    /// <param name="version2">版本2（例如 "V3.0.0"）</param>
+    /// <returns>如果 version1 > version2 返回正数，相等返回 0，小于返回负数</returns>
+    private int CompareVersions(string version1, string version2)
+    {
+        try
+        {
+            // Normalize versions (remove V prefix and prerelease tags)
+            string v1 = NormalizeVersion(version1);
+            string v2 = NormalizeVersion(version2);
+
+            var parts1 = v1.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
+            var parts2 = v2.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
+
+            int maxLength = Math.Max(parts1.Length, parts2.Length);
+            for (int i = 0; i < maxLength; i++)
+            {
+                int p1 = i < parts1.Length ? parts1[i] : 0;
+                int p2 = i < parts2.Length ? parts2[i] : 0;
+
+                if (p1 != p2)
+                {
+                    return p1.CompareTo(p2);
+                }
+            }
+
+            return 0;
+        }
+        catch
+        {
+            // If comparison fails, assume they are equal
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// 标准化版本号（移除 V 前缀和预览版标签）
+    /// </summary>
+    private string NormalizeVersion(string version)
+    {
+        if (string.IsNullOrWhiteSpace(version))
+        {
+            return "0.0.0";
+        }
+
+        // Remove V prefix
+        version = version.TrimStart('v', 'V');
+
+        // Remove prerelease tags (e.g., -beta.1)
+        int dashIndex = version.IndexOf('-');
+        if (dashIndex > 0)
+        {
+            version = version.Substring(0, dashIndex);
+        }
+
+        return version.Trim();
+    }
+}

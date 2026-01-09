@@ -734,6 +734,15 @@ public static class AppConfig
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// HoYoShade框架 - 加入预览版更新渠道
+    /// </summary>
+    public static bool EnableHoYoShadePreviewChannel
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
 
     #endregion
 

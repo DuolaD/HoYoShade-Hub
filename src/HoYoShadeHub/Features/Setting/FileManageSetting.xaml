@@ -155,6 +155,12 @@
                     </StackPanel>
                 </Button>
             </StackPanel>
+            
+            <!--  预览版渠道开关  -->
+            <StackPanel Margin="0,8,0,0">
+                <CheckBox Content="Join preview channel"
+                          IsChecked="{x:Bind EnableHoYoShadePreviewChannel, Mode=TwoWay}" />
+            </StackPanel>
 
             <!--  HoYoShade  -->
             <TextBlock Margin="0,12,0,0"
@@ -171,6 +177,42 @@
                     <Run Foreground="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToColorConverter}, Mode=OneWay}"
                          Text="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToCheckMarkConverter}, Mode=OneWay}" />
                 </TextBlock>
+            </StackPanel>
+            
+            <!--  版本信息  -->
+            <StackPanel Margin="0,4,0,0"
+                        Orientation="Horizontal"
+                        Spacing="20"
+                        Visibility="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <TextBlock>
+                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Version" />
+                </TextBlock>
+                <TextBlock Text="{x:Bind HoYoShadeVersion, Mode=OneWay}" />
+                
+                <!--  检查更新按钮  -->
+                <Button Height="32"
+                        Padding="12,0,12,0"
+                        BorderThickness="0"
+                        Command="{x:Bind CheckHoYoShadeUpdateCommand}"
+                        CornerRadius="16"
+                        Style="{ThemeResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon FontSize="12" Glyph="&#xE117;" />
+                        <TextBlock FontSize="12" Text="Check Update" />
+                    </StackPanel>
+                </Button>
+                
+                <!--  更新检测结果  -->
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Text="{x:Bind HoYoShadeUpdateInfo, Mode=OneWay}"
+                           Visibility="{x:Bind HoYoShadeUpdateInfo, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
+                
+                <ProgressRing Width="20"
+                              Height="20"
+                              VerticalAlignment="Center"
+                              IsIndeterminate="{x:Bind CheckHoYoShadeUpdateCommand.IsRunning}"
+                              Visibility="{x:Bind CheckHoYoShadeUpdateCommand.IsRunning}" />
             </StackPanel>
             
             <!--  HoYoShade详细信息（仅在已安装时显示）  -->
@@ -311,6 +353,42 @@
                 </TextBlock>
             </StackPanel>
             
+            <!--  版本信息  -->
+            <StackPanel Margin="0,4,0,0"
+                        Orientation="Horizontal"
+                        Spacing="20"
+                        Visibility="{x:Bind OpenHoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <TextBlock>
+                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Version" />
+                </TextBlock>
+                <TextBlock Text="{x:Bind OpenHoYoShadeVersion, Mode=OneWay}" />
+                
+                <!--  检查更新按钮  -->
+                <Button Height="32"
+                        Padding="12,0,12,0"
+                        BorderThickness="0"
+                        Command="{x:Bind CheckOpenHoYoShadeUpdateCommand}"
+                        CornerRadius="16"
+                        Style="{ThemeResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon FontSize="12" Glyph="&#xE117;" />
+                        <TextBlock FontSize="12" Text="Check Update" />
+                    </StackPanel>
+                </Button>
+                
+                <!--  更新检测结果  -->
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Text="{x:Bind OpenHoYoShadeUpdateInfo, Mode=OneWay}"
+                           Visibility="{x:Bind OpenHoYoShadeUpdateInfo, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
+                
+                <ProgressRing Width="20"
+                              Height="20"
+                              VerticalAlignment="Center"
+                              IsIndeterminate="{x:Bind CheckOpenHoYoShadeUpdateCommand.IsRunning}"
+                              Visibility="{x:Bind CheckOpenHoYoShadeUpdateCommand.IsRunning}" />
+            </StackPanel>
+            
             <!--  OpenHoYoShade详细信息（仅在已安装时显示）  -->
             <Grid Margin="0,4,0,0"
                   Visibility="{x:Bind OpenHoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
@@ -431,7 +509,6 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-
 
 			<!--  日志  -->
 			<TextBlock Margin="0,20,0,0"

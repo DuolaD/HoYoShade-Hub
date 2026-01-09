@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppLifecycle;
 using SharpSevenZip;
 using HoYoShadeHub.Core;
+using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Features.Database;
 using HoYoShadeHub.Features.GameLauncher;
 using HoYoShadeHub.Features.ViewHost;
@@ -28,12 +29,37 @@ public sealed partial class FileManageSetting : PageBase
 {
 
     private readonly ILogger<FileManageSetting> _logger = AppConfig.GetLogger<FileManageSetting>();
+    private readonly HoYoShadeVersionService _versionService = new(AppConfig.UserDataFolder);
 
 
     public FileManageSetting()
     {
         this.InitializeComponent();
     }
+    
+    /// <summary>
+    /// HoYoShade框架预览版渠道
+    /// </summary>
+    public bool EnableHoYoShadePreviewChannel
+    {
+        get; set
+        {
+            if (SetProperty(ref field, value))
+            {
+                AppConfig.EnableHoYoShadePreviewChannel = value;
+            }
+        }
+    } = AppConfig.EnableHoYoShadePreviewChannel;
+    
+    /// <summary>
+    /// HoYoShade 更新检测结果
+    /// </summary>
+    public string? HoYoShadeUpdateInfo { get => field; set => SetProperty(ref field, value); }
+    
+    /// <summary>
+    /// OpenHoYoShade 更新检测结果
+    /// </summary>
+    public string? OpenHoYoShadeUpdateInfo { get => field; set => SetProperty(ref field, value); }
 
 
 
@@ -42,6 +68,7 @@ public sealed partial class FileManageSetting : PageBase
         GetLastBackupTime();
         _ = UpdateCacheSizeAsync();
         _ = UpdateHoYoShadeSizeAsync();
+        _ = LoadVersionInfoAsync();
     }
 
 
@@ -218,7 +245,7 @@ public sealed partial class FileManageSetting : PageBase
                 });
                 LastDatabaseBackupTime = $"{Lang.SettingPage_LastBackup}  {time:yyyy-MM-dd HH:mm:ss}";
             }
-        }
+        }        
         catch (Exception ex)
         {
             _logger.LogError(ex, "Backup database");
@@ -276,6 +303,8 @@ public sealed partial class FileManageSetting : PageBase
     public bool HoYoShadeInstalled { get => field; set => SetProperty(ref field, value); }
 
     public string HoYoShadePath { get => field; set => SetProperty(ref field, value); } = "";
+    
+    public string HoYoShadeVersion { get => field; set => SetProperty(ref field, value); } = "";
 
     public string HoYoShadeTotalSize { get => field; set => SetProperty(ref field, value); } = "0.00 KB";
 
@@ -291,6 +320,8 @@ public sealed partial class FileManageSetting : PageBase
     public bool OpenHoYoShadeInstalled { get => field; set => SetProperty(ref field, value); }
 
     public string OpenHoYoShadePath { get => field; set => SetProperty(ref field, value); } = "";
+    
+    public string OpenHoYoShadeVersion { get => field; set => SetProperty(ref field, value); } = "";
 
     public string OpenHoYoShadeTotalSize { get => field; set => SetProperty(ref field, value); } = "0.00 KB";
 
@@ -578,8 +609,12 @@ public sealed partial class FileManageSetting : PageBase
             
             await dialog.ShowAsync();
             
+            // Clear version info after uninstall
+            await _versionService.ClearHoYoShadeVersionAsync();
+            
             // 刷新安装状态
             await UpdateHoYoShadeSizeAsync();
+            await LoadVersionInfoAsync();
         }
         catch (Exception ex)
         {
@@ -656,8 +691,12 @@ public sealed partial class FileManageSetting : PageBase
             
             await dialog.ShowAsync();
             
+            // Clear version info after uninstall
+            await _versionService.ClearOpenHoYoShadeVersionAsync();
+            
             // 刷新安装状态
             await UpdateHoYoShadeSizeAsync();
+            await LoadVersionInfoAsync();
         }
         catch (Exception ex)
         {
@@ -860,7 +899,6 @@ public sealed partial class FileManageSetting : PageBase
                 shadeName, injectorProcess.Id);
             InAppToast.MainWindow?.Success($"{shadeName} injector started");
 
-            // Monitor injector process exit code asynchronously
             _ = Task.Run(async () =>
             {
                 try
@@ -877,7 +915,6 @@ public sealed partial class FileManageSetting : PageBase
                         _logger.LogWarning("{ShadeName} injector exited with error code: {ExitCode}", shadeName, exitCode);
                         string errorMessage = InjectorHelper.GetErrorMessage(exitCode, shadeName);
                         
-                        // Notify user on UI thread
                         DispatcherQueue.TryEnqueue(() =>
                         {
                             InAppToast.MainWindow?.Error(errorMessage, null, 8000);
@@ -900,6 +937,147 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Start {ShadeName} injector", shadeName);
             InAppToast.MainWindow?.Error($"Failed to start {shadeName} injector: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// 加载版本信息
+    /// </summary>
+    private async Task LoadVersionInfoAsync()
+    {
+        try
+        {
+            var hoYoShadeInfo = await _versionService.GetHoYoShadeVersionAsync();
+            if (hoYoShadeInfo != null)
+            {
+                HoYoShadeVersion = hoYoShadeInfo.Version;
+                _logger.LogInformation("Loaded HoYoShade version: {Version}", hoYoShadeInfo.Version);
+            }
+            else
+            {
+                HoYoShadeVersion = "";
+            }
+
+            var openHoYoShadeInfo = await _versionService.GetOpenHoYoShadeVersionAsync();
+            if (openHoYoShadeInfo != null)
+            {
+                OpenHoYoShadeVersion = openHoYoShadeInfo.Version;
+                _logger.LogInformation("Loaded OpenHoYoShade version: {Version}", openHoYoShadeInfo.Version);
+            }
+            else
+            {
+                OpenHoYoShadeVersion = "";
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Load version info");
+            HoYoShadeVersion = "";
+            OpenHoYoShadeVersion = "";
+        }
+    }
+    
+    /// <summary>
+    /// 检查 HoYoShade 更新
+    /// </summary>
+    [RelayCommand]
+    private async Task CheckHoYoShadeUpdateAsync()
+    {
+        try
+        {
+            HoYoShadeUpdateInfo = "Checking for updates...";
+            
+            var updateService = new HoYoShadeUpdateService(_versionService);
+            var latestRelease = await updateService.CheckHoYoShadeUpdateAsync(
+                AppConfig.EnableHoYoShadePreviewChannel);
+            
+            if (latestRelease != null)
+            {
+                HoYoShadeUpdateInfo = $"New version available: {latestRelease.TagName}";
+                _logger.LogInformation("HoYoShade update available: {Version}", latestRelease.TagName);
+                
+                // Show update dialog
+                await ShowUpdateDialogAsync("HoYoShade", latestRelease.TagName, latestRelease.Body);
+            }
+            else
+            {
+                HoYoShadeUpdateInfo = "You are running the latest version";
+                _logger.LogInformation("HoYoShade is up to date");
+                InAppToast.MainWindow?.Success("HoYoShade is up to date!");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Check HoYoShade update");
+            HoYoShadeUpdateInfo = $"Failed to check for updates: {ex.Message}";
+            InAppToast.MainWindow?.Error($"Failed to check for updates: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// 检查 OpenHoYoShade 更新
+    /// </summary>
+    [RelayCommand]
+    private async Task CheckOpenHoYoShadeUpdateAsync()
+    {
+        try
+        {
+            OpenHoYoShadeUpdateInfo = "Checking for updates...";
+            
+            var updateService = new HoYoShadeUpdateService(_versionService);
+            var latestRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(
+                AppConfig.EnableHoYoShadePreviewChannel);
+            
+            if (latestRelease != null)
+            {
+                OpenHoYoShadeUpdateInfo = $"New version available: {latestRelease.TagName}";
+                _logger.LogInformation("OpenHoYoShade update available: {Version}", latestRelease.TagName);
+                
+                // Show update dialog
+                await ShowUpdateDialogAsync("OpenHoYoShade", latestRelease.TagName, latestRelease.Body);
+            }
+            else
+            {
+                OpenHoYoShadeUpdateInfo = "You are running the latest version";
+                _logger.LogInformation("OpenHoYoShade is up to date");
+                InAppToast.MainWindow?.Success("OpenHoYoShade is up to date!");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Check OpenHoYoShade update");
+            OpenHoYoShadeUpdateInfo = $"Failed to check for updates: {ex.Message}";
+            InAppToast.MainWindow?.Error($"Failed to check for updates: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// 显示更新对话框
+    /// </summary>
+    private async Task ShowUpdateDialogAsync(string frameworkName, string newVersion, string releaseNotes)
+    {
+        try
+        {
+            var dialog = new ContentDialog
+            {
+                Title = $"{frameworkName} Update Available",
+                Content = $"New version {newVersion} is available!\n\n{releaseNotes?.Substring(0, Math.Min(200, releaseNotes?.Length ?? 0))}...",
+                PrimaryButtonText = "Go to Download Page",
+                CloseButtonText = "Later",
+                DefaultButton = ContentDialogButton.Primary,
+                XamlRoot = this.XamlRoot,
+            };
+            
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                // Navigate to download page
+                WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Show update dialog");
         }
     }
 
