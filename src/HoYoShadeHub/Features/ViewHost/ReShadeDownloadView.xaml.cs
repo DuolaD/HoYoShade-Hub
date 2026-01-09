@@ -68,12 +68,12 @@ public sealed partial class ReShadeDownloadView : UserControl
         if (currentCulture.StartsWith("en"))
         {
             // English: much less vertical offset (smaller top margin)
-            ContentMargin = new Thickness(48, 40, 48, 120);
+            ContentMargin = new Thickness(48, 60, 48, 120);
         }
         else
         {
             // Chinese and other languages: slightly less vertical offset
-            ContentMargin = new Thickness(48, 60, 48, 120);
+            ContentMargin = new Thickness(48, 80, 48, 120);
         }
     }
 

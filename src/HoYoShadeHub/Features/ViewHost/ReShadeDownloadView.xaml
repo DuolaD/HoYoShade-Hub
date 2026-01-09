@@ -77,10 +77,10 @@
 
         <StackPanel x:Name="MainContentPanel" 
                     VerticalAlignment="Top" 
-                    Spacing="14"
+                    Spacing="8"
                     Margin="{x:Bind ContentMargin, Mode=OneWay}">
             
-            <TextBlock FontSize="20" 
+            <TextBlock FontSize="18" 
                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                        Text="{x:Bind lang:Lang.ReShadeDownloadView_Title}" />
 
@@ -100,11 +100,11 @@
                 </Grid.ColumnDefinitions>
                 
                 <!-- Install Target Selection -->
-                <StackPanel Grid.Column="0" Spacing="6">
+                <StackPanel Grid.Column="0" Spacing="4">
                     <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_SelectInstallTarget}" 
                                FontSize="12"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <StackPanel Spacing="6">
+                    <StackPanel Spacing="4">
                         <RadioButton IsChecked="{x:Bind IsInstallToHoYoShadeOnly, Mode=TwoWay}"
                                      IsEnabled="{x:Bind CanInstallToHoYoShadeOnly, Mode=OneWay}"
                                      GroupName="InstallTarget"
@@ -154,11 +154,11 @@
                 </StackPanel>
 
                 <!-- Install Type Selection -->
-                <StackPanel Grid.Column="1" Spacing="6">
+                <StackPanel Grid.Column="1" Spacing="4">
                     <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_SelectInstallType}" 
                                FontSize="12"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <StackPanel Spacing="6">
+                    <StackPanel Spacing="4">
                         <RadioButton IsChecked="{x:Bind IsInstallAll, Mode=TwoWay}"
                                      GroupName="InstallType"
                                      MaxWidth="9999">
@@ -188,7 +188,7 @@
             </Grid>
 
             <!-- Server Selection -->
-            <StackPanel Spacing="6">
+            <StackPanel Spacing="4">
                 <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}" 
                            FontSize="12"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
