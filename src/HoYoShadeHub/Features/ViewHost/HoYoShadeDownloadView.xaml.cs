@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using HoYoShadeHub.Core.Metadata.Github;
+using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Features.RPC;
 using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Language;
@@ -35,6 +36,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         this.InitializeComponent();
         DownloadServers = new ObservableCollection<string>();
         PauseResumeButtonText = Lang.HoYoShadeDownloadView_Pause;
+        _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         Versions.CollectionChanged += (_, __) =>
         {
             OnPropertyChanged(nameof(CanImport));
@@ -570,7 +572,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             else if (progress.State == 2) StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusExtracting + " ({0})", keyword);
             else if (progress.State == 3) 
             {
-                // Download of this variant completed
+                // Download of this variant completed successfully - save version information
+                await SaveVersionInfoAfterInstallAsync(keyword, SelectedVersion.TagName, "github_release");
                 DownloadProgress = 0;
                 SpeedAndProgress = "";
             }
@@ -590,6 +593,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private CancellationTokenSource _validationCts; // For SHA256 validation
     private bool _isPaused;
     private bool _isStopped;
+    private HoYoShadeVersionService _versionService;
 
     [RelayCommand]
     private void PauseResume()
@@ -1151,6 +1155,30 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         catch (Exception ex)
         {
             Debug.WriteLine($"CheckInstallationStatus error: {ex}");
+        }
+    }
+    
+    /// <summary>
+    /// 保存安装后的版本信息
+    /// </summary>
+    private async Task SaveVersionInfoAfterInstallAsync(string packageType, string version, string source, string? sha256 = null)
+    {
+        try
+        {
+            if (packageType == "HoYoShade")
+            {
+                await _versionService.UpdateHoYoShadeVersionAsync(version, source, sha256);
+                Debug.WriteLine($"Saved version info for HoYoShade: {version}");
+            }
+            else if (packageType == "OpenHoYoShade")
+            {
+                await _versionService.UpdateOpenHoYoShadeVersionAsync(version, source, sha256);
+                Debug.WriteLine($"Saved version info for OpenHoYoShade: {version}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to save version info for {packageType}: {ex.Message}");
         }
     }
 }
