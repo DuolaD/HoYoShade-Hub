@@ -148,30 +148,43 @@ public class HoYoShadeUpdateService
     /// <summary>
     /// 比较两个版本号
     /// </summary>
-    /// <param name="version1">版本1（例如 "V3.0.1"）</param>
-    /// <param name="version2">版本2（例如 "V3.0.0"）</param>
+    /// <param name="version1">版本1（例如 "V3.0.1" 或 "V3.0.0-Beta.1"）</param>
+    /// <param name="version2">版本2（例如 "V3.0.0" 或 "V3.0.0-Beta.2"）</param>
     /// <returns>如果 version1 > version2 返回正数，相等返回 0，小于返回负数</returns>
     private int CompareVersions(string version1, string version2)
     {
         try
         {
-            // Normalize versions (remove V prefix and prerelease tags)
-            string v1 = NormalizeVersion(version1);
-            string v2 = NormalizeVersion(version2);
+            // Parse versions
+            var v1 = ParseVersion(version1);
+            var v2 = ParseVersion(version2);
 
-            var parts1 = v1.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
-            var parts2 = v2.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
-
-            int maxLength = Math.Max(parts1.Length, parts2.Length);
-            for (int i = 0; i < maxLength; i++)
+            // Compare main version parts (major.minor.patch)
+            for (int i = 0; i < 3; i++)
             {
-                int p1 = i < parts1.Length ? parts1[i] : 0;
-                int p2 = i < parts2.Length ? parts2[i] : 0;
-
-                if (p1 != p2)
+                if (v1.MainParts[i] != v2.MainParts[i])
                 {
-                    return p1.CompareTo(p2);
+                    return v1.MainParts[i].CompareTo(v2.MainParts[i]);
                 }
+            }
+
+            // Main versions are equal, compare prerelease
+            // Non-prerelease > prerelease (e.g., 3.0.0 > 3.0.0-Beta.1)
+            if (!v1.IsPrerelease && v2.IsPrerelease) return 1;
+            if (v1.IsPrerelease && !v2.IsPrerelease) return -1;
+
+            // Both are prerelease or both are not, compare prerelease parts
+            if (v1.IsPrerelease && v2.IsPrerelease)
+            {
+                // Compare prerelease identifier (alpha < beta < rc)
+                int identifierCompare = string.Compare(v1.PrereleaseIdentifier, v2.PrereleaseIdentifier, StringComparison.OrdinalIgnoreCase);
+                if (identifierCompare != 0)
+                {
+                    return identifierCompare;
+                }
+
+                // Same identifier, compare version number
+                return v1.PrereleaseVersion.CompareTo(v2.PrereleaseVersion);
             }
 
             return 0;
@@ -181,6 +194,64 @@ public class HoYoShadeUpdateService
             // If comparison fails, assume they are equal
             return 0;
         }
+    }
+
+    /// <summary>
+    /// 解析版本号
+    /// </summary>
+    private VersionInfo ParseVersion(string version)
+    {
+        var info = new VersionInfo();
+
+        if (string.IsNullOrWhiteSpace(version))
+        {
+            return info;
+        }
+
+        // Remove V prefix
+        version = version.TrimStart('v', 'V').Trim();
+
+        // Split main version and prerelease
+        string[] parts = version.Split('-', 2);
+        string mainVersion = parts[0];
+        string? prerelease = parts.Length > 1 ? parts[1] : null;
+
+        // Parse main version (major.minor.patch)
+        var mainParts = mainVersion.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
+        for (int i = 0; i < Math.Min(3, mainParts.Length); i++)
+        {
+            info.MainParts[i] = mainParts[i];
+        }
+
+        // Parse prerelease
+        if (!string.IsNullOrWhiteSpace(prerelease))
+        {
+            info.IsPrerelease = true;
+
+            // Extract identifier and version (e.g., "Beta.1" -> identifier="Beta", version=1)
+            var prereleaseParts = prerelease.Split('.');
+            if (prereleaseParts.Length > 0)
+            {
+                info.PrereleaseIdentifier = prereleaseParts[0].ToLowerInvariant();
+            }
+            if (prereleaseParts.Length > 1 && int.TryParse(prereleaseParts[1], out int prereleaseVer))
+            {
+                info.PrereleaseVersion = prereleaseVer;
+            }
+        }
+
+        return info;
+    }
+
+    /// <summary>
+    /// 版本信息结构
+    /// </summary>
+    private class VersionInfo
+    {
+        public int[] MainParts { get; set; } = new int[3]; // major, minor, patch
+        public bool IsPrerelease { get; set; }
+        public string PrereleaseIdentifier { get; set; } = "";
+        public int PrereleaseVersion { get; set; }
     }
 
     /// <summary>

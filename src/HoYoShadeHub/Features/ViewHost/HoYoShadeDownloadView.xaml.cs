@@ -1063,6 +1063,37 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 {
                     DownloadProgress = 100;
                     Debug.WriteLine("Installation completed successfully");
+                    
+                    // Save version info after successful installation from local package
+                    try
+                    {
+                        // Extract version from the validation result
+                        var fileName = Path.GetFileNameWithoutExtension(packagePath);
+                        string? version = null;
+                        
+                        // Extract version from filename
+                        var match = System.Text.RegularExpressions.Regex.Match(fileName, @"[Vv]?(\d+\.\d+\.?\d*(?:-[a-zA-Z0-9.]+)?)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        if (match.Success)
+                        {
+                            version = match.Groups[1].Value;
+                            if (!version.StartsWith("V", StringComparison.OrdinalIgnoreCase))
+                            {
+                                version = "V" + version;
+                            }
+                        }
+                        
+                        if (!string.IsNullOrEmpty(version))
+                        {
+                            // Calculate SHA256 for local package
+                            string packageSha256 = await CalculateSHA256Async(packagePath);
+                            await SaveVersionInfoAfterInstallAsync(packageType, version, "local_import", packageSha256);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Failed to save version info after local install: {ex.Message}");
+                    }
+                    
                     break;
                 }
                 else if (progress.State == 4)
