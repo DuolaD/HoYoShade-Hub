@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using NuGet.Versioning;
 using HoYoShadeHub.Core.Metadata.Github;
 using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Features.RPC;
@@ -1243,10 +1244,15 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     }
     
     /// <summary>
-    /// 比较两个版本号
+    /// 比较两个版本号 (使用 NuGetVersion 提供工业级语义化版本比较)
+    /// 支持所有标准语义化版本格式，包括:
+    /// - 标准版本: 3.0.1, 3.1.0
+    /// - 预发布版本: 3.0.0-Beta.1, 3.0.0-Alpha.2, 3.0.0-RC.1
+    /// - 带构建元数据: 3.0.0+build.123
+    /// - 组合格式: 3.0.0-Beta.1+build.456
     /// </summary>
-    /// <param name="version1">版本1 (例如: "V3.0.1")</param>
-    /// <param name="version2">版本2 (例如: "V3.1.0")</param>
+    /// <param name="version1">版本1 (例如: "V3.0.1", "V3.0.0-Beta.1")</param>
+    /// <param name="version2">版本2 (例如: "V3.1.0", "V3.0.0-Beta.3")</param>
     /// <returns>如果version1 > version2返回1,如果version1 < version2返回-1,如果相等返回0,无法比较返回null</returns>
     private int? CompareVersions(string? version1, string? version2)
     {
@@ -1257,15 +1263,29 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         
         try
         {
-            // Remove 'v' or 'V' prefix and any whitespace
+            // 移除 'v' 或 'V' 前缀
             string v1 = version1.TrimStart('v', 'V').Trim();
             string v2 = version2.TrimStart('v', 'V').Trim();
             
-            // Split versions by '.'
+            // 使用 NuGetVersion 解析版本号
+            // NuGetVersion 完全支持语义化版本规范 (SemVer 2.0):
+            // - 正确处理主版本、次版本、修订版本的数字比较
+            // - 预发布标识的字典序和数字比较 (Beta.1 < Beta.2 < Beta.10)
+            // - 正式版 > 预览版 (3.0.0 > 3.0.0-Beta.1)
+            // - 预发布标识的优先级 (Alpha < Beta < RC < 正式版)
+            if (NuGetVersion.TryParse(v1, out var nugetV1) && NuGetVersion.TryParse(v2, out var nugetV2))
+            {
+                int result = nugetV1.CompareTo(nugetV2);
+                Debug.WriteLine($"CompareVersions: NuGetVersion comparing '{version1}' with '{version2}', result: {result}");
+                return result > 0 ? 1 : result < 0 ? -1 : 0;
+            }
+            
+            Debug.WriteLine($"CompareVersions: NuGetVersion parse failed for '{version1}' or '{version2}', falling back to manual parse");
+            
+            // 如果 NuGetVersion 无法解析,回退到手动解析 (保留作为安全网)
             var parts1 = v1.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
             var parts2 = v2.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
             
-            // Compare each part
             int maxLength = Math.Max(parts1.Length, parts2.Length);
             for (int i = 0; i < maxLength; i++)
             {
@@ -1276,7 +1296,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 if (p1 < p2) return -1;
             }
             
-            return 0; // Versions are equal
+            return 0;
         }
         catch (Exception ex)
         {
