@@ -149,6 +149,11 @@ public sealed partial class UpdateWindow : WindowEx
 
     public ReleaseInfoDetail? NewVersion { get; set => SetProperty(ref field, value); }
 
+    /// <summary>
+    /// Current framework version (for HoYoShade/OpenHoYoShade updates)
+    /// </summary>
+    public string? CurrentFrameworkVersion { get; set; }
+
 
 #if DEV
     public string ChannelText => Lang.UpdatePage_DevChannel;
@@ -156,7 +161,12 @@ public sealed partial class UpdateWindow : WindowEx
     public string ChannelText => AppConfig.EnablePreviewRelease ? Lang.UpdatePage_PreviewChannel : Lang.UpdatePage_StableChannel;
 #endif
 
-
+    /// <summary>
+    /// Get the current version to display (framework version for framework updates, hub version for hub updates)
+    /// </summary>
+    public string CurrentVersionText => !string.IsNullOrEmpty(CurrentFrameworkVersion) 
+        ? CurrentFrameworkVersion 
+        : AppConfig.AppVersion;
 
     private async void HyperlinkButton_Click(object sender, RoutedEventArgs e)
     {
@@ -201,7 +211,7 @@ public sealed partial class UpdateWindow : WindowEx
 
     public string ProgressCountText { get; set => SetProperty(ref field, value); }
 
-    public string ProgressPercentText { get; set => SetProperty(ref field, value); }
+    public string ProgressPercentText { get => field; set => SetProperty(ref field, value); }
 
     public string ProgressSpeedText { get; set => SetProperty(ref field, value); }
 

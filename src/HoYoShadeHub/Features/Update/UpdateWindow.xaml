@@ -32,7 +32,7 @@
                             Spacing="8">
                     <TextBlock VerticalAlignment="Bottom"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind s:AppConfig.AppVersion}" />
+                               Text="{x:Bind CurrentVersionText}" />
                     <FontIcon VerticalAlignment="Bottom"
                               FontSize="16"
                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"

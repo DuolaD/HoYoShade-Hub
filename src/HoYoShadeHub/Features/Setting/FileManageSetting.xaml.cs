@@ -1058,6 +1058,19 @@ public sealed partial class FileManageSetting : PageBase
     {
         try
         {
+            // Get current framework version
+            string currentVersion = "0.0.0";
+            if (frameworkName == "HoYoShade")
+            {
+                var currentInfo = await _versionService.GetHoYoShadeVersionAsync();
+                currentVersion = currentInfo?.Version ?? "0.0.0";
+            }
+            else if (frameworkName == "OpenHoYoShade")
+            {
+                var currentInfo = await _versionService.GetOpenHoYoShadeVersionAsync();
+                currentVersion = currentInfo?.Version ?? "0.0.0";
+            }
+            
             // Create a ReleaseInfoDetail-like object for the framework update
             var frameworkRelease = new HoYoShadeHub.RPC.Update.Metadata.ReleaseInfoDetail
             {
@@ -1072,11 +1085,13 @@ public sealed partial class FileManageSetting : PageBase
                 PackageSize = 0,
             };
             
-            // Create and show UpdateWindow
+            // Create and show UpdateWindow with current version info
             var updateWindow = new HoYoShadeHub.Features.Update.UpdateWindow 
             { 
                 NewVersion = frameworkRelease,
-                Title = $"{frameworkName} - Update"
+                Title = $"{frameworkName} - Update",
+                // Pass the current framework version
+                CurrentFrameworkVersion = currentVersion
             };
             
             updateWindow.Activate();
