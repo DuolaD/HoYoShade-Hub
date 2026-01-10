@@ -1,4 +1,5 @@
 using HoYoShadeHub.Core.Metadata.Github;
+using NuGet.Versioning;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -146,7 +147,12 @@ public class HoYoShadeUpdateService
     }
 
     /// <summary>
-    /// 比较两个版本号
+    /// 比较两个版本号 (使用 NuGetVersion 提供工业级语义化版本比较)
+    /// 支持所有标准语义化版本格式，包括:
+    /// - 标准版本: 3.0.1, 3.1.0
+    /// - 预发布版本: 3.0.0-Beta.1, 3.0.0-Alpha.2, 3.0.0-RC.1
+    /// - 带构建元数据: 3.0.0+build.123
+    /// - 组合格式: 3.0.0-Beta.1+build.456
     /// </summary>
     /// <param name="version1">版本1（例如 "V3.0.1" 或 "V3.0.0-Beta.1"）</param>
     /// <param name="version2">版本2（例如 "V3.0.0" 或 "V3.0.0-Beta.2"）</param>
@@ -155,125 +161,43 @@ public class HoYoShadeUpdateService
     {
         try
         {
-            // Parse versions
-            var v1 = ParseVersion(version1);
-            var v2 = ParseVersion(version2);
+            // 移除 'v' 或 'V' 前缀
+            string v1 = version1.TrimStart('v', 'V').Trim();
+            string v2 = version2.TrimStart('v', 'V').Trim();
 
-            // Compare main version parts (major.minor.patch)
-            for (int i = 0; i < 3; i++)
+            // 使用 NuGetVersion 解析版本号
+            // NuGetVersion 完全支持语义化版本规范 (SemVer 2.0):
+            // - 正确处理主版本、次版本、修订版本的数字比较
+            // - 预发布标识的字典序和数字比较 (Beta.1 < Beta.2 < Beta.10)
+            // - 正式版 > 预览版 (3.0.0 > 3.0.0-Beta.1)
+            // - 预发布标识的优先级 (Alpha < Beta < RC < 正式版)
+            if (NuGetVersion.TryParse(v1, out var nugetV1) && NuGetVersion.TryParse(v2, out var nugetV2))
             {
-                if (v1.MainParts[i] != v2.MainParts[i])
-                {
-                    return v1.MainParts[i].CompareTo(v2.MainParts[i]);
-                }
+                return nugetV1.CompareTo(nugetV2);
             }
 
-            // Main versions are equal, compare prerelease
-            // Non-prerelease > prerelease (e.g., 3.0.0 > 3.0.0-Beta.1)
-            if (!v1.IsPrerelease && v2.IsPrerelease) return 1;
-            if (v1.IsPrerelease && !v2.IsPrerelease) return -1;
+            // 如果 NuGetVersion 无法解析,回退到简单数字比较
+            var parts1 = v1.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
+            var parts2 = v2.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
 
-            // Both are prerelease or both are not, compare prerelease parts
-            if (v1.IsPrerelease && v2.IsPrerelease)
+            int maxLength = Math.Max(parts1.Length, parts2.Length);
+            for (int i = 0; i < maxLength; i++)
             {
-                // Compare prerelease identifier (alpha < beta < rc)
-                int identifierCompare = string.Compare(v1.PrereleaseIdentifier, v2.PrereleaseIdentifier, StringComparison.OrdinalIgnoreCase);
-                if (identifierCompare != 0)
-                {
-                    return identifierCompare;
-                }
+                int p1 = i < parts1.Length ? parts1[i] : 0;
+                int p2 = i < parts2.Length ? parts2[i] : 0;
 
-                // Same identifier, compare version number
-                return v1.PrereleaseVersion.CompareTo(v2.PrereleaseVersion);
+                if (p1 != p2)
+                {
+                    return p1.CompareTo(p2);
+                }
             }
 
             return 0;
         }
         catch
         {
-            // If comparison fails, assume they are equal
+            // 如果比较失败,假设它们相等
             return 0;
         }
-    }
-
-    /// <summary>
-    /// 解析版本号
-    /// </summary>
-    private VersionInfo ParseVersion(string version)
-    {
-        var info = new VersionInfo();
-
-        if (string.IsNullOrWhiteSpace(version))
-        {
-            return info;
-        }
-
-        // Remove V prefix
-        version = version.TrimStart('v', 'V').Trim();
-
-        // Split main version and prerelease
-        string[] parts = version.Split('-', 2);
-        string mainVersion = parts[0];
-        string? prerelease = parts.Length > 1 ? parts[1] : null;
-
-        // Parse main version (major.minor.patch)
-        var mainParts = mainVersion.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
-        for (int i = 0; i < Math.Min(3, mainParts.Length); i++)
-        {
-            info.MainParts[i] = mainParts[i];
-        }
-
-        // Parse prerelease
-        if (!string.IsNullOrWhiteSpace(prerelease))
-        {
-            info.IsPrerelease = true;
-
-            // Extract identifier and version (e.g., "Beta.1" -> identifier="Beta", version=1)
-            var prereleaseParts = prerelease.Split('.');
-            if (prereleaseParts.Length > 0)
-            {
-                info.PrereleaseIdentifier = prereleaseParts[0].ToLowerInvariant();
-            }
-            if (prereleaseParts.Length > 1 && int.TryParse(prereleaseParts[1], out int prereleaseVer))
-            {
-                info.PrereleaseVersion = prereleaseVer;
-            }
-        }
-
-        return info;
-    }
-
-    /// <summary>
-    /// 版本信息结构
-    /// </summary>
-    private class VersionInfo
-    {
-        public int[] MainParts { get; set; } = new int[3]; // major, minor, patch
-        public bool IsPrerelease { get; set; }
-        public string PrereleaseIdentifier { get; set; } = "";
-        public int PrereleaseVersion { get; set; }
-    }
-
-    /// <summary>
-    /// 标准化版本号（移除 V 前缀和预览版标签）
-    /// </summary>
-    private string NormalizeVersion(string version)
-    {
-        if (string.IsNullOrWhiteSpace(version))
-        {
-            return "0.0.0";
-        }
-
-        // Remove V prefix
-        version = version.TrimStart('v', 'V');
-
-        // Remove prerelease tags (e.g., -beta.1)
-        int dashIndex = version.IndexOf('-');
-        if (dashIndex > 0)
-        {
-            version = version.Substring(0, dashIndex);
-        }
-
-        return version.Trim();
     }
 }

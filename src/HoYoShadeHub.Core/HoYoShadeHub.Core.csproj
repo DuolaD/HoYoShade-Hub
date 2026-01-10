@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NuGet.Versioning" Version="6.12.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Localization\CoreLang.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
