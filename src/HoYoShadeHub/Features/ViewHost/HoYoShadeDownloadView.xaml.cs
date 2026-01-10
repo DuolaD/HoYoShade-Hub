@@ -135,7 +135,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private bool isDownloading;
 
     public bool CanDownload => !IsDownloading && SelectedVersion != null && !IsLoadingVersions &&
-        ((IsHoYoShadeSelected && !IsHoYoShadeInstalled) || (IsOpenHoYoShadeSelected && !IsOpenHoYoShadeInstalled));
+        ((IsHoYoShadeSelected && (!IsHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledHoYoShadeVersion))) || 
+         (IsOpenHoYoShadeSelected && (!IsOpenHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledOpenHoYoShadeVersion))));
     
     public string DownloadButtonText => _isPaused ? Lang.HoYoShadeDownloadView_Resume : Lang.HoYoShadeDownloadView_DownloadAndInstall;
 
@@ -198,6 +199,12 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     [ObservableProperty]
     private bool enablePreviewChannel;
+    
+    [ObservableProperty]
+    private string? installedHoYoShadeVersion;
+    
+    [ObservableProperty]
+    private string? installedOpenHoYoShadeVersion;
 
     partial void OnEnablePreviewChannelChanged(bool value)
     {
@@ -218,8 +225,17 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         InitializeLanguageSelector();
-        await LoadVersionsAsync();
+        _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
+        await LoadInstalledVersionsAsync();
         CheckInstallationStatus();
+        _ = LoadVersionsAsync();
+        // Notify dependencies
+        OnPropertyChanged(nameof(CanDownload));
+        OnPropertyChanged(nameof(CanImport));
+        ImportFromLocalCommand.NotifyCanExecuteChanged();
+        
+        // Register for language change messages
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
     }
 
     private void InitializeLanguageSelector()
@@ -404,15 +420,15 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             PauseResumeButtonText = Lang.HoYoShadeDownloadView_Pause;
             OnPropertyChanged(nameof(ShowPauseResumeButton));
 
-            // Download HoYoShade if selected
-            if (IsHoYoShadeSelected && !IsHoYoShadeInstalled)
+            // Download HoYoShade if selected and can install
+            if (IsHoYoShadeSelected && (!IsHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledHoYoShadeVersion)))
             {
                 await DownloadShadeVariantAsync("HoYoShade", "HoYoShade");
                 if (_downloadCts.IsCancellationRequested) return;
             }
 
-            // Download OpenHoYoShade if selected
-            if (IsOpenHoYoShadeSelected && !IsOpenHoYoShadeInstalled)
+            // Download OpenHoYoShade if selected and can install
+            if (IsOpenHoYoShadeSelected && (!IsOpenHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledOpenHoYoShadeVersion)))
             {
                 await DownloadShadeVariantAsync("OpenHoYoShade", "OpenHoYoShade");
                 if (_downloadCts.IsCancellationRequested) return;
@@ -420,6 +436,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
             // All downloads completed successfully
             StatusMessage = Lang.HoYoShadeDownloadView_StatusFinished;
+            
+            // Reload installed versions after successful installation
+            await LoadInstalledVersionsAsync();
             CheckInstallationStatus(); // Update installation status
             IsControlButtonsVisible = false;
             SpeedAndProgress = "";
@@ -716,28 +735,36 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             // Check if trying to install an already installed package type
             if (validationResult.PackageType == "HoYoShade" && IsHoYoShadeInstalled)
             {
-                var errorMsg = Lang.ResourceManager.GetString("HoYoShadeDownloadView_PackageAlreadyInstalled") 
-                    ?? "Cannot install: HoYoShade is already installed. Please uninstall it first.";
-                StatusMessage = string.Format(errorMsg, "HoYoShade");
-                IsDownloading = false;
-                IsControlButtonsVisible = false;
-                await Task.Delay(3000);
-                StatusMessage = Lang.HoYoShadeDownloadView_StatusReady;
-                Debug.WriteLine($"Installation blocked: HoYoShade already installed");
-                return;
+                // Check version: allow upgrade but not downgrade
+                if (!CanInstallVersion(validationResult.Version, InstalledHoYoShadeVersion))
+                {
+                    var errorMsg = Lang.ResourceManager.GetString("HoYoShadeDownloadView_PackageVersionLowerOrEqual") 
+                        ?? "Cannot install: Selected version ({0}) is lower than or equal to the installed version ({1}). Please select a higher version.";
+                    StatusMessage = string.Format(errorMsg, validationResult.Version, InstalledHoYoShadeVersion);
+                    IsDownloading = false;
+                    IsControlButtonsVisible = false;
+                    await Task.Delay(3000);
+                    StatusMessage = Lang.HoYoShadeDownloadView_StatusReady;
+                    Debug.WriteLine($"Installation blocked: HoYoShade version {validationResult.Version} is not higher than installed version {InstalledHoYoShadeVersion}");
+                    return;
+                }
             }
             
             if (validationResult.PackageType == "OpenHoYoShade" && IsOpenHoYoShadeInstalled)
             {
-                var errorMsg = Lang.ResourceManager.GetString("HoYoShadeDownloadView_PackageAlreadyInstalled") 
-                    ?? "Cannot install: OpenHoYoShade is already installed. Please uninstall it first.";
-                StatusMessage = string.Format(errorMsg, "OpenHoYoShade");
-                IsDownloading = false;
-                IsControlButtonsVisible = false;
-                await Task.Delay(3000);
-                StatusMessage = Lang.HoYoShadeDownloadView_StatusReady;
-                Debug.WriteLine($"Installation blocked: OpenHoYoShade already installed");
-                return;
+                // Check version: allow upgrade but not downgrade
+                if (!CanInstallVersion(validationResult.Version, InstalledOpenHoYoShadeVersion))
+                {
+                    var errorMsg = Lang.ResourceManager.GetString("HoYoShadeDownloadView_PackageVersionLowerOrEqual") 
+                        ?? "Cannot install: Selected version ({0}) is lower than or equal to the installed version ({1}). Please select a higher version.";
+                    StatusMessage = string.Format(errorMsg, validationResult.Version, InstalledOpenHoYoShadeVersion);
+                    IsDownloading = false;
+                    IsControlButtonsVisible = false;
+                    await Task.Delay(3000);
+                    StatusMessage = Lang.HoYoShadeDownloadView_StatusReady;
+                    Debug.WriteLine($"Installation blocked: OpenHoYoShade version {validationResult.Version} is not higher than installed version {InstalledOpenHoYoShadeVersion}");
+                    return;
+                }
             }
             
             // Package is valid, start installation
@@ -1187,6 +1214,91 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         {
             Debug.WriteLine($"CheckInstallationStatus error: {ex}");
         }
+    }
+    
+    /// <summary>
+    /// 加载已安装的HoYoShade和OpenHoYoShade版本
+    /// </summary>
+    private async Task LoadInstalledVersionsAsync()
+    {
+        try
+        {
+            var manifest = await _versionService.LoadManifestAsync();
+            InstalledHoYoShadeVersion = manifest.HoYoShade?.Version;
+            InstalledOpenHoYoShadeVersion = manifest.OpenHoYoShade?.Version;
+            
+            Debug.WriteLine($"Loaded installed versions: HoYoShade={InstalledHoYoShadeVersion}, OpenHoYoShade={InstalledOpenHoYoShadeVersion}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to load installed versions: {ex.Message}");
+            InstalledHoYoShadeVersion = null;
+            InstalledOpenHoYoShadeVersion = null;
+        }
+    }
+    
+    /// <summary>
+    /// 比较两个版本号
+    /// </summary>
+    /// <param name="version1">版本1 (例如: "V3.0.1")</param>
+    /// <param name="version2">版本2 (例如: "V3.1.0")</param>
+    /// <returns>如果version1 > version2返回1,如果version1 < version2返回-1,如果相等返回0,无法比较返回null</returns>
+    private int? CompareVersions(string? version1, string? version2)
+    {
+        if (string.IsNullOrWhiteSpace(version1) || string.IsNullOrWhiteSpace(version2))
+        {
+            return null;
+        }
+        
+        try
+        {
+            // Remove 'v' or 'V' prefix and any whitespace
+            string v1 = version1.TrimStart('v', 'V').Trim();
+            string v2 = version2.TrimStart('v', 'V').Trim();
+            
+            // Split versions by '.'
+            var parts1 = v1.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
+            var parts2 = v2.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
+            
+            // Compare each part
+            int maxLength = Math.Max(parts1.Length, parts2.Length);
+            for (int i = 0; i < maxLength; i++)
+            {
+                int p1 = i < parts1.Length ? parts1[i] : 0;
+                int p2 = i < parts2.Length ? parts2[i] : 0;
+                
+                if (p1 > p2) return 1;
+                if (p1 < p2) return -1;
+            }
+            
+            return 0; // Versions are equal
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to compare versions '{version1}' and '{version2}': {ex.Message}");
+            return null;
+        }
+    }
+    
+    /// <summary>
+    /// 检查选中版本是否可以安装
+    /// </summary>
+    /// <param name="selectedVersion">要安装的版本</param>
+    /// <param name="installedVersion">已安装的版本</param>
+    /// <returns>如果可以安装返回true</returns>
+    private bool CanInstallVersion(string? selectedVersion, string? installedVersion)
+    {
+        // 如果没有安装任何版本,可以安装
+        if (string.IsNullOrWhiteSpace(installedVersion))
+        {
+            return true;
+        }
+        
+        // 比较版本
+        var comparison = CompareVersions(selectedVersion, installedVersion);
+        
+        // 只允许安装更高版本,不允许安装相同或更低版本
+        return comparison.HasValue && comparison.Value > 0;
     }
     
     /// <summary>
