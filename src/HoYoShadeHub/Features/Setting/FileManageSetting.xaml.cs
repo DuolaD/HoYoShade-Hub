@@ -1058,22 +1058,28 @@ public sealed partial class FileManageSetting : PageBase
     {
         try
         {
-            var dialog = new ContentDialog
+            // Create a ReleaseInfoDetail-like object for the framework update
+            var frameworkRelease = new HoYoShadeHub.RPC.Update.Metadata.ReleaseInfoDetail
             {
-                Title = $"{frameworkName} Update Available",
-                Content = $"New version {newVersion} is available!\n\n{releaseNotes?.Substring(0, Math.Min(200, releaseNotes?.Length ?? 0))}...",
-                PrimaryButtonText = "Go to Download Page",
-                CloseButtonText = "Later",
-                DefaultButton = ContentDialogButton.Primary,
-                XamlRoot = this.XamlRoot,
+                Version = newVersion,
+                Architecture = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture,
+                InstallType = HoYoShadeHub.RPC.Update.Metadata.InstallType.Portable,
+                BuildTime = DateTimeOffset.Now,
+                DisableAutoUpdate = true, // 禁用自动更新，框架更新需要手动下载
+                PackageUrl = frameworkName == "HoYoShade" 
+                    ? $"https://github.com/DuolaD/HoYoShade/releases/tag/{newVersion}"
+                    : $"https://github.com/DuolaD/OpenHoYoShade/releases/tag/{newVersion}",
+                PackageSize = 0,
             };
             
-            var result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary)
-            {
-                // Navigate to download page
-                WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
-            }
+            // Create and show UpdateWindow
+            var updateWindow = new HoYoShadeHub.Features.Update.UpdateWindow 
+            { 
+                NewVersion = frameworkRelease,
+                Title = $"{frameworkName} - Update"
+            };
+            
+            updateWindow.Activate();
         }
         catch (Exception ex)
         {
