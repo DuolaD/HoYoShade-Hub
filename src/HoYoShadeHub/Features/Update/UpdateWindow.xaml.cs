@@ -518,42 +518,36 @@ public sealed partial class UpdateWindow : WindowEx
             // For framework updates, fetch the GitHub release directly
             try
             {
-                // Extract tag from PackageUrl (e.g., "https://github.com/DuolaD/HoYoShade/releases/tag/v1.0.0")
+                // Extract tag from PackageUrl
                 var packageUrl = NewVersion.PackageUrl;
                 if (!string.IsNullOrEmpty(packageUrl))
                 {
+                    // Both HoYoShade and OpenHoYoShade are in the same repository
                     var segments = packageUrl.Split('/');
                     var tag = segments[^1]; // Get the last segment (tag name)
                     
-                    // Determine which repo to query based on the URL
-                    bool isHoYoShade = packageUrl.Contains("github.com/DuolaD/HoYoShade/");
-                    bool isOpenHoYoShade = packageUrl.Contains("github.com/DuolaD/OpenHoYoShade/");
+                    var frameworkMarkdown = new StringBuilder();
                     
-                    if (isHoYoShade || isOpenHoYoShade)
-                    {
-                        var frameworkMarkdown = new StringBuilder();
-                        
-                        // Fetch release from GitHub API
-                        var repoOwner = "DuolaD";
-                        var repoName = isHoYoShade ? "HoYoShade" : "OpenHoYoShade";
-                        
-                        // Use GitHub API to get the release
-                        var apiUrl = $"https://api.github.com/repos/{repoOwner}/{repoName}/releases/tags/{tag}";
-                        using var httpClient = new System.Net.Http.HttpClient();
-                        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
-                        
-                        var response = await httpClient.GetStringAsync(apiUrl);
-                        var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
-                        
-                        var name = release.GetProperty("name").GetString() ?? tag;
-                        var body = release.GetProperty("body").GetString() ?? "";
-                        
-                        frameworkMarkdown.AppendLine($"# {name}");
-                        frameworkMarkdown.AppendLine();
-                        frameworkMarkdown.AppendLine(body);
-                        
-                        return frameworkMarkdown.ToString();
-                    }
+                    // Fetch release from GitHub API (both frameworks are in DuolaD/HoYoShade repo)
+                    var repoOwner = "DuolaD";
+                    var repoName = "HoYoShade";
+                    
+                    // Use GitHub API to get the release
+                    var apiUrl = $"https://api.github.com/repos/{repoOwner}/{repoName}/releases/tags/{tag}";
+                    using var httpClient = new System.Net.Http.HttpClient();
+                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
+                    
+                    var response = await httpClient.GetStringAsync(apiUrl);
+                    var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
+                    
+                    var name = release.GetProperty("name").GetString() ?? tag;
+                    var body = release.GetProperty("body").GetString() ?? "";
+                    
+                    frameworkMarkdown.AppendLine($"# {name}");
+                    frameworkMarkdown.AppendLine();
+                    frameworkMarkdown.AppendLine(body);
+                    
+                    return frameworkMarkdown.ToString();
                 }
             }
             catch (Exception ex)

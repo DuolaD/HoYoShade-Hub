@@ -1071,6 +1071,41 @@ public sealed partial class FileManageSetting : PageBase
                 currentVersion = currentInfo?.Version ?? "0.0.0";
             }
             
+            // Fetch GitHub Release to get download URL and package size
+            string? packageDownloadUrl = null;
+            long packageSize = 0;
+            
+            try
+            {
+                var apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{newVersion}";
+                using var httpClient = new System.Net.Http.HttpClient();
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
+                
+                var response = await httpClient.GetStringAsync(apiUrl);
+                var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
+                
+                // Find the correct asset based on framework name
+                var assets = release.GetProperty("assets");
+                string assetNamePattern = frameworkName == "HoYoShade" 
+                    ? "HoYoShade-" 
+                    : "OpenHoYoShade-";
+                
+                foreach (var asset in assets.EnumerateArray())
+                {
+                    var assetName = asset.GetProperty("name").GetString() ?? "";
+                    if (assetName.StartsWith(assetNamePattern) && assetName.EndsWith(".zip"))
+                    {
+                        packageDownloadUrl = asset.GetProperty("browser_download_url").GetString();
+                        packageSize = asset.GetProperty("size").GetInt64();
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch GitHub release assets for {FrameworkName}", frameworkName);
+            }
+            
             // Create a ReleaseInfoDetail-like object for the framework update
             var frameworkRelease = new HoYoShadeHub.RPC.Update.Metadata.ReleaseInfoDetail
             {
@@ -1079,10 +1114,8 @@ public sealed partial class FileManageSetting : PageBase
                 InstallType = HoYoShadeHub.RPC.Update.Metadata.InstallType.Portable,
                 BuildTime = DateTimeOffset.Now,
                 DisableAutoUpdate = true, // 禁用自动更新，框架更新需要手动下载
-                PackageUrl = frameworkName == "HoYoShade" 
-                    ? $"https://github.com/DuolaD/HoYoShade/releases/tag/{newVersion}"
-                    : $"https://github.com/DuolaD/OpenHoYoShade/releases/tag/{newVersion}",
-                PackageSize = 0,
+                PackageUrl = packageDownloadUrl ?? $"https://github.com/DuolaD/HoYoShade/releases/tag/{newVersion}",
+                PackageSize = packageSize,
             };
             
             // Create and show UpdateWindow with current version info
