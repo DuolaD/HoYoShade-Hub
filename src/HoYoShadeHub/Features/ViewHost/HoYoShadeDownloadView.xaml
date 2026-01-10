@@ -44,9 +44,11 @@
                                   Margin="0,0,8,0"
                                   Glyph="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallGlyphConverter}}" 
                                   Foreground="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallColorConverter}}" />
-                        <TextBlock Grid.Column="1"
-                                   Text="HoYoShade"
-                                   FontSize="13" />
+                        <TextBlock Grid.Column="1" FontSize="13">
+                            <Run Text="HoYoShade"/>
+                            <Run Text="{x:Bind HoYoShadeVersionDisplay, Mode=OneWay}" 
+                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        </TextBlock>
                     </Grid>
                     
                     <!-- OpenHoYoShade Status -->
@@ -61,9 +63,11 @@
                                   Margin="0,0,8,0"
                                   Glyph="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallGlyphConverter}}" 
                                   Foreground="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallColorConverter}}" />
-                        <TextBlock Grid.Column="1"
-                                   Text="OpenHoYoShade"
-                                   FontSize="13" />
+                        <TextBlock Grid.Column="1" FontSize="13">
+                            <Run Text="OpenHoYoShade"/>
+                            <Run Text="{x:Bind OpenHoYoShadeVersionDisplay, Mode=OneWay}" 
+                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        </TextBlock>
                     </Grid>
                 </StackPanel>
             </Border>

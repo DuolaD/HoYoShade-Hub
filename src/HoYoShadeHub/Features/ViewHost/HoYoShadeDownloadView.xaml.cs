@@ -201,10 +201,15 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private bool enablePreviewChannel;
     
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HoYoShadeVersionDisplay))]
     private string? installedHoYoShadeVersion;
     
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(OpenHoYoShadeVersionDisplay))]
     private string? installedOpenHoYoShadeVersion;
+
+    public string HoYoShadeVersionDisplay => string.IsNullOrEmpty(InstalledHoYoShadeVersion) ? "" : " " + InstalledHoYoShadeVersion;
+    public string OpenHoYoShadeVersionDisplay => string.IsNullOrEmpty(InstalledOpenHoYoShadeVersion) ? "" : " " + InstalledOpenHoYoShadeVersion;
 
     partial void OnEnablePreviewChannelChanged(bool value)
     {
