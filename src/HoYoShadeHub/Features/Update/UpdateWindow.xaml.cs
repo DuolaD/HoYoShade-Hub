@@ -487,8 +487,22 @@ public sealed partial class UpdateWindow : WindowEx
         catch (Exception ex) when (ex is HttpRequestException or SocketException or IOException)
         {
             _logger.LogError(ex, "Load recent update content");
+            
+            // Check if this is a framework update
+            bool isFrameworkUpdate = NewVersion?.DisableAutoUpdate ?? false;
             string tag = NewVersion?.Version ?? AppConfig.AppVersion;
-            webview.Source = new Uri($"https://github.com/DuolaD/HoYoShade-Hub/releases/tag/{tag}");
+            
+            if (isFrameworkUpdate)
+            {
+                // For framework updates, redirect to HoYoShade repository
+                webview.Source = new Uri($"https://github.com/DuolaD/HoYoShade/releases/tag/{tag}");
+            }
+            else
+            {
+                // For Hub updates, redirect to Hub repository
+                webview.Source = new Uri($"https://github.com/DuolaD/HoYoShade-Hub/releases/tag/{tag}");
+            }
+            
             webview.Visibility = Visibility.Visible;
             StackPanel_Loading.Visibility = Visibility.Collapsed;
             StackPanel_Error.Visibility = Visibility.Collapsed;
@@ -503,8 +517,6 @@ public sealed partial class UpdateWindow : WindowEx
         }
     }
 
-
-
     private async Task<string> GetReleaseContentMarkdownAsync()
     {
         bool showPrerelease = false;
@@ -518,14 +530,11 @@ public sealed partial class UpdateWindow : WindowEx
             // For framework updates, fetch the GitHub release directly
             try
             {
-                // Extract tag from PackageUrl
-                var packageUrl = NewVersion.PackageUrl;
-                if (!string.IsNullOrEmpty(packageUrl))
+                // Use the version directly as the tag name
+                var tag = NewVersion.Version;
+                
+                if (!string.IsNullOrEmpty(tag))
                 {
-                    // Both HoYoShade and OpenHoYoShade are in the same repository
-                    var segments = packageUrl.Split('/');
-                    var tag = segments[^1]; // Get the last segment (tag name)
-                    
                     var frameworkMarkdown = new StringBuilder();
                     
                     // Fetch release from GitHub API (both frameworks are in DuolaD/HoYoShade repo)
@@ -553,6 +562,8 @@ public sealed partial class UpdateWindow : WindowEx
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch framework release info");
+                // Rethrow to trigger the fallback logic in LoadUpdateContentAsync
+                throw;
             }
         }
         
