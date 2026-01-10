@@ -9,6 +9,7 @@ using Microsoft.Web.WebView2.Core;
 using NuGet.Versioning;
 using HoYoShadeHub.Features.RPC;
 using HoYoShadeHub.Features.Setting;
+using HoYoShadeHub.Features.ViewHost;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.RPC.Update;
 using HoYoShadeHub.RPC.Update.Github;
@@ -121,11 +122,15 @@ public sealed partial class UpdateWindow : WindowEx
 
     private void RootGrid_Loaded(object sender, RoutedEventArgs e)
     {
+        // We now support framework updates via navigation, so we don't disable the button here.
+        // The UpdateNowAsync method handles the navigation logic for DisableAutoUpdate=true.
+        /*
         if (NewVersion?.DisableAutoUpdate ?? false)
         {
             IsUpdateNowEnabled = false;
             ErrorMessage = Lang.UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage;
         }
+        */
         if (UpdateService.UpdateFinished)
         {
             Finish(skipRestart: true);
@@ -254,6 +259,22 @@ public sealed partial class UpdateWindow : WindowEx
         try
         {
             ErrorMessage = null;
+            
+            // Check if this is a framework update (DisableAutoUpdate = true)
+            if (NewVersion?.DisableAutoUpdate ?? false)
+            {
+                // Framework update: navigate to download page instead of downloading
+                _logger.LogInformation("Framework update detected, navigating to download page");
+                
+                // Send message to navigate to download page
+                WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
+                
+                // Close the update window
+                this.Close();
+                return;
+            }
+            
+            // Hub update: proceed with normal update flow
             IsUpdateNowEnabled = false;
             IsUpdateRemindLatterEnabled = false;
 
@@ -270,7 +291,6 @@ public sealed partial class UpdateWindow : WindowEx
             Button_RemindLatter.IsEnabled = true;
         }
     }
-
 
 
 
