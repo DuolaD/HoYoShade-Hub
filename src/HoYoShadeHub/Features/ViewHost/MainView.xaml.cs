@@ -215,6 +215,28 @@ public sealed partial class MainView : UserControl
 #pragma warning disable CS0162 // 检测到无法访问的代码
             await Task.Delay(500);
 #pragma warning restore CS0162 // 检测到无法访问的代码
+            
+            // Check if there's a pending framework update to show changelog for
+            string? pendingFrameworkVersion = AppConfig.GetValue<string>(null, "PendingFrameworkUpdateVersion");
+            string? pendingFrameworkName = AppConfig.GetValue<string>(null, "PendingFrameworkUpdateName");
+            if (!string.IsNullOrEmpty(pendingFrameworkVersion))
+            {
+                _logger.LogInformation("Found pending framework update version: {Version}, showing changelog", pendingFrameworkVersion);
+                
+                // Clear the pending version and name
+                AppConfig.SetValue<string>(null, "PendingFrameworkUpdateVersion");
+                AppConfig.SetValue<string>(null, "PendingFrameworkUpdateName");
+                
+                // Show update window in "changelog only" mode (NewVersion = null)
+                // Pass the pending info to the window so it knows what to load
+                new UpdateWindow 
+                { 
+                    PendingFrameworkUpdateVersion = pendingFrameworkVersion,
+                    PendingFrameworkUpdateName = pendingFrameworkName
+                }.Activate();
+                return;
+            }
+            
             if (NuGetVersion.TryParse(AppConfig.AppVersion, out var appVersion))
             {
                 _ = NuGetVersion.TryParse(AppConfig.LastAppVersion, out var lastVersion);

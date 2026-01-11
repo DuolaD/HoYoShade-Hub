@@ -183,6 +183,16 @@ public sealed partial class UpdateWindow : WindowEx
     /// </summary>
     public string? CurrentFrameworkVersion { get; set; }
 
+    /// <summary>
+    /// Version of the pending framework update (for showing changelog after update)
+    /// </summary>
+    public string? PendingFrameworkUpdateVersion { get; set; }
+
+    /// <summary>
+    /// Name of the pending framework update (for showing changelog after update)
+    /// </summary>
+    public string? PendingFrameworkUpdateName { get; set; }
+
 
 #if DEV
     public string ChannelText => Lang.UpdatePage_DevChannel;
@@ -352,6 +362,12 @@ public sealed partial class UpdateWindow : WindowEx
                 if (ShowUpdateContentAfterFrameworkUpdate)
                 {
                     AppConfig.SetValue(NewVersion.Version, "PendingFrameworkUpdateVersion");
+                    // Store the framework name to fetch correct changelog later
+                    // Determine framework name from package URL or use CurrentFrameworkVersion
+                    string frameworkName = DetermineFrameworkName();
+                    AppConfig.SetValue(frameworkName, "PendingFrameworkUpdateName");
+                    _logger.LogInformation("Stored pending framework update: {Version} ({Framework})", 
+                        NewVersion.Version, frameworkName);
                 }
                 
                 // Send message to navigate to download page
@@ -378,6 +394,30 @@ public sealed partial class UpdateWindow : WindowEx
             Button_UpdateNow.IsEnabled = true;
             Button_RemindLatter.IsEnabled = true;
         }
+    }
+
+    /// <summary>
+    /// Determine the framework name from the current update context
+    /// </summary>
+    private string DetermineFrameworkName()
+    {
+        // Try to determine from CurrentFrameworkVersion or PackageUrl
+        if (!string.IsNullOrEmpty(CurrentFrameworkVersion))
+        {
+            // CurrentFrameworkVersion is set for framework updates
+            // Check the package URL or other indicators
+            if (NewVersion?.PackageUrl?.Contains("OpenHoYoShade", StringComparison.OrdinalIgnoreCase) ?? false)
+            {
+                return "OpenHoYoShade";
+            }
+            else if (NewVersion?.PackageUrl?.Contains("HoYoShade", StringComparison.OrdinalIgnoreCase) ?? false)
+            {
+                return "HoYoShade";
+            }
+        }
+        
+        // Default to HoYoShade if we can't determine
+        return "HoYoShade";
     }
 
 
@@ -633,13 +673,36 @@ public sealed partial class UpdateWindow : WindowEx
         // Check if this is a framework update (DisableAutoUpdate = true)
         bool isFrameworkUpdate = NewVersion?.DisableAutoUpdate ?? false;
         
-        if (isFrameworkUpdate && NewVersion != null)
+        // Check if we're showing changelog for a completed framework update
+        // We prioritize the properties set on the window instance, then fallback to AppConfig
+        string? pendingFrameworkVersion = PendingFrameworkUpdateVersion;
+        string? pendingFrameworkName = PendingFrameworkUpdateName;
+
+        if (NewVersion is null)
+        {
+            if (string.IsNullOrEmpty(pendingFrameworkVersion) || string.IsNullOrEmpty(pendingFrameworkName))
+            {
+                // Fallback to checking AppConfig directly if properties weren't set
+                // This handles cases where UpdateWindow might be instantiated differently
+                pendingFrameworkVersion = AppConfig.GetValue<string>(null, "PendingFrameworkUpdateVersion");
+                pendingFrameworkName = AppConfig.GetValue<string>(null, "PendingFrameworkUpdateName");
+            }
+            
+            if (!string.IsNullOrEmpty(pendingFrameworkVersion) && !string.IsNullOrEmpty(pendingFrameworkName))
+            {
+                _logger.LogInformation("Fetching changelog for completed framework update: {Version} ({Framework})", 
+                    pendingFrameworkVersion, pendingFrameworkName);
+                isFrameworkUpdate = true;
+            }
+        }
+        
+        if (isFrameworkUpdate)
         {
             // For framework updates, fetch the GitHub release directly
             try
             {
-                // Use the version directly as the tag name
-                var tag = NewVersion.Version;
+                // Use the version from either NewVersion or pending update
+                var tag = NewVersion?.Version ?? pendingFrameworkVersion;
                 
                 if (!string.IsNullOrEmpty(tag))
                 {
