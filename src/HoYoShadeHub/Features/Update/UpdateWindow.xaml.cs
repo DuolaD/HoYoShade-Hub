@@ -147,6 +147,12 @@ public sealed partial class UpdateWindow : WindowEx
             // Show architecture info for Hub updates
             TextBlock_ArchLabel.Visibility = Visibility.Visible;
             TextBlock_ArchValue.Visibility = Visibility.Visible;
+            
+            // Display build time for Hub updates
+            if (NewVersion != null)
+            {
+                ReleaseTimeText = NewVersion.BuildTime.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            }
         }
         
         if (UpdateService.UpdateFinished)
