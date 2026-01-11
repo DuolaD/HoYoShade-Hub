@@ -120,17 +120,35 @@ public sealed partial class UpdateWindow : WindowEx
 
 
 
-    private void RootGrid_Loaded(object sender, RoutedEventArgs e)
+    private async void RootGrid_Loaded(object sender, RoutedEventArgs e)
     {
-        // We now support framework updates via navigation, so we don't disable the button here.
-        // The UpdateNowAsync method handles the navigation logic for DisableAutoUpdate=true.
-        /*
+        // Check if this is a framework update and adjust UI accordingly
         if (NewVersion?.DisableAutoUpdate ?? false)
         {
-            IsUpdateNowEnabled = false;
-            ErrorMessage = Lang.UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage;
+            // Hide Hub update checkboxes, show framework update checkbox
+            CheckBox_HubUpdate1.Visibility = Visibility.Collapsed;
+            CheckBox_HubUpdate2.Visibility = Visibility.Collapsed;
+            CheckBox_FrameworkUpdate.Visibility = Visibility.Visible;
+            
+            // Hide architecture info for framework updates
+            TextBlock_ArchLabel.Visibility = Visibility.Collapsed;
+            TextBlock_ArchValue.Visibility = Visibility.Collapsed;
+            
+            // Fetch and display GitHub release time
+            await FetchAndDisplayReleaseTimeAsync();
         }
-        */
+        else
+        {
+            // Show Hub update checkboxes, hide framework checkbox
+            CheckBox_HubUpdate1.Visibility = Visibility.Visible;
+            CheckBox_HubUpdate2.Visibility = Visibility.Visible;
+            CheckBox_FrameworkUpdate.Visibility = Visibility.Collapsed;
+            
+            // Show architecture info for Hub updates
+            TextBlock_ArchLabel.Visibility = Visibility.Visible;
+            TextBlock_ArchValue.Visibility = Visibility.Visible;
+        }
+        
         if (UpdateService.UpdateFinished)
         {
             Finish(skipRestart: true);
@@ -173,6 +191,50 @@ public sealed partial class UpdateWindow : WindowEx
         ? CurrentFrameworkVersion 
         : AppConfig.AppVersion;
 
+    /// <summary>
+    /// Release time label: "发布时间" for framework, "编译时间" for hub
+    /// </summary>
+    public string ReleaseTimeLabel => (NewVersion?.DisableAutoUpdate ?? false) 
+        ? "发布时间：" 
+        : Lang.UpdatePage_BuiltTime;
+
+    /// <summary>
+    /// Release time text
+    /// </summary>
+    public string ReleaseTimeText { get; set => SetProperty(ref field, value); } = "";
+
+    private async Task FetchAndDisplayReleaseTimeAsync()
+    {
+        try
+        {
+            if (NewVersion == null) return;
+            
+            var tag = NewVersion.Version;
+            var apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{tag}";
+            
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
+            
+            var response = await httpClient.GetStringAsync(apiUrl);
+            var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
+            
+            var publishedAt = release.GetProperty("published_at").GetString();
+            if (!string.IsNullOrEmpty(publishedAt) && DateTimeOffset.TryParse(publishedAt, out var publishTime))
+            {
+                ReleaseTimeText = publishTime.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            else
+            {
+                ReleaseTimeText = NewVersion.BuildTime.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to fetch GitHub release time, using BuildTime instead");
+            ReleaseTimeText = NewVersion?.BuildTime.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss") ?? "";
+        }
+    }
+
     private async void HyperlinkButton_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -204,23 +266,23 @@ public sealed partial class UpdateWindow : WindowEx
 
 
 
-    public bool IsUpdateNowEnabled { get; set => SetProperty(ref field, value); } = true;
+    public bool IsUpdateNowEnabled { get => field; set => SetProperty(ref field, value); } = true;
 
-    public bool IsUpdateRemindLatterEnabled { get; set => SetProperty(ref field, value); } = true;
+    public bool IsUpdateRemindLatterEnabled { get => field; set => SetProperty(ref field, value); } = true;
 
-    public bool IsProgressTextVisible { get; set => SetProperty(ref field, value); }
+    public bool IsProgressTextVisible { get => field; set => SetProperty(ref field, value); }
 
-    public bool IsProgressBarVisible { get; set => SetProperty(ref field, value); }
+    public bool IsProgressBarVisible { get => field; set => SetProperty(ref field, value); }
 
-    public string ProgressBytesText { get; set => SetProperty(ref field, value); }
+    public string ProgressBytesText { get => field; set => SetProperty(ref field, value); }
 
-    public string ProgressCountText { get; set => SetProperty(ref field, value); }
+    public string ProgressCountText { get => field; set => SetProperty(ref field, value); }
 
     public string ProgressPercentText { get => field; set => SetProperty(ref field, value); }
 
-    public string ProgressSpeedText { get; set => SetProperty(ref field, value); }
+    public string ProgressSpeedText { get => field; set => SetProperty(ref field, value); }
 
-    public string? ErrorMessage { get; set => SetProperty(ref field, value); }
+    public string? ErrorMessage { get => field; set => SetProperty(ref field, value); }
 
 
 
@@ -250,6 +312,20 @@ public sealed partial class UpdateWindow : WindowEx
         }
     } = AppConfig.ShowUpdateContentAfterUpdateRestart;
 
+    /// <summary>
+    /// Show update content after framework update (replaces both Hub update options)
+    /// </summary>
+    public bool ShowUpdateContentAfterFrameworkUpdate
+    {
+        get;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                AppConfig.SetValue(value, "ShowUpdateContentAfterFrameworkUpdate");
+            }
+        }
+    } = AppConfig.GetValue(true, "ShowUpdateContentAfterFrameworkUpdate");
 
 
 
@@ -265,6 +341,12 @@ public sealed partial class UpdateWindow : WindowEx
             {
                 // Framework update: navigate to download page instead of downloading
                 _logger.LogInformation("Framework update detected, navigating to download page");
+                
+                // Store the framework update info to show changelog later
+                if (ShowUpdateContentAfterFrameworkUpdate)
+                {
+                    AppConfig.SetValue(NewVersion.Version, "PendingFrameworkUpdateVersion");
+                }
                 
                 // Send message to navigate to download page
                 WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
@@ -700,12 +782,116 @@ public sealed partial class UpdateWindow : WindowEx
         {
             css = """<link href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.8.1/github-markdown.min.css" type="text/css" rel="stylesheet" />""";
         }
+        
+        // Add GitHub Alerts CSS support
+        string alertsCss = """
+            <style>
+              /* GitHub Alerts Styling */
+              .markdown-alert {
+                padding: 0.5rem 1rem;
+                margin-bottom: 16px;
+                color: inherit;
+                border-left: 0.25em solid #888;
+              }
+              .markdown-alert > :first-child {
+                margin-top: 0;
+              }
+              .markdown-alert > :last-child {
+                margin-bottom: 0;
+              }
+              .markdown-alert .markdown-alert-title {
+                display: flex;
+                font-weight: 500;
+                align-items: center;
+                line-height: 1;
+              }
+              .markdown-alert .markdown-alert-title svg {
+                margin-right: 0.5rem;
+              }
+              
+              /* Note Alert */
+              .markdown-alert.markdown-alert-note {
+                border-left-color: #0969da;
+              }
+              .markdown-alert.markdown-alert-note .markdown-alert-title {
+                color: #0969da;
+              }
+              
+              /* Important Alert */
+              .markdown-alert.markdown-alert-important {
+                border-left-color: #8250df;
+              }
+              .markdown-alert.markdown-alert-important .markdown-alert-title {
+                color: #8250df;
+              }
+              
+              /* Warning Alert */
+              .markdown-alert.markdown-alert-warning {
+                border-left-color: #9a6700;
+              }
+              .markdown-alert.markdown-alert-warning .markdown-alert-title {
+                color: #9a6700;
+              }
+              
+              /* Tip Alert */
+              .markdown-alert.markdown-alert-tip {
+                border-left-color: #1a7f37;
+              }
+              .markdown-alert.markdown-alert-tip .markdown-alert-title {
+                color: #1a7f37;
+              }
+              
+              /* Caution Alert */
+              .markdown-alert.markdown-alert-caution {
+                border-left-color: #cf222e;
+              }
+              .markdown-alert.markdown-alert-caution .markdown-alert-title {
+                color: #cf222e;
+              }
+              
+              /* Dark mode support */
+              @media (prefers-color-scheme: dark) {
+                .markdown-alert.markdown-alert-note {
+                  border-left-color: #2f81f7;
+                }
+                .markdown-alert.markdown-alert-note .markdown-alert-title {
+                  color: #2f81f7;
+                }
+                .markdown-alert.markdown-alert-important {
+                  border-left-color: #a371f7;
+                }
+                .markdown-alert.markdown-alert-important .markdown-alert-title {
+                  color: #a371f7;
+                }
+                .markdown-alert.markdown-alert-warning {
+                  border-left-color: #d29922;
+                }
+                .markdown-alert.markdown-alert-warning .markdown-alert-title {
+                  color: #d29922;
+                }
+                .markdown-alert.markdown-alert-tip {
+                  border-left-color: #3fb950;
+                }
+                .markdown-alert.markdown-alert-tip .markdown-alert-title {
+                  color: #3fb950;
+                }
+                .markdown-alert.markdown-alert-caution {
+                  border-left-color: #f85149;
+                }
+                .markdown-alert.markdown-alert-caution .markdown-alert-title {
+                  color: #f85149;
+                }
+              }
+            </style>
+            """;
+        
         return $$"""
             <!DOCTYPE html>
             <html>
             <head>
               <base target="_blank">
               {{css}}
+              {{alertsCss}}
               <style>
                 @media (prefers-color-scheme: light) {
                   ::-webkit-scrollbar {

@@ -56,11 +56,13 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <!--  架构：  -->
-                    <TextBlock Grid.Row="0"
+                    <TextBlock x:Name="TextBlock_ArchLabel"
+                               Grid.Row="0"
                                Grid.Column="0"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                Text="{x:Bind lang:Lang.UpdatePage_Architecture}" />
-                    <TextBlock Grid.Row="0"
+                    <TextBlock x:Name="TextBlock_ArchValue"
+                               Grid.Row="0"
                                Grid.Column="1"
                                Text="{x:Bind NewVersion.Architecture}" />
                     <!--  发布渠道  -->
@@ -71,14 +73,16 @@
                     <TextBlock Grid.Row="1"
                                Grid.Column="1"
                                Text="{x:Bind ChannelText}" />
-                    <!--  编译时间：  -->
-                    <TextBlock Grid.Row="2"
+                    <!--  发布时间：  -->
+                    <TextBlock x:Name="TextBlock_BuildTimeLabel"
+                               Grid.Row="2"
                                Grid.Column="0"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind lang:Lang.UpdatePage_BuiltTime}" />
-                    <TextBlock Grid.Row="2"
+                               Text="{x:Bind ReleaseTimeLabel}" />
+                    <TextBlock x:Name="TextBlock_BuildTimeValue"
+                               Grid.Row="2"
                                Grid.Column="1"
-                               Text="{x:Bind NewVersion.BuildTime.LocalDateTime.ToString('yyyy-MM-dd HH:mm:ss', x:Null)}" />
+                               Text="{x:Bind ReleaseTimeText}" />
                 </Grid>
 
                 <!--  相关链接  -->
@@ -110,12 +114,20 @@
 
                 <MenuFlyoutSeparator />
 
-                <!--  更新后自动重启  -->
-                <CheckBox Content="{x:Bind lang:Lang.UpdateWindow_AutoRestartAfterUpdate}" IsChecked="{x:Bind AutoRestartWhenUpdateFinished, Mode=TwoWay}" />
-                <!--  重启后显示更新内容  -->
-                <CheckBox Margin="0,-4,0,0"
+                <!--  更新后展示更新内容 (Hub更新显示)  -->
+                <CheckBox x:Name="CheckBox_HubUpdate1"
+                          Content="{x:Bind lang:Lang.UpdateWindow_AutoRestartAfterUpdate}"
+                          IsChecked="{x:Bind AutoRestartWhenUpdateFinished, Mode=TwoWay}" />
+                <CheckBox x:Name="CheckBox_HubUpdate2"
+                          Margin="0,-4,0,0"
                           Content="{x:Bind lang:Lang.UpdateWindow_DisplayUpdateContentAfterRestart}"
                           IsChecked="{x:Bind ShowUpdateContentAfterUpdateRestart, Mode=TwoWay}" />
+
+                <!--  更新后展示更新内容 (框架更新显示)  -->
+                <CheckBox x:Name="CheckBox_FrameworkUpdate"
+                          Content="更新后展示更新内容"
+                          IsChecked="{x:Bind ShowUpdateContentAfterFrameworkUpdate, Mode=TwoWay}"
+                          Visibility="Collapsed" />
 
             </StackPanel>
 
