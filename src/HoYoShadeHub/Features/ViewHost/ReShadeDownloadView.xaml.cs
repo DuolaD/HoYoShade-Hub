@@ -34,6 +34,10 @@ public sealed partial class ReShadeDownloadView : UserControl
     {
         this.InitializeComponent();
         DownloadServers = new ObservableCollection<string>();
+        
+        // Register for installation change messages from other views/windows
+        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
+        
         UpdateDownloadServers();
         UpdateContentMargin();
         // Register for language change messages
@@ -1183,5 +1187,20 @@ public sealed partial class ReShadeDownloadView : UserControl
                 CopyDirectoryAsync(subdir, targetSubdir).Wait();
             }
         });
+    }
+    
+    /// <summary>
+    /// Handle installation changed message from other views
+    /// </summary>
+    private void OnInstallationChanged()
+    {
+        try
+        {
+            CheckInstallationStatus();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "OnInstallationChanged error");
+        }
     }
 }

@@ -69,6 +69,13 @@ public sealed partial class FileManageSetting : PageBase
         _ = UpdateCacheSizeAsync();
         _ = UpdateHoYoShadeSizeAsync();
         _ = LoadVersionInfoAsync();
+        
+        // Register for installation change messages
+        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, async (r, m) => 
+        {
+            await UpdateHoYoShadeSizeAsync();
+            await LoadVersionInfoAsync();
+        });
     }
 
 

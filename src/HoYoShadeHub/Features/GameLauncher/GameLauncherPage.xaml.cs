@@ -6,6 +6,7 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using HoYoShadeHub.Core;
 using HoYoShadeHub.Core.HoYoPlay;
+using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Features.Background;
 using HoYoShadeHub.Features.HoYoPlay;
 using HoYoShadeHub.Features.Overlay;
@@ -33,13 +34,11 @@ public sealed partial class GameLauncherPage : PageBase
 {
 
 
-    private readonly ILogger<GameLauncherPage> _logger = AppConfig.GetLogger<GameLauncherPage>();
-
-    private readonly GameLauncherService _gameLauncherService = AppConfig.GetService<GameLauncherService>();
-
-    private readonly BackgroundService _backgroundService = AppConfig.GetService<BackgroundService>();
-
-    private readonly HoYoPlayService _hoYoPlayService = AppConfig.GetService<HoYoPlayService>();
+    private readonly ILogger<GameLauncherPage> _logger ;
+    private readonly GameLauncherService _gameLauncherService ;
+    private readonly BackgroundService _backgroundService ;
+    private readonly HoYoPlayService _hoYoPlayService ;
+    private readonly HoYoShadeVersionService _versionService ;
 
     private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _dispatchTimer;
 
@@ -59,6 +58,11 @@ public sealed partial class GameLauncherPage : PageBase
     public GameLauncherPage()
     {
         this.InitializeComponent();
+        _logger = AppConfig.GetLogger<GameLauncherPage>();
+        _gameLauncherService = AppConfig.GetService<GameLauncherService>();
+        _backgroundService = AppConfig.GetService<BackgroundService>();
+        _hoYoPlayService = AppConfig.GetService<HoYoPlayService>();
+        _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         _dispatchTimer = DispatcherQueue.CreateTimer();
         _dispatchTimer.Interval = TimeSpan.FromMilliseconds(100);
     }
@@ -77,6 +81,7 @@ public sealed partial class GameLauncherPage : PageBase
         WeakReferenceMessenger.Default.Register<RemovableStorageDeviceChangedMessage>(this, OnRemovableStorageDeviceChanged);
         WeakReferenceMessenger.Default.Register<BackgroundChangedMessage>(this, OnBackgroundChanged);
         WeakReferenceMessenger.Default.Register<UseStarwardLauncherChangedMessage>(this, OnUseStarwardLauncherChanged);
+        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => CheckShadeInstallation());
     }
 
 
@@ -97,7 +102,7 @@ public sealed partial class GameLauncherPage : PageBase
     }
 
 
-    private void CheckShadeInstallation()
+    private async void CheckShadeInstallation()
     {
         try
         {
@@ -110,6 +115,20 @@ public sealed partial class GameLauncherPage : PageBase
             string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
             IsOpenHoYoShadeInstalled = Directory.Exists(openHoYoShadePath) &&
                                        Directory.GetFiles(openHoYoShadePath, "*.dll").Length > 0;
+
+            // Load versions
+            try 
+            {
+                var manifest = await _versionService.LoadManifestAsync();
+                HoYoShadeVersion = IsHoYoShadeInstalled ? (manifest.HoYoShade?.Version ?? "") : "";
+                OpenHoYoShadeVersion = IsOpenHoYoShadeInstalled ? (manifest.OpenHoYoShade?.Version ?? "") : "";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to load shade versions");
+                HoYoShadeVersion = "";
+                OpenHoYoShadeVersion = "";
+            }
 
             // Uncheck options if shaders are not installed
             if (!IsHoYoShadeInstalled && UseHoYoShade)
@@ -127,8 +146,8 @@ public sealed partial class GameLauncherPage : PageBase
             // Check Starward protocol availability
             CheckStarwardProtocolAvailability();
 
-            _logger.LogInformation("HoYoShade installed: {HoYoShade}, OpenHoYoShade installed: {OpenHoYoShade}",
-                IsHoYoShadeInstalled, IsOpenHoYoShadeInstalled);
+            _logger.LogInformation("HoYoShade installed: {HoYoShade} ({Version}), OpenHoYoShade installed: {OpenHoYoShade} ({OpenVersion})",
+                IsHoYoShadeInstalled, HoYoShadeVersion, IsOpenHoYoShadeInstalled, OpenHoYoShadeVersion);
         }
         catch (Exception ex)
         {
@@ -340,12 +359,26 @@ public sealed partial class GameLauncherPage : PageBase
         get => _isHoYoShadeInstalled;
         set => SetProperty(ref _isHoYoShadeInstalled, value);
     }
+    
+    private string _hoYoShadeVersion;
+    public string HoYoShadeVersion
+    {
+        get => _hoYoShadeVersion;
+        set => SetProperty(ref _hoYoShadeVersion, value);
+    }
 
     private bool _isOpenHoYoShadeInstalled;
     public bool IsOpenHoYoShadeInstalled
     {
         get => _isOpenHoYoShadeInstalled;
         set => SetProperty(ref _isOpenHoYoShadeInstalled, value);
+    }
+    
+    private string _openHoYoShadeVersion;
+    public string OpenHoYoShadeVersion
+    {
+        get => _openHoYoShadeVersion;
+        set => SetProperty(ref _openHoYoShadeVersion, value);
     }
 
     // Blender plugin properties

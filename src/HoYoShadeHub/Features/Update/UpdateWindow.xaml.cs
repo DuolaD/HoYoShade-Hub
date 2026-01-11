@@ -25,6 +25,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics;
 using Windows.System;
+using HoYoShadeHub.Core.HoYoShade;
 
 
 namespace HoYoShadeHub.Features.Update;
@@ -38,7 +39,6 @@ public sealed partial class UpdateWindow : WindowEx
 
 
     private readonly MetadataClient _metadataClient = AppConfig.GetService<MetadataClient>();
-
 
     private readonly UpdateService _updateService = AppConfig.GetService<UpdateService>();
 
@@ -176,7 +176,7 @@ public sealed partial class UpdateWindow : WindowEx
 
 
 
-    public ReleaseInfoDetail? NewVersion { get; set => SetProperty(ref field, value); }
+    public ReleaseInfoDetail? NewVersion { get; set; }
 
     /// <summary>
     /// Current framework version (for HoYoShade/OpenHoYoShade updates)
@@ -217,7 +217,7 @@ public sealed partial class UpdateWindow : WindowEx
     /// <summary>
     /// Release time text
     /// </summary>
-    public string ReleaseTimeText { get; set => SetProperty(ref field, value); } = "";
+    public string ReleaseTimeText { get; set; } = "";
 
     private async Task FetchAndDisplayReleaseTimeAsync()
     {
@@ -516,19 +516,56 @@ public sealed partial class UpdateWindow : WindowEx
 
 
 
-    private void Finish(bool skipRestart = false)
+    private async void Finish(bool skipRestart = false)
     {
         AppConfig.IgnoreVersion = null;
         Button_UpdateNow.Visibility = Visibility.Collapsed;
         Button_Restart.Visibility = Visibility.Visible;
         AppConfig.GetService<RpcService>().KeepRunningOnExited(false, noLongerChange: true);
+        
+        // If this was a framework update, update the manifest and notify other views
+        if (NewVersion?.DisableAutoUpdate ?? false)
+        {
+            await UpdateFrameworkVersionManifestAsync();
+            WeakReferenceMessenger.Default.Send(new HoYoShadeInstallationChangedMessage());
+        }
+        
         if (AutoRestartWhenUpdateFinished && !skipRestart)
         {
             Restart();
         }
     }
 
+    private async Task UpdateFrameworkVersionManifestAsync()
+    {
+        try
+        {
+            var versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
+            string frameworkName = AppConfig.GetValue<string>(null, "PendingFrameworkUpdateName");
+            string tag = AppConfig.GetValue<string>(null, "PendingFrameworkUpdateVersion");
 
+            if (string.IsNullOrEmpty(frameworkName)) frameworkName = DetermineFrameworkName();
+            if (string.IsNullOrEmpty(tag)) tag = NewVersion?.Version;
+
+            if (!string.IsNullOrEmpty(tag))
+            {
+                if (frameworkName == "HoYoShade")
+                {
+                     await versionService.UpdateHoYoShadeVersionAsync(tag, "github_release");
+                     _logger.LogInformation("Updated HoYoShade version manifest to {Version}", tag);
+                }
+                else if (frameworkName == "OpenHoYoShade")
+                {
+                     await versionService.UpdateOpenHoYoShadeVersionAsync(tag, "github_release");
+                     _logger.LogInformation("Updated OpenHoYoShade version manifest to {Version}", tag);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update version manifest");
+        }
+    }
 
     [RelayCommand]
     private void Restart()
@@ -674,7 +711,7 @@ public sealed partial class UpdateWindow : WindowEx
         bool isFrameworkUpdate = NewVersion?.DisableAutoUpdate ?? false;
         
         // Check if we're showing changelog for a completed framework update
-        // We prioritize the properties set on the window instance, then fallback to AppConfig
+        // We priorititize the properties set on the window instance, then fallback to AppConfig
         string? pendingFrameworkVersion = PendingFrameworkUpdateVersion;
         string? pendingFrameworkName = PendingFrameworkUpdateName;
 

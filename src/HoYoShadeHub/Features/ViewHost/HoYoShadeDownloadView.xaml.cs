@@ -38,6 +38,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         DownloadServers = new ObservableCollection<string>();
         PauseResumeButtonText = Lang.HoYoShadeDownloadView_Pause;
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
+        
+        // Register for installation change messages from other views/windows
+        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
+        
         Versions.CollectionChanged += (_, __) =>
         {
             OnPropertyChanged(nameof(CanImport));
@@ -446,6 +450,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             // Reload installed versions after successful installation
             await LoadInstalledVersionsAsync();
             CheckInstallationStatus(); // Update installation status
+            
+            // Notify other pages that HoYoShade installation has changed
+            WeakReferenceMessenger.Default.Send(new HoYoShadeInstallationChangedMessage());
+            
             IsControlButtonsVisible = false;
             SpeedAndProgress = "";
             IsDownloading = false;
@@ -1143,6 +1151,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             
             StatusMessage = Lang.HoYoShadeDownloadView_StatusFinished;
             CheckInstallationStatus(); // Update installation status
+            
+            // Notify other pages that HoYoShade installation has changed
+            WeakReferenceMessenger.Default.Send(new HoYoShadeInstallationChangedMessage());
+            
             IsControlButtonsVisible = false;
             IsDownloading = false;
             DownloadProgress = 0;
@@ -1347,6 +1359,22 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         catch (Exception ex)
         {
             Debug.WriteLine($"Failed to save version info for {packageType}: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Handle installation changed message from other views
+    /// </summary>
+    private async void OnInstallationChanged()
+    {
+        try
+        {
+            await LoadInstalledVersionsAsync();
+            CheckInstallationStatus();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"OnInstallationChanged error: {ex}");
         }
     }
 }
