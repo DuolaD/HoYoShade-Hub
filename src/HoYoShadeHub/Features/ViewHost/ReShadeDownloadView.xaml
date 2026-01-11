@@ -44,9 +44,13 @@
                                   Margin="0,0,8,0"
                                   Glyph="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallGlyphConverter}}" 
                                   Foreground="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallColorConverter}}" />
-                        <TextBlock Grid.Column="1"
-                                   Text="HoYoShade"
-                                   FontSize="13" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="HoYoShade"
+                                       FontSize="13" />
+                            <TextBlock Text="{x:Bind HoYoShadeVersionDisplay, Mode=OneWay}"
+                                       FontSize="13"
+                                       Opacity="0.7"/>
+                        </StackPanel>
                     </Grid>
                     
                     <!-- OpenHoYoShade Status -->
@@ -61,9 +65,13 @@
                                   Margin="0,0,8,0"
                                   Glyph="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallGlyphConverter}}" 
                                   Foreground="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallColorConverter}}" />
-                        <TextBlock Grid.Column="1"
-                                   Text="OpenHoYoShade"
-                                   FontSize="13" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="OpenHoYoShade"
+                                       FontSize="13" />
+                            <TextBlock Text="{x:Bind OpenHoYoShadeVersionDisplay, Mode=OneWay}"
+                                       FontSize="13"
+                                       Opacity="0.7"/>
+                        </StackPanel>
                     </Grid>
                 </StackPanel>
             </Border>

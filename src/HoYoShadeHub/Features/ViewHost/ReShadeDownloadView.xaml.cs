@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Features.RPC;
 using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Helpers;
@@ -28,12 +29,14 @@ public sealed partial class ReShadeDownloadView : UserControl
 {
     private readonly ILogger<ReShadeDownloadView> _logger = AppConfig.GetLogger<ReShadeDownloadView>();
     private readonly RpcService _rpcService = AppConfig.GetService<RpcService>();
+    private readonly HoYoShadeVersionService _versionService;
     private CancellationTokenSource _cancellationTokenSource;
 
     public ReShadeDownloadView()
     {
         this.InitializeComponent();
         DownloadServers = new ObservableCollection<string>();
+        _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         
         // Register for installation change messages from other views/windows
         WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
@@ -109,6 +112,17 @@ public sealed partial class ReShadeDownloadView : UserControl
 
     [ObservableProperty]
     private bool isOpenHoYoShadeInstalled;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HoYoShadeVersionDisplay))]
+    private string? installedHoYoShadeVersion;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(OpenHoYoShadeVersionDisplay))]
+    private string? installedOpenHoYoShadeVersion;
+
+    public string HoYoShadeVersionDisplay => string.IsNullOrEmpty(InstalledHoYoShadeVersion) ? "" : " " + InstalledHoYoShadeVersion;
+    public string OpenHoYoShadeVersionDisplay => string.IsNullOrEmpty(InstalledOpenHoYoShadeVersion) ? "" : " " + InstalledOpenHoYoShadeVersion;
 
     public bool AreBothInstalled => IsHoYoShadeInstalled && IsOpenHoYoShadeInstalled;
 
@@ -210,6 +224,7 @@ public sealed partial class ReShadeDownloadView : UserControl
     {
         InitializeLanguageSelector();
         CheckInstallationStatus();
+        await LoadInstalledVersionsAsync();
 
         // Store initial installation states
         _initialHoYoShadeState = IsHoYoShadeInstalled;
@@ -1192,15 +1207,37 @@ public sealed partial class ReShadeDownloadView : UserControl
     /// <summary>
     /// Handle installation changed message from other views
     /// </summary>
-    private void OnInstallationChanged()
+    private async void OnInstallationChanged()
     {
         try
         {
             CheckInstallationStatus();
+            await LoadInstalledVersionsAsync();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "OnInstallationChanged error");
+        }
+    }
+
+    /// <summary>
+    /// Load installed versions of HoYoShade and OpenHoYoShade
+    /// </summary>
+    private async Task LoadInstalledVersionsAsync()
+    {
+        try
+        {
+            var manifest = await _versionService.LoadManifestAsync();
+            InstalledHoYoShadeVersion = manifest.HoYoShade?.Version;
+            InstalledOpenHoYoShadeVersion = manifest.OpenHoYoShade?.Version;
+            
+            Debug.WriteLine($"ReShadeDownloadView: Loaded installed versions: HoYoShade={InstalledHoYoShadeVersion}, OpenHoYoShade={InstalledOpenHoYoShadeVersion}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"ReShadeDownloadView: Failed to load installed versions: {ex.Message}");
+            InstalledHoYoShadeVersion = null;
+            InstalledOpenHoYoShadeVersion = null;
         }
     }
 }
