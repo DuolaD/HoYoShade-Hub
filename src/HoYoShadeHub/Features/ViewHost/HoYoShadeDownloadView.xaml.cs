@@ -124,8 +124,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     public string Title => IsUpdateMode ? "让我们更新 HoYoShade 框架" : Lang.HoYoShadeDownloadView_Title;
 
-    public bool IsHoYoShadeSelectionEnabled => !IsHoYoShadeInstalled || IsUpdateMode;
-    public bool IsOpenHoYoShadeSelectionEnabled => !IsOpenHoYoShadeInstalled || IsUpdateMode;
+    public bool IsHoYoShadeSelectionEnabled => !IsHoYoShadeInstalled;
+    public bool IsOpenHoYoShadeSelectionEnabled => !IsOpenHoYoShadeInstalled;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
@@ -155,7 +155,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     public bool CanDownload => !IsDownloading && SelectedVersion != null && !IsLoadingVersions &&
         ((IsHoYoShadeSelected && (!IsHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledHoYoShadeVersion))) || 
-         (IsOpenHoYoShadeSelected && (!IsOpenHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledOpenHoYoShadeVersion))));
+         (IsOpenHoYoShadeSelected && (!IsOpenHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledOpenHoYoShadeVersion)))) &&
+        (IsUpdateMode || !IsHoYoShadeInstalled || !IsOpenHoYoShadeInstalled);
     
     public string DownloadButtonText => _isPaused ? Lang.HoYoShadeDownloadView_Resume : Lang.HoYoShadeDownloadView_DownloadAndInstall;
 
