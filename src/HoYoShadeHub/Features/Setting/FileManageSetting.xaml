@@ -215,6 +215,17 @@
                               Visibility="{x:Bind CheckHoYoShadeUpdateCommand.IsRunning}" />
             </StackPanel>
             
+            <!--  ReShade版本信息  -->
+            <StackPanel Margin="0,4,0,0"
+                        Orientation="Horizontal"
+                        Spacing="20"
+                        Visibility="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <TextBlock>
+                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="ReShade Version" />
+                </TextBlock>
+                <TextBlock Text="{x:Bind HoYoShadeReShadeVersion, Mode=OneWay}" />
+            </StackPanel>
+            
             <!--  HoYoShade详细信息（仅在已安装时显示）  -->
             <Grid Margin="0,4,0,0"
                   Visibility="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
@@ -387,6 +398,17 @@
                               VerticalAlignment="Center"
                               IsIndeterminate="{x:Bind CheckOpenHoYoShadeUpdateCommand.IsRunning}"
                               Visibility="{x:Bind CheckOpenHoYoShadeUpdateCommand.IsRunning}" />
+            </StackPanel>
+            
+            <!--  ReShade版本信息  -->
+            <StackPanel Margin="0,4,0,0"
+                        Orientation="Horizontal"
+                        Spacing="20"
+                        Visibility="{x:Bind OpenHoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <TextBlock>
+                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="ReShade Version" />
+                </TextBlock>
+                <TextBlock Text="{x:Bind OpenHoYoShadeReShadeVersion, Mode=OneWay}" />
             </StackPanel>
             
             <!--  OpenHoYoShade详细信息（仅在已安装时显示）  -->

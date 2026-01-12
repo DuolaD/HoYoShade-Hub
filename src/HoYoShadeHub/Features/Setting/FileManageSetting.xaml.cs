@@ -312,6 +312,8 @@ public sealed partial class FileManageSetting : PageBase
     public string HoYoShadePath { get => field; set => SetProperty(ref field, value); } = "";
     
     public string HoYoShadeVersion { get => field; set => SetProperty(ref field, value); } = "";
+    
+    public string HoYoShadeReShadeVersion { get => field; set => SetProperty(ref field, value); } = "";
 
     public string HoYoShadeTotalSize { get => field; set => SetProperty(ref field, value); } = "0.00 KB";
 
@@ -329,6 +331,8 @@ public sealed partial class FileManageSetting : PageBase
     public string OpenHoYoShadePath { get => field; set => SetProperty(ref field, value); } = "";
     
     public string OpenHoYoShadeVersion { get => field; set => SetProperty(ref field, value); } = "";
+    
+    public string OpenHoYoShadeReShadeVersion { get => field; set => SetProperty(ref field, value); } = "";
 
     public string OpenHoYoShadeTotalSize { get => field; set => SetProperty(ref field, value); } = "0.00 KB";
 
@@ -443,6 +447,11 @@ public sealed partial class FileManageSetting : PageBase
                     hoYoShadeScreenshotSize = await GetFolderSizeLongAsync(screenshotsPath);
                     _logger.LogInformation("HoYoShade screenshots directory size: {Size} bytes", hoYoShadeScreenshotSize);
                 }
+                
+                // 读取 ReShade64.dll 产品版本
+                string reshade64DllPath = Path.Combine(hoYoShadePath, "ReShade64.dll");
+                HoYoShadeReShadeVersion = GetDllProductVersion(reshade64DllPath);
+                _logger.LogInformation("HoYoShade ReShade64.dll version: {Version}", HoYoShadeReShadeVersion);
             }
 
             // 检测并计算 OpenHoYoShade (在用户数据目录下)
@@ -480,6 +489,11 @@ public sealed partial class FileManageSetting : PageBase
                     openHoYoShadeScreenshotSize = await GetFolderSizeLongAsync(openScreenshotsPath);
                     _logger.LogInformation("OpenHoYoShade screenshots directory size: {Size} bytes", openHoYoShadeScreenshotSize);
                 }
+                
+                // 读取 ReShade64.dll 产品版本
+                string openReshade64DllPath = Path.Combine(openHoYoShadePath, "ReShade64.dll");
+                OpenHoYoShadeReShadeVersion = GetDllProductVersion(openReshade64DllPath);
+                _logger.LogInformation("OpenHoYoShade ReShade64.dll version: {Version}", OpenHoYoShadeReShadeVersion);
             }
 
             _logger.LogInformation("Detection complete. HoYoShade: {HoYoShade}, OpenHoYoShade: {OpenHoYoShade}", 
@@ -510,6 +524,7 @@ public sealed partial class FileManageSetting : PageBase
                 HoYoShadePresetSize = "0.00 KB";
                 HoYoShadeScreenshotSize = "0.00 KB";
                 HoYoShadeOtherSize = "0.00 KB";
+                HoYoShadeReShadeVersion = "";
             }
 
             // 更新OpenHoYoShade显示
@@ -537,6 +552,7 @@ public sealed partial class FileManageSetting : PageBase
                 OpenHoYoShadePresetSize = "0.00 KB";
                 OpenHoYoShadeScreenshotSize = "0.00 KB";
                 OpenHoYoShadeOtherSize = "0.00 KB";
+                OpenHoYoShadeReShadeVersion = "";
             }
         }
         catch (Exception ex)
@@ -593,6 +609,34 @@ public sealed partial class FileManageSetting : PageBase
         else
         {
             return $"{bytes / (double)GB:F2} GB";
+        }
+    }
+    
+    /// <summary>
+    /// 获取DLL文件的产品版本
+    /// </summary>
+    /// <param name="dllPath">DLL文件路径</param>
+    /// <returns>产品版本字符串，如果文件不存在或无法读取则返回"Not available"</returns>
+    private static string GetDllProductVersion(string dllPath)
+    {
+        try
+        {
+            if (!File.Exists(dllPath))
+            {
+                return "Not available";
+            }
+            
+            var versionInfo = FileVersionInfo.GetVersionInfo(dllPath);
+            if (!string.IsNullOrWhiteSpace(versionInfo.ProductVersion))
+            {
+                return versionInfo.ProductVersion;
+            }
+            
+            return "Not available";
+        }
+        catch
+        {
+            return "Not available";
         }
     }
 
