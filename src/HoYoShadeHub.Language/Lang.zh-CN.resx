@@ -1089,7 +1089,7 @@
     <value>安装状态</value>
   </data>
   <data name="ReShadeDownloadView_Title" xml:space="preserve">
-    <value>接下来，让我们更新</value>
+    <value>接下来，让我们下载并安装 ReShade 着色器和插件</value>
   </data>
   <data name="ReShadeDownloadView_Description" xml:space="preserve">
     <value>你需要下载并安装 ReShade 着色器和插件，才能让 HoYoShade 正常工作。

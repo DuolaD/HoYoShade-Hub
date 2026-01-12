@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,1039 +59,1564 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="Language_Chinese" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Language_Chinese" xml:space="preserve">
     <value>Chinese</value>
   </data>
-  <data name="Language_English" xml:space="preserve">
+	<data name="Language_English" xml:space="preserve">
     <value>English</value>
   </data>
-  <data name="Language_Japanese" xml:space="preserve">
+	<data name="Language_Japanese" xml:space="preserve">
     <value>Japanese</value>
   </data>
-  <data name="Language_Korean" xml:space="preserve">
+	<data name="Language_Korean" xml:space="preserve">
     <value>Korean</value>
   </data>
-  <data name="SelectDirectoryPage_SelectFolder" xml:space="preserve">
+	<data name="SelectDirectoryPage_SelectFolder" xml:space="preserve">
     <value>Select Folder</value>
   </data>
-  <data name="SelectDirectoryPage_AutoDeleteAfterUpdate" xml:space="preserve">
+	<data name="SelectDirectoryPage_AutoDeleteAfterUpdate" xml:space="preserve">
     <value>This folder will be automatically deleted after the software update</value>
   </data>
-  <data name="SelectDirectoryPage_NoWritePermission" xml:space="preserve">
+	<data name="SelectDirectoryPage_NoWritePermission" xml:space="preserve">
     <value>No write permission</value>
   </data>
-  <data name="DownloadGamePage_Close" xml:space="preserve">
+	<data name="DownloadGamePage_Close" xml:space="preserve">
     <value>Close</value>
   </data>
-  <data name="Common_Cancel" xml:space="preserve">
+	<data name="Common_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="Common_Confirm" xml:space="preserve">
+	<data name="Common_Confirm" xml:space="preserve">
     <value>Confirm</value>
   </data>
-  <data name="DownloadGamePage_Downloading" xml:space="preserve">
+	<data name="DownloadGamePage_Downloading" xml:space="preserve">
     <value>Downloading</value>
   </data>
-  <data name="DownloadGamePage_Verifying" xml:space="preserve">
+	<data name="DownloadGamePage_Verifying" xml:space="preserve">
     <value>Verifying</value>
   </data>
-  <data name="DownloadGamePage_Decompressing" xml:space="preserve">
+	<data name="DownloadGamePage_Decompressing" xml:space="preserve">
     <value>Decompressing</value>
   </data>
-  <data name="DownloadGamePage_SomethingError" xml:space="preserve">
+	<data name="DownloadGamePage_SomethingError" xml:space="preserve">
     <value>Something went wrong</value>
   </data>
-  <data name="DownloadGamePage_Retry" xml:space="preserve">
+	<data name="DownloadGamePage_Retry" xml:space="preserve">
     <value>Retry</value>
   </data>
-  <data name="DownloadGamePage_UnknownError" xml:space="preserve">
+	<data name="DownloadGamePage_UnknownError" xml:space="preserve">
     <value>Unknown Error</value>
   </data>
-  <data name="DownloadGamePage_Finished" xml:space="preserve">
+	<data name="DownloadGamePage_Finished" xml:space="preserve">
     <value>Finished</value>
   </data>
-  <data name="DownloadGamePage_Pause" xml:space="preserve">
+	<data name="DownloadGamePage_Pause" xml:space="preserve">
     <value>Pause</value>
   </data>
-  <data name="DownloadGamePage_Stop" xml:space="preserve">
+	<data name="DownloadGamePage_Stop" xml:space="preserve">
     <value>Stop</value>
   </data>
-  <data name="Common_Delete" xml:space="preserve">
+	<data name="Common_Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="UpdateService_CannotUpdateAutomatically" xml:space="preserve">
+	<data name="UpdateService_CannotUpdateAutomatically" xml:space="preserve">
     <value>Cannot update automatically</value>
   </data>
-  <data name="GameSettingPage_Custom" xml:space="preserve">
+	<data name="GameSettingPage_Custom" xml:space="preserve">
     <value>Custom</value>
   </data>
-  <data name="GameSettingPage_Resolution" xml:space="preserve">
+	<data name="GameSettingPage_Resolution" xml:space="preserve">
     <value>Resolution</value>
   </data>
-  <data name="GameSettingPage_FullScreen" xml:space="preserve">
+	<data name="GameSettingPage_FullScreen" xml:space="preserve">
     <value>Full Screen</value>
   </data>
-  <data name="GameSettingPage_CustomResolution" xml:space="preserve">
+	<data name="GameSettingPage_CustomResolution" xml:space="preserve">
     <value>Custom Resolution</value>
   </data>
-  <data name="GameSettingPage_VoiceLanguage" xml:space="preserve">
+	<data name="GameSettingPage_VoiceLanguage" xml:space="preserve">
     <value>Voice Language</value>
   </data>
-  <data name="GameSettingPage_VoiceLanguageDescription" xml:space="preserve">
+	<data name="GameSettingPage_VoiceLanguageDescription" xml:space="preserve">
     <value>Set this value before starting the game for the first time to avoid downloading some voice resources</value>
   </data>
-  <data name="GameSettingPage_GraphicsSetting" xml:space="preserve">
+	<data name="GameSettingPage_GraphicsSetting" xml:space="preserve">
     <value>Graphics Setting</value>
   </data>
-  <data name="GameSettingPage_FPS" xml:space="preserve">
+	<data name="GameSettingPage_FPS" xml:space="preserve">
     <value>FPS</value>
   </data>
-  <data name="Common_Apply" xml:space="preserve">
+	<data name="Common_Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
-  <data name="GameSettingPage_GameNotInstalled" xml:space="preserve">
+	<data name="GameSettingPage_GameNotInstalled" xml:space="preserve">
     <value>Game not Installed</value>
   </data>
-  <data name="GameSettingPage_SettingNotEffect" xml:space="preserve">
+	<data name="GameSettingPage_SettingNotEffect" xml:space="preserve">
     <value>The settings applied while the game is running do not take effect</value>
   </data>
-  <data name="GameSettingPage_ResolutionMustBeGreaterThan0" xml:space="preserve">
+	<data name="GameSettingPage_ResolutionMustBeGreaterThan0" xml:space="preserve">
     <value>Resolution must be greater than 0</value>
   </data>
-  <data name="LauncherPage_UpdateGame" xml:space="preserve">
+	<data name="LauncherPage_UpdateGame" xml:space="preserve">
     <value>Update Game</value>
   </data>
-  <data name="LauncherPage_PlayTime" xml:space="preserve">
+	<data name="LauncherPage_PlayTime" xml:space="preserve">
     <value>Play Time</value>
   </data>
-  <data name="Common_Refresh" xml:space="preserve">
+	<data name="Common_Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
-  <data name="LauncherPage_ThisWeek" xml:space="preserve">
+	<data name="LauncherPage_ThisWeek" xml:space="preserve">
     <value>This Week</value>
   </data>
-  <data name="LauncherPage_ThisMonth" xml:space="preserve">
+	<data name="LauncherPage_ThisMonth" xml:space="preserve">
     <value>This Month</value>
   </data>
-  <data name="LauncherPage_LastTime" xml:space="preserve">
+	<data name="LauncherPage_LastTime" xml:space="preserve">
     <value>Last Time</value>
   </data>
-  <data name="Common_Save" xml:space="preserve">
+	<data name="Common_Save" xml:space="preserve">
     <value>Save</value>
   </data>
-  <data name="LauncherPage_GameSetting" xml:space="preserve">
+	<data name="LauncherPage_GameSetting" xml:space="preserve">
     <value>Game Setting</value>
   </data>
-  <data name="LauncherPage_CustomStartExecutable" xml:space="preserve">
+	<data name="LauncherPage_CustomStartExecutable" xml:space="preserve">
     <value>Custom Startup Executable</value>
   </data>
-  <data name="Common_Select" xml:space="preserve">
+	<data name="Common_Select" xml:space="preserve">
     <value>Select</value>
   </data>
-  <data name="SettingPage_BgSizeTip" xml:space="preserve">
+	<data name="SettingPage_BgSizeTip" xml:space="preserve">
     <value>Please select an image with a pixel size matches the application window; oversized images will reduce performance.</value>
   </data>
-  <data name="LauncherPage_StartGame" xml:space="preserve">
+	<data name="LauncherPage_StartGame" xml:space="preserve">
     <value>Start Game</value>
   </data>
-  <data name="LauncherPage_GameIsRunning" xml:space="preserve">
+	<data name="LauncherPage_GameIsRunning" xml:space="preserve">
     <value>Game is Running</value>
   </data>
-  <data name="Common_Continue" xml:space="preserve">
+	<data name="Common_Continue" xml:space="preserve">
     <value>Continue</value>
   </data>
-  <data name="MainPage_Launcer" xml:space="preserve">
+	<data name="MainPage_Launcer" xml:space="preserve">
     <value>Launcher</value>
   </data>
-  <data name="MainPage_GameScreenshot" xml:space="preserve">
+	<data name="MainPage_GameScreenshot" xml:space="preserve">
     <value>Screenshot</value>
   </data>
-  <data name="ScreenshotPage_GameScreenshot" xml:space="preserve">
+	<data name="ScreenshotPage_GameScreenshot" xml:space="preserve">
     <value>Screenshot</value>
   </data>
-  <data name="SettingPage_Log" xml:space="preserve">
+	<data name="SettingPage_Log" xml:space="preserve">
     <value>Log</value>
   </data>
-  <data name="SettingPage_AppSettings" xml:space="preserve">
+	<data name="SettingPage_AppSettings" xml:space="preserve">
     <value>App Settings</value>
   </data>
-  <data name="SettingPage_OpenLogFolder" xml:space="preserve">
+	<data name="SettingPage_OpenLogFolder" xml:space="preserve">
     <value>Open Launcher Log Folder</value>
   </data>
-  <data name="SettingPage_CustomBackgroundSupportVideo" xml:space="preserve">
+	<data name="SettingPage_CustomBackgroundSupportVideo" xml:space="preserve">
     <value>Custom Background (Support Video)</value>
   </data>
-  <data name="SettingPage_CheckForUpdate" xml:space="preserve">
+	<data name="SettingPage_CheckForUpdate" xml:space="preserve">
     <value>Check for Update</value>
   </data>
-  <data name="SettingPage_CurrentVersion" xml:space="preserve">
+	<data name="SettingPage_CurrentVersion" xml:space="preserve">
     <value>Current Version:</value>
   </data>
-  <data name="SettingPage_JoinPreviewReleaseChannel" xml:space="preserve">
+	<data name="SettingPage_JoinPreviewReleaseChannel" xml:space="preserve">
     <value>Join Preview Release Channel</value>
   </data>
-  <data name="SettingPage_ReselectDataFolder" xml:space="preserve">
+	<data name="SettingPage_ReselectDataFolder" xml:space="preserve">
     <value>Reselect Data Folder</value>
   </data>
-  <data name="SettingPage_DeleteAllSettings" xml:space="preserve">
+	<data name="SettingPage_DeleteAllSettings" xml:space="preserve">
     <value>Delete All Settings</value>
   </data>
-  <data name="SettingPage_About" xml:space="preserve">
+	<data name="SettingPage_About" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="SettingPage_ProjectHomepage" xml:space="preserve">
+	<data name="SettingPage_ProjectHomepage" xml:space="preserve">
     <value>Homepage</value>
   </data>
-  <data name="SettingPage_ReportIssue" xml:space="preserve">
+	<data name="SettingPage_ReportIssue" xml:space="preserve">
     <value>Report Issue</value>
   </data>
-  <data name="SettingPage_ReleaseHistroy" xml:space="preserve">
+	<data name="SettingPage_ReleaseHistroy" xml:space="preserve">
     <value>Release History</value>
   </data>
-  <data name="SettingPage_TheCurrentLocationOfTheDataFolderIs" xml:space="preserve">
+	<data name="SettingPage_TheCurrentLocationOfTheDataFolderIs" xml:space="preserve">
     <value>The current location of the data folder is:</value>
   </data>
-  <data name="SettingPage_WouldLikeToReselectDataFolder" xml:space="preserve">
+	<data name="SettingPage_WouldLikeToReselectDataFolder" xml:space="preserve">
     <value>Would like to reselect? (You need to migrate the data files manually before selecting)</value>
   </data>
-  <data name="Common_Yes" xml:space="preserve">
+	<data name="Common_Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
-  <data name="SettingPage_AfterDeletingTheSoftwareWillBeRestartedAutomatically" xml:space="preserve">
+	<data name="SettingPage_AfterDeletingTheSoftwareWillBeRestartedAutomatically" xml:space="preserve">
     <value>After deleting, the software will be restarted automatically.</value>
   </data>
-  <data name="UpdatePage_NewVersion" xml:space="preserve">
+	<data name="UpdatePage_NewVersion" xml:space="preserve">
     <value>New Version!</value>
   </data>
-  <data name="UpdatePage_Links" xml:space="preserve">
+	<data name="UpdatePage_Links" xml:space="preserve">
     <value>Links:</value>
   </data>
-  <data name="UpdatePage_BuiltTime" xml:space="preserve">
+	<data name="UpdatePage_BuiltTime" xml:space="preserve">
     <value>Build Time:</value>
   </data>
-  <data name="UpdatePage_ReleaseChannel" xml:space="preserve">
+	<data name="UpdatePage_ReleaseChannel" xml:space="preserve">
     <value>Release Channel:</value>
   </data>
-  <data name="UpdatePage_Architecture" xml:space="preserve">
+	<data name="UpdatePage_Architecture" xml:space="preserve">
     <value>Architecture:</value>
   </data>
-  <data name="UpdatePage_RemindLatter" xml:space="preserve">
+	<data name="UpdatePage_RemindLatter" xml:space="preserve">
     <value>Remind me Later</value>
   </data>
-  <data name="UpdatePage_IgnoreThisVersion" xml:space="preserve">
+	<data name="UpdatePage_IgnoreThisVersion" xml:space="preserve">
     <value>Ignore this Version</value>
   </data>
-  <data name="UpdatePage_UpdateNow" xml:space="preserve">
+	<data name="UpdatePage_UpdateNow" xml:space="preserve">
     <value>Update Now</value>
   </data>
-  <data name="UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage" xml:space="preserve">
+	<data name="UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage" xml:space="preserve">
     <value>You need to manually download the new version package</value>
   </data>
-  <data name="UpdatePage_PreviewChannel" xml:space="preserve">
+	<data name="UpdatePage_PreviewChannel" xml:space="preserve">
     <value>Preview Channel</value>
   </data>
-  <data name="UpdatePage_StableChannel" xml:space="preserve">
+	<data name="UpdatePage_StableChannel" xml:space="preserve">
     <value>Stable Channel</value>
   </data>
-  <data name="UpdatePage_DevChannel" xml:space="preserve">
+	<data name="UpdatePage_DevChannel" xml:space="preserve">
     <value>Dev Channel</value>
   </data>
-  <data name="UpdatePage_ReleasePage" xml:space="preserve">
+	<data name="UpdatePage_ReleasePage" xml:space="preserve">
     <value>Release Page</value>
   </data>
-  <data name="SettingPage_Language" xml:space="preserve">
+	<data name="SettingPage_Language" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="SettingPage_FollowSystem" xml:space="preserve">
+	<data name="SettingPage_FollowSystem" xml:space="preserve">
     <value>Follow System</value>
   </data>
-  <data name="ScreenshotPage_ScreenshotFolderDoesNotExist" xml:space="preserve">
+	<data name="ScreenshotPage_ScreenshotFolderDoesNotExist" xml:space="preserve">
     <value>Screenshot folder does not exist</value>
   </data>
-  <data name="SettingPage_PrivacyPolicy" xml:space="preserve">
+	<data name="SettingPage_PrivacyPolicy" xml:space="preserve">
     <value>User Agreement and Privacy Policy</value>
   </data>
-  <data name="SelectGamePage_SelectGameServer" xml:space="preserve">
+	<data name="SelectGamePage_SelectGameServer" xml:space="preserve">
     <value>Select Server</value>
   </data>
-  <data name="Common_Exit" xml:space="preserve">
+	<data name="Common_Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="ScreenshotPage_BackupScreenshots" xml:space="preserve">
+	<data name="ScreenshotPage_BackupScreenshots" xml:space="preserve">
     <value>Backup Screenshots</value>
   </data>
-  <data name="SettingPage_LastBackup" xml:space="preserve">
+	<data name="SettingPage_LastBackup" xml:space="preserve">
     <value>Last backup</value>
   </data>
-  <data name="SettingPage_BackupDatabase" xml:space="preserve">
+	<data name="SettingPage_BackupDatabase" xml:space="preserve">
     <value>Backup Database</value>
   </data>
-  <data name="ScreenshotPage_BackedUpNewScreenshots" xml:space="preserve">
+	<data name="ScreenshotPage_BackedUpNewScreenshots" xml:space="preserve">
     <value>Backed up {0} new screenshots.</value>
   </data>
-  <data name="DownloadGamePage_Merging" xml:space="preserve">
+	<data name="DownloadGamePage_Merging" xml:space="preserve">
     <value>Merging</value>
   </data>
-  <data name="LauncherPage_ConfirmDelete" xml:space="preserve">
+	<data name="LauncherPage_ConfirmDelete" xml:space="preserve">
     <value>Confirm Delete</value>
   </data>
-  <data name="SettingPage_Donate" xml:space="preserve">
+	<data name="SettingPage_Donate" xml:space="preserve">
     <value>Donate</value>
   </data>
-  <data name="SettingPage_URLProtocolExperimental" xml:space="preserve">
+	<data name="SettingPage_URLProtocolExperimental" xml:space="preserve">
     <value>URL Protocol</value>
   </data>
-  <data name="SettingPage_URLProtocolDesc" xml:space="preserve">
+	<data name="SettingPage_URLProtocolDesc" xml:space="preserve">
     <value>Other software can use some of HoYoShade Hub's features through the URL protocol.</value>
   </data>
-  <data name="SettingPage_RegisterURLProtocol" xml:space="preserve">
+	<data name="SettingPage_RegisterURLProtocol" xml:space="preserve">
     <value>Register URL Protocol</value>
   </data>
-  <data name="SettingPage_TestURLProtocol" xml:space="preserve">
+	<data name="SettingPage_TestURLProtocol" xml:space="preserve">
     <value>Test URL Protocol</value>
   </data>
-  <data name="ImageViewPage_ZoomOut" xml:space="preserve">
+	<data name="ImageViewPage_ZoomOut" xml:space="preserve">
     <value>Zoom out</value>
   </data>
-  <data name="ImageViewPage_ZoomIn" xml:space="preserve">
+	<data name="ImageViewPage_ZoomIn" xml:space="preserve">
     <value>Zoom in</value>
   </data>
-  <data name="ImageViewPage_Rotate" xml:space="preserve">
+	<data name="ImageViewPage_Rotate" xml:space="preserve">
     <value>Rotate</value>
   </data>
-  <data name="Common_Copy" xml:space="preserve">
+	<data name="Common_Copy" xml:space="preserve">
     <value>Copy</value>
   </data>
-  <data name="Common_Open" xml:space="preserve">
+	<data name="Common_Open" xml:space="preserve">
     <value>Open</value>
   </data>
-  <data name="LauncherPage_StartupCount" xml:space="preserve">
+	<data name="LauncherPage_StartupCount" xml:space="preserve">
     <value>Startup Count</value>
   </data>
-  <data name="FileSettingPage_DataFolder" xml:space="preserve">
+	<data name="FileSettingPage_DataFolder" xml:space="preserve">
     <value>Data Folder</value>
   </data>
-  <data name="SettingPage_FileManagement" xml:space="preserve">
+	<data name="SettingPage_FileManagement" xml:space="preserve">
     <value>Management</value>
   </data>
-  <data name="AboutSettingPage_Links" xml:space="preserve">
+	<data name="AboutSettingPage_Links" xml:space="preserve">
     <value>Links</value>
   </data>
-  <data name="SettingPage_Advanced" xml:space="preserve">
+	<data name="SettingPage_Advanced" xml:space="preserve">
     <value>Advanced</value>
   </data>
-  <data name="LauncherPage_ThisDay" xml:space="preserve">
+	<data name="LauncherPage_ThisDay" xml:space="preserve">
     <value>This Day</value>
   </data>
-  <data name="ExperienceSettingPage_CloseWindowOption" xml:space="preserve">
+	<data name="ExperienceSettingPage_CloseWindowOption" xml:space="preserve">
     <value>Close Window Option</value>
   </data>
-  <data name="ExperienceSettingPage_MinimizeToSystemTray" xml:space="preserve">
+	<data name="ExperienceSettingPage_MinimizeToSystemTray" xml:space="preserve">
     <value>Minimize to system tray</value>
   </data>
-  <data name="ExperienceSettingPage_ExitCompletely" xml:space="preserve">
+	<data name="ExperienceSettingPage_ExitCompletely" xml:space="preserve">
     <value>Exit completely</value>
   </data>
-  <data name="CloseWindowDialog_YouCouldChangeTheOptionAgainInSettingPage" xml:space="preserve">
+	<data name="CloseWindowDialog_YouCouldChangeTheOptionAgainInSettingPage" xml:space="preserve">
     <value>You could change the option again in setting page.</value>
   </data>
-  <data name="FileSettingPage_DataFolderIsImportant" xml:space="preserve">
+	<data name="FileSettingPage_DataFolderIsImportant" xml:space="preserve">
     <value>Your personal data is stored in the folder below. It is very important, please do not delete it casually.</value>
   </data>
-  <data name="ExperienceSettingPage_MinimizeToTaskbar" xml:space="preserve">
+	<data name="ExperienceSettingPage_MinimizeToTaskbar" xml:space="preserve">
     <value>Minimize to taskbar</value>
   </data>
-  <data name="ExperienceSettingPage_DoNothing" xml:space="preserve">
+	<data name="ExperienceSettingPage_DoNothing" xml:space="preserve">
     <value>Do nothing</value>
   </data>
-  <data name="ExperienceSettingPage_AfterStartingGame" xml:space="preserve">
+	<data name="ExperienceSettingPage_AfterStartingGame" xml:space="preserve">
     <value>After Starting Game</value>
   </data>
-  <data name="AppearanceSettingPage_HelpUsTranslateHoYoShadeHub" xml:space="preserve">
+	<data name="AppearanceSettingPage_HelpUsTranslateHoYoShadeHub" xml:space="preserve">
     <value>Help us translate HoYoShade Hub</value>
   </data>
-  <data name="FileSettingPage_Cache" xml:space="preserve">
+	<data name="FileSettingPage_Cache" xml:space="preserve">
     <value>Cache</value>
   </data>
-  <data name="FileSettingPage_Log" xml:space="preserve">
+	<data name="FileSettingPage_Log" xml:space="preserve">
     <value>Launcher Log</value>
   </data>
-  <data name="FileSettingPage_Image" xml:space="preserve">
+	<data name="FileSettingPage_Image" xml:space="preserve">
     <value>Image</value>
   </data>
-  <data name="FileSettingPage_Browser" xml:space="preserve">
+	<data name="FileSettingPage_Browser" xml:space="preserve">
     <value>Browser</value>
   </data>
-  <data name="FileSettingPage_ClearCache" xml:space="preserve">
+	<data name="FileSettingPage_ClearCache" xml:space="preserve">
     <value>Clear Cache</value>
   </data>
-  <data name="DownloadGamePage_TheFolderDoesNotExist" xml:space="preserve">
+	<data name="DownloadGamePage_TheFolderDoesNotExist" xml:space="preserve">
     <value>The folder does not exist.</value>
   </data>
-  <data name="LauncherPage_PleaseDoNotSelectTheRootDirectoryOfADrive" xml:space="preserve">
+	<data name="LauncherPage_PleaseDoNotSelectTheRootDirectoryOfADrive" xml:space="preserve">
     <value>Please do not select the root directory of a drive.</value>
   </data>
-  <data name="AppearanceSettingPage_TransparencyEffects" xml:space="preserve">
+	<data name="AppearanceSettingPage_TransparencyEffects" xml:space="preserve">
     <value>Transparency effects</value>
   </data>
-  <data name="AppearanceSettingPage_AnimationEffects" xml:space="preserve">
+	<data name="AppearanceSettingPage_AnimationEffects" xml:space="preserve">
     <value>Animation effects</value>
   </data>
-  <data name="FileSettingPage_GameResource" xml:space="preserve">
+	<data name="FileSettingPage_GameResource" xml:space="preserve">
     <value>Game Resource</value>
   </data>
-  <data name="GameResourcePage_LatestVersion" xml:space="preserve">
+	<data name="GameResourcePage_LatestVersion" xml:space="preserve">
     <value>Latest Version</value>
   </data>
-  <data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
+	<data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
     <value>Recently Updated Content</value>
   </data>
-  <data name="GameBizSelector_AutoSearch" xml:space="preserve">
+	<data name="GameBizSelector_AutoSearch" xml:space="preserve">
     <value>Auto Search</value>
   </data>
-  <data name="InstallGameDialog_Installed" xml:space="preserve">
+	<data name="InstallGameDialog_Installed" xml:space="preserve">
     <value>Installed?</value>
   </data>
-  <data name="InstallGameDialog_LocateGame" xml:space="preserve">
+	<data name="InstallGameDialog_LocateGame" xml:space="preserve">
     <value>Locate Game</value>
   </data>
-  <data name="SettingPage_Download" xml:space="preserve">
+	<data name="SettingPage_Download" xml:space="preserve">
     <value>Download</value>
   </data>
-  <data name="DownloadGamePage_Paused" xml:space="preserve">
+	<data name="DownloadGamePage_Paused" xml:space="preserve">
     <value>Paused</value>
   </data>
-  <data name="Common_Restart" xml:space="preserve">
+	<data name="Common_Restart" xml:space="preserve">
     <value>Restart</value>
   </data>
-  <data name="GameLauncherPage_RemovableStorageDeviceNotConnected" xml:space="preserve">
+	<data name="GameLauncherPage_RemovableStorageDeviceNotConnected" xml:space="preserve">
     <value>Removable storage device not connected.</value>
   </data>
-  <data name="StartGameButton_ResumeDownload" xml:space="preserve">
+	<data name="StartGameButton_ResumeDownload" xml:space="preserve">
     <value>Resume Download</value>
   </data>
-  <data name="StartGameButton_Waiting" xml:space="preserve">
+	<data name="StartGameButton_Waiting" xml:space="preserve">
     <value>Waiting</value>
   </data>
-  <data name="GameLauncherPage_Relocate" xml:space="preserve">
+	<data name="GameLauncherPage_Relocate" xml:space="preserve">
     <value>Relocate</value>
   </data>
-  <data name="GameLauncherSettingDialog_RelocateGame" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_RelocateGame" xml:space="preserve">
     <value>Relocate Game</value>
   </data>
-  <data name="GameLauncherSettingDialog_Size" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_Size" xml:space="preserve">
     <value>Size</value>
   </data>
-  <data name="GameLauncherSettingDialog_BasicInformation" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_BasicInformation" xml:space="preserve">
     <value>Basic Information</value>
   </data>
-  <data name="GameLauncherSettingDialog_StartupArguments" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_StartupArguments" xml:space="preserve">
     <value>Startup Arguments</value>
   </data>
-  <data name="GameLauncherSettingDialog_CustomBackground" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_CustomBackground" xml:space="preserve">
     <value>Custom Background</value>
   </data>
-  <data name="GameLauncherSettingDialog_CommandLineArgument" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_CommandLineArgument" xml:space="preserve">
     <value>Command Line Argument</value>
   </data>
-  <data name="GameLauncherSettingDialog_SeeMoreInformationAboutCommandLineArgument" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_SeeMoreInformationAboutCommandLineArgument" xml:space="preserve">
     <value>See more information about command line argument.</value>
   </data>
-  <data name="GameSelector_ActualSizeOfInstalledGames" xml:space="preserve">
+	<data name="GameSelector_ActualSizeOfInstalledGames" xml:space="preserve">
     <value>Actual Size of Installed Games</value>
   </data>
-  <data name="GameSelector_StorageSpaceSavedByHardLinks" xml:space="preserve">
+	<data name="GameSelector_StorageSpaceSavedByHardLinks" xml:space="preserve">
     <value>Storage Space Saved by Hard Links</value>
   </data>
-  <data name="GameLauncherSettingDialog_CannotDecodeFile" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_CannotDecodeFile" xml:space="preserve">
     <value>Cannot decode file.</value>
   </data>
-  <data name="GameLauncherSettingDialog_AnUnknownErrorOccurredPleaseCheckTheLogs" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_AnUnknownErrorOccurredPleaseCheckTheLogs" xml:space="preserve">
     <value>An unknown error occurred. Please check the logs.</value>
   </data>
-  <data name="GameLauncherSettingDialog_DragAndDropImageOrVideoFiles" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_DragAndDropImageOrVideoFiles" xml:space="preserve">
     <value>Drag and drop image / video files.</value>
   </data>
-  <data name="GameSelector_Calculating" xml:space="preserve">
+	<data name="GameSelector_Calculating" xml:space="preserve">
     <value>Calculating</value>
     <comment>Calculating storage space usage.</comment>
   </data>
-  <data name="SettingPage_General" xml:space="preserve">
+	<data name="SettingPage_General" xml:space="preserve">
     <value>General</value>
     <comment>General Setting</comment>
   </data>
-  <data name="SettingPage_ForABetterExperiencePleaseEnableTheFollowingFeaturesInSystemSettings" xml:space="preserve">
+	<data name="SettingPage_ForABetterExperiencePleaseEnableTheFollowingFeaturesInSystemSettings" xml:space="preserve">
     <value>For a better experience, please enable the following features in system settings.</value>
   </data>
-  <data name="UpdateWindow_AutoRestartAfterUpdate" xml:space="preserve">
+	<data name="UpdateWindow_AutoRestartAfterUpdate" xml:space="preserve">
     <value>Auto-restart after update</value>
   </data>
-  <data name="UpdateWindow_DisplayUpdateContentAfterRestart" xml:space="preserve">
+	<data name="UpdateWindow_DisplayUpdateContentAfterRestart" xml:space="preserve">
     <value>Display update content after restart</value>
   </data>
-  <data name="Common_WebView2ComponentInitializationFailed" xml:space="preserve">
+	<data name="Common_WebView2ComponentInitializationFailed" xml:space="preserve">
     <value>WebView2 component initialization failed.</value>
   </data>
-  <data name="SettingPage_RPCService" xml:space="preserve">
+	<data name="SettingPage_RPCService" xml:space="preserve">
     <value>RPC Service</value>
   </data>
-  <data name="SettingPage_RPCService_Desc" xml:space="preserve">
+	<data name="SettingPage_RPCService_Desc" xml:space="preserve">
     <value>The RPC service is an independent process used to avoid restarting when downloading games, updating software, and other features that require administrator privileges.</value>
   </data>
-  <data name="SettingPage_KeepRPCServiceRunningInTheBackground" xml:space="preserve">
+	<data name="SettingPage_KeepRPCServiceRunningInTheBackground" xml:space="preserve">
     <value>Keep RPC Service Running in the Background</value>
   </data>
-  <data name="SettingPage_RPCServiceWarningIfAppInRemovableStorage" xml:space="preserve">
+	<data name="SettingPage_RPCServiceWarningIfAppInRemovableStorage" xml:space="preserve">
     <value>Detected that the application is in a removable storage device, it is not recommended to keep the RPC service running in the background.</value>
   </data>
-  <data name="Common_Error" xml:space="preserve">
+	<data name="Common_Error" xml:space="preserve">
     <value>Error</value>
   </data>
-  <data name="StartGameButton_InQueue" xml:space="preserve">
+	<data name="StartGameButton_InQueue" xml:space="preserve">
     <value>In Queue</value>
   </data>
-  <data name="StartGameButton_Install" xml:space="preserve">
+	<data name="StartGameButton_Install" xml:space="preserve">
     <value>Install</value>
   </data>
-  <data name="StartGameButton_Verify" xml:space="preserve">
+	<data name="StartGameButton_Verify" xml:space="preserve">
     <value>Verify</value>
   </data>
-  <data name="SettingPage_RPCServiceIsNotRunning" xml:space="preserve">
+	<data name="SettingPage_RPCServiceIsNotRunning" xml:space="preserve">
     <value>RPC Service is not Running</value>
   </data>
-  <data name="SettingPage_RunService" xml:space="preserve">
+	<data name="SettingPage_RunService" xml:space="preserve">
     <value>Run Service</value>
   </data>
-  <data name="SettingPage_RPCServiceIsRunning" xml:space="preserve">
+	<data name="SettingPage_RPCServiceIsRunning" xml:space="preserve">
     <value>RPC Service is Running</value>
   </data>
-  <data name="SettingPage_StopService" xml:space="preserve">
+	<data name="SettingPage_StopService" xml:space="preserve">
     <value>Stop Service</value>
   </data>
-  <data name="SettingPage_CannotConnectRPCService" xml:space="preserve">
+	<data name="SettingPage_CannotConnectRPCService" xml:space="preserve">
     <value>Cannot Connect RPC Service</value>
   </data>
-  <data name="WelcomeView_DearPlayerWelcomeToHoYoShadeHub" xml:space="preserve">
+	<data name="WelcomeView_DearPlayerWelcomeToHoYoShadeHub" xml:space="preserve">
     <value>Dear Player, welcome to HoYoShade Hub!</value>
   </data>
-  <data name="WelcomeView_WelcomeToHoYoShadeHubDescription" xml:space="preserve">
+	<data name="WelcomeView_WelcomeToHoYoShadeHubDescription" xml:space="preserve">
     <value>This is a GUI launcher designed specifically for HoYoShade, helping you easily install and manage it and enjoy a better experience.</value>
   </data>
-  <data name="WelcomeView_SelectUserDataFolderDescription" xml:space="preserve">
+	<data name="WelcomeView_SelectUserDataFolderDescription" xml:space="preserve">
     <value>All your personal data will be stored in the folder below. It is important, and you can also click the button below to select a different folder.</value>
   </data>
-  <data name="WelcomeView_BeforeStartingSomeNecessaryEnvironmentChecksAreRequired" xml:space="preserve">
+	<data name="WelcomeView_BeforeStartingSomeNecessaryEnvironmentChecksAreRequired" xml:space="preserve">
     <value>Before starting, some necessary environment checks are required.</value>
   </data>
-  <data name="WelcomeView_NetworkStatus" xml:space="preserve">
+	<data name="WelcomeView_NetworkStatus" xml:space="preserve">
     <value>Network Status</value>
   </data>
-  <data name="WelcomeView_NotInstalled" xml:space="preserve">
+	<data name="WelcomeView_NotInstalled" xml:space="preserve">
     <value>Not Installed</value>
   </data>
-  <data name="WelcomeView_InstallNow" xml:space="preserve">
+	<data name="WelcomeView_InstallNow" xml:space="preserve">
     <value>Install Now</value>
   </data>
-  <data name="WelcomeView_Installed" xml:space="preserve">
+	<data name="WelcomeView_Installed" xml:space="preserve">
     <value>Installed</value>
   </data>
-  <data name="WelcomeView_HoYoShadeHubStart" xml:space="preserve">
+	<data name="WelcomeView_HoYoShadeHubStart" xml:space="preserve">
     <value>HoYoShade Hub, Start!</value>
   </data>
-  <data name="GameSelector_ClickToSelectOrSwitchGame" xml:space="preserve">
+	<data name="GameSelector_ClickToSelectOrSwitchGame" xml:space="preserve">
     <value>Click to select or switch game.</value>
   </data>
-  <data name="SettingPage_Toolbox" xml:space="preserve">
+	<data name="SettingPage_Toolbox" xml:space="preserve">
     <value>Toolbox</value>
   </data>
-  <data name="GachaImportAndExportWindow_Import" xml:space="preserve">
+	<data name="GachaImportAndExportWindow_Import" xml:space="preserve">
     <value>Import</value>
   </data>
-  <data name="GameSettingPage_EnableHDR" xml:space="preserve">
+	<data name="GameSettingPage_EnableHDR" xml:space="preserve">
     <value>Enable HDR</value>
   </data>
-  <data name="Common_RestoreDefaults" xml:space="preserve">
+	<data name="Common_RestoreDefaults" xml:space="preserve">
     <value>Restore Defaults</value>
   </data>
-  <data name="GameSettingPage_HDRBrightnessSetting" xml:space="preserve">
+	<data name="GameSettingPage_HDRBrightnessSetting" xml:space="preserve">
     <value>HDR Brightness Setting</value>
   </data>
-  <data name="GameSettingPage_IfYouHaveMultipleMonitorsYouNeedToSetTheHDRSupportedMonitorAsThePrimaryDisplay" xml:space="preserve">
+	<data name="GameSettingPage_IfYouHaveMultipleMonitorsYouNeedToSetTheHDRSupportedMonitorAsThePrimaryDisplay" xml:space="preserve">
     <value>If you have multiple monitors, you need to set the HDR-supported monitor as the primary display.</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_AdaptToMonitorBrightness" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_AdaptToMonitorBrightness" xml:space="preserve">
     <value>Adapt to Monitor Brightness</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_MaxLuminance" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_MaxLuminance" xml:space="preserve">
     <value>Max Luminance</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_SceneryBrightness" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_SceneryBrightness" xml:space="preserve">
     <value>Scenery Brightness</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_UIBrightness" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_UIBrightness" xml:space="preserve">
     <value>UI Brightness</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_MonitorInformation" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_MonitorInformation" xml:space="preserve">
     <value>Monitor Information</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_ColorSpace" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_ColorSpace" xml:space="preserve">
     <value>Color Space</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_PeakLuminance" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_PeakLuminance" xml:space="preserve">
     <value>Peak Luminance</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_MaxFullScreenLuminance" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_MaxFullScreenLuminance" xml:space="preserve">
     <value>Max Full-Screen Luminance</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_SDRWhiteLuminance" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_SDRWhiteLuminance" xml:space="preserve">
     <value>SDR White Luminance</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_StandardDynamicRange" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_StandardDynamicRange" xml:space="preserve">
     <value>Standard Dynamic Range</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_WideColorGamut" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_WideColorGamut" xml:space="preserve">
     <value>Wide Color Gamut</value>
   </data>
-  <data name="GenshinHDRLuminanceSettingDialog_HighDynamicRange" xml:space="preserve">
+	<data name="GenshinHDRLuminanceSettingDialog_HighDynamicRange" xml:space="preserve">
     <value>High Dynamic Range</value>
   </data>
-  <data name="WelcomeView_IfHoYoShadeHubTakesALongTimeToStartItIsRecommendedToDisableSmartAppControlInWindowsSecurity" xml:space="preserve">
+	<data name="WelcomeView_IfHoYoShadeHubTakesALongTimeToStartItIsRecommendedToDisableSmartAppControlInWindowsSecurity" xml:space="preserve">
     <value>If HoYoShade Hub takes a long time to start, it is recommended to disable Smart App Control in Windows Security.</value>
   </data>
-  <data name="WelcomeView_OpenWindowsSecurity" xml:space="preserve">
+	<data name="WelcomeView_OpenWindowsSecurity" xml:space="preserve">
     <value>Open Windows Security</value>
   </data>
-  <data name="WelcomeView_LearnMore" xml:space="preserve">
+	<data name="WelcomeView_LearnMore" xml:space="preserve">
     <value>Learn More</value>
   </data>
-  <data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
+	<data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
     <value>Network error. You can continue using HoYoShade Hub, but you won't receive future updates.</value>
   </data>
-  <data name="MainView_CheckSystemProxy_SystemProxyIsEnabled" xml:space="preserve">
+	<data name="MainView_CheckSystemProxy_SystemProxyIsEnabled" xml:space="preserve">
     <value>System proxy is enabled.</value>
   </data>
-  <data name="GameSettingPage_TheCurrentMonitorDoesNotSupportHDR" xml:space="preserve">
+	<data name="GameSettingPage_TheCurrentMonitorDoesNotSupportHDR" xml:space="preserve">
     <value>The current monitor does not support HDR.</value>
   </data>
-  <data name="GameSettingPage_WindowsHDRIsNotTurnedOn" xml:space="preserve">
+	<data name="GameSettingPage_WindowsHDRIsNotTurnedOn" xml:space="preserve">
     <value>Windows HDR is not turned on.</value>
   </data>
-  <data name="InstallGameDialog_MappedNetworkDrivesAreNotSupportedPleaseUseANetworkSharePathStartingWithDoubleBackslashes" xml:space="preserve">
+	<data name="InstallGameDialog_MappedNetworkDrivesAreNotSupportedPleaseUseANetworkSharePathStartingWithDoubleBackslashes" xml:space="preserve">
     <value>Mapped network drives are not supported. Please use a network share path starting with double backslashes (\\).</value>
   </data>
-  <data name="ScreenCaptureInfoWindow_ScreenshotSaved" xml:space="preserve">
+	<data name="ScreenCaptureInfoWindow_ScreenshotSaved" xml:space="preserve">
     <value>Screenshot Saved</value>
   </data>
-  <data name="ScreenshotPage_ManageScreenshotFolders" xml:space="preserve">
+	<data name="ScreenshotPage_ManageScreenshotFolders" xml:space="preserve">
     <value>Manage Screenshot Folders</value>
   </data>
-  <data name="ScreenshotFolderManageDialog_AddFolder" xml:space="preserve">
+	<data name="ScreenshotFolderManageDialog_AddFolder" xml:space="preserve">
     <value>Add Folder</value>
   </data>
-  <data name="ScreenshotFolderManageDialog_BackingUp" xml:space="preserve">
+	<data name="ScreenshotFolderManageDialog_BackingUp" xml:space="preserve">
     <value>Backing up...</value>
   </data>
-  <data name="Common_Remove" xml:space="preserve">
+	<data name="Common_Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
-  <data name="ScreenshotFolderManageDialog_FailedToBackupScreenshots" xml:space="preserve">
+	<data name="ScreenshotFolderManageDialog_FailedToBackupScreenshots" xml:space="preserve">
     <value>Failed to backup screenshots.</value>
   </data>
-  <data name="ScreenCaptureInfoWindow_ScreenshotFailed" xml:space="preserve">
+	<data name="ScreenCaptureInfoWindow_ScreenshotFailed" xml:space="preserve">
     <value>Screenshot Failed</value>
   </data>
-  <data name="ScreenCaptureInfoWindow_CheckTheLogForMoreInformation" xml:space="preserve">
+	<data name="ScreenCaptureInfoWindow_CheckTheLogForMoreInformation" xml:space="preserve">
     <value>Check the log for more information.</value>
   </data>
-  <data name="GameSettingPage_StarRailFpsTip" xml:space="preserve">
+	<data name="GameSettingPage_StarRailFpsTip" xml:space="preserve">
     <value>Don't change the in-game "Graphics Quality" preset, or the FPS setting may not work. If you set 120 FPS but see 30 FPS in the game settings, that's expected.</value>
   </data>
-  <data name="ScreenshotFolderManageDialog_ImagesFromTheFollowingFoldersWillBeDisplayedInTheGallery" xml:space="preserve">
+	<data name="ScreenshotFolderManageDialog_ImagesFromTheFollowingFoldersWillBeDisplayedInTheGallery" xml:space="preserve">
     <value>Images from the following folders will be displayed in the gallery.</value>
   </data>
-  <data name="ImageViewWindow2_OpenInExplorer" xml:space="preserve">
+	<data name="ImageViewWindow2_OpenInExplorer" xml:space="preserve">
     <value>Open in Explorer</value>
   </data>
-  <data name="ImageViewWindow2_OpenWith" xml:space="preserve">
+	<data name="ImageViewWindow2_OpenWith" xml:space="preserve">
     <value>Open with</value>
   </data>
-  <data name="ImageViewWindow2_Previous" xml:space="preserve">
+	<data name="ImageViewWindow2_Previous" xml:space="preserve">
     <value>Previous</value>
     <comment>Previous Image</comment>
   </data>
-  <data name="ImageViewWindow2_Next" xml:space="preserve">
+	<data name="ImageViewWindow2_Next" xml:space="preserve">
     <value>Next</value>
     <comment>Next Image</comment>
   </data>
-  <data name="ImageViewWindow2_ShowGallery" xml:space="preserve">
+	<data name="ImageViewWindow2_ShowGallery" xml:space="preserve">
     <value>Show Gallery</value>
   </data>
-  <data name="ImageViewWindow2_FitToWindow" xml:space="preserve">
+	<data name="ImageViewWindow2_FitToWindow" xml:space="preserve">
     <value>Fit to Window</value>
     <comment>Zoom image fit to window</comment>
   </data>
-  <data name="ImageViewWindow2_CopyFile" xml:space="preserve">
+	<data name="ImageViewWindow2_CopyFile" xml:space="preserve">
     <value>Copy File</value>
   </data>
-  <data name="ImageViewWindow2_CopyPath" xml:space="preserve">
+	<data name="ImageViewWindow2_CopyPath" xml:space="preserve">
     <value>Copy Path</value>
   </data>
-  <data name="ImageViewWindow2_CopyImage" xml:space="preserve">
+	<data name="ImageViewWindow2_CopyImage" xml:space="preserve">
     <value>Copy Image</value>
   </data>
-  <data name="Common_Edit" xml:space="preserve">
+	<data name="Common_Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="ImageViewWindow2_ImageInformation" xml:space="preserve">
+	<data name="ImageViewWindow2_ImageInformation" xml:space="preserve">
     <value>Image Information</value>
   </data>
-  <data name="ImageViewWindow2_EditImage" xml:space="preserve">
+	<data name="ImageViewWindow2_EditImage" xml:space="preserve">
     <value>Edit Image</value>
   </data>
-  <data name="ImageViewWindow2_DisplayMode" xml:space="preserve">
+	<data name="ImageViewWindow2_DisplayMode" xml:space="preserve">
     <value>Display Mode</value>
   </data>
-  <data name="ImageViewWindow2_SDRMappedLuminance" xml:space="preserve">
+	<data name="ImageViewWindow2_SDRMappedLuminance" xml:space="preserve">
     <value>SDR Mapped Luminance</value>
   </data>
-  <data name="ImageViewWindow2_ExportImage" xml:space="preserve">
+	<data name="ImageViewWindow2_ExportImage" xml:space="preserve">
     <value>Export Image</value>
   </data>
-  <data name="ImageViewWindow2_DeleteImageFile" xml:space="preserve">
+	<data name="ImageViewWindow2_DeleteImageFile" xml:space="preserve">
     <value>Delete Image File</value>
   </data>
-  <data name="ImageViewWindow2_CopiedToClipboard" xml:space="preserve">
+	<data name="ImageViewWindow2_CopiedToClipboard" xml:space="preserve">
     <value>Copied to clipboard.</value>
   </data>
-  <data name="ImageViewWindow2_FileDoesNotExist" xml:space="preserve">
+	<data name="ImageViewWindow2_FileDoesNotExist" xml:space="preserve">
     <value>File does not exist.</value>
   </data>
-  <data name="ImageViewWindow2_OpenWithDefaultApp" xml:space="preserve">
+	<data name="ImageViewWindow2_OpenWithDefaultApp" xml:space="preserve">
     <value>Open with Default App</value>
   </data>
-  <data name="ImageViewWindow2_NoImageToDisplay" xml:space="preserve">
+	<data name="ImageViewWindow2_NoImageToDisplay" xml:space="preserve">
     <value>No Image to Display</value>
   </data>
-  <data name="Common_OpenFiles" xml:space="preserve">
+	<data name="Common_OpenFiles" xml:space="preserve">
     <value>Open Files</value>
   </data>
-  <data name="ImageViewWindow2_OpenNewFiles" xml:space="preserve">
+	<data name="ImageViewWindow2_OpenNewFiles" xml:space="preserve">
     <value>Open New Files</value>
   </data>
-  <data name="ImageViewWindow2_FailedToDisplayImage" xml:space="preserve">
+	<data name="ImageViewWindow2_FailedToDisplayImage" xml:space="preserve">
     <value>Failed to Display Image</value>
   </data>
-  <data name="ImageViewWindow2_FailedToSaveImage" xml:space="preserve">
+	<data name="ImageViewWindow2_FailedToSaveImage" xml:space="preserve">
     <value>Failed to Save Image</value>
   </data>
-  <data name="ImageViewWindow2_FailedToDeleteImageFile" xml:space="preserve">
+	<data name="ImageViewWindow2_FailedToDeleteImageFile" xml:space="preserve">
     <value>Failed to Delete Image File</value>
   </data>
-  <data name="ImageViewWindow2_UnableToDeleteTheFile" xml:space="preserve">
+	<data name="ImageViewWindow2_UnableToDeleteTheFile" xml:space="preserve">
     <value>Unable to Delete the File</value>
   </data>
-  <data name="ImageViewWindow2_InsufficientPermissionsOrTheFileIsInUse" xml:space="preserve">
+	<data name="ImageViewWindow2_InsufficientPermissionsOrTheFileIsInUse" xml:space="preserve">
     <value>Insufficient permissions or the file is in use.</value>
   </data>
-  <data name="HotkeyInput_ClickToSetShortcutKeys" xml:space="preserve">
+	<data name="HotkeyInput_ClickToSetShortcutKeys" xml:space="preserve">
     <value>Click to Set Shortcut Keys</value>
   </data>
-  <data name="HotkeyInput_PressTheShortcutKeys" xml:space="preserve">
+	<data name="HotkeyInput_PressTheShortcutKeys" xml:space="preserve">
     <value>Press the Shortcut Keys</value>
   </data>
-  <data name="HotkeyManager_TheShortcutKeys0IsAlreadyInUse" xml:space="preserve">
+	<data name="HotkeyManager_TheShortcutKeys0IsAlreadyInUse" xml:space="preserve">
     <value>The shortcut keys ({0}) is already in use.</value>
   </data>
-  <data name="HotkeyManager_FailedToRegisterTheShortcutKeys0" xml:space="preserve">
+	<data name="HotkeyManager_FailedToRegisterTheShortcutKeys0" xml:space="preserve">
     <value>Failed to register the shortcut keys ({0}).</value>
   </data>
-  <data name="HotkeyManager_TheShortcutKeys0IsAlreadyInUsePleaseModifyItInSettingsPage" xml:space="preserve">
+	<data name="HotkeyManager_TheShortcutKeys0IsAlreadyInUsePleaseModifyItInSettingsPage" xml:space="preserve">
     <value>The shortcut keys ({0}) is already in use. Please modify it in Settings page.</value>
   </data>
-  <data name="HotkeyManager_FailedToRegisterTheShortcutKeys0PleaseRetryInSettingsPage" xml:space="preserve">
+	<data name="HotkeyManager_FailedToRegisterTheShortcutKeys0PleaseRetryInSettingsPage" xml:space="preserve">
     <value>Failed to register the shortcut keys ({0}). Please retry in Settings page.</value>
   </data>
-  <data name="HotkeySetting_OpenMainWindow" xml:space="preserve">
+	<data name="HotkeySetting_OpenMainWindow" xml:space="preserve">
     <value>Open Main Window</value>
   </data>
-  <data name="HotkeySetting_FailedToRegisterTheShortcutKeys" xml:space="preserve">
+	<data name="HotkeySetting_FailedToRegisterTheShortcutKeys" xml:space="preserve">
     <value>Failed to register the shortcut keys.</value>
   </data>
-  <data name="HotkeySetting_SingleKeyShortcutsTips" xml:space="preserve">
+	<data name="HotkeySetting_SingleKeyShortcutsTips" xml:space="preserve">
     <value>If you register single-key shortcuts (F1-12), you need to run HoYoShade Hub with administrator privileges; otherwise, the shortcuts may not work in the game.</value>
   </data>
-  <data name="SettingPage_KeyboardShortcuts" xml:space="preserve">
+	<data name="SettingPage_KeyboardShortcuts" xml:space="preserve">
     <value>Keyboard Shortcuts</value>
   </data>
-  <data name="GameSettingPage_UsePopupWindow" xml:space="preserve">
+	<data name="GameSettingPage_UsePopupWindow" xml:space="preserve">
     <value>Use Popup Window</value>
   </data>
-  <data name="ToolboxSetting_ImageViewer" xml:space="preserve">
+	<data name="ToolboxSetting_ImageViewer" xml:space="preserve">
     <value>Image Viewer</value>
   </data>
-  <data name="ToolboxSetting_ViewOrEditImage" xml:space="preserve">
+	<data name="ToolboxSetting_ViewOrEditImage" xml:space="preserve">
     <value>View / Edit Image</value>
   </data>
-  <data name="ImageViewWindow2_CopyAsJPG" xml:space="preserve">
+	<data name="ImageViewWindow2_CopyAsJPG" xml:space="preserve">
     <value>Copy as JPG</value>
   </data>
-  <data name="ScreenshotPage_MultiSelect" xml:space="preserve">
+	<data name="ScreenshotPage_MultiSelect" xml:space="preserve">
     <value>Multi Select</value>
   </data>
-  <data name="ScreenshotPage_Total0Files" xml:space="preserve">
+	<data name="ScreenshotPage_Total0Files" xml:space="preserve">
     <value>Total {0} files.</value>
   </data>
-  <data name="ScreenCaptureInfoWindow_ProcessingImage" xml:space="preserve">
+	<data name="ScreenCaptureInfoWindow_ProcessingImage" xml:space="preserve">
     <value>Processing Image</value>
   </data>
-  <data name="ScreenshotPage_BatchConvert" xml:space="preserve">
+	<data name="ScreenshotPage_BatchConvert" xml:space="preserve">
     <value>Batch Convert</value>
   </data>
-  <data name="ImageBatchConvertWindow_Quality" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_Quality" xml:space="preserve">
     <value>Quality</value>
   </data>
-  <data name="ImageBatchConvertWindow_StartConvert" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_StartConvert" xml:space="preserve">
     <value>Start Convert</value>
   </data>
-  <data name="Common_Clear" xml:space="preserve">
+	<data name="Common_Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
-  <data name="ImageBatchConvertWindow_OutputFolder" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_OutputFolder" xml:space="preserve">
     <value>Output Folder</value>
   </data>
-  <data name="ImageBatchConvertWindow_OriginalFileFolder" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_OriginalFileFolder" xml:space="preserve">
     <value>Original File Folder</value>
   </data>
-  <data name="ImageBatchConvertWindow_SelectOutputFormat" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_SelectOutputFormat" xml:space="preserve">
     <value>Select Output Format</value>
   </data>
-  <data name="ImageBatchConvertWindow_NoReadOrWritePermission" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_NoReadOrWritePermission" xml:space="preserve">
     <value>No read or write permission</value>
   </data>
-  <data name="ImageBatchConvertWindow_ConvertFailed" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_ConvertFailed" xml:space="preserve">
     <value>Convert failed</value>
   </data>
-  <data name="ImageBatchConvertWindow_IfOutputFileExists" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_IfOutputFileExists" xml:space="preserve">
     <value>If Output File Exists</value>
   </data>
-  <data name="ImageBatchConvertWindow_SkipDefault" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_SkipDefault" xml:space="preserve">
     <value>Skip (Default)</value>
   </data>
-  <data name="ImageBatchConvertWindow_Overwrite" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_Overwrite" xml:space="preserve">
     <value>Overwrite</value>
   </data>
-  <data name="ImageBatchConvertWindow_Rename" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_Rename" xml:space="preserve">
     <value>Rename</value>
   </data>
-  <data name="Common_Success" xml:space="preserve">
+	<data name="Common_Success" xml:space="preserve">
     <value>Success</value>
   </data>
-  <data name="Common_Failed" xml:space="preserve">
+	<data name="Common_Failed" xml:space="preserve">
     <value>Failed</value>
   </data>
-  <data name="ImageBatchConvertWindow_ImageBatchConvert" xml:space="preserve">
+	<data name="ImageBatchConvertWindow_ImageBatchConvert" xml:space="preserve">
     <value>Image Batch Convert</value>
   </data>
-  <data name="Common_CopiedToClipboard" xml:space="preserve">
+	<data name="Common_CopiedToClipboard" xml:space="preserve">
     <value>Copied to clipboard.</value>
   </data>
-  <data name="GameLauncherSettingDialog_LaunchGameUsingCMD" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_LaunchGameUsingCMD" xml:space="preserve">
     <value>Launch Game using CMD</value>
   </data>
-  <data name="GameLauncherSettingDialog_AvoidShowingAlertsAboutDetectingIllegalToolInTheGame" xml:space="preserve">
+	<data name="GameLauncherSettingDialog_AvoidShowingAlertsAboutDetectingIllegalToolInTheGame" xml:space="preserve">
     <value>Avoid showing alerts about detecting illegal tool in the game.</value>
   </data>
-  <data name="UpdateWindow_FullPackage" xml:space="preserve">
+	<data name="UpdateWindow_FullPackage" xml:space="preserve">
     <value>Full Package</value>
   </data>
-  <data name="SettingPage_DefaultDisableVideoBackgroundPlayback" xml:space="preserve">
+	<data name="SettingPage_DefaultDisableVideoBackgroundPlayback" xml:space="preserve">
     <value>Default disable video background playback</value>
   </data>
-  <data name="HoYoShadeDownloadView_Title" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Title" xml:space="preserve">
     <value>First, let's download and install the HoYoShade framework</value>
   </data>
-  <data name="HoYoShadeDownloadView_SelectVersion" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_SelectVersion" xml:space="preserve">
     <value>Select Version</value>
   </data>
-  <data name="HoYoShadeDownloadView_SelectType" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_SelectType" xml:space="preserve">
     <value>Select Type</value>
   </data>
-  <data name="HoYoShadeDownloadView_DownloadServer" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_DownloadServer" xml:space="preserve">
     <value>Download Server</value>
   </data>
-  <data name="HoYoShadeDownloadView_DownloadAndInstall" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_DownloadAndInstall" xml:space="preserve">
     <value>Download &amp; Install</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusFetchingReleases" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusFetchingReleases" xml:space="preserve">
     <value>Fetching releases...</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusReady" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusReady" xml:space="preserve">
     <value>Ready to download.</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusFailedToLoadVersions" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusFailedToLoadVersions" xml:space="preserve">
     <value>Failed to load versions: {0}</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusInitializing" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusInitializing" xml:space="preserve">
     <value>Initializing download...</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
     <value>Asset not found for selected options.</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusStartingRPC" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusStartingRPC" xml:space="preserve">
     <value>Starting RPC server...</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusDownloading" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusDownloading" xml:space="preserve">
     <value>Downloading...</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusExtracting" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusExtracting" xml:space="preserve">
     <value>Extracting...</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusFinished" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusFinished" xml:space="preserve">
     <value>Finished!</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusError" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_StatusError" xml:space="preserve">
     <value>Error: {0}</value>
   </data>
-  <data name="HoYoShadeDownloadView_Next" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Next" xml:space="preserve">
     <value>Next</value>
   </data>
-  <data name="HoYoShadeDownloadView_Pause" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Pause" xml:space="preserve">
     <value>Pause</value>
   </data>
-  <data name="HoYoShadeDownloadView_Resume" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Resume" xml:space="preserve">
     <value>Resume</value>
   </data>
-  <data name="HoYoShadeDownloadView_Stop" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Stop" xml:space="preserve">
     <value>Stop</value>
   </data>
-  <data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
     <value>HoYoShade</value>
   </data>
-  <data name="HoYoShadeDownloadView_Option_OpenHoYoShade" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Option_OpenHoYoShade" xml:space="preserve">
     <value>OpenHoYoShade</value>
   </data>
-  <data name="HoYoShadeDownloadView_Server_GithubDirect" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Server_GithubDirect" xml:space="preserve">
     <value>GitHub (Direct)</value>
   </data>
-  <data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
     <value>GitHub (Proxy)</value>
   </data>
-  <data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
     <value>Cloudflare</value>
   </data>
-  <data name="HoYoShadeDownloadView_Server_TencentCloud" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Server_TencentCloud" xml:space="preserve">
     <value>Tencent Cloud</value>
   </data>
-  <data name="HoYoShadeDownloadView_Server_AlibabaCloud" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Server_AlibabaCloud" xml:space="preserve">
     <value>Alibaba Cloud</value>
   </data>
-  <data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
     <value>{0}/s - {1}%</value>
   </data>
-  <data name="HoYoShadeDownloadView_HoYoShade_Description" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_HoYoShade_Description" xml:space="preserve">
     <value>The full HoYoShade package, including all built-in presets and other resources, is suitable for general users.</value>
   </data>
-  <data name="HoYoShadeDownloadView_OpenHoYoShade_Description" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_OpenHoYoShade_Description" xml:space="preserve">
     <value>This package contains only the basic framework, without any built-in presets or other resources, making it suitable for developers who want to build upon it.</value>
   </data>
-  <data name="HoYoShadeDownloadView_LatestVersion" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_LatestVersion" xml:space="preserve">
     <value>(Latest Version)</value>
   </data>
-  <data name="HoYoShadeDownloadView_LatestVersionTip" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_LatestVersionTip" xml:space="preserve">
     <value>Unless you know what you're doing, installing the latest version is usually the best choice.</value>
   </data>
-  <data name="HoYoShadeDownloadView_ImportFromLocal" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_ImportFromLocal" xml:space="preserve">
     <value>Or, import from local package</value>
   </data>
-  <data name="HoYoShadeDownloadView_SelectPackage" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_SelectPackage" xml:space="preserve">
     <value>Select Package</value>
   </data>
-  <data name="HoYoShadeDownloadView_SelectFolder" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_SelectFolder" xml:space="preserve">
     <value>Select Folder</value>
   </data>
-  <data name="HoYoShadeDownloadView_PackageValidating" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_PackageValidating" xml:space="preserve">
     <value>Validating package...</value>
   </data>
-  <data name="HoYoShadeDownloadView_PackageInvalid" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_PackageInvalid" xml:space="preserve">
     <value>Invalid package: {0}</value>
   </data>
-  <data name="HoYoShadeDownloadView_PackageVersionTooOld" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_PackageVersionTooOld" xml:space="preserve">
     <value>Package version {0} is too old. Please use V3 or above.</value>
   </data>
-  <data name="HoYoShadeDownloadView_PackageSHA256Mismatch" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_PackageSHA256Mismatch" xml:space="preserve">
     <value>Package SHA256 checksum mismatch. The file may be corrupted or modified.</value>
   </data>
-  <data name="HoYoShadeDownloadView_PackageValidated" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_PackageValidated" xml:space="preserve">
     <value>Package validated successfully: {0} {1}</value>
   </data>
-  <data name="HoYoShadeDownloadView_Installing" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_Installing" xml:space="preserve">
     <value>Installing...</value>
   </data>
-  <data name="HoYoShadeDownloadView_InstallStatus" xml:space="preserve">
+	<data name="HoYoShadeDownloadView_InstallStatus" xml:space="preserve">
     <value>Install Status</value>
   </data>
-  <data name="ReShadeDownloadView_Title" xml:space="preserve">
+	<data name="ReShadeDownloadView_Title" xml:space="preserve">
     <value>Next, let's download and install ReShade shaders and addons</value>
   </data>
-  <data name="ReShadeDownloadView_UpdateHint" xml:space="preserve">
+	<data name="ReShadeDownloadView_UpdateHint" xml:space="preserve">
     <value>If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons.</value>
+  </data>
+	<data name="ReShadeDownloadView_Description" xml:space="preserve">
+    <value>You need to download and install ReShade shaders and addons for HoYoShade to work properly.
+However, for OpenHoYoShade, this step is optional because it is intended for development purposes. If you installed OpenHoYoShade, we recommend skipping this step.
+The list of available shaders and addons is synchronized with the official ReShade installer and controlled by ReShade.
+
+Due to ReShade version updates, previously available shaders/addons may not appear in this list and cannot be downloaded or installed. We cannot do anything about this.
+If you need to install shaders/addons that are not in the list, we recommend manually adding them after installation.
+
+If you are unsure what to choose, we recommend downloading and installing all shaders/addons.</value>
+  </data>
+	<data name="ReShadeDownloadView_SelectInstallTarget" xml:space="preserve">
+    <value>Select Install Target</value>
+  </data>
+	<data name="ReShadeDownloadView_InstallToHoYoShadeOnly" xml:space="preserve">
+    <value>Install to HoYoShade only</value>
+  </data>
+	<data name="ReShadeDownloadView_InstallToOpenHoYoShadeOnly" xml:space="preserve">
+    <value>Install to OpenHoYoShade only</value>
+  </data>
+	<data name="ReShadeDownloadView_InstallToBoth" xml:space="preserve">
+    <value>Install to both HoYoShade and OpenHoYoShade</value>
+  </data>
+	<data name="ReShadeDownloadView_OpenHoYoShadeWarning" xml:space="preserve">
+    <value>OpenHoYoShade is intended for development purposes. We recommend skipping the installation of ReShade shaders and addons for it.</value>
+  </data>
+	<data name="ReShadeDownloadView_BothTargetsWarning" xml:space="preserve">
+    <value>OpenHoYoShade is intended for development purposes. We recommend installing to HoYoShade only.</value>
+  </data>
+	<data name="ReShadeDownloadView_SelectInstallType" xml:space="preserve">
+    <value>Select Install Type</value>
+  </data>
+	<data name="ReShadeDownloadView_InstallAll" xml:space="preserve">
+    <value>Download and install all ReShade shaders and addons</value>
+  </data>
+	<data name="ReShadeDownloadView_InstallEssentialOnly" xml:space="preserve">
+    <value>Download and install essential ReShade shaders only, no addons</value>
+  </data>
+	<data name="ReShadeDownloadView_CustomizeInstall" xml:space="preserve">
+    <value>Customize shaders and addons to install</value>
+  </data>
+	<data name="ReShadeDownloadView_CustomizeInstallDialogTitle" xml:space="preserve">
+    <value>Customize ReShade Shaders and Addons</value>
+  </data>
+	<data name="ReShadeDownloadView_SkipThisStep" xml:space="preserve">
+    <value>Skip this step</value>
+  </data>
+	<data name="ReShadeDownloadView_DownloadAndInstall" xml:space="preserve">
+    <value>Download &amp; Install</value>
+  </data>
+	<data name="ReShadeDownloadView_StatusReady" xml:space="preserve">
+    <value>Ready to download.</value>
+  </data>
+	<data name="ReShadeDownloadView_StatusDownloading" xml:space="preserve">
+    <value>Downloading...</value>
+  </data>
+	<data name="ReShadeDownloadView_StatusInstalling" xml:space="preserve">
+    <value>Installing...</value>
+  </data>
+	<data name="ReShadeDownloadView_StatusFinished" xml:space="preserve">
+    <value>Installation completed!</value>
+  </data>
+	<data name="ReShadeDownloadView_StatusError" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+	<data name="Common_Shader" xml:space="preserve">
+    <value>Shader</value>
+  </data>
+	<data name="Common_Addon" xml:space="preserve">
+    <value>Addon</value>
+  </data>
+	<data name="HoYoShadeDownloadView_PackageAlreadyInstalled" xml:space="preserve">
+    <value>Cannot install: {0} is already installed.</value>
+  </data>
+	<data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
+    <value>Shaders</value>
+  </data>
+	<data name="ReShadeDownloadView_TypeAddons" xml:space="preserve">
+    <value>Addons</value>
+  </data>
+	<data name="ReShadeDownloadView_ImportHint" xml:space="preserve">
+    <value>Or, import from local package or folder</value>
+  </data>
+	<data name="ReShadeDownloadView_FolderStructureInvalid" xml:space="preserve">
+    <value>Invalid folder structure. The selected folder must contain "Shaders" and "Textures" folders. "Addons" folder is optional. No other folders are allowed.</value>
+  </data>
+	<data name="ReShadeDownloadView_FolderImporting" xml:space="preserve">
+    <value>Importing folder...</value>
+  </data>
+	<data name="ReShadeDownloadView_FolderImported" xml:space="preserve">
+    <value>Folder imported successfully!</value>
+  </data>
+	<data name="FileSettingPage_HoYoShadeFramework" xml:space="preserve">
+    <value>HoYoShade Framework</value>
+  </data>
+	<data name="FileSettingPage_InstallHoYoShadeFramework" xml:space="preserve">
+    <value>Install HoYoShade Framework</value>
+  </data>
+	<data name="FileSettingPage_InstallReShadeShadersAndAddons" xml:space="preserve">
+    <value>Install ReShade shaders &amp; addons</value>
+  </data>
+	<data name="FileSettingPage_InstallStatus" xml:space="preserve">
+    <value>Install Status</value>
+  </data>
+	<data name="FileSettingPage_TotalSize" xml:space="preserve">
+    <value>Total Size</value>
+  </data>
+	<data name="FileSettingPage_ShaderAndAddonSize" xml:space="preserve">
+    <value>Shaders &amp; Addons Size</value>
+  </data>
+	<data name="FileSettingPage_PresetSize" xml:space="preserve">
+    <value>Presets Size</value>
+  </data>
+	<data name="FileSettingPage_ScreenshotSize" xml:space="preserve">
+    <value>Screenshots Size</value>
+  </data>
+	<data name="FileSettingPage_OtherContentSize" xml:space="preserve">
+    <value>Other Content Size</value>
+  </data>
+	<data name="FileSettingPage_UninstallHoYoShade" xml:space="preserve">
+    <value>Uninstall HoYoShade</value>
+  </data>
+	<data name="FileSettingPage_UninstallOpenHoYoShade" xml:space="preserve">
+    <value>Uninstall OpenHoYoShade</value>
+  </data>
+	<data name="UninstallShadeDialog_ConfirmUninstallTitle" xml:space="preserve">
+    <value>Are you sure you want to uninstall {0}?</value>
+  </data>
+	<data name="UninstallShadeDialog_WarningMessage1" xml:space="preserve">
+    <value>This will delete all installed {0} shaders, addons, presets, and game screenshots. Once uninstalled, these data cannot be recovered.</value>
+  </data>
+	<data name="UninstallShadeDialog_WarningMessage2" xml:space="preserve">
+    <value>If you have important data that has not been backed up, please back up before uninstalling.</value>
+  </data>
+	<data name="UninstallShadeDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+	<data name="UninstallShadeDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+	<data name="UninstallShadeDialog_Uninstall" xml:space="preserve">
+    <value>Uninstall</value>
+  </data>
+	<data name="UninstallShadeDialog_ConfirmUninstall" xml:space="preserve">
+    <value>Confirm Uninstall</value>
+  </data>
+	<data name="UninstallShadeDialog_PreparingUninstall" xml:space="preserve">
+    <value>Preparing to uninstall...</value>
+  </data>
+	<data name="UninstallShadeDialog_DeletingFiles" xml:space="preserve">
+    <value>Deleting files... ({0}/{1})</value>
+  </data>
+	<data name="UninstallShadeDialog_DeletingDirectories" xml:space="preserve">
+    <value>Deleting directories...</value>
+  </data>
+	<data name="UninstallShadeDialog_UninstallCompleted" xml:space="preserve">
+    <value>Uninstall completed</value>
+  </data>
+	<data name="UninstallShadeDialog_UninstallCancelled" xml:space="preserve">
+    <value>Uninstall cancelled</value>
+  </data>
+	<data name="GameLauncherPage_LaunchOptions" xml:space="preserve">
+    <value>Launch Options</value>
+  </data>
+	<data name="GameLauncherPage_LaunchGame" xml:space="preserve">
+    <value>Launch Game</value>
+  </data>
+	<data name="GameLauncherPage_LaunchHoYoShade" xml:space="preserve">
+    <value>Launch HoYoShade</value>
+  </data>
+	<data name="GameLauncherPage_LaunchOpenHoYoShade" xml:space="preserve">
+    <value>Launch OpenHoYoShade</value>
+  </data>
+	<data name="ResetReShadeIniDialog_Title" xml:space="preserve">
+    <value>Reset ReShade.ini</value>
+  </data>
+	<data name="ResetReShadeIniDialog_WarningTitle" xml:space="preserve">
+    <value>Are you sure you want to continue resetting ReShade.ini?</value>
+  </data>
+	<data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">
+    <value>Under normal circumstances, the ReShade.ini reset operation is automatically detected and runs in the background.
+This means that you usually do not need to manually reset ReShade.ini.
+
+Generally, you only need to reset the ReShade.ini configuration file in the following two situations:
+· The Releases page explicitly states that you must/should reset the ReShade.ini configuration file to enable new features/fix bugs.
+· HoYoShade developers/contributors explicitly ask you to perform this operation.
+
+Apart from these, you generally do not need to perform the ReShade.ini reset operation.
+
+After the reset is complete, you need to delete the ReShade.ini configuration file that has been copied to the game process root directory, otherwise HoYoShade/OpenHoYoShade will not work as expected.</value>
+  </data>
+	<data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">
+    <value>Resetting ReShade.ini will not cause the loss of shaders, plugins, presets, and game screenshots installed in HoYoShade/OpenHoYoShade.
+
+Do you want to continue with the reset operation?</value>
+  </data>
+	<data name="ResetReShadeIniDialog_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+	<data name="ResetReShadeIniDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+	<data name="ResetReShadeIniDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+	<data name="ResetReShadeIniDialog_Resetting" xml:space="preserve">
+    <value>Resetting ReShade.ini...</value>
+  </data>
+	<data name="ResetReShadeIniDialog_ResetCompleted" xml:space="preserve">
+    <value>Reset completed</value>
+  </data>
+	<data name="ResetReShadeIniDialog_ResetFailed" xml:space="preserve">
+    <value>Reset failed</value>
+  </data>
+	<data name="ResetReShadeIniDialog_ShadePathNotFound" xml:space="preserve">
+    <value>Shade path not found</value>
+  </data>
+	<data name="ResetReShadeIniDialog_ReShadeIniNotFound" xml:space="preserve">
+    <value>ReShade.ini file not found</value>
+  </data>
+	<data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
+    <value>Reset ReShade.ini</value>
+  </data>
+	<data name="SettingPage_Integration" xml:space="preserve">
+    <value>Integration</value>
+  </data>
+	<data name="SettingPage_IntegrationDescription" xml:space="preserve">
+    <value>This page is for configuring integrations with other Mods and applications.</value>
+  </data>
+	<data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
+    <value>Integration features coming soon...</value>
+  </data>
+	<data name="SettingPage_BlenderPlugin" xml:space="preserve">
+    <value>Blender Plugin</value>
+  </data>
+	<data name="SettingPage_GenshinBlenderPlugin" xml:space="preserve">
+    <value>Genshin Impact Blender Plugin</value>
+  </data>
+	<data name="SettingPage_ZZZBlenderPlugin" xml:space="preserve">
+    <value>Zenless Zone Zero Blender Plugin</value>
+  </data>
+	<data name="SettingPage_PluginFolderPath" xml:space="preserve">
+    <value>Plugin Folder Path</value>
+  </data>
+	<data name="SettingPage_SelectFolder" xml:space="preserve">
+    <value>Select Folder</value>
+  </data>
+	<data name="SettingPage_Unbind" xml:space="preserve">
+    <value>Unbind</value>
+  </data>
+	<data name="SettingPage_NotSet" xml:space="preserve">
+    <value>Not Set</value>
+  </data>
+	<data name="SettingPage_GenshinBlenderPluginValidationFailed" xml:space="preserve">
+    <value>Genshin Impact Plugin Validation Failed</value>
+  </data>
+	<data name="SettingPage_GenshinBlenderPluginMustContainClientExe" xml:space="preserve">
+    <value>The selected folder must contain client.exe</value>
+  </data>
+	<data name="SettingPage_ZZZBlenderPluginValidationFailed" xml:space="preserve">
+    <value>Zenless Zone Zero Plugin Validation Failed</value>
+  </data>
+	<data name="SettingPage_ZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
+    <value>The selected folder must contain loader.exe</value>
+  </data>
+	<data name="GameLauncherPage_LaunchGenshinBlenderPlugin" xml:space="preserve">
+    <value>Launch Genshin Impact Blender Plugin</value>
+  </data>
+	<data name="GameLauncherPage_LaunchZZZBlenderPlugin" xml:space="preserve">
+    <value>Launch ZZZ Blender Plugin</value>
+  </data>
+	<data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
+    <value>{0} is not installed. Please install it before use</value>
+  </data>
+	<data name="GameLauncher_InjectExeNotFound" xml:space="preserve">
+    <value>inject.exe not found in {0}</value>
+  </data>
+	<data name="GameLauncher_InjectorStarted" xml:space="preserve">
+    <value>{0} injector started</value>
+  </data>
+	<data name="GameLauncher_InjectorStartFailed" xml:space="preserve">
+    <value>Failed to start {0} injector: {1}</value>
+  </data>
+	<data name="GameLauncher_BlenderPluginNotConfigured" xml:space="preserve">
+    <value>{0} Blender Plugin path not configured. Please configure it in settings</value>
+  </data>
+	<data name="GameLauncher_ClientExeNotFound" xml:space="preserve">
+    <value>client.exe not found. Please check the plugin path</value>
+  </data>
+	<data name="GameLauncher_LoaderExeNotFound" xml:space="preserve">
+    <value>loader.exe not found. Please check the plugin path</value>
+  </data>
+	<data name="GameLauncher_BlenderPluginStarted" xml:space="preserve">
+    <value>{0} Blender Plugin started</value>
+  </data>
+	<data name="GameLauncher_BlenderPluginStartFailed" xml:space="preserve">
+    <value>Failed to start {0} Blender Plugin: {1}</value>
+  </data>
+	<data name="GameLauncher_GameNotStartedKillingInjector" xml:space="preserve">
+    <value>Game not started, HoYoShade/OpenHoYoShade injector process terminated</value>
+  </data>
+	<data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
+    <value>Game launch failed</value>
+  </data>
+	<data name="GameLauncher_GameNotFound" xml:space="preserve">
+    <value>Game install path not found</value>
+  </data>
+	<data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
+    <value>Launched game with {0}</value>
+  </data>
+	<data name="GameLauncher_LaunchWithShaderFailed" xml:space="preserve">
+    <value>Failed to launch game with {0}: {1}</value>
+  </data>
+	<data name="GameName_ZenlessZoneZero" xml:space="preserve">
+    <value>Zenless Zone Zero</value>
+  </data>
+	<data name="GameName_GenshinImpact" xml:space="preserve">
+    <value>Genshin Impact</value>
+  </data>
+	<data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunning" xml:space="preserve">
+    <value>Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin again.</value>
+  </data>
+	<data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
+    <value>Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin or HoYoShade/OpenHoYoShade injector.</value>
+  </data>
+	<data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
+    <value>This plugin is only available in Mainland China/Hong Kong/Macau/Taiwan/Singapore. If you are not in the above countries and regions, the plugin developers/contributors and HoYoShade Hub developers/contributors reserve the right to refuse support.</value>
+  </data>
+	<data name="SettingPage_StarwardLauncher" xml:space="preserve">
+    <value>Starward Launcher</value>
+  </data>
+	<data name="SettingPage_StarwardLauncherIntegration" xml:space="preserve">
+    <value>Starward Launcher Integration:</value>
+  </data>
+	<data name="SettingPage_StarwardProtocolNotAvailableTip" xml:space="preserve">
+    <value>Please enable the "Register URL Protocol" switch in Starward Launcher's Settings - Advanced interface to allow HoYoShade Hub to connect.</value>
+  </data>
+	<data name="SettingPage_UseStarwardLauncherToStartGame" xml:space="preserve">
+    <value>Use Starward Launcher to start public client games</value>
+  </data>
+	<data name="SettingPage_UseStarwardLauncherDescription" xml:space="preserve">
+    <value>When enabled, public client games will be launched using Starward Launcher. You need to ensure that the corresponding client has been located/installed in Starward.</value>
+  </data>
+	<data name="SettingPage_ProtocolStatusAvailable" xml:space="preserve">
+    <value>Available</value>
+  </data>
+	<data name="SettingPage_ProtocolStatusUnavailable" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+	<data name="GameLauncherPage_LaunchWithStarward" xml:space="preserve">
+    <value>Launch game via Starward Launcher</value>
+  </data>
+	<data name="GameLauncher_StarwardLaunchSuccess" xml:space="preserve">
+    <value>Game launched via Starward Launcher</value>
+  </data>
+	<data name="GameLauncher_StarwardLaunchFailed" xml:space="preserve">
+    <value>Failed to launch game via Starward. Please ensure Starward is properly installed</value>
+  </data>
+	<data name="GameLauncher_StarwardLaunchError" xml:space="preserve">
+    <value>Failed to launch game via Starward: {0}</value>
+  </data>
+	<data name="BlenderRepairTool_WindowTitle" xml:space="preserve">
+    <value>Blender Plugin Repair Tools</value>
+  </data>
+	<data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
+    <value>Fix Blender renderer and screenshot tool issues</value>
+  </data>
+	<data name="BlenderRepairTool_TimeSyncSection" xml:space="preserve">
+    <value>Time Synchronization</value>
+  </data>
+	<data name="BlenderRepairTool_LocalTime" xml:space="preserve">
+    <value>Local Time</value>
+  </data>
+	<data name="BlenderRepairTool_AccurateTime" xml:space="preserve">
+    <value>Accurate Time</value>
+  </data>
+	<data name="BlenderRepairTool_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+	<data name="BlenderRepairTool_SyncMethod" xml:space="preserve">
+    <value>Sync Method</value>
+  </data>
+	<data name="BlenderRepairTool_NTPSync" xml:space="preserve">
+    <value>NTP Sync</value>
+  </data>
+	<data name="BlenderRepairTool_HTTPSync" xml:space="preserve">
+    <value>HTTP Sync (Cloudflare Trace API)</value>
+  </data>
+	<data name="BlenderRepairTool_NTPServer" xml:space="preserve">
+    <value>NTP Server</value>
+  </data>
+	<data name="BlenderRepairTool_TraceEndpoint" xml:space="preserve">
+    <value>Trace Endpoint</value>
+  </data>
+	<data name="BlenderRepairTool_SyncTimeNow" xml:space="preserve">
+    <value>Sync Time Now</value>
+  </data>
+	<data name="BlenderRepairTool_EnableAutoSync" xml:space="preserve">
+    <value>Enable Auto Sync</value>
+  </data>
+	<data name="BlenderRepairTool_SyncInterval" xml:space="preserve">
+    <value>Sync Interval (minutes)</value>
+  </data>
+	<data name="BlenderRepairTool_PluginRepairTools" xml:space="preserve">
+    <value>Blender Plugin Repair Tools</value>
+  </data>
+	<data name="BlenderRepairTool_ResetClientTarget" xml:space="preserve">
+    <value>Reset Plugin Client Target (Delete config file)</value>
+  </data>
+	<data name="BlenderRepairTool_FixLoginError" xml:space="preserve">
+    <value>Fix 'Account Not Logged In' Error (Delete cookie file)</value>
+  </data>
+	<data name="BlenderRepairTool_ResetConfirmTitle" xml:space="preserve">
+    <value>Reset Plugin Client Target</value>
+  </data>
+	<data name="BlenderRepairTool_ResetConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to continue?
+
+After deletion, you need to restart the client once to let the drone re-acquire the game process root directory.</value>
+  </data>
+	<data name="BlenderRepairTool_SelectGamesToRepair" xml:space="preserve">
+    <value>Select game(s) to repair:</value>
+  </data>
+	<data name="BlenderRepairTool_GenshinImpact" xml:space="preserve">
+    <value>Genshin Impact</value>
+  </data>
+	<data name="BlenderRepairTool_ZenlessZoneZero" xml:space="preserve">
+    <value>Zenless Zone Zero</value>
+  </data>
+	<data name="BlenderRepairTool_NotConfigured" xml:space="preserve">
+    <value>Not configured</value>
+  </data>
+	<data name="BlenderRepairTool_NoPluginPathConfigured" xml:space="preserve">
+    <value>No Blender plugin path configured. Please configure plugin paths in the launcher first.</value>
+  </data>
+	<data name="BlenderRepairTool_SelectAtLeastOneGame" xml:space="preserve">
+    <value>Please select at least one game to repair.</value>
+  </data>
+	<data name="BlenderRepairTool_SuccessMessage" xml:space="preserve">
+    <value>Successfully deleted config file(s) for {0} game(s).
+Please re-select the client while Injector run next time.</value>
+  </data>
+	<data name="BlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
+    <value>Partially completed: {0} succeeded, {1} failed. Check logs for details.</value>
+  </data>
+	<data name="BlenderRepairTool_AllFailedMessage" xml:space="preserve">
+    <value>All operations failed. Check logs for details.</value>
+  </data>
+	<data name="BlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to delete the cookie file?
+
+After deletion, you need to scan the QR code again to log in to your Bilibili account.</value>
+  </data>
+	<data name="BlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
+    <value>Successfully deleted cookie file(s) for {0} game(s).
+Please scan QR code while Injector run next time to login again.</value>
+  </data>
+	<data name="BlenderRepairTool_GenshinCookie" xml:space="preserve">
+    <value>Genshin Impact (cookies.json)</value>
+  </data>
+	<data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
+    <value>Zenless Zone Zero (cookies.json)</value>
+  </data>
+	<data name="ToolboxSetting_BlenderRepairTool" xml:space="preserve">
+    <value>Blender Plugin Repair Tool</value>
+  </data>
+	<data name="ToolboxSetting_BlenderRepairToolDescription" xml:space="preserve">
+    <value>Fix Blender Plugin issues</value>
+  </data>
+	<data name="UninstallShadersDialog_Title" xml:space="preserve">
+    <value>Uninstall {0} shaders and plugins</value>
+  </data>
+	<data name="UninstallShadersDialog_Message1" xml:space="preserve">
+    <value>Are you sure you want to uninstall shaders and plugins for {0}?</value>
+  </data>
+	<data name="UninstallShadersDialog_Message2" xml:space="preserve">
+    <value>This operation will not delete presets and screenshots. You can reinstall them via 'Install ReShade shaders &amp; addons', but previously available shaders might not be available anymore.</value>
+  </data>
+	<data name="FileSettingPage_UninstallShadersAndPlugins" xml:space="preserve">
+    <value>Uninstall Shaders and Plugins</value>
+  </data>
+	<data name="CustomInjectDialog_Title" xml:space="preserve">
+    <value>Custom Inject</value>
+  </data>
+	<data name="CustomInjectDialog_ProcessNameInput" xml:space="preserve">
+    <value>Please enter the target process name (including .exe suffix), or use shortcut:</value>
+  </data>
+	<data name="CustomInjectDialog_ProcessNamePlaceholder" xml:space="preserve">
+    <value>e.g. GenshinImpact.exe or -GI</value>
+  </data>
+	<data name="CustomInjectDialog_Description" xml:space="preserve">
+    <value>The injector will attempt to inject ReShade into this process.</value>
+  </data>
+	<data name="CustomInjectDialog_Inject" xml:space="preserve">
+    <value>Inject</value>
+  </data>
+	<data name="CustomInjectDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+	<data name="FileSettingPage_CustomInject" xml:space="preserve">
+    <value>Custom Inject</value>
+  </data>
+	<data name="GameLauncherSettingDialog_GameExeNotFoundInFolder" xml:space="preserve">
+    <value>{0} not found in the selected folder</value>
+  </data>
+	<data name="GameLauncherSettingDialog_AddGameDirectoryFailed" xml:space="preserve">
+    <value>Failed to add game directory</value>
+  </data>
+	<data name="GameLauncherSettingDialog_AddGameDirectory" xml:space="preserve">
+    <value>Add Game Directory</value>
+  </data>
+	<data name="Injector_FileIntegrityCheckFailed" xml:space="preserve">
+    <value>{0} file integrity check failed. Some required files may be missing or corrupted.</value>
+  </data>
+	<data name="Injector_BlacklistProcess" xml:space="preserve">
+    <value>{0} cannot inject into this process. The process name is blacklisted.</value>
+  </data>
+	<data name="Injector_InvalidParameters" xml:space="preserve">
+    <value>{0} received invalid parameters.</value>
+  </data>
+	<data name="Injector_MissingExeSuffix" xml:space="preserve">
+    <value>{0} error: Process name must end with .exe</value>
+  </data>
+	<data name="Injector_UnknownError" xml:space="preserve">
+    <value>{0} injector exited with error code: 0x{1:X}</value>
   </data>
 </root>

@@ -2615,6 +2615,51 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 {0} cannot inject into this process. The process name is blacklisted. 的本地化字符串。
+        /// </summary>
+        public static string Injector_BlacklistProcess {
+            get {
+                return ResourceManager.GetString("Injector_BlacklistProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} file integrity check failed. Some required files may be missing or corrupted. 的本地化字符串。
+        /// </summary>
+        public static string Injector_FileIntegrityCheckFailed {
+            get {
+                return ResourceManager.GetString("Injector_FileIntegrityCheckFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} received invalid parameters. 的本地化字符串。
+        /// </summary>
+        public static string Injector_InvalidParameters {
+            get {
+                return ResourceManager.GetString("Injector_InvalidParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} error: Process name must end with .exe 的本地化字符串。
+        /// </summary>
+        public static string Injector_MissingExeSuffix {
+            get {
+                return ResourceManager.GetString("Injector_MissingExeSuffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} injector exited with error code: 0x{1:X} 的本地化字符串。
+        /// </summary>
+        public static string Injector_UnknownError {
+            get {
+                return ResourceManager.GetString("Injector_UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Installed? 的本地化字符串。
         /// </summary>
         public static string InstallGameDialog_Installed {
@@ -3174,6 +3219,15 @@ namespace HoYoShadeHub.Language {
         public static string ReShadeDownloadView_TypeShaders {
             get {
                 return ResourceManager.GetString("ReShadeDownloadView_TypeShaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons. 的本地化字符串。
+        /// </summary>
+        public static string ReShadeDownloadView_UpdateHint {
+            get {
+                return ResourceManager.GetString("ReShadeDownloadView_UpdateHint", resourceCulture);
             }
         }
         
@@ -4446,51 +4500,6 @@ namespace HoYoShadeHub.Language {
         public static string WelcomeView_WelcomeToHoYoShadeHubDescription {
             get {
                 return ResourceManager.GetString("WelcomeView_WelcomeToHoYoShadeHubDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 {0} cannot inject into this process. The process name is blacklisted. 的本地化字符串。
-        /// </summary>
-        public static string Injector_BlacklistProcess {
-            get {
-                return ResourceManager.GetString("Injector_BlacklistProcess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 {0} file integrity check failed. Some required files may be missing or corrupted. 的本地化字符串。
-        /// </summary>
-        public static string Injector_FileIntegrityCheckFailed {
-            get {
-                return ResourceManager.GetString("Injector_FileIntegrityCheckFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 {0} received invalid parameters. 的本地化字符串。
-        /// </summary>
-        public static string Injector_InvalidParameters {
-            get {
-                return ResourceManager.GetString("Injector_InvalidParameters", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 {0} error: Process name must end with .exe 的本地化字符串。
-        /// </summary>
-        public static string Injector_MissingExeSuffix {
-            get {
-                return ResourceManager.GetString("Injector_MissingExeSuffix", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 {0} injector exited with error code: 0x{1:X} 的本地化字符串。
-        /// </summary>
-        public static string Injector_UnknownError {
-            get {
-                return ResourceManager.GetString("Injector_UnknownError", resourceCulture);
             }
         }
     }
