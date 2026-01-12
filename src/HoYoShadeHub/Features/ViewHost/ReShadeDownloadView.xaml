@@ -90,7 +90,16 @@
             
             <TextBlock FontSize="18" 
                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                       Text="{x:Bind lang:Lang.ReShadeDownloadView_Title}" />
+                       Text="{x:Bind Title, Mode=OneWay}" />
+
+            <!-- Update Hint -->
+            <TextBlock Text="如果本次更新涉及到ReShade版本升级，我们建议你更新所有已安装的着色器和插件。"
+                       TextWrapping="Wrap"
+                       Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                       FontSize="13"
+                       MaxWidth="800"
+                       HorizontalAlignment="Left"
+                       Visibility="{x:Bind IsUpdateMode, Mode=OneWay}" />
 
             <!-- Description -->
             <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_Description}"

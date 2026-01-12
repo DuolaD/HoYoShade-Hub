@@ -129,31 +129,47 @@ public sealed partial class ReShadeDownloadView : UserControl
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     [NotifyPropertyChangedFor(nameof(CanInstallToHoYoShadeOnly))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToOpenHoYoShadeOnly))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToBoth))]
+    private bool isUpdateMode;
+
+    public string Title => IsUpdateMode ? "接下来，让我们更新" : Lang.ReShadeDownloadView_Title; // Use localized string if available, currently hardcoded as requested
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanDownload))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToHoYoShadeOnly))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToOpenHoYoShadeOnly))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToBoth))]
     private bool isInstallToHoYoShadeOnly = true;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToHoYoShadeOnly))]
     [NotifyPropertyChangedFor(nameof(CanInstallToOpenHoYoShadeOnly))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToBoth))]
     private bool isInstallToOpenHoYoShadeOnly;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToHoYoShadeOnly))]
+    [NotifyPropertyChangedFor(nameof(CanInstallToOpenHoYoShadeOnly))]
     [NotifyPropertyChangedFor(nameof(CanInstallToBoth))]
     private bool isInstallToBoth;
 
     // Properties to control radio button enabled state
     // Logic:
-    // - If only one framework is installed → only that framework's option is enabled
-    // - If both frameworks are installed → all options enabled initially, then disable after installation
+    // - If only one framework is installed  only that framework's option is enabled
+    // - If both frameworks are installed  all options enabled initially, then disable after installation
+    // - In Update Mode, options remain enabled even after installation (to allow re-install/update)
     public bool CanInstallToHoYoShadeOnly =>
-        IsHoYoShadeInstalled && !_hasInstalledHoYoShadeTarget;
+        IsHoYoShadeInstalled && (!_hasInstalledHoYoShadeTarget || IsUpdateMode);
 
     public bool CanInstallToOpenHoYoShadeOnly =>
-        IsOpenHoYoShadeInstalled && !_hasInstalledOpenHoYoShadeTarget;
+        IsOpenHoYoShadeInstalled && (!_hasInstalledOpenHoYoShadeTarget || IsUpdateMode);
 
     public bool CanInstallToBoth =>
         IsHoYoShadeInstalled && IsOpenHoYoShadeInstalled &&
-        !_hasInstalledHoYoShadeTarget && !_hasInstalledOpenHoYoShadeTarget;
+        (!_hasInstalledHoYoShadeTarget || IsUpdateMode) && (!_hasInstalledOpenHoYoShadeTarget || IsUpdateMode);
 
     [ObservableProperty]
     private bool isInstallAll = true;
@@ -642,46 +658,56 @@ public sealed partial class ReShadeDownloadView : UserControl
                     _hasInstalledAtLeastOnce = true;
 
                     // Handle auto-switch logic for single target installations
-                    if (IsInstallToHoYoShadeOnly && !_hasInstalledHoYoShadeTarget)
+                    if (IsInstallToHoYoShadeOnly && (!_hasInstalledHoYoShadeTarget || IsUpdateMode))
                     {
-                        // Just installed HoYoShade only for the first time
+                        // Just installed HoYoShade only
                         _hasInstalledHoYoShadeTarget = true;
 
-                        // Disable HoYoShade options and check if OpenHoYoShade is available
+                        // Refresh UI states
                         OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
                         OnPropertyChanged(nameof(CanInstallToBoth));
 
-                        // If OpenHoYoShade option is available, auto-select it; otherwise don't select anything
-                        IsInstallToHoYoShadeOnly = false;
-                        IsInstallToBoth = false;
-                        if (CanInstallToOpenHoYoShadeOnly)
+                        if (!IsUpdateMode)
                         {
-                            IsInstallToOpenHoYoShadeOnly = true;
-                        }
-                        else
-                        {
-                            IsInstallToOpenHoYoShadeOnly = false;
+                            // Disable HoYoShade options and check if OpenHoYoShade is available
+                            
+                            // If OpenHoYoShade option is available, auto-select it; otherwise don't select anything
+                            IsInstallToHoYoShadeOnly = false;
+                            IsInstallToBoth = false;
+                            if (CanInstallToOpenHoYoShadeOnly)
+                            {
+                                IsInstallToOpenHoYoShadeOnly = true;
+                            }
+                            else
+                            {
+                                IsInstallToOpenHoYoShadeOnly = false;
+                            }
                         }
                     }
-                    else if (IsInstallToOpenHoYoShadeOnly && !_hasInstalledOpenHoYoShadeTarget)
+                    else if (IsInstallToOpenHoYoShadeOnly && (!_hasInstalledOpenHoYoShadeTarget || IsUpdateMode))
                     {
-                        // Just installed OpenHoYoShade only for the first time
+                        // Just installed OpenHoYoShade only
                         _hasInstalledOpenHoYoShadeTarget = true;
-
-                        // Disable OpenHoYoShade options and check if HoYoShade is available
+                        
+                        // Refresh UI states
                         OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
                         OnPropertyChanged(nameof(CanInstallToBoth));
 
-                        // If HoYoShade option is available, auto-select it; otherwise don't select anything
-                        IsInstallToOpenHoYoShadeOnly = false;
-                        IsInstallToBoth = false;
-                        if (CanInstallToHoYoShadeOnly)
+                        if (!IsUpdateMode)
                         {
-                            IsInstallToHoYoShadeOnly = true;
-                        }
-                        else
-                        {
-                            IsInstallToHoYoShadeOnly = false;
+                            // Disable OpenHoYoShade options and check if HoYoShade is available
+
+                            // If HoYoShade option is available, auto-select it; otherwise don't select anything
+                            IsInstallToOpenHoYoShadeOnly = false;
+                            IsInstallToBoth = false;
+                            if (CanInstallToHoYoShadeOnly)
+                            {
+                                IsInstallToHoYoShadeOnly = true;
+                            }
+                            else
+                            {
+                                IsInstallToHoYoShadeOnly = false;
+                            }
                         }
                     }
                     else if (IsInstallToBoth)
@@ -690,14 +716,18 @@ public sealed partial class ReShadeDownloadView : UserControl
                         _hasInstalledHoYoShadeTarget = true;
                         _hasInstalledOpenHoYoShadeTarget = true;
 
-                        // Disable all options and don't select anything
+                        // Refresh UI states
                         OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
                         OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
                         OnPropertyChanged(nameof(CanInstallToBoth));
 
-                        IsInstallToHoYoShadeOnly = false;
-                        IsInstallToOpenHoYoShadeOnly = false;
-                        IsInstallToBoth = false;
+                        if (!IsUpdateMode)
+                        {
+                            // Disable all options and don't select anything
+                            IsInstallToHoYoShadeOnly = false;
+                            IsInstallToOpenHoYoShadeOnly = false;
+                            IsInstallToBoth = false;
+                        }
                     }
 
                     OnPropertyChanged(nameof(CanNext));
@@ -918,46 +948,52 @@ public sealed partial class ReShadeDownloadView : UserControl
                 _hasInstalledAtLeastOnce = true;
 
                 // Handle auto-switch logic for single target installations
-                if (IsInstallToHoYoShadeOnly && !_hasInstalledHoYoShadeTarget)
+                if (IsInstallToHoYoShadeOnly && (!_hasInstalledHoYoShadeTarget || IsUpdateMode))
                 {
-                    // Just installed HoYoShade only for the first time
+                    // Just installed HoYoShade only
                     _hasInstalledHoYoShadeTarget = true;
 
-                    // Disable HoYoShade options and check if OpenHoYoShade is available
+                    // Refresh UI states
                     OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
                     OnPropertyChanged(nameof(CanInstallToBoth));
 
-                    // If OpenHoYoShade option is available, auto-select it; otherwise don't select anything
-                    IsInstallToHoYoShadeOnly = false;
-                    IsInstallToBoth = false;
-                    if (CanInstallToOpenHoYoShadeOnly)
+                    if (!IsUpdateMode)
                     {
-                        IsInstallToOpenHoYoShadeOnly = true;
-                    }
-                    else
-                    {
-                        IsInstallToOpenHoYoShadeOnly = false;
+                        // If OpenHoYoShade option is available, auto-select it; otherwise don't select anything
+                        IsInstallToHoYoShadeOnly = false;
+                        IsInstallToBoth = false;
+                        if (CanInstallToOpenHoYoShadeOnly)
+                        {
+                            IsInstallToOpenHoYoShadeOnly = true;
+                        }
+                        else
+                        {
+                            IsInstallToOpenHoYoShadeOnly = false;
+                        }
                     }
                 }
-                else if (IsInstallToOpenHoYoShadeOnly && !_hasInstalledOpenHoYoShadeTarget)
+                else if (IsInstallToOpenHoYoShadeOnly && (!_hasInstalledOpenHoYoShadeTarget || IsUpdateMode))
                 {
-                    // Just installed OpenHoYoShade only for the first time
+                    // Just installed OpenHoYoShade only
                     _hasInstalledOpenHoYoShadeTarget = true;
 
-                    // Disable OpenHoYoShade options and check if HoYoShade is available
+                    // Refresh UI states
                     OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
                     OnPropertyChanged(nameof(CanInstallToBoth));
 
-                    // If HoYoShade option is available, auto-select it; otherwise don't select anything
-                    IsInstallToOpenHoYoShadeOnly = false;
-                    IsInstallToBoth = false;
-                    if (CanInstallToHoYoShadeOnly)
+                    if (!IsUpdateMode)
                     {
-                        IsInstallToHoYoShadeOnly = true;
-                    }
-                    else
-                    {
-                        IsInstallToHoYoShadeOnly = false;
+                        // If HoYoShade option is available, auto-select it; otherwise don't select anything
+                        IsInstallToOpenHoYoShadeOnly = false;
+                        IsInstallToBoth = false;
+                        if (CanInstallToHoYoShadeOnly)
+                        {
+                            IsInstallToHoYoShadeOnly = true;
+                        }
+                        else
+                        {
+                            IsInstallToHoYoShadeOnly = false;
+                        }
                     }
                 }
                 else if (IsInstallToBoth)
@@ -966,14 +1002,18 @@ public sealed partial class ReShadeDownloadView : UserControl
                     _hasInstalledHoYoShadeTarget = true;
                     _hasInstalledOpenHoYoShadeTarget = true;
 
-                    // Disable all options and don't select anything
+                    // Refresh UI states
                     OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
                     OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
                     OnPropertyChanged(nameof(CanInstallToBoth));
 
-                    IsInstallToHoYoShadeOnly = false;
-                    IsInstallToOpenHoYoShadeOnly = false;
-                    IsInstallToBoth = false;
+                    if (!IsUpdateMode)
+                    {
+                        // Disable all options and don't select anything
+                        IsInstallToHoYoShadeOnly = false;
+                        IsInstallToOpenHoYoShadeOnly = false;
+                        IsInstallToBoth = false;
+                    }
                 }
 
                 OnPropertyChanged(nameof(CanNext));
@@ -1106,46 +1146,52 @@ public sealed partial class ReShadeDownloadView : UserControl
             _hasInstalledAtLeastOnce = true;
 
             // Handle auto-switch logic for single target installations (same as DownloadAsync)
-            if (IsInstallToHoYoShadeOnly && !_hasInstalledHoYoShadeTarget)
+            if (IsInstallToHoYoShadeOnly && (!_hasInstalledHoYoShadeTarget || IsUpdateMode))
             {
-                // Just installed HoYoShade only for the first time
+                // Just installed HoYoShade only
                 _hasInstalledHoYoShadeTarget = true;
 
-                // Disable HoYoShade options and check if OpenHoYoShade is available
+                // Refresh UI states
                 OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
                 OnPropertyChanged(nameof(CanInstallToBoth));
 
-                // If OpenHoYoShade option is available, auto-select it; otherwise don't select anything
-                IsInstallToHoYoShadeOnly = false;
-                IsInstallToBoth = false;
-                if (CanInstallToOpenHoYoShadeOnly)
+                if (!IsUpdateMode)
                 {
-                    IsInstallToOpenHoYoShadeOnly = true;
-                }
-                else
-                {
-                    IsInstallToOpenHoYoShadeOnly = false;
+                    // If OpenHoYoShade option is available, auto-select it; otherwise don't select anything
+                    IsInstallToHoYoShadeOnly = false;
+                    IsInstallToBoth = false;
+                    if (CanInstallToOpenHoYoShadeOnly)
+                    {
+                        IsInstallToOpenHoYoShadeOnly = true;
+                    }
+                    else
+                    {
+                        IsInstallToOpenHoYoShadeOnly = false;
+                    }
                 }
             }
-            else if (IsInstallToOpenHoYoShadeOnly && !_hasInstalledOpenHoYoShadeTarget)
+            else if (IsInstallToOpenHoYoShadeOnly && (!_hasInstalledOpenHoYoShadeTarget || IsUpdateMode))
             {
-                // Just installed OpenHoYoShade only for the first time
+                // Just installed OpenHoYoShade only
                 _hasInstalledOpenHoYoShadeTarget = true;
 
-                // Disable OpenHoYoShade options and check if HoYoShade is available
+                // Refresh UI states
                 OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
                 OnPropertyChanged(nameof(CanInstallToBoth));
 
-                // If HoYoShade option is available, auto-select it; otherwise don't select anything
-                IsInstallToOpenHoYoShadeOnly = false;
-                IsInstallToBoth = false;
-                if (CanInstallToHoYoShadeOnly)
+                if (!IsUpdateMode)
                 {
-                    IsInstallToHoYoShadeOnly = true;
-                }
-                else
-                {
-                    IsInstallToHoYoShadeOnly = false;
+                    // If HoYoShade option is available, auto-select it; otherwise don't select anything
+                    IsInstallToOpenHoYoShadeOnly = false;
+                    IsInstallToBoth = false;
+                    if (CanInstallToHoYoShadeOnly)
+                    {
+                        IsInstallToHoYoShadeOnly = true;
+                    }
+                    else
+                    {
+                        IsInstallToHoYoShadeOnly = false;
+                    }
                 }
             }
             else if (IsInstallToBoth)
@@ -1154,10 +1200,18 @@ public sealed partial class ReShadeDownloadView : UserControl
                 _hasInstalledHoYoShadeTarget = true;
                 _hasInstalledOpenHoYoShadeTarget = true;
 
-                // Disable all options and don't select anything
+                // Refresh UI states
                 OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
                 OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
                 OnPropertyChanged(nameof(CanInstallToBoth));
+
+                if (!IsUpdateMode)
+                {
+                    // Disable all options and don't select anything
+                    IsInstallToHoYoShadeOnly = false;
+                    IsInstallToOpenHoYoShadeOnly = false;
+                    IsInstallToBoth = false;
+                }
             }
 
             OnPropertyChanged(nameof(CanNext));

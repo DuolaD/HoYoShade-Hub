@@ -715,7 +715,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [RelayCommand]
     private void Start()
     {
-        WeakReferenceMessenger.Default.Send(new NavigateToReShadeDownloadPageMessage());
+        WeakReferenceMessenger.Default.Send(new NavigateToReShadeDownloadPageMessage { IsUpdateMode = IsUpdateMode });
     }
 
     [RelayCommand(CanExecute = nameof(CanRefresh))]

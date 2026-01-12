@@ -139,9 +139,12 @@ public sealed partial class MainWindow : WindowEx
     }
 
 
-    private void OnNavigateToReShadeDownloadPage(object _, NavigateToReShadeDownloadPageMessage __)
+    private void OnNavigateToReShadeDownloadPage(object _, NavigateToReShadeDownloadPageMessage m)
     {
-        MainContentHost.Content = new ReShadeDownloadView();
+        MainContentHost.Content = new ReShadeDownloadView
+        {
+            IsUpdateMode = m.IsUpdateMode
+        };
     }
 
 
