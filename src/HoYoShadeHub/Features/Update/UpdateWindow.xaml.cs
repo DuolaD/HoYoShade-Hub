@@ -371,7 +371,7 @@ public sealed partial class UpdateWindow : WindowEx
                 }
                 
                 // Send message to navigate to download page
-                WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
+                WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage(true));
                 
                 // Close the update window
                 this.Close();

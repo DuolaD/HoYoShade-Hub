@@ -114,6 +114,20 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private GithubRelease selectedVersion;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Title))]
+    [NotifyPropertyChangedFor(nameof(ShowRefreshButton))]
+    [NotifyPropertyChangedFor(nameof(IsHoYoShadeSelectionEnabled))]
+    [NotifyPropertyChangedFor(nameof(IsOpenHoYoShadeSelectionEnabled))]
+    [NotifyPropertyChangedFor(nameof(CanDownload))]
+    [NotifyPropertyChangedFor(nameof(CanImport))]
+    private bool isUpdateMode;
+
+    public string Title => IsUpdateMode ? "让我们更新 HoYoShade 框架" : Lang.HoYoShadeDownloadView_Title;
+
+    public bool IsHoYoShadeSelectionEnabled => !IsHoYoShadeInstalled || IsUpdateMode;
+    public bool IsOpenHoYoShadeSelectionEnabled => !IsOpenHoYoShadeInstalled || IsUpdateMode;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     [NotifyCanExecuteChangedFor(nameof(DownloadCommand))]
     [NotifyPropertyChangedFor(nameof(CanImport))]
@@ -161,7 +175,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(ShowStopButton))]
     private bool isControlButtonsVisible;
     
-    public bool ShowRefreshButton => !IsControlButtonsVisible;
+    public bool ShowRefreshButton => !IsControlButtonsVisible && !(IsHoYoShadeInstalled && IsOpenHoYoShadeInstalled && !IsUpdateMode);
     
     // Show pause/resume button when control buttons are visible AND not paused
     public bool ShowPauseResumeButton => IsControlButtonsVisible && !_isPaused;
@@ -192,6 +206,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(CanStart))]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     [NotifyPropertyChangedFor(nameof(CanImport))]
+    [NotifyPropertyChangedFor(nameof(ShowRefreshButton))]
+    [NotifyPropertyChangedFor(nameof(IsHoYoShadeSelectionEnabled))]
     [NotifyCanExecuteChangedFor(nameof(ImportFromLocalCommand))]
     private bool isHoYoShadeInstalled;
 
@@ -199,6 +215,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(CanStart))]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     [NotifyPropertyChangedFor(nameof(CanImport))]
+    [NotifyPropertyChangedFor(nameof(ShowRefreshButton))]
+    [NotifyPropertyChangedFor(nameof(IsOpenHoYoShadeSelectionEnabled))]
     [NotifyCanExecuteChangedFor(nameof(ImportFromLocalCommand))]
     private bool isOpenHoYoShadeInstalled;
 
@@ -1224,6 +1242,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             }
             OnPropertyChanged(nameof(CanDownload));
             OnPropertyChanged(nameof(CanImport));
+            OnPropertyChanged(nameof(Title)); // Start title might need update if logic depended on install state (it doesn't currently but good practice)
             ImportFromLocalCommand.NotifyCanExecuteChanged();
 
             Debug.WriteLine($"Installation status check: HoYoShade={IsHoYoShadeInstalled}, OpenHoYoShade={IsOpenHoYoShadeInstalled}, CanStart={CanStart}");
@@ -1318,28 +1337,35 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     }
     
     /// <summary>
-    /// 检查选中版本是否可以安装
+    /// Checks if the selected version can be installed
     /// </summary>
-    /// <param name="selectedVersion">要安装的版本</param>
-    /// <param name="installedVersion">已安装的版本</param>
-    /// <returns>如果可以安装返回true</returns>
+    /// <param name="selectedVersion">The version to install</param>
+    /// <param name="installedVersion">The currently installed version</param>
+    /// <returns>True if can install</returns>
     private bool CanInstallVersion(string? selectedVersion, string? installedVersion)
     {
-        // 如果没有安装任何版本,可以安装
+        // If not installed, can always install
         if (string.IsNullOrWhiteSpace(installedVersion))
         {
             return true;
         }
         
-        // 比较版本
+        // Compare versions
         var comparison = CompareVersions(selectedVersion, installedVersion);
         
-        // 只允许安装更高版本,不允许安装相同或更低版本
+        if (IsUpdateMode)
+        {
+            // In update mode, allow same or higher version (>= 0)
+            return comparison.HasValue && comparison.Value >= 0;
+        }
+        
+        // In clean install mode, strictly existing logic (higher version only)
+        // Wait, existing logic was strict higher (> 0).
         return comparison.HasValue && comparison.Value > 0;
     }
     
     /// <summary>
-    /// 保存安装后的版本信息
+    /// Save version info after installation
     /// </summary>
     private async Task SaveVersionInfoAfterInstallAsync(string packageType, string version, string source, string? sha256 = null)
     {

@@ -130,9 +130,12 @@ public sealed partial class MainWindow : WindowEx
     }
 
 
-    private void OnNavigateToDownloadPage(object _, NavigateToDownloadPageMessage __)
+    private void OnNavigateToDownloadPage(object _, NavigateToDownloadPageMessage m)
     {
-        MainContentHost.Content = new HoYoShadeDownloadView();
+        MainContentHost.Content = new HoYoShadeDownloadView
+        {
+            IsUpdateMode = m.IsUpdateMode
+        };
     }
 
 

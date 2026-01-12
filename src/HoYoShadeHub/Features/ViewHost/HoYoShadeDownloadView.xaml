@@ -82,7 +82,7 @@
         <StackPanel Margin="48,40,48,80" VerticalAlignment="Center" Spacing="8">
             <TextBlock FontSize="24" 
                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                       Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Title}" />
+                       Text="{x:Bind Title, Mode=OneWay}" />
 
             <!-- Version Selection -->
             <StackPanel Spacing="4">
@@ -118,7 +118,7 @@
                     <StackPanel Spacing="3">
                         <CheckBox Content="{x:Bind lang:Lang.HoYoShadeDownloadView_Option_HoYoShade}" 
                                   IsChecked="{x:Bind IsHoYoShadeSelected, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolReversedConverter}}" />
+                                  IsEnabled="{x:Bind IsHoYoShadeSelectionEnabled, Mode=OneWay}" />
                         <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_HoYoShade_Description}"
                                    TextWrapping="Wrap"
                                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
@@ -128,7 +128,7 @@
                     <StackPanel Spacing="3">
                         <CheckBox Content="{x:Bind lang:Lang.HoYoShadeDownloadView_Option_OpenHoYoShade}" 
                                   IsChecked="{x:Bind IsOpenHoYoShadeSelected, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolReversedConverter}}" />
+                                  IsEnabled="{x:Bind IsOpenHoYoShadeSelectionEnabled, Mode=OneWay}" />
                         <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_OpenHoYoShade_Description}"
                                    TextWrapping="Wrap"
                                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
