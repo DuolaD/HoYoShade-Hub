@@ -157,10 +157,10 @@
             </StackPanel>
             
             <!--  预览版渠道开关  -->
-            <StackPanel Margin="0,8,0,0">
-                <CheckBox Content="Join preview channel"
-                          IsChecked="{x:Bind EnableHoYoShadePreviewChannel, Mode=TwoWay}" />
-            </StackPanel>
+            <ToggleSwitch Margin="0,12,0,0"
+                          IsOn="{x:Bind EnableHoYoShadePreviewChannel, Mode=TwoWay}"
+                          OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
+                          OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
 
             <!--  HoYoShade  -->
             <TextBlock Margin="0,12,0,0"
