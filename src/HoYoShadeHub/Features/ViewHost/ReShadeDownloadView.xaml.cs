@@ -72,16 +72,21 @@ public sealed partial class ReShadeDownloadView : UserControl
     {
         // For English language, use smaller top margin to prevent scrolling
         var currentCulture = CultureInfo.CurrentUICulture.Name.ToLower();
+        double topMargin;
+
         if (currentCulture.StartsWith("en"))
         {
             // English: much less vertical offset (smaller top margin)
-            ContentMargin = new Thickness(48, 60, 48, 120);
+            // If in update mode, reduce further to accommodate the hint text
+            topMargin = IsUpdateMode ? 30 : 60;
         }
         else
         {
             // Chinese and other languages: slightly less vertical offset
-            ContentMargin = new Thickness(48, 80, 48, 120);
+            topMargin = IsUpdateMode ? 60 : 80;
         }
+
+        ContentMargin = new Thickness(48, topMargin, 48, 120);
     }
 
     private void UpdateDownloadServers()
@@ -127,13 +132,16 @@ public sealed partial class ReShadeDownloadView : UserControl
     public bool AreBothInstalled => IsHoYoShadeInstalled && IsOpenHoYoShadeInstalled;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Title))]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     [NotifyPropertyChangedFor(nameof(CanInstallToHoYoShadeOnly))]
     [NotifyPropertyChangedFor(nameof(CanInstallToOpenHoYoShadeOnly))]
     [NotifyPropertyChangedFor(nameof(CanInstallToBoth))]
     private bool isUpdateMode;
 
-    public string Title => IsUpdateMode ? "接下来，让我们更新" : Lang.ReShadeDownloadView_Title; // Use localized string if available, currently hardcoded as requested
+    public string Title => IsUpdateMode ? "接下来，让我们更新 ReShade 着色器和插件" : Lang.ReShadeDownloadView_Title;
+    
+    public string UpdateHintText => "如果本次更新涉及到ReShade版本升级，我们建议你更新所有已安装的着色器和插件。";
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
@@ -187,6 +195,11 @@ public sealed partial class ReShadeDownloadView : UserControl
         {
             _ = CustomizeAsync();
         }
+    }
+
+    partial void OnIsUpdateModeChanged(bool value)
+    {
+        UpdateContentMargin();
     }
 
     // Track installation history to enable Next button and auto-switch logic
@@ -323,8 +336,7 @@ public sealed partial class ReShadeDownloadView : UserControl
             CultureInfo.CurrentUICulture = CultureInfo.InstalledUICulture;
         }
         catch (Exception ex)
-        {
-            Debug.WriteLine(ex);
+        {// ...existing code...
         }
     }
 
@@ -959,6 +971,8 @@ public sealed partial class ReShadeDownloadView : UserControl
 
                     if (!IsUpdateMode)
                     {
+                        // Disable HoYoShade options and check if OpenHoYoShade is available
+                        
                         // If OpenHoYoShade option is available, auto-select it; otherwise don't select anything
                         IsInstallToHoYoShadeOnly = false;
                         IsInstallToBoth = false;
@@ -976,13 +990,15 @@ public sealed partial class ReShadeDownloadView : UserControl
                 {
                     // Just installed OpenHoYoShade only
                     _hasInstalledOpenHoYoShadeTarget = true;
-
+                    
                     // Refresh UI states
                     OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
                     OnPropertyChanged(nameof(CanInstallToBoth));
 
                     if (!IsUpdateMode)
                     {
+                        // Disable OpenHoYoShade options and check if HoYoShade is available
+
                         // If HoYoShade option is available, auto-select it; otherwise don't select anything
                         IsInstallToOpenHoYoShadeOnly = false;
                         IsInstallToBoth = false;

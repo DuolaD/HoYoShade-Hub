@@ -93,7 +93,7 @@
                        Text="{x:Bind Title, Mode=OneWay}" />
 
             <!-- Update Hint -->
-            <TextBlock Text="如果本次更新涉及到ReShade版本升级，我们建议你更新所有已安装的着色器和插件。"
+            <TextBlock Text="{x:Bind UpdateHintText}"
                        TextWrapping="Wrap"
                        Foreground="{ThemeResource SystemFillColorCautionBrush}"
                        FontSize="13"
