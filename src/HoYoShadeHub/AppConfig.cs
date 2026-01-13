@@ -752,6 +752,15 @@ public static class AppConfig
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// HoYoShade框架下载服务器选择 (0=GitHub Direct, 1=Cloudflare, 2=Tencent, 3=Alibaba)
+    /// </summary>
+    public static int HoYoShadeFrameworkDownloadServer
+    {
+        get => GetValue(0);
+        set => SetValue(value);
+    }
+
 
     #endregion
 

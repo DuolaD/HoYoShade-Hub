@@ -50,25 +50,42 @@ public sealed partial class FileManageSetting : PageBase
     public string SelectedDownloadServer 
     { 
         get => _selectedDownloadServer; 
-        set => SetProperty(ref _selectedDownloadServer, value); 
+        set
+        {
+            if (SetProperty(ref _selectedDownloadServer, value))
+            {
+                // Save the selected server index to AppConfig
+                int selectedIndex = DownloadServers.IndexOf(value);
+                if (selectedIndex >= 0)
+                {
+                    AppConfig.HoYoShadeFrameworkDownloadServer = selectedIndex;
+                }
+            }
+        }
     }
 
     private void UpdateDownloadServers()
     {
-        var selectedIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+        // Get the saved index from AppConfig
+        int savedIndex = AppConfig.HoYoShadeFrameworkDownloadServer;
+        
         DownloadServers.Clear();
         DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubDirect);
         DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_Cloudflare);
         DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_TencentCloud);
         DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_AlibabaCloud);
-        if (selectedIndex >= 0 && selectedIndex < DownloadServers.Count)
+        
+        // Restore the previously selected server
+        if (savedIndex >= 0 && savedIndex < DownloadServers.Count)
         {
-            SelectedDownloadServer = DownloadServers[selectedIndex];
+            _selectedDownloadServer = DownloadServers[savedIndex];
         }
         else
         {
-            SelectedDownloadServer = DownloadServers[0];
+            _selectedDownloadServer = DownloadServers[0];
         }
+        
+        OnPropertyChanged(nameof(SelectedDownloadServer));
     }
 
 
