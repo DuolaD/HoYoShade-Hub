@@ -156,11 +156,27 @@
                 </Button>
             </StackPanel>
             
-            <!--  预览版渠道开关  -->
-            <ToggleSwitch Margin="0,12,0,0"
-                          IsOn="{x:Bind EnableHoYoShadePreviewChannel, Mode=TwoWay}"
-                          OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
-                          OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
+            <!--  预览版渠道开关和下载服务器选择  -->
+            <Grid Margin="0,12,0,0" ColumnSpacing="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <ToggleSwitch Grid.Column="0"
+                              IsOn="{x:Bind EnableHoYoShadePreviewChannel, Mode=TwoWay}"
+                              OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
+                              OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
+                
+                <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}" 
+                               FontSize="12"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <ComboBox ItemsSource="{x:Bind DownloadServers}" 
+                              SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}" 
+                              MinWidth="240" />
+                </StackPanel>
+            </Grid>
 
             <!--  HoYoShade  -->
             <TextBlock Margin="0,12,0,0"

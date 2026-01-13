@@ -14,7 +14,9 @@ using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -35,8 +37,42 @@ public sealed partial class FileManageSetting : PageBase
     public FileManageSetting()
     {
         this.InitializeComponent();
+        DownloadServers = new ObservableCollection<string>();
+        UpdateDownloadServers();
+        
+        // Register for language change messages
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => UpdateDownloadServers());
     }
     
+    public ObservableCollection<string> DownloadServers { get; }
+
+    private string _selectedDownloadServer;
+    public string SelectedDownloadServer 
+    { 
+        get => _selectedDownloadServer; 
+        set => SetProperty(ref _selectedDownloadServer, value); 
+    }
+
+    private void UpdateDownloadServers()
+    {
+        var selectedIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+        DownloadServers.Clear();
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubDirect);
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_Cloudflare);
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_TencentCloud);
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_AlibabaCloud);
+        if (selectedIndex >= 0 && selectedIndex < DownloadServers.Count)
+        {
+            SelectedDownloadServer = DownloadServers[selectedIndex];
+        }
+        else
+        {
+            SelectedDownloadServer = DownloadServers[0];
+        }
+    }
+
+
+
     /// <summary>
     /// HoYoShade框架预览版渠道
     /// </summary>
@@ -1038,9 +1074,13 @@ public sealed partial class FileManageSetting : PageBase
         {
             HoYoShadeUpdateInfo = "Checking for updates...";
             
+            // Get proxy URL from selected server
+            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+            
             var updateService = new HoYoShadeUpdateService(_versionService);
             var latestRelease = await updateService.CheckHoYoShadeUpdateAsync(
-                AppConfig.EnableHoYoShadePreviewChannel);
+                AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
             
             if (latestRelease != null)
             {
@@ -1075,9 +1115,13 @@ public sealed partial class FileManageSetting : PageBase
         {
             OpenHoYoShadeUpdateInfo = "Checking for updates...";
             
+            // Get proxy URL from selected server
+            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+            
             var updateService = new HoYoShadeUpdateService(_versionService);
             var latestRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(
-                AppConfig.EnableHoYoShadePreviewChannel);
+                AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
             
             if (latestRelease != null)
             {

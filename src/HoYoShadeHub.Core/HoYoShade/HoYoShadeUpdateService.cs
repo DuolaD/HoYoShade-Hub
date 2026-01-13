@@ -29,6 +29,18 @@ public class HoYoShadeUpdateService
     /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
     public async Task<GithubRelease?> CheckHoYoShadeUpdateAsync(bool includePrerelease = false, CancellationToken cancellationToken = default)
     {
+        return await CheckHoYoShadeUpdateAsync(includePrerelease, null, cancellationToken);
+    }
+
+    /// <summary>
+    /// 检查 HoYoShade 更新（使用指定的代理URL）
+    /// </summary>
+    /// <param name="includePrerelease">是否包含预览版</param>
+    /// <param name="proxyUrl">代理URL（如果为null则使用GitHub直连）</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
+    public async Task<GithubRelease?> CheckHoYoShadeUpdateAsync(bool includePrerelease = false, string? proxyUrl = null, CancellationToken cancellationToken = default)
+    {
         try
         {
             var currentVersion = await _versionService.GetHoYoShadeVersionAsync();
@@ -37,7 +49,7 @@ public class HoYoShadeUpdateService
                 return null;
             }
 
-            var latestRelease = await GetLatestReleaseAsync(includePrerelease, cancellationToken);
+            var latestRelease = await GetLatestReleaseAsync(includePrerelease, proxyUrl, cancellationToken);
             if (latestRelease == null)
             {
                 return null;
@@ -65,6 +77,18 @@ public class HoYoShadeUpdateService
     /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
     public async Task<GithubRelease?> CheckOpenHoYoShadeUpdateAsync(bool includePrerelease = false, CancellationToken cancellationToken = default)
     {
+        return await CheckOpenHoYoShadeUpdateAsync(includePrerelease, null, cancellationToken);
+    }
+
+    /// <summary>
+    /// 检查 OpenHoYoShade 更新（使用指定的代理URL）
+    /// </summary>
+    /// <param name="includePrerelease">是否包含预览版</param>
+    /// <param name="proxyUrl">代理URL（如果为null则使用GitHub直连）</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
+    public async Task<GithubRelease?> CheckOpenHoYoShadeUpdateAsync(bool includePrerelease = false, string? proxyUrl = null, CancellationToken cancellationToken = default)
+    {
         try
         {
             var currentVersion = await _versionService.GetOpenHoYoShadeVersionAsync();
@@ -73,7 +97,7 @@ public class HoYoShadeUpdateService
                 return null;
             }
 
-            var latestRelease = await GetLatestReleaseAsync(includePrerelease, cancellationToken);
+            var latestRelease = await GetLatestReleaseAsync(includePrerelease, proxyUrl, cancellationToken);
             if (latestRelease == null)
             {
                 return null;
@@ -94,9 +118,9 @@ public class HoYoShadeUpdateService
     }
 
     /// <summary>
-    /// 从 GitHub 获取最新版本
+    /// 从 GitHub 获取最新版本（使用指定的代理URL）
     /// </summary>
-    private async Task<GithubRelease?> GetLatestReleaseAsync(bool includePrerelease, CancellationToken cancellationToken)
+    private async Task<GithubRelease?> GetLatestReleaseAsync(bool includePrerelease, string? proxyUrl, CancellationToken cancellationToken)
     {
         try
         {
@@ -104,6 +128,13 @@ public class HoYoShadeUpdateService
             client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
 
             string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
+            
+            // Apply proxy if provided
+            if (!string.IsNullOrWhiteSpace(proxyUrl))
+            {
+                apiUrl = $"{proxyUrl}/{apiUrl}";
+            }
+            
             var releases = await client.GetFromJsonAsync<GithubRelease[]>(apiUrl, cancellationToken);
 
             if (releases == null || releases.Length == 0)
@@ -147,16 +178,16 @@ public class HoYoShadeUpdateService
     }
 
     /// <summary>
-    /// 比较两个版本号 (使用 NuGetVersion 提供工业级语义化版本比较)
-    /// 支持所有标准语义化版本格式，包括:
+    /// 比较两个版本号 (使用 NuGetVersion 提供的标准语义化版本比较)
+    /// 支持所有标准语义化版本格式，例如:
     /// - 标准版本: 3.0.1, 3.1.0
     /// - 预发布版本: 3.0.0-Beta.1, 3.0.0-Alpha.2, 3.0.0-RC.1
-    /// - 带构建元数据: 3.0.0+build.123
+    /// - 构建元数据: 3.0.0+build.123
     /// - 组合格式: 3.0.0-Beta.1+build.456
     /// </summary>
-    /// <param name="version1">版本1（例如 "V3.0.1" 或 "V3.0.0-Beta.1"）</param>
-    /// <param name="version2">版本2（例如 "V3.0.0" 或 "V3.0.0-Beta.2"）</param>
-    /// <returns>如果 version1 > version2 返回正数，相等返回 0，小于返回负数</returns>
+    /// <param name="version1">版本1，例如 "V3.0.1" 或 "V3.0.0-Beta.1"）</param>
+    /// <param name="version2">版本2，例如 "V3.0.0" 或 "V3.0.0-Beta.2"）</param>
+    /// <returns>如果 version1 > version2 返回正数；相等返回 0；小于返回负数</returns>
     private int CompareVersions(string version1, string version2)
     {
         try
@@ -168,15 +199,15 @@ public class HoYoShadeUpdateService
             // 使用 NuGetVersion 解析版本号
             // NuGetVersion 完全支持语义化版本规范 (SemVer 2.0):
             // - 正确处理主版本、次版本、修订版本的数字比较
-            // - 预发布标识的字典序和数字比较 (Beta.1 < Beta.2 < Beta.10)
-            // - 正式版 > 预览版 (3.0.0 > 3.0.0-Beta.1)
-            // - 预发布标识的优先级 (Alpha < Beta < RC < 正式版)
+            // - 预发布标识符的分段字典比较 (Beta.1 < Beta.2 < Beta.10)
+            // - 正式版 > 预发布版 (3.0.0 > 3.0.0-Beta.1)
+            // - 预发布标识符的优先级 (Alpha < Beta < RC < 正式版)
             if (NuGetVersion.TryParse(v1, out var nugetV1) && NuGetVersion.TryParse(v2, out var nugetV2))
             {
                 return nugetV1.CompareTo(nugetV2);
             }
 
-            // 如果 NuGetVersion 无法解析,回退到简单数字比较
+            // 如果 NuGetVersion 无法解析,使用数字比较
             var parts1 = v1.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
             var parts2 = v2.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
 
@@ -196,7 +227,7 @@ public class HoYoShadeUpdateService
         }
         catch
         {
-            // 如果比较失败,假设它们相等
+            // 版本比较失败,假定两者相等
             return 0;
         }
     }
