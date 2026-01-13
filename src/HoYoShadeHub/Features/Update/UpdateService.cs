@@ -31,8 +31,14 @@ internal class UpdateService
 
 
 
-    public async Task<ReleaseInfoDetail?> CheckUpdateAsync(bool disableIgnore = false)
+    public async Task<ReleaseInfoDetail?> CheckUpdateAsync(bool disableIgnore = false, string? proxyUrl = null)
     {
+        // Set proxy URL on MetadataClient if provided
+        if (proxyUrl != null)
+        {
+            _metadataClient.SetProxyUrl(proxyUrl);
+        }
+        
         _ = NuGetVersion.TryParse(AppConfig.AppVersion, out var currentVersion);
         _ = NuGetVersion.TryParse(AppConfig.IgnoreVersion, out var ignoreVersion);
 #if DEBUG

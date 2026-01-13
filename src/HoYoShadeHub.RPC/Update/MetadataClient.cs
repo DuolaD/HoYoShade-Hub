@@ -21,6 +21,8 @@ public class MetadataClient
 
 
     private string API_PREFIX = "https://cdn.cf.storage.hub.hoyosha.de/release";
+    
+    private string? _proxyUrl;
 
 
 
@@ -39,6 +41,15 @@ public class MetadataClient
         {
             _httpClient = httpClient;
         }
+    }
+    
+    /// <summary>
+    /// Set proxy URL for API requests (Tencent Cloud or Alibaba Cloud)
+    /// </summary>
+    /// <param name="proxyUrl">Proxy URL prefix, or null to use Cloudflare direct</param>
+    public void SetProxyUrl(string? proxyUrl)
+    {
+        _proxyUrl = proxyUrl;
     }
 
 
@@ -62,7 +73,15 @@ public class MetadataClient
 
     private string GetUrl(string suffix)
     {
-        return $"{API_PREFIX}/{suffix}";
+        string baseUrl = $"{API_PREFIX}/{suffix}";
+        
+        // If proxy is set, use it to proxy the Cloudflare API
+        if (!string.IsNullOrWhiteSpace(_proxyUrl))
+        {
+            return $"{_proxyUrl}/{baseUrl}";
+        }
+        
+        return baseUrl;
     }
 
 
