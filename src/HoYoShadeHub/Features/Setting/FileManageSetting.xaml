@@ -209,18 +209,6 @@
                             Spacing="16"
                             VerticalAlignment="Center"
                             Visibility="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="8"
-                                VerticalAlignment="Center">
-                        <ProgressRing Width="20"
-                                      Height="20"
-                                      IsIndeterminate="{x:Bind CheckHoYoShadeUpdateCommand.IsRunning}"
-                                      Visibility="{x:Bind CheckHoYoShadeUpdateCommand.IsRunning}" />
-                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                   Text="{x:Bind HoYoShadeUpdateInfo, Mode=OneWay}"
-                                   Visibility="{x:Bind HoYoShadeUpdateInfo, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
-                    </StackPanel>
-
                     <Button Height="40"
                             Padding="12,0,16,0"
                             BorderThickness="0"
@@ -232,6 +220,18 @@
                             <TextBlock Text="{x:Bind lang:Lang.SettingPage_CheckForUpdate}" />
                         </StackPanel>
                     </Button>
+
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8"
+                                VerticalAlignment="Center">
+                        <ProgressRing Width="20"
+                                      Height="20"
+                                      IsIndeterminate="{x:Bind CheckHoYoShadeUpdateCommand.IsRunning}"
+                                      Visibility="{x:Bind CheckHoYoShadeUpdateCommand.IsRunning}" />
+                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="{x:Bind HoYoShadeUpdateInfo, Mode=OneWay}"
+                                   Visibility="{x:Bind HoYoShadeUpdateInfo, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
+                    </StackPanel>
                 </StackPanel>
             </Grid>
 
@@ -403,18 +403,6 @@
                             Spacing="16"
                             VerticalAlignment="Center"
                             Visibility="{x:Bind OpenHoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="8"
-                                VerticalAlignment="Center">
-                        <ProgressRing Width="20"
-                                      Height="20"
-                                      IsIndeterminate="{x:Bind CheckOpenHoYoShadeUpdateCommand.IsRunning}"
-                                      Visibility="{x:Bind CheckOpenHoYoShadeUpdateCommand.IsRunning}" />
-                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                   Text="{x:Bind OpenHoYoShadeUpdateInfo, Mode=OneWay}"
-                                   Visibility="{x:Bind OpenHoYoShadeUpdateInfo, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
-                    </StackPanel>
-
                     <Button Height="40"
                             Padding="12,0,16,0"
                             BorderThickness="0"
@@ -426,6 +414,18 @@
                             <TextBlock Text="{x:Bind lang:Lang.SettingPage_CheckForUpdate}" />
                         </StackPanel>
                     </Button>
+
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8"
+                                VerticalAlignment="Center">
+                        <ProgressRing Width="20"
+                                      Height="20"
+                                      IsIndeterminate="{x:Bind CheckOpenHoYoShadeUpdateCommand.IsRunning}"
+                                      Visibility="{x:Bind CheckOpenHoYoShadeUpdateCommand.IsRunning}" />
+                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="{x:Bind OpenHoYoShadeUpdateInfo, Mode=OneWay}"
+                                   Visibility="{x:Bind OpenHoYoShadeUpdateInfo, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
+                    </StackPanel>
                 </StackPanel>
             </Grid>
 
