@@ -743,6 +743,15 @@ public static class AppConfig
         set => SetValue(value);
     }
 
+    /// <summary>
+    /// 启动器更新下载服务器选择 (0=Cloudflare, 1=Tencent, 2=Alibaba)
+    /// </summary>
+    public static int LauncherUpdateDownloadServer
+    {
+        get => GetValue(0);
+        set => SetValue(value);
+    }
+
 
     #endregion
 
