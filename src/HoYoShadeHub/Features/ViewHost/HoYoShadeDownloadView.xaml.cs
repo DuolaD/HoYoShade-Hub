@@ -124,8 +124,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     public string Title => IsUpdateMode ? "让我们更新 HoYoShade 框架" : Lang.HoYoShadeDownloadView_Title;
 
-    public bool IsHoYoShadeSelectionEnabled => !IsHoYoShadeInstalled;
-    public bool IsOpenHoYoShadeSelectionEnabled => !IsOpenHoYoShadeInstalled;
+    // Allow selection always (unless downloading) so users can repair/reinstall if needed
+    public bool IsHoYoShadeSelectionEnabled => !IsDownloading;
+    public bool IsOpenHoYoShadeSelectionEnabled => !IsDownloading;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
@@ -562,6 +563,30 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             assetUrl = CloudProxyManager.ApplyProxy(assetUrl, proxyUrl);
         }
 
+        // Check if this is an update (existing installation)
+        var targetPath = System.IO.Path.Combine(AppConfig.UserDataFolder, folderName);
+        var presetsPath = System.IO.Path.Combine(targetPath, "Presets");
+        bool isUpdate = Directory.Exists(presetsPath);
+        
+        // Determine presets handling option
+        int presetsHandling = 0; // 0: Overwrite (default)
+        string versionTag = SelectedVersion?.TagName ?? "";
+        
+        if (isUpdate && IsUpdateMode)
+        {
+            // Show dialog to ask user how to handle presets
+            var (cancelled, option) = await PresetsHandlingDialog.ShowAsync(this.XamlRoot);
+            
+            if (cancelled)
+            {
+                // User cancelled
+                _downloadCts?.Cancel();
+                return;
+            }
+            
+            presetsHandling = (int)option;
+        }
+
         if (!RpcClientFactory.CheckRpcServerRunning())
         {
             StatusMessage = Lang.HoYoShadeDownloadView_StatusStartingRPC;
@@ -584,12 +609,13 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
         // Target path is UserDataFolder/HoYoShade or UserDataFolder/OpenHoYoShade
         // The content will be extracted directly to this folder, not to a subfolder
-        var targetPath = System.IO.Path.Combine(AppConfig.UserDataFolder, folderName);
         var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
         var request = new InstallHoYoShadeRequest
         {
             DownloadUrl = assetUrl,
-            TargetPath = targetPath
+            TargetPath = targetPath,
+            PresetsHandling = presetsHandling,
+            VersionTag = versionTag
         };
 
         using var call = client.InstallHoYoShade(request, cancellationToken: _downloadCts.Token);
@@ -1096,16 +1122,63 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             var targetPath = System.IO.Path.Combine(AppConfig.UserDataFolder, packageType);
             Debug.WriteLine($"Target installation path: {targetPath}");
             
+            // Check if this is an update (existing installation with Presets)
+            var presetsPath = System.IO.Path.Combine(targetPath, "Presets");
+            bool isUpdate = Directory.Exists(presetsPath);
+            
+            // Determine presets handling option
+            int presetsHandling = 0; // 0: Overwrite (default)
+            string versionTag = "";
+            
+            // Extract version from filename for version tag
+            var fileName = Path.GetFileNameWithoutExtension(packagePath);
+            var versionMatch = System.Text.RegularExpressions.Regex.Match(fileName, @"[Vv]?(\d+\.\d+\.?\d*(?:-[a-zA-Z0-9.]+)?)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if (versionMatch.Success)
+            {
+                versionTag = versionMatch.Groups[1].Value;
+                if (!versionTag.StartsWith("V", StringComparison.OrdinalIgnoreCase))
+                {
+                    versionTag = "V" + versionTag;
+                }
+            }
+            else
+            {
+                // Fallback version tag if filename doesn't contain valid version
+                versionTag = "V" + DateTime.Now.ToString("yyyy.MM.dd.HHmmss");
+                Debug.WriteLine($"Version parsing failed, using timestamp as tag: {versionTag}");
+            }
+            
+            // Ask for presets handling if presets folder exists (ignoring IsUpdateMode flag)
+            if (isUpdate)
+            {
+                // Show dialog to ask user how to handle presets
+                var (cancelled, option) = await PresetsHandlingDialog.ShowAsync(this.XamlRoot);
+                
+                if (cancelled)
+                {
+                    // User cancelled
+                    StatusMessage = Lang.HoYoShadeDownloadView_StatusReady;
+                    IsDownloading = false;
+                    IsControlButtonsVisible = false;
+                    return;
+                }
+                
+                presetsHandling = (int)option;
+                Debug.WriteLine($"User selected presets handling option: {option} (value: {presetsHandling})");
+            }
+            
             var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
             
             // Use local file path instead of download URL
             var request = new InstallHoYoShadeRequest
             {
                 DownloadUrl = "file://" + packagePath, // Use file:// protocol to indicate local file
-                TargetPath = targetPath
+                TargetPath = targetPath,
+                PresetsHandling = presetsHandling,
+                VersionTag = versionTag
             };
             
-            Debug.WriteLine($"Sending install request with URL: {request.DownloadUrl}");
+            Debug.WriteLine($"Sending install request with URL: {request.DownloadUrl}, PresetsHandling: {presetsHandling}, VersionTag: {versionTag}");
             
             using var call = client.InstallHoYoShade(request, cancellationToken: CancellationToken.None);
             
@@ -1127,26 +1200,11 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                     // Save version info after successful installation from local package
                     try
                     {
-                        // Extract version from the validation result
-                        var fileName = Path.GetFileNameWithoutExtension(packagePath);
-                        string? version = null;
-                        
-                        // Extract version from filename
-                        var match = System.Text.RegularExpressions.Regex.Match(fileName, @"[Vv]?(\d+\.\d+\.?\d*(?:-[a-zA-Z0-9.]+)?)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                        if (match.Success)
-                        {
-                            version = match.Groups[1].Value;
-                            if (!version.StartsWith("V", StringComparison.OrdinalIgnoreCase))
-                            {
-                                version = "V" + version;
-                            }
-                        }
-                        
-                        if (!string.IsNullOrEmpty(version))
+                        if (!string.IsNullOrEmpty(versionTag))
                         {
                             // Calculate SHA256 for local package
                             string packageSha256 = await CalculateSHA256Async(packagePath);
-                            await SaveVersionInfoAfterInstallAsync(packageType, version, "local_import", packageSha256);
+                            await SaveVersionInfoAfterInstallAsync(packageType, versionTag, "local_import", packageSha256);
                         }
                     }
                     catch (Exception ex)

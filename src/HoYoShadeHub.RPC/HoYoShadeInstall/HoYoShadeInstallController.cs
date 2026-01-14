@@ -23,7 +23,7 @@ internal class HoYoShadeInstallController : HoYoShadeInstaller.HoYoShadeInstalle
     {
         try
         {
-            _ = _service.StartInstallAsync(request.DownloadUrl, request.TargetPath, context.CancellationToken);
+            _ = _service.StartInstallAsync(request.DownloadUrl, request.TargetPath, context.CancellationToken, request.PresetsHandling, request.VersionTag);
 
             using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
             while (await timer.WaitForNextTickAsync(context.CancellationToken))

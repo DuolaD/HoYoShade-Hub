@@ -41,14 +41,15 @@ public class HoYoShadeInstallService
     private DateTime _lastSpeedUpdate = DateTime.Now;
     private long _lastDownloadBytes = 0;
 
-    public async Task StartInstallAsync(string url, string targetPath, CancellationToken cancellationToken)
+    public async Task StartInstallAsync(string url, string targetPath, CancellationToken cancellationToken, int presetsHandling = 0, string versionTag = null)
     {
         string zipPath = "";
         bool isLocalFile = url.StartsWith("file://", StringComparison.OrdinalIgnoreCase);
         
         try
         {
-            _logger.LogInformation("Starting HoYoShade installation. URL: {Url}, Target: {Target}", url, targetPath);
+            _logger.LogInformation("Starting HoYoShade installation. URL: {Url}, Target: {Target}, PresetsHandling: {PresetsHandling}, VersionTag: {VersionTag}", 
+                url, targetPath, presetsHandling, versionTag);
             State = 0;
             ErrorMessage = null;
 
@@ -130,8 +131,82 @@ public class HoYoShadeInstallService
             
             await Task.Run(() =>
             {
-                using var archive = new SharpSevenZipExtractor(zipPath);
-                archive.ExtractArchive(targetPath);
+                // Extract to a temporary directory first
+                string tempExtractPath = Path.Combine(Path.GetTempPath(), $"HoYoShade_Extract_{Guid.NewGuid()}");
+                try
+                {
+                    Directory.CreateDirectory(tempExtractPath);
+                    
+                    using (var archive = new SharpSevenZipExtractor(zipPath))
+                    {
+                        archive.ExtractArchive(tempExtractPath);
+                    }
+                    
+                    // Handle Presets folder based on presetsHandling option
+                    string presetsSourcePath = Path.Combine(tempExtractPath, "Presets");
+                    string presetsTargetPath = Path.Combine(targetPath, "Presets");
+                    
+                    // Check if update mode and Presets folder exists in the archive
+                    bool hasPresetsInArchive = Directory.Exists(presetsSourcePath);
+                    bool hasExistingPresets = Directory.Exists(presetsTargetPath);
+                    
+                    _logger.LogInformation("Presets handling - Mode: {Mode}, HasPresetsInArchive: {HasArchive}, HasExistingPresets: {HasExisting}", 
+                        presetsHandling, hasPresetsInArchive, hasExistingPresets);
+                    
+                    if (hasPresetsInArchive && hasExistingPresets)
+                    {
+                        switch (presetsHandling)
+                        {
+                            case 1: // KeepExisting - Don't update presets
+                                _logger.LogInformation("Keeping existing presets, removing from extraction");
+                                Directory.Delete(presetsSourcePath, true);
+                                break;
+                                
+                            case 2: // SeparateFolder - Place in version-tagged folder
+                                if (!string.IsNullOrEmpty(versionTag))
+                                {
+                                    _logger.LogInformation("Placing new presets in separate folder: {VersionTag}", versionTag);
+                                    string versionedPresetsPath = Path.Combine(presetsTargetPath, versionTag);
+                                    Directory.CreateDirectory(versionedPresetsPath);
+                                    
+                                    // Move contents of Presets from temp to versioned folder
+                                    foreach (var file in Directory.GetFiles(presetsSourcePath, "*", SearchOption.AllDirectories))
+                                    {
+                                        string relativePath = Path.GetRelativePath(presetsSourcePath, file);
+                                        string destFile = Path.Combine(versionedPresetsPath, relativePath);
+                                        Directory.CreateDirectory(Path.GetDirectoryName(destFile));
+                                        File.Copy(file, destFile, true);
+                                    }
+                                    
+                                    // Remove Presets from temp extraction so it doesn't overwrite
+                                    Directory.Delete(presetsSourcePath, true);
+                                }
+                                break;
+                                
+                            case 0: // Overwrite (default) - Do nothing, will be overwritten during copy
+                            default:
+                                _logger.LogInformation("Will overwrite existing presets");
+                                break;
+                        }
+                    }
+                    else if (hasPresetsInArchive && presetsHandling == 1)
+                    {
+                        // KeepExisting mode but no existing presets - remove from extraction anyway
+                        _logger.LogInformation("KeepExisting mode but no existing presets, removing from extraction");
+                        Directory.Delete(presetsSourcePath, true);
+                    }
+                    
+                    // Copy all files from temp to target (excluding already handled Presets if needed)
+                    CopyDirectory(tempExtractPath, targetPath, true);
+                }
+                finally
+                {
+                    // Clean up temp extraction directory
+                    if (Directory.Exists(tempExtractPath))
+                    {
+                        try { Directory.Delete(tempExtractPath, true); } catch { }
+                    }
+                }
             }, cancellationToken);
 
             if (!isLocalFile && File.Exists(zipPath))
@@ -157,6 +232,23 @@ public class HoYoShadeInstallService
             {
                 try { File.Delete(zipPath); } catch { }
             }
+        }
+    }
+    
+    private void CopyDirectory(string sourceDir, string destDir, bool overwrite)
+    {
+        Directory.CreateDirectory(destDir);
+        
+        foreach (string file in Directory.GetFiles(sourceDir))
+        {
+            string destFile = Path.Combine(destDir, Path.GetFileName(file));
+            File.Copy(file, destFile, overwrite);
+        }
+        
+        foreach (string dir in Directory.GetDirectories(sourceDir))
+        {
+            string destSubDir = Path.Combine(destDir, Path.GetFileName(dir));
+            CopyDirectory(dir, destSubDir, overwrite);
         }
     }
 

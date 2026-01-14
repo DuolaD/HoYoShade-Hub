@@ -14,6 +14,8 @@ service HoYoShadeInstaller {
 message InstallHoYoShadeRequest {
     string download_url = 1;
     string target_path = 2;
+    int32 presets_handling = 3; // 0: Overwrite (default), 1: KeepExisting, 2: SeparateFolder
+    string version_tag = 4; // Version tag for SeparateFolder option (e.g., "V3.0.0-Beta.1")
 }
 
 message InstallHoYoShadeProgress {
