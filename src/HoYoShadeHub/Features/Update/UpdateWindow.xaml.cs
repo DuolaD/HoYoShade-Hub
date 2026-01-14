@@ -14,7 +14,9 @@ using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.RPC.Update;
 using HoYoShadeHub.RPC.Update.Github;
 using HoYoShadeHub.RPC.Update.Metadata;
+using HoYoShadeHub.Helpers;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -54,9 +56,66 @@ public sealed partial class UpdateWindow : WindowEx
         _timer = DispatcherQueue.CreateTimer();
         _timer.Interval = TimeSpan.FromMilliseconds(100);
         _timer.Tick += _timer_Tick;
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) => this.Bindings.Update());
+        
+        // Initialize download servers
+        DownloadServers = new ObservableCollection<string>();
+        UpdateDownloadServers();
+        
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => 
+        {
+            this.Bindings.Update();
+            UpdateDownloadServers();
+        });
         this.Closed += UpdateWindow_Closed;
     }
+    
+    
+    #region Download Server Selection
+    
+    public ObservableCollection<string> DownloadServers { get; }
+
+    private string _selectedDownloadServer;
+    public string SelectedDownloadServer 
+    { 
+        get => _selectedDownloadServer; 
+        set
+        {
+            if (SetProperty(ref _selectedDownloadServer, value))
+            {
+                // Save the selected server index to AppConfig
+                int selectedIndex = DownloadServers.IndexOf(value);
+                if (selectedIndex >= 0)
+                {
+                    AppConfig.LauncherUpdateDownloadServer = selectedIndex;
+                }
+            }
+        }
+    }
+
+    private void UpdateDownloadServers()
+    {
+        // Get the saved index from AppConfig
+        int savedIndex = AppConfig.LauncherUpdateDownloadServer;
+        
+        DownloadServers.Clear();
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_Cloudflare);
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_TencentCloud);
+        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_AlibabaCloud);
+        
+        // Restore the previously selected server
+        if (savedIndex >= 0 && savedIndex < DownloadServers.Count)
+        {
+            _selectedDownloadServer = DownloadServers[savedIndex];
+        }
+        else
+        {
+            _selectedDownloadServer = DownloadServers[0];
+        }
+        
+        OnPropertyChanged(nameof(SelectedDownloadServer));
+    }
+    
+    #endregion
 
 
 
@@ -134,6 +193,9 @@ public sealed partial class UpdateWindow : WindowEx
             TextBlock_ArchLabel.Visibility = Visibility.Collapsed;
             TextBlock_ArchValue.Visibility = Visibility.Collapsed;
             
+            // Hide download server selection for framework updates
+            Grid_DownloadServer.Visibility = Visibility.Collapsed;
+            
             // Fetch and display GitHub release time
             await FetchAndDisplayReleaseTimeAsync();
         }
@@ -147,6 +209,9 @@ public sealed partial class UpdateWindow : WindowEx
             // Show architecture info for Hub updates
             TextBlock_ArchLabel.Visibility = Visibility.Visible;
             TextBlock_ArchValue.Visibility = Visibility.Visible;
+            
+            // Show download server selection for Hub updates
+            Grid_DownloadServer.Visibility = Visibility.Visible;
             
             // Display build time for Hub updates
             if (NewVersion != null)

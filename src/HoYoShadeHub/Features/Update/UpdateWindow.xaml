@@ -112,6 +112,24 @@
                     </StackPanel>
                 </Grid>
 
+                <!--  下载服务器选择  -->
+                <Grid x:Name="Grid_DownloadServer"
+                      Margin="0,8,0,0" 
+                      ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="下载服务器：" />
+                    <ComboBox Grid.Column="1"
+                              HorizontalAlignment="Left"
+                              ItemsSource="{x:Bind DownloadServers}"
+                              SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}" />
+                </Grid>
+
                 <MenuFlyoutSeparator />
 
                 <!--  更新后展示更新内容 (Hub更新显示)  -->
