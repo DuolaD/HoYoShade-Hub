@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using NuGet.Versioning;
 using HoYoShadeHub.Core.Metadata.Github;
@@ -11,6 +12,7 @@ using HoYoShadeHub.Language;
 using HoYoShadeHub.RPC;
 using HoYoShadeHub.RPC.HoYoShadeInstall;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -32,6 +34,14 @@ namespace HoYoShadeHub.Features.ViewHost;
 [INotifyPropertyChanged]
 public sealed partial class HoYoShadeDownloadView : UserControl
 {
+    private readonly ILogger<HoYoShadeDownloadView> _logger = AppConfig.GetLogger<HoYoShadeDownloadView>();
+
+    private sealed class PresetsSnapshot
+    {
+        public bool Existed { get; set; }
+        public HashSet<string> RelativeFiles { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    }
+
     public HoYoShadeDownloadView()
     {
         this.InitializeComponent();
@@ -49,8 +59,6 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             ImportFromLocalCommand.NotifyCanExecuteChanged();
         };
         UpdateDownloadServers();
-        // Register for language change messages
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
     }
 
     private void OnLanguageChanged()
@@ -122,7 +130,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(CanImport))]
     private bool isUpdateMode;
 
-    public string Title => IsUpdateMode ? "ÈÃÎÒÃÇ¸üÐÂ HoYoShade ¿ò¼Ü" : Lang.HoYoShadeDownloadView_Title;
+    public string Title => IsUpdateMode ? "ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ HoYoShade ï¿½ï¿½ï¿½" : Lang.HoYoShadeDownloadView_Title;
 
     // Allow selection always (unless downloading) so users can repair/reinstall if needed
     public bool IsHoYoShadeSelectionEnabled => !IsDownloading;
@@ -255,7 +263,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         InitializeLanguageSelector();
-        _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
+        // Unregister first to avoid duplicate registration crash if Grid_Loaded is called multiple times
+        WeakReferenceMessenger.Default.Unregister<LanguageChangedMessage>(this);
+        
+        // _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder); // Already initialized in constructor
         await LoadInstalledVersionsAsync();
         CheckInstallationStatus();
         _ = LoadVersionsAsync();
@@ -566,14 +577,18 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         // Check if this is an update (existing installation)
         var targetPath = System.IO.Path.Combine(AppConfig.UserDataFolder, folderName);
         var presetsPath = System.IO.Path.Combine(targetPath, "Presets");
-        bool isUpdate = Directory.Exists(presetsPath);
+        bool hasExistingPresets = Directory.Exists(presetsPath);
         
         // Determine presets handling option
         int presetsHandling = 0; // 0: Overwrite (default)
         string versionTag = SelectedVersion?.TagName ?? "";
+        PresetsSnapshot? presetsSnapshot = null;
         
-        if (isUpdate && IsUpdateMode)
+        // In update mode, always ask user how to handle presets (regardless of whether Presets folder exists)
+        // This allows users who manually deleted presets to choose whether to restore them
+        if (IsUpdateMode)
         {
+            _logger.LogInformation("Update install: prompting presets handling. TargetPath={TargetPath}, HasExistingPresets={HasExistingPresets}", targetPath, hasExistingPresets);
             // Show dialog to ask user how to handle presets
             var (cancelled, option) = await PresetsHandlingDialog.ShowAsync(this.XamlRoot);
             
@@ -585,6 +600,30 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             }
             
             presetsHandling = (int)option;
+            _logger.LogInformation("Update install: presets handling selected. Option={Option}, Value={Value}", option, presetsHandling);
+        }
+        else if (hasExistingPresets)
+        {
+            _logger.LogInformation("Install: prompting presets handling. TargetPath={TargetPath}, HasExistingPresets={HasExistingPresets}", targetPath, hasExistingPresets);
+            // If presets folder exists and we're not in update mode, still ask the user
+            // This covers cases where user might have manually deleted presets and wants to restore
+            var (cancelled, option) = await PresetsHandlingDialog.ShowAsync(this.XamlRoot);
+            
+            if (cancelled)
+            {
+                // User cancelled
+                _downloadCts?.Cancel();
+                return;
+            }
+            
+            presetsHandling = (int)option;
+            _logger.LogInformation("Install: presets handling selected. Option={Option}, Value={Value}", option, presetsHandling);
+        }
+
+        if (presetsHandling == 1)
+        {
+            presetsSnapshot = CapturePresetsSnapshot(targetPath);
+            _logger.LogInformation("Presets snapshot captured. TargetPath={TargetPath}, Existed={Existed}, Files={FileCount}", targetPath, presetsSnapshot.Existed, presetsSnapshot.RelativeFiles.Count);
         }
 
         if (!RpcClientFactory.CheckRpcServerRunning())
@@ -617,6 +656,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             PresetsHandling = presetsHandling,
             VersionTag = versionTag
         };
+        _logger.LogInformation("Install request: Keyword={Keyword}, TargetPath={TargetPath}, PresetsHandling={PresetsHandling}, VersionTag={VersionTag}, UrlIsFile={UrlIsFile}", keyword, targetPath, presetsHandling, versionTag, assetUrl?.StartsWith("file://", StringComparison.OrdinalIgnoreCase) == true);
 
         using var call = client.InstallHoYoShade(request, cancellationToken: _downloadCts.Token);
         
@@ -652,6 +692,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             {
                 // Download of this variant completed successfully - save version information
                 await SaveVersionInfoAfterInstallAsync(keyword, SelectedVersion.TagName, "github_release");
+                if (presetsHandling == 1 && presetsSnapshot != null)
+                {
+                    await RestorePresetsSnapshotAsync(targetPath, presetsSnapshot);
+                }
                 DownloadProgress = 0;
                 SpeedAndProgress = "";
             }
@@ -1081,7 +1125,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     {
         try
         {
-            Debug.WriteLine($"Starting local package installation: {packagePath}");
+            _logger.LogInformation("Starting local package installation: {PackagePath}", packagePath);
             
             StatusMessage = Lang.HoYoShadeDownloadView_Installing;
             _isPaused = false;
@@ -1092,7 +1136,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             
             if (!RpcClientFactory.CheckRpcServerRunning())
             {
-                Debug.WriteLine("RPC server not running, starting it...");
+                _logger.LogInformation("RPC server not running, starting it");
                 StatusMessage = Lang.HoYoShadeDownloadView_StatusStartingRPC;
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                 {
@@ -1108,7 +1152,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                     await Task.Delay(500);
                     if (RpcClientFactory.CheckRpcServerRunning())
                     {
-                        Debug.WriteLine("RPC server started successfully");
+                        _logger.LogInformation("RPC server started successfully");
                         break;
                     }
                 }
@@ -1120,15 +1164,16 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             }
             
             var targetPath = System.IO.Path.Combine(AppConfig.UserDataFolder, packageType);
-            Debug.WriteLine($"Target installation path: {targetPath}");
+            _logger.LogInformation("Local install target path: {TargetPath}", targetPath);
             
-            // Check if this is an update (existing installation with Presets)
+            // Check if Presets folder exists
             var presetsPath = System.IO.Path.Combine(targetPath, "Presets");
-            bool isUpdate = Directory.Exists(presetsPath);
+            bool hasExistingPresets = Directory.Exists(presetsPath);
             
             // Determine presets handling option
             int presetsHandling = 0; // 0: Overwrite (default)
             string versionTag = "";
+            PresetsSnapshot? presetsSnapshot = null;
             
             // Extract version from filename for version tag
             var fileName = Path.GetFileNameWithoutExtension(packagePath);
@@ -1145,12 +1190,14 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             {
                 // Fallback version tag if filename doesn't contain valid version
                 versionTag = "V" + DateTime.Now.ToString("yyyy.MM.dd.HHmmss");
-                Debug.WriteLine($"Version parsing failed, using timestamp as tag: {versionTag}");
+                _logger.LogInformation("Local install: version parsing failed, using timestamp tag: {VersionTag}", versionTag);
             }
             
-            // Ask for presets handling if presets folder exists (ignoring IsUpdateMode flag)
-            if (isUpdate)
+            // Always ask for presets handling when importing (regardless of update mode flag)
+            // This allows users to control preset behavior for all local imports
+            if (hasExistingPresets || IsUpdateMode)
             {
+                _logger.LogInformation("Local import: prompting presets handling. IsUpdateMode={IsUpdateMode}, HasExistingPresets={HasExistingPresets}, TargetPath={TargetPath}", IsUpdateMode, hasExistingPresets, targetPath);
                 // Show dialog to ask user how to handle presets
                 var (cancelled, option) = await PresetsHandlingDialog.ShowAsync(this.XamlRoot);
                 
@@ -1164,7 +1211,13 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 }
                 
                 presetsHandling = (int)option;
-                Debug.WriteLine($"User selected presets handling option: {option} (value: {presetsHandling})");
+                _logger.LogInformation("Local import: presets handling selected. Option={Option}, Value={Value}", option, presetsHandling);
+            }
+
+            if (presetsHandling == 1)
+            {
+                presetsSnapshot = CapturePresetsSnapshot(targetPath);
+                _logger.LogInformation("Presets snapshot captured. TargetPath={TargetPath}, Existed={Existed}, Files={FileCount}", targetPath, presetsSnapshot.Existed, presetsSnapshot.RelativeFiles.Count);
             }
             
             var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
@@ -1177,15 +1230,14 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 PresetsHandling = presetsHandling,
                 VersionTag = versionTag
             };
-            
-            Debug.WriteLine($"Sending install request with URL: {request.DownloadUrl}, PresetsHandling: {presetsHandling}, VersionTag: {versionTag}");
+            _logger.LogInformation("Local import: sending install request. TargetPath={TargetPath}, PresetsHandling={PresetsHandling}, VersionTag={VersionTag}", targetPath, presetsHandling, versionTag);
             
             using var call = client.InstallHoYoShade(request, cancellationToken: CancellationToken.None);
             
             while (await call.ResponseStream.MoveNext(CancellationToken.None))
             {
                 var progress = call.ResponseStream.Current;
-                Debug.WriteLine($"Installation progress - State: {progress.State}, Error: {progress.ErrorMessage}");
+                _logger.LogInformation("Local install progress. State={State}, Error={Error}", progress.State, progress.ErrorMessage);
                 
                 if (progress.State == 2) 
                 {
@@ -1195,7 +1247,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 else if (progress.State == 3) 
                 {
                     DownloadProgress = 100;
-                    Debug.WriteLine("Installation completed successfully");
+                    _logger.LogInformation("Local install completed successfully");
                     
                     // Save version info after successful installation from local package
                     try
@@ -1209,7 +1261,12 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Failed to save version info after local install: {ex.Message}");
+                        _logger.LogWarning(ex, "Failed to save version info after local install");
+                    }
+
+                    if (presetsHandling == 1 && presetsSnapshot != null)
+                    {
+                        await RestorePresetsSnapshotAsync(targetPath, presetsSnapshot);
                     }
                     
                     break;
@@ -1236,15 +1293,110 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             IsDownloading = false;
             DownloadProgress = 0;
             
-            Debug.WriteLine("Local package installation finished successfully");
+            _logger.LogInformation("Local package installation finished successfully");
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"InstallFromLocalPackageAsync error: {ex}");
+            _logger.LogError(ex, "InstallFromLocalPackageAsync error");
             var errorDetail = string.IsNullOrWhiteSpace(ex.Message) ? ex.GetType().Name : ex.Message;
             StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusError, errorDetail);
             IsDownloading = false;
             IsControlButtonsVisible = false;
+        }
+    }
+
+    private PresetsSnapshot CapturePresetsSnapshot(string targetPath)
+    {
+        var snapshot = new PresetsSnapshot();
+        try
+        {
+            var presetsPath = Path.Combine(targetPath, "Presets");
+            snapshot.Existed = Directory.Exists(presetsPath);
+            if (!snapshot.Existed)
+            {
+                return snapshot;
+            }
+
+            foreach (var file in Directory.EnumerateFiles(presetsPath, "*", SearchOption.AllDirectories))
+            {
+                snapshot.RelativeFiles.Add(Path.GetRelativePath(presetsPath, file));
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to capture presets snapshot. TargetPath={TargetPath}", targetPath);
+        }
+        return snapshot;
+    }
+
+    private async Task RestorePresetsSnapshotAsync(string targetPath, PresetsSnapshot snapshot)
+    {
+        try
+        {
+            var presetsPath = Path.Combine(targetPath, "Presets");
+            if (!snapshot.Existed)
+            {
+                if (Directory.Exists(presetsPath))
+                {
+                    Directory.Delete(presetsPath, true);
+                    _logger.LogInformation("KeepExisting: Deleted Presets folder created during install. Path={Path}", presetsPath);
+                }
+                return;
+            }
+
+            if (!Directory.Exists(presetsPath))
+            {
+                _logger.LogInformation("KeepExisting: Presets folder missing after install; nothing to restore. Path={Path}", presetsPath);
+                return;
+            }
+
+            int removedFiles = 0;
+            foreach (var file in Directory.EnumerateFiles(presetsPath, "*", SearchOption.AllDirectories))
+            {
+                var relative = Path.GetRelativePath(presetsPath, file);
+                if (!snapshot.RelativeFiles.Contains(relative))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                        removedFiles++;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "KeepExisting: Failed to delete file. File={File}", file);
+                    }
+                }
+            }
+
+            var dirs = Directory.EnumerateDirectories(presetsPath, "*", SearchOption.AllDirectories)
+                .OrderByDescending(d => d.Length)
+                .ToList();
+            int removedDirs = 0;
+            foreach (var dir in dirs)
+            {
+                try
+                {
+                    if (Directory.Exists(dir) && !Directory.EnumerateFileSystemEntries(dir).Any())
+                    {
+                        Directory.Delete(dir, false);
+                        removedDirs++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "KeepExisting: Failed to delete empty directory. Dir={Dir}", dir);
+                }
+            }
+
+            _logger.LogInformation("KeepExisting: Presets restored to snapshot. RemovedFiles={RemovedFiles}, RemovedDirs={RemovedDirs}", removedFiles, removedDirs);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "KeepExisting: Failed to restore presets snapshot. TargetPath={TargetPath}", targetPath);
+        }
+        finally
+        {
+            await Task.CompletedTask;
         }
     }
     
@@ -1313,7 +1465,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     }
     
     /// <summary>
-    /// ¼ÓÔØÒÑ°²×°µÄHoYoShadeºÍOpenHoYoShade°æ±¾
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Ñ°ï¿½×°ï¿½ï¿½HoYoShadeï¿½ï¿½OpenHoYoShadeï¿½æ±¾
     /// </summary>
     private async Task LoadInstalledVersionsAsync()
     {
@@ -1334,16 +1486,16 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     }
     
     /// <summary>
-    /// ±È½ÏÁ½¸ö°æ±¾ºÅ (Ê¹ÓÃ NuGetVersion Ìá¹©¹¤Òµ¼¶ÓïÒå»¯°æ±¾±È½Ï)
-    /// Ö§³ÖËùÓÐ±ê×¼ÓïÒå»¯°æ±¾¸ñÊ½£¬°üÀ¨:
-    /// - ±ê×¼°æ±¾: 3.0.1, 3.1.0
-    /// - Ô¤·¢²¼°æ±¾: 3.0.0-Beta.1, 3.0.0-Alpha.2, 3.0.0-RC.1
-    /// - ´ø¹¹½¨ÔªÊý¾Ý: 3.0.0+build.123
-    /// - ×éºÏ¸ñÊ½: 3.0.0-Beta.1+build.456
+    /// ï¿½È½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½ (Ê¹ï¿½ï¿½ NuGetVersion ï¿½á¹©ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½å»¯ï¿½æ±¾ï¿½È½ï¿½)
+    /// Ö§ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½×¼ï¿½ï¿½ï¿½å»¯ï¿½æ±¾ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:
+    /// - ï¿½ï¿½×¼ï¿½æ±¾: 3.0.1, 3.1.0
+    /// - Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾: 3.0.0-Beta.1, 3.0.0-Alpha.2, 3.0.0-RC.1
+    /// - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½ï¿½: 3.0.0+build.123
+    /// - ï¿½ï¿½Ï¸ï¿½Ê½: 3.0.0-Beta.1+build.456
     /// </summary>
-    /// <param name="version1">°æ±¾1 (ÀýÈç: "V3.0.1", "V3.0.0-Beta.1")</param>
-    /// <param name="version2">°æ±¾2 (ÀýÈç: "V3.1.0", "V3.0.0-Beta.3")</param>
-    /// <returns>Èç¹ûversion1 > version2·µ»Ø1,Èç¹ûversion1 < version2·µ»Ø-1,Èç¹ûÏàµÈ·µ»Ø0,ÎÞ·¨±È½Ï·µ»Ønull</returns>
+    /// <param name="version1">ï¿½æ±¾1 (ï¿½ï¿½ï¿½ï¿½: "V3.0.1", "V3.0.0-Beta.1")</param>
+    /// <param name="version2">ï¿½æ±¾2 (ï¿½ï¿½ï¿½ï¿½: "V3.1.0", "V3.0.0-Beta.3")</param>
+    /// <returns>ï¿½ï¿½ï¿½version1 > version2ï¿½ï¿½ï¿½ï¿½1,ï¿½ï¿½ï¿½version1 < version2ï¿½ï¿½ï¿½ï¿½-1,ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½0,ï¿½Þ·ï¿½ï¿½È½Ï·ï¿½ï¿½ï¿½null</returns>
     private int? CompareVersions(string? version1, string? version2)
     {
         if (string.IsNullOrWhiteSpace(version1) || string.IsNullOrWhiteSpace(version2))
@@ -1353,16 +1505,16 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         
         try
         {
-            // ÒÆ³ý 'v' »ò 'V' Ç°×º
+            // ï¿½Æ³ï¿½ 'v' ï¿½ï¿½ 'V' Ç°×º
             string v1 = version1.TrimStart('v', 'V').Trim();
             string v2 = version2.TrimStart('v', 'V').Trim();
             
-            // Ê¹ÓÃ NuGetVersion ½âÎö°æ±¾ºÅ
-            // NuGetVersion ÍêÈ«Ö§³ÖÓïÒå»¯°æ±¾¹æ·¶ (SemVer 2.0):
-            // - ÕýÈ·´¦ÀíÖ÷°æ±¾¡¢´Î°æ±¾¡¢ÐÞ¶©°æ±¾µÄÊý×Ö±È½Ï
-            // - Ô¤·¢²¼±êÊ¶µÄ×ÖµäÐòºÍÊý×Ö±È½Ï (Beta.1 < Beta.2 < Beta.10)
-            // - ÕýÊ½°æ > Ô¤ÀÀ°æ (3.0.0 > 3.0.0-Beta.1)
-            // - Ô¤·¢²¼±êÊ¶µÄÓÅÏÈ¼¶ (Alpha < Beta < RC < ÕýÊ½°æ)
+            // Ê¹ï¿½ï¿½ NuGetVersion ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½
+            // NuGetVersion ï¿½ï¿½È«Ö§ï¿½ï¿½ï¿½ï¿½ï¿½å»¯ï¿½æ±¾ï¿½æ·¶ (SemVer 2.0):
+            // - ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½ï¿½Î°æ±¾ï¿½ï¿½ï¿½Þ¶ï¿½ï¿½æ±¾ï¿½ï¿½ï¿½ï¿½ï¿½Ö±È½ï¿½
+            // - Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±È½ï¿½ (Beta.1 < Beta.2 < Beta.10)
+            // - ï¿½ï¿½Ê½ï¿½ï¿½ > Ô¤ï¿½ï¿½ï¿½ï¿½ (3.0.0 > 3.0.0-Beta.1)
+            // - Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ (Alpha < Beta < RC < ï¿½ï¿½Ê½ï¿½ï¿½)
             if (NuGetVersion.TryParse(v1, out var nugetV1) && NuGetVersion.TryParse(v2, out var nugetV2))
             {
                 int result = nugetV1.CompareTo(nugetV2);
@@ -1372,7 +1524,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             
             Debug.WriteLine($"CompareVersions: NuGetVersion parse failed for '{version1}' or '{version2}', falling back to manual parse");
             
-            // Èç¹û NuGetVersion ÎÞ·¨½âÎö,»ØÍËµ½ÊÖ¶¯½âÎö (±£Áô×÷Îª°²È«Íø)
+            // ï¿½ï¿½ï¿½ NuGetVersion ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Ëµï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½È«ï¿½ï¿½)
             var parts1 = v1.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
             var parts2 = v2.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
             

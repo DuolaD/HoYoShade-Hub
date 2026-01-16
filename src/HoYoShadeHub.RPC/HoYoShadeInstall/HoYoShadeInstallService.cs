@@ -48,25 +48,35 @@ public class HoYoShadeInstallService
         
         try
         {
-            _logger.LogInformation("Starting HoYoShade installation. URL: {Url}, Target: {Target}, PresetsHandling: {PresetsHandling}, VersionTag: {VersionTag}", 
-                url, targetPath, presetsHandling, versionTag);
+            _logger.LogInformation("=== HoYoShade Installation Started ===");
+            _logger.LogInformation("Installation Parameters:");
+            _logger.LogInformation("  - URL: {Url}", url);
+            _logger.LogInformation("  - Target Path: {Target}", targetPath);
+            _logger.LogInformation("  - Presets Handling: {PresetsHandling} (0=Overwrite, 1=KeepExisting, 2=SeparateFolder)", presetsHandling);
+            _logger.LogInformation("  - Version Tag: {VersionTag}", versionTag ?? "(null)");
+            _logger.LogInformation("  - Is Local File: {IsLocal}", isLocalFile);
+            
             State = 0;
             ErrorMessage = null;
 
             Directory.CreateDirectory(targetPath);
+            _logger.LogInformation("Target directory created/verified: {Path}", targetPath);
             
             if (isLocalFile)
             {
                 zipPath = url.Substring(7);
-                _logger.LogInformation("Using local file: {ZipPath}", zipPath);
+                _logger.LogInformation("Using local file installation");
+                _logger.LogInformation("  - Zip Path: {ZipPath}", zipPath);
                 
                 if (!File.Exists(zipPath))
                 {
+                    _logger.LogError("Local package file not found: {ZipPath}", zipPath);
                     throw new FileNotFoundException($"Local package not found: {zipPath}");
                 }
                 
                 TotalBytes = new FileInfo(zipPath).Length;
                 DownloadBytes = TotalBytes;
+                _logger.LogInformation("  - File Size: {Size} bytes ({SizeMB:F2} MB)", TotalBytes, TotalBytes / (1024.0 * 1024.0));
             }
             else
             {
@@ -127,84 +137,290 @@ public class HoYoShadeInstallService
             }
 
             State = 2;
-            _logger.LogInformation("Extracting HoYoShade zip to {targetPath}.", targetPath);
+            _logger.LogInformation("=== Starting Extraction ===");
+            _logger.LogInformation("Extracting HoYoShade zip: {ZipPath}", zipPath);
+            _logger.LogInformation("Extraction target: {TargetPath}", targetPath);
+
+            string presetsTargetPathBefore = Path.Combine(targetPath, "Presets");
+            bool presetsDirExistedBefore = Directory.Exists(presetsTargetPathBefore);
+            var presetsFilesBefore = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (presetsDirExistedBefore)
+            {
+                try
+                {
+                    foreach (var file in Directory.EnumerateFiles(presetsTargetPathBefore, "*", SearchOption.AllDirectories))
+                    {
+                        presetsFilesBefore.Add(Path.GetRelativePath(presetsTargetPathBefore, file));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to snapshot existing Presets files before install");
+                }
+            }
             
             await Task.Run(() =>
             {
                 // Extract to a temporary directory first
                 string tempExtractPath = Path.Combine(Path.GetTempPath(), $"HoYoShade_Extract_{Guid.NewGuid()}");
+                _logger.LogInformation("Created temporary extraction directory: {TempPath}", tempExtractPath);
+                
                 try
                 {
                     Directory.CreateDirectory(tempExtractPath);
                     
+                    _logger.LogInformation("Extracting archive to temporary directory...");
                     using (var archive = new SharpSevenZipExtractor(zipPath))
                     {
                         archive.ExtractArchive(tempExtractPath);
                     }
+                    _logger.LogInformation("Archive extraction completed");
+                    
+                    // Log all extracted top-level directories
+                    var topLevelDirs = Directory.GetDirectories(tempExtractPath);
+                    _logger.LogInformation("Top-level directories in extracted archive ({Count}):", topLevelDirs.Length);
+                    foreach (var dir in topLevelDirs)
+                    {
+                        _logger.LogInformation("  - {DirName}", Path.GetFileName(dir));
+                    }
                     
                     // Handle Presets folder based on presetsHandling option
+                    // Robustly find Presets folder (case-insensitive search at top level)
                     string presetsSourcePath = Path.Combine(tempExtractPath, "Presets");
+                    var foundPresetsDir = Directory.GetDirectories(tempExtractPath)
+                        .FirstOrDefault(d => Path.GetFileName(d).Equals("Presets", StringComparison.OrdinalIgnoreCase));
+                    
+                    if (foundPresetsDir != null)
+                    {
+                        presetsSourcePath = foundPresetsDir;
+                        _logger.LogInformation("Found Presets folder: {Path}", presetsSourcePath);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Presets folder not found at root of extracted archive: {Path}", tempExtractPath);
+                    }
+
                     string presetsTargetPath = Path.Combine(targetPath, "Presets");
+                    
+                    _logger.LogInformation("=== Presets Folder Handling ===");
+                    _logger.LogInformation("Presets source path: {SourcePath}", presetsSourcePath);
+                    _logger.LogInformation("Presets target path: {TargetPath}", presetsTargetPath);
                     
                     // Check if update mode and Presets folder exists in the archive
                     bool hasPresetsInArchive = Directory.Exists(presetsSourcePath);
                     bool hasExistingPresets = Directory.Exists(presetsTargetPath);
                     
-                    _logger.LogInformation("Presets handling - Mode: {Mode}, HasPresetsInArchive: {HasArchive}, HasExistingPresets: {HasExisting}", 
-                        presetsHandling, hasPresetsInArchive, hasExistingPresets);
+                    _logger.LogInformation("Presets folder status check:");
+                    _logger.LogInformation("  - Has Presets in archive: {HasArchive}", hasPresetsInArchive);
+                    _logger.LogInformation("  - Has existing Presets: {HasExisting}", hasExistingPresets);
+                    _logger.LogInformation("  - Handling mode: {Mode} (0=Overwrite, 1=KeepExisting, 2=SeparateFolder)", presetsHandling);
                     
-                    if (hasPresetsInArchive && hasExistingPresets)
+                    if (hasPresetsInArchive) // Simplified logic: if we have source presets, we must decide what to do
                     {
-                        switch (presetsHandling)
+                        // Decision point
+                        if (presetsHandling == 1) // KeepExisting
                         {
-                            case 1: // KeepExisting - Don't update presets
-                                _logger.LogInformation("Keeping existing presets, removing from extraction");
-                                Directory.Delete(presetsSourcePath, true);
-                                break;
-                                
-                            case 2: // SeparateFolder - Place in version-tagged folder
-                                if (!string.IsNullOrEmpty(versionTag))
+                            _logger.LogInformation("=== Mode 1: KeepExisting - Handling Presets ===");
+                            bool shouldDelete = false;
+
+                            if (hasExistingPresets)
+                            {
+                                _logger.LogInformation("Existing presets found, will remove new ones from extraction to preserve existing.");
+                                shouldDelete = true;
+                            }
+                            else
+                            {
+                                _logger.LogInformation("No existing presets found, but KeepExisting selected. Removing new presets anyway as requested.");
+                                shouldDelete = true;
+                            }
+
+                            if (shouldDelete)
+                            {
+                                _logger.LogInformation("Deleting Presets folder from temp extraction: {Path}", presetsSourcePath);
+                                try
                                 {
-                                    _logger.LogInformation("Placing new presets in separate folder: {VersionTag}", versionTag);
-                                    string versionedPresetsPath = Path.Combine(presetsTargetPath, versionTag);
-                                    Directory.CreateDirectory(versionedPresetsPath);
-                                    
-                                    // Move contents of Presets from temp to versioned folder
-                                    foreach (var file in Directory.GetFiles(presetsSourcePath, "*", SearchOption.AllDirectories))
-                                    {
-                                        string relativePath = Path.GetRelativePath(presetsSourcePath, file);
-                                        string destFile = Path.Combine(versionedPresetsPath, relativePath);
-                                        Directory.CreateDirectory(Path.GetDirectoryName(destFile));
-                                        File.Copy(file, destFile, true);
-                                    }
-                                    
-                                    // Remove Presets from temp extraction so it doesn't overwrite
                                     Directory.Delete(presetsSourcePath, true);
+                                    _logger.LogInformation("Successfully deleted Presets folder from temp extraction");
                                 }
-                                break;
-                                
-                            case 0: // Overwrite (default) - Do nothing, will be overwritten during copy
-                            default:
-                                _logger.LogInformation("Will overwrite existing presets");
-                                break;
+                                catch (Exception ex)
+                                {
+                                    _logger.LogError(ex, "Failed to delete Presets folder from temp extraction");
+                                    throw;
+                                }
+                            }
+                        }
+                        else if (presetsHandling == 2 && hasExistingPresets && !string.IsNullOrEmpty(versionTag)) // SeparateFolder
+                        {
+                            _logger.LogInformation("=== Mode 2: SeparateFolder - Placing new presets in versioned folder ===");
+                            _logger.LogInformation("Version tag: {VersionTag}", versionTag);
+                            
+                            string versionedPresetsPath = Path.Combine(presetsTargetPath, versionTag);
+                            _logger.LogInformation("Versioned Presets path: {Path}", versionedPresetsPath);
+                            
+                            Directory.CreateDirectory(versionedPresetsPath);
+                            
+                            // Move contents of Presets from temp to versioned folder
+                            var filesToCopy = Directory.GetFiles(presetsSourcePath, "*", SearchOption.AllDirectories);
+                            _logger.LogInformation("Copying {Count} files to versioned folder...", filesToCopy.Length);
+                            
+                            foreach (var file in filesToCopy)
+                            {
+                                string relativePath = Path.GetRelativePath(presetsSourcePath, file);
+                                string destFile = Path.Combine(versionedPresetsPath, relativePath);
+                                Directory.CreateDirectory(Path.GetDirectoryName(destFile));
+                                File.Copy(file, destFile, true);
+                            }
+                            
+                            // Remove Presets from temp extraction so it doesn't overwrite
+                            _logger.LogInformation("Deleting Presets folder from temp extraction after separate copy");
+                            Directory.Delete(presetsSourcePath, true);
+                        }
+                        else
+                        {
+                            _logger.LogInformation("=== Mode 0 (Overwrite) or fallback - Presets will be installed/overwritten normally ===");
                         }
                     }
-                    else if (hasPresetsInArchive && presetsHandling == 1)
+                    else
                     {
-                        // KeepExisting mode but no existing presets - remove from extraction anyway
-                        _logger.LogInformation("KeepExisting mode but no existing presets, removing from extraction");
-                        Directory.Delete(presetsSourcePath, true);
+                        _logger.LogInformation("No/Invalid Presets folder in archive, skipping special handling.");
                     }
+
+                    if (presetsHandling == 1)
+                    {
+                        try
+                        {
+                            var allPresetsDirs = Directory.EnumerateDirectories(tempExtractPath, "*", SearchOption.AllDirectories)
+                                .Where(d => Path.GetFileName(d).Equals("Presets", StringComparison.OrdinalIgnoreCase))
+                                .OrderByDescending(d => d.Length)
+                                .ToList();
+
+                            if (Path.GetFileName(tempExtractPath).Equals("Presets", StringComparison.OrdinalIgnoreCase))
+                            {
+                                allPresetsDirs.Add(tempExtractPath);
+                            }
+
+                            if (allPresetsDirs.Count > 0)
+                            {
+                                _logger.LogInformation("KeepExisting: Deleting {Count} Presets directories from temp extraction", allPresetsDirs.Count);
+                                foreach (var dir in allPresetsDirs)
+                                {
+                                    if (!Directory.Exists(dir)) continue;
+                                    _logger.LogInformation("KeepExisting: Deleting Presets directory: {Path}", dir);
+                                    Directory.Delete(dir, true);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "KeepExisting: Failed to delete some Presets directories from temp extraction");
+                        }
+                    }
+
+                    _logger.LogInformation("=== Starting Final Copy ===");
+                    _logger.LogInformation("Copying all files from temp extraction to target directory");
+                    _logger.LogInformation("Source: {Source}", tempExtractPath);
+                    _logger.LogInformation("Target: {Target}", targetPath);
+                    _logger.LogInformation("Presets Handling: {Mode} (0=Overwrite, 1=KeepExisting, 2=SeparateFolder), VersionTag: {Tag}", presetsHandling, versionTag ?? "(null)");
                     
                     // Copy all files from temp to target (excluding already handled Presets if needed)
-                    CopyDirectory(tempExtractPath, targetPath, true);
+                    // Pass presetsHandling and versionTag to CopyDirectory
+                    CopyDirectory(tempExtractPath, targetPath, true, presetsHandling, versionTag, targetPath);
+                    
+                    _logger.LogInformation("Final copy completed");
+                    
+                    // Verify Presets in target after copy
+                    bool presetsInTargetAfterCopy = Directory.Exists(presetsTargetPath);
+                    _logger.LogInformation("Verification: Presets folder exists in target after copy: {Exists}", presetsInTargetAfterCopy);
+
+                    if (presetsHandling == 1)
+                    {
+                        try
+                        {
+                            if (!presetsDirExistedBefore)
+                            {
+                                if (Directory.Exists(presetsTargetPath))
+                                {
+                                    _logger.LogInformation("KeepExisting: Presets did not exist before install; deleting created Presets folder");
+                                    Directory.Delete(presetsTargetPath, true);
+                                }
+                            }
+                            else if (Directory.Exists(presetsTargetPath))
+                            {
+                                int removedFiles = 0;
+                                foreach (var file in Directory.EnumerateFiles(presetsTargetPath, "*", SearchOption.AllDirectories))
+                                {
+                                    var relativePath = Path.GetRelativePath(presetsTargetPath, file);
+                                    if (!presetsFilesBefore.Contains(relativePath))
+                                    {
+                                        try
+                                        {
+                                            File.Delete(file);
+                                            removedFiles++;
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            _logger.LogWarning(ex, "KeepExisting: Failed to delete newly created presets file: {File}", file);
+                                        }
+                                    }
+                                }
+
+                                var allDirs = Directory.EnumerateDirectories(presetsTargetPath, "*", SearchOption.AllDirectories)
+                                    .OrderByDescending(d => d.Length)
+                                    .ToList();
+                                int removedDirs = 0;
+                                foreach (var dir in allDirs)
+                                {
+                                    try
+                                    {
+                                        if (Directory.Exists(dir) && !Directory.EnumerateFileSystemEntries(dir).Any())
+                                        {
+                                            Directory.Delete(dir, false);
+                                            removedDirs++;
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _logger.LogWarning(ex, "KeepExisting: Failed to delete empty directory: {Dir}", dir);
+                                    }
+                                }
+
+                                _logger.LogInformation("KeepExisting: Removed {RemovedFiles} new files and {RemovedDirs} empty directories", removedFiles, removedDirs);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "KeepExisting: Post-copy cleanup failed");
+                        }
+                    }
+                    
+                    if (presetsInTargetAfterCopy)
+                    {
+                        try
+                        {
+                            var finalPresetsFiles = Directory.GetFiles(presetsTargetPath, "*", SearchOption.AllDirectories);
+                            _logger.LogInformation("Final Presets folder contains {Count} files", finalPresetsFiles.Length);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Failed to enumerate final Presets files");
+                        }
+                    }
                 }
                 finally
                 {
                     // Clean up temp extraction directory
                     if (Directory.Exists(tempExtractPath))
                     {
-                        try { Directory.Delete(tempExtractPath, true); } catch { }
+                        _logger.LogInformation("Cleaning up temporary extraction directory: {Path}", tempExtractPath);
+                        try 
+                        { 
+                            Directory.Delete(tempExtractPath, true);
+                            _logger.LogInformation("Temporary directory deleted successfully");
+                        } 
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Failed to delete temporary extraction directory");
+                        }
                     }
                 }
             }, cancellationToken);
@@ -215,7 +431,7 @@ public class HoYoShadeInstallService
             }
 
             State = 3;
-            _logger.LogInformation("HoYoShade installation finished.");
+            _logger.LogInformation("=== HoYoShade Installation Finished Successfully ===");
         }
         catch (OperationCanceledException)
         {
@@ -235,21 +451,92 @@ public class HoYoShadeInstallService
         }
     }
     
-    private void CopyDirectory(string sourceDir, string destDir, bool overwrite)
+    private void CopyDirectory(string sourceDir, string destDir, bool overwrite, int presetsHandling = 0, string versionTag = null, string rootTargetDir = null)
     {
+        _logger.LogInformation("CopyDirectory called - Source: {Source}, Dest: {Dest}, Overwrite: {Overwrite}", 
+            sourceDir, destDir, overwrite);
+
+        if (presetsHandling == 1 && !string.IsNullOrWhiteSpace(rootTargetDir))
+        {
+            try
+            {
+                string fullDestDir = Path.GetFullPath(destDir)
+                    .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                string fullPresetsRoot = Path.GetFullPath(Path.Combine(rootTargetDir, "Presets"))
+                    .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+                if (fullDestDir.Equals(fullPresetsRoot, StringComparison.OrdinalIgnoreCase) ||
+                    fullDestDir.StartsWith(fullPresetsRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogInformation("KeepExisting: Blocking copy into Presets target path: {Dest}", fullDestDir);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "KeepExisting: Failed to evaluate target path for presets blocking");
+            }
+        }
+        
         Directory.CreateDirectory(destDir);
         
-        foreach (string file in Directory.GetFiles(sourceDir))
+        var files = Directory.GetFiles(sourceDir);
+        _logger.LogInformation("Copying {Count} files from {Source}", files.Length, Path.GetFileName(sourceDir));
+        
+        foreach (string file in files)
         {
-            string destFile = Path.Combine(destDir, Path.GetFileName(file));
+            string fileName = Path.GetFileName(file);
+            string destFile = Path.Combine(destDir, fileName);
+            
+            // Special logging for Presets folder - though files are inside Presets folder
+            if (sourceDir.EndsWith("Presets", StringComparison.OrdinalIgnoreCase) || 
+                destDir.EndsWith("Presets", StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogInformation("  [PRESETS] Copying file: {FileName} -> {DestFile}", fileName, destFile);
+            }
+            
             File.Copy(file, destFile, overwrite);
         }
         
-        foreach (string dir in Directory.GetDirectories(sourceDir))
+        var directories = Directory.GetDirectories(sourceDir);
+        _logger.LogInformation("Processing {Count} subdirectories from {Source}", directories.Length, Path.GetFileName(sourceDir));
+        
+        foreach (string dir in directories)
         {
-            string destSubDir = Path.Combine(destDir, Path.GetFileName(dir));
-            CopyDirectory(dir, destSubDir, overwrite);
+            string dirName = Path.GetFileName(dir);
+            
+            // Special handling for Presets folder during copy traversal
+            if (dirName.Equals("Presets", StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogInformation("!!! PRESETS FOLDER ENCOUNTERED: {Source} !!!", dir);
+                
+                if (presetsHandling == 1) // KeepExisting
+                {
+                    _logger.LogInformation("SKIPPING Presets folder copy as requested (KeepExisting mode).");
+                    continue; // Skip recursive copy for this folder
+                }
+                else if (presetsHandling == 2 && !string.IsNullOrEmpty(versionTag)) // SeparateFolder
+                {
+                    // Redirect to versioned folder
+                    // We need to determine where the "Presets" folder should land relative to the original destination
+                    // If we are at destDir, normally Presets would go to destDir/Presets
+                    // We want destDir/Presets/VersionTag/
+                    
+                    string versionedPath = Path.Combine(destDir, "Presets", versionTag);
+                    _logger.LogInformation("REDIRECTING Presets copy to versioned folder: {Path}", versionedPath);
+                    
+                    // Recursively copy to the new location, but reset handling to 0 for the inner copy so it doesn't loop or skip
+                    CopyDirectory(dir, versionedPath, true, 0, null, rootTargetDir);
+                    
+                    continue; // Skip standard copy
+                }
+            }
+            
+            string destSubDir = Path.Combine(destDir, dirName);
+            CopyDirectory(dir, destSubDir, overwrite, presetsHandling, versionTag, rootTargetDir);
         }
+        
+        _logger.LogInformation("Finished copying directory: {Dir}", Path.GetFileName(sourceDir));
     }
 
     /// <summary>
