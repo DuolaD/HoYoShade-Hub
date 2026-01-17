@@ -684,12 +684,14 @@
                                      Severity="Warning" />
 
                             <!--  HoYoShade 部分  -->
-                            <StackPanel x:Name="StackPanel_HoYoShade" Spacing="8" Visibility="Collapsed">
-                                <TextBlock FontSize="16"
-                                           FontWeight="SemiBold"
-                                           Text="联动HoYoShade" />
-
-                                <Grid ColumnSpacing="8">
+                            <StackPanel x:Name="StackPanel_HoYoShade"
+                                        Spacing="8"
+                                        Visibility="Collapsed">
+                                <TextBlock FontWeight="SemiBold" Text="联动 HoYoShade" />
+                                <Grid Background="{ThemeResource ControlFillColorDefaultBrush}"
+                                      BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                                      BorderThickness="1"
+                                      CornerRadius="8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
@@ -697,32 +699,39 @@
 
                                     <TextBox x:Name="TextBox_HoYoShadeCommand"
                                              Grid.Column="0"
-                                             IsReadOnly="True"
+                                             Padding="12,8"
+                                             VerticalAlignment="Stretch"
+                                             Background="Transparent"
+                                             BorderThickness="0"
                                              FontFamily="Consolas,Cascadia Mono,Courier New"
                                              FontSize="12"
-                                             Text="" />
+                                             IsReadOnly="True"
+                                             Text=""
+                                             TextWrapping="Wrap" />
 
                                     <Button Grid.Column="1"
-                                            Height="32"
+                                            Width="40"
+                                            Margin="4"
+                                            VerticalAlignment="Stretch"
+                                            Background="Transparent"
                                             BorderThickness="0"
-                                            CornerRadius="8"
                                             Click="Button_CopyHoYoShadeCommand_Click"
-                                            Style="{ThemeResource AccentButtonStyle}">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <FontIcon FontSize="14" Glyph="&#xE8C8;" />
-                                            <TextBlock Text="复制" />
-                                        </StackPanel>
+                                            CornerRadius="4"
+                                            ToolTipService.ToolTip="复制">
+                                        <FontIcon FontSize="14" Glyph="&#xE8C8;" />
                                     </Button>
                                 </Grid>
                             </StackPanel>
 
                             <!--  OpenHoYoShade 部分  -->
-                            <StackPanel x:Name="StackPanel_OpenHoYoShade" Spacing="8" Visibility="Collapsed">
-                                <TextBlock FontSize="16"
-                                           FontWeight="SemiBold"
-                                           Text="联动OpenHoYoShade" />
-
-                                <Grid ColumnSpacing="8">
+                            <StackPanel x:Name="StackPanel_OpenHoYoShade"
+                                        Spacing="8"
+                                        Visibility="Collapsed">
+                                <TextBlock FontWeight="SemiBold" Text="联动 OpenHoYoShade" />
+                                <Grid Background="{ThemeResource ControlFillColorDefaultBrush}"
+                                      BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                                      BorderThickness="1"
+                                      CornerRadius="8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
@@ -730,21 +739,26 @@
 
                                     <TextBox x:Name="TextBox_OpenHoYoShadeCommand"
                                              Grid.Column="0"
-                                             IsReadOnly="True"
+                                             Padding="12,8"
+                                             VerticalAlignment="Stretch"
+                                             Background="Transparent"
+                                             BorderThickness="0"
                                              FontFamily="Consolas,Cascadia Mono,Courier New"
                                              FontSize="12"
-                                             Text="" />
+                                             IsReadOnly="True"
+                                             Text=""
+                                             TextWrapping="Wrap" />
 
                                     <Button Grid.Column="1"
-                                            Height="32"
+                                            Width="40"
+                                            Margin="4"
+                                            VerticalAlignment="Stretch"
+                                            Background="Transparent"
                                             BorderThickness="0"
-                                            CornerRadius="8"
                                             Click="Button_CopyOpenHoYoShadeCommand_Click"
-                                            Style="{ThemeResource AccentButtonStyle}">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <FontIcon FontSize="14" Glyph="&#xE8C8;" />
-                                            <TextBlock Text="复制" />
-                                        </StackPanel>
+                                            CornerRadius="4"
+                                            ToolTipService.ToolTip="复制">
+                                        <FontIcon FontSize="14" Glyph="&#xE8C8;" />
                                     </Button>
                                 </Grid>
                             </StackPanel>
