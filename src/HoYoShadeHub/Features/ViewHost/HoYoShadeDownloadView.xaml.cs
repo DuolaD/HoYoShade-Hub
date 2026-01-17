@@ -623,7 +623,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         if (presetsHandling == 1)
         {
             presetsSnapshot = CapturePresetsSnapshot(targetPath);
-            _logger.LogInformation("Presets snapshot captured. TargetPath={TargetPath}, Existed={Existed}, Files={FileCount}", targetPath, presetsSnapshot.Existed, presetsSnapshot.RelativeFiles.Count);
+            _logger.LogDebug("Presets snapshot captured. TargetPath={TargetPath}, Existed={Existed}, Files={FileCount}", targetPath, presetsSnapshot.Existed, presetsSnapshot.RelativeFiles.Count);
         }
         
         await EnsureFreshRpcServerAsync(_downloadCts.Token);
@@ -1172,7 +1172,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             if (presetsHandling == 1)
             {
                 presetsSnapshot = CapturePresetsSnapshot(targetPath);
-                _logger.LogInformation("Presets snapshot captured. TargetPath={TargetPath}, Existed={Existed}, Files={FileCount}", targetPath, presetsSnapshot.Existed, presetsSnapshot.RelativeFiles.Count);
+                _logger.LogDebug("Presets snapshot captured. TargetPath={TargetPath}, Existed={Existed}, Files={FileCount}", targetPath, presetsSnapshot.Existed, presetsSnapshot.RelativeFiles.Count);
             }
             
             var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
@@ -1188,11 +1188,16 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             _logger.LogInformation("Local import: sending install request. TargetPath={TargetPath}, PresetsHandling={PresetsHandling}, VersionTag={VersionTag}", targetPath, presetsHandling, versionTag);
             
             using var call = client.InstallHoYoShade(request, cancellationToken: CancellationToken.None);
+            int? lastState = null;
             
             while (await call.ResponseStream.MoveNext(CancellationToken.None))
             {
                 var progress = call.ResponseStream.Current;
-                _logger.LogInformation("Local install progress. State={State}, Error={Error}", progress.State, progress.ErrorMessage);
+                if (progress.State != lastState)
+                {
+                    _logger.LogDebug("Local install state changed. State={State}", progress.State);
+                    lastState = progress.State;
+                }
                 
                 if (progress.State == 2) 
                 {
@@ -1230,7 +1235,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 {
                     var errorDetail = string.IsNullOrWhiteSpace(progress.ErrorMessage) ? "Unknown error (installer returned empty message)" : progress.ErrorMessage;
                     var errorMsg = string.Format(Lang.HoYoShadeDownloadView_StatusError + " ({0}): {1}", packageType, errorDetail);
-                    Debug.WriteLine($"Installation error: {errorMsg}");
+                    _logger.LogError("Local install failed. Detail={Detail}", errorDetail);
                     StatusMessage = errorMsg;
                     IsDownloading = false;
                     IsControlButtonsVisible = false;

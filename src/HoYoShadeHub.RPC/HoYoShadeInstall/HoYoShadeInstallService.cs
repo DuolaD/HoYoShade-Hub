@@ -49,24 +49,18 @@ public class HoYoShadeInstallService
         try
         {
             _logger.LogInformation("=== HoYoShade Installation Started ===");
-            _logger.LogInformation("Installation Parameters:");
-            _logger.LogInformation("  - URL: {Url}", url);
-            _logger.LogInformation("  - Target Path: {Target}", targetPath);
-            _logger.LogInformation("  - Presets Handling: {PresetsHandling} (0=Overwrite, 1=KeepExisting, 2=SeparateFolder)", presetsHandling);
-            _logger.LogInformation("  - Version Tag: {VersionTag}", versionTag ?? "(null)");
-            _logger.LogInformation("  - Is Local File: {IsLocal}", isLocalFile);
+            _logger.LogInformation("Install request. TargetPath={Target}, PresetsHandling={PresetsHandling}, VersionTag={VersionTag}, IsLocal={IsLocal}", targetPath, presetsHandling, versionTag ?? "(null)", isLocalFile);
             
             State = 0;
             ErrorMessage = null;
 
             Directory.CreateDirectory(targetPath);
-            _logger.LogInformation("Target directory created/verified: {Path}", targetPath);
+            _logger.LogDebug("Target directory created/verified: {Path}", targetPath);
             
             if (isLocalFile)
             {
                 zipPath = url.Substring(7);
-                _logger.LogInformation("Using local file installation");
-                _logger.LogInformation("  - Zip Path: {ZipPath}", zipPath);
+                _logger.LogInformation("Using local package: {ZipPath}", zipPath);
                 
                 if (!File.Exists(zipPath))
                 {
@@ -76,7 +70,7 @@ public class HoYoShadeInstallService
                 
                 TotalBytes = new FileInfo(zipPath).Length;
                 DownloadBytes = TotalBytes;
-                _logger.LogInformation("  - File Size: {Size} bytes ({SizeMB:F2} MB)", TotalBytes, TotalBytes / (1024.0 * 1024.0));
+                _logger.LogDebug("Local package size: {Size} bytes ({SizeMB:F2} MB)", TotalBytes, TotalBytes / (1024.0 * 1024.0));
             }
             else
             {
@@ -138,8 +132,8 @@ public class HoYoShadeInstallService
 
             State = 2;
             _logger.LogInformation("=== Starting Extraction ===");
-            _logger.LogInformation("Extracting HoYoShade zip: {ZipPath}", zipPath);
-            _logger.LogInformation("Extraction target: {TargetPath}", targetPath);
+            _logger.LogDebug("Extracting HoYoShade zip: {ZipPath}", zipPath);
+            _logger.LogDebug("Extraction target: {TargetPath}", targetPath);
 
             string presetsTargetPathBefore = Path.Combine(targetPath, "Presets");
             bool presetsDirExistedBefore = Directory.Exists(presetsTargetPathBefore);
@@ -178,11 +172,7 @@ public class HoYoShadeInstallService
                     
                     // Log all extracted top-level directories
                     var topLevelDirs = Directory.GetDirectories(tempExtractPath);
-                    _logger.LogInformation("Top-level directories in extracted archive ({Count}):", topLevelDirs.Length);
-                    foreach (var dir in topLevelDirs)
-                    {
-                        _logger.LogInformation("  - {DirName}", Path.GetFileName(dir));
-                    }
+                    _logger.LogDebug("Top-level directories in extracted archive: {Count}", topLevelDirs.Length);
                     
                     // Handle Presets folder based on presetsHandling option
                     // Robustly find Presets folder (case-insensitive search at top level)
@@ -202,45 +192,37 @@ public class HoYoShadeInstallService
 
                     string presetsTargetPath = Path.Combine(targetPath, "Presets");
                     
-                    _logger.LogInformation("=== Presets Folder Handling ===");
-                    _logger.LogInformation("Presets source path: {SourcePath}", presetsSourcePath);
-                    _logger.LogInformation("Presets target path: {TargetPath}", presetsTargetPath);
+                    _logger.LogDebug("Presets source path: {SourcePath}", presetsSourcePath);
+                    _logger.LogDebug("Presets target path: {TargetPath}", presetsTargetPath);
                     
                     // Check if update mode and Presets folder exists in the archive
                     bool hasPresetsInArchive = Directory.Exists(presetsSourcePath);
                     bool hasExistingPresets = Directory.Exists(presetsTargetPath);
                     
-                    _logger.LogInformation("Presets folder status check:");
-                    _logger.LogInformation("  - Has Presets in archive: {HasArchive}", hasPresetsInArchive);
-                    _logger.LogInformation("  - Has existing Presets: {HasExisting}", hasExistingPresets);
-                    _logger.LogInformation("  - Handling mode: {Mode} (0=Overwrite, 1=KeepExisting, 2=SeparateFolder)", presetsHandling);
+                    _logger.LogDebug("Presets status. HasArchive={HasArchive}, HasExisting={HasExisting}, Mode={Mode}", hasPresetsInArchive, hasExistingPresets, presetsHandling);
                     
                     if (hasPresetsInArchive) // Simplified logic: if we have source presets, we must decide what to do
                     {
                         // Decision point
                         if (presetsHandling == 1) // KeepExisting
                         {
-                            _logger.LogInformation("=== Mode 1: KeepExisting - Handling Presets ===");
                             bool shouldDelete = false;
 
                             if (hasExistingPresets)
                             {
-                                _logger.LogInformation("Existing presets found, will remove new ones from extraction to preserve existing.");
                                 shouldDelete = true;
                             }
                             else
                             {
-                                _logger.LogInformation("No existing presets found, but KeepExisting selected. Removing new presets anyway as requested.");
                                 shouldDelete = true;
                             }
 
                             if (shouldDelete)
                             {
-                                _logger.LogInformation("Deleting Presets folder from temp extraction: {Path}", presetsSourcePath);
+                                _logger.LogInformation("KeepExisting: Skipping presets from package");
                                 try
                                 {
                                     Directory.Delete(presetsSourcePath, true);
-                                    _logger.LogInformation("Successfully deleted Presets folder from temp extraction");
                                 }
                                 catch (Exception ex)
                                 {
@@ -251,8 +233,7 @@ public class HoYoShadeInstallService
                         }
                         else if (presetsHandling == 2 && !string.IsNullOrEmpty(versionTag)) // SeparateFolder
                         {
-                            _logger.LogInformation("=== Mode 2: SeparateFolder - Placing new presets in versioned folder ===");
-                            _logger.LogInformation("Version tag: {VersionTag}", versionTag);
+                            _logger.LogInformation("SeparateFolder: Installing presets into versioned folder. VersionTag={VersionTag}", versionTag);
                             
                             string safeVersionTag = SanitizeFolderName(versionTag);
                             if (string.IsNullOrWhiteSpace(safeVersionTag))
@@ -261,15 +242,11 @@ public class HoYoShadeInstallService
                             }
 
                             string versionedPresetsPath = Path.Combine(presetsTargetPath, safeVersionTag);
-                            _logger.LogInformation("Versioned Presets path: {Path}", versionedPresetsPath);
-                            
                             Directory.CreateDirectory(presetsTargetPath);
                             Directory.CreateDirectory(versionedPresetsPath);
                             
                             // Move contents of Presets from temp to versioned folder
                             var filesToCopy = Directory.GetFiles(presetsSourcePath, "*", SearchOption.AllDirectories);
-                            _logger.LogInformation("Copying {Count} files to versioned folder...", filesToCopy.Length);
-                            
                             foreach (var file in filesToCopy)
                             {
                                 string relativePath = Path.GetRelativePath(presetsSourcePath, file);
@@ -279,17 +256,16 @@ public class HoYoShadeInstallService
                             }
                             
                             // Remove Presets from temp extraction so it doesn't overwrite
-                            _logger.LogInformation("Deleting Presets folder from temp extraction after separate copy");
                             Directory.Delete(presetsSourcePath, true);
                         }
                         else
                         {
-                            _logger.LogInformation("=== Mode 0 (Overwrite) or fallback - Presets will be installed/overwritten normally ===");
+                            _logger.LogInformation("Overwrite: Presets will be installed/overwritten");
                         }
                     }
                     else
                     {
-                        _logger.LogInformation("No/Invalid Presets folder in archive, skipping special handling.");
+                        _logger.LogDebug("Presets folder not found in archive, skipping presets handling");
                     }
 
                     if (presetsHandling == 1)
@@ -308,11 +284,10 @@ public class HoYoShadeInstallService
 
                             if (allPresetsDirs.Count > 0)
                             {
-                                _logger.LogInformation("KeepExisting: Deleting {Count} Presets directories from temp extraction", allPresetsDirs.Count);
+                                _logger.LogDebug("KeepExisting: Deleting {Count} Presets directories from temp extraction", allPresetsDirs.Count);
                                 foreach (var dir in allPresetsDirs)
                                 {
                                     if (!Directory.Exists(dir)) continue;
-                                    _logger.LogInformation("KeepExisting: Deleting Presets directory: {Path}", dir);
                                     Directory.Delete(dir, true);
                                 }
                             }
@@ -338,11 +313,10 @@ public class HoYoShadeInstallService
 
                             if (allPresetsDirs.Count > 0)
                             {
-                                _logger.LogInformation("SeparateFolder: Deleting {Count} Presets directories from temp extraction", allPresetsDirs.Count);
+                                _logger.LogDebug("SeparateFolder: Deleting {Count} Presets directories from temp extraction", allPresetsDirs.Count);
                                 foreach (var dir in allPresetsDirs)
                                 {
                                     if (!Directory.Exists(dir)) continue;
-                                    _logger.LogInformation("SeparateFolder: Deleting Presets directory: {Path}", dir);
                                     Directory.Delete(dir, true);
                                 }
                             }
@@ -353,17 +327,13 @@ public class HoYoShadeInstallService
                         }
                     }
 
-                    _logger.LogInformation("=== Starting Final Copy ===");
-                    _logger.LogInformation("Copying all files from temp extraction to target directory");
-                    _logger.LogInformation("Source: {Source}", tempExtractPath);
-                    _logger.LogInformation("Target: {Target}", targetPath);
-                    _logger.LogInformation("Presets Handling: {Mode} (0=Overwrite, 1=KeepExisting, 2=SeparateFolder), VersionTag: {Tag}", presetsHandling, versionTag ?? "(null)");
+                    _logger.LogDebug("Copying extracted files to target. Source={Source}, Target={Target}, Mode={Mode}, VersionTag={Tag}", tempExtractPath, targetPath, presetsHandling, versionTag ?? "(null)");
                     
                     // Copy all files from temp to target (excluding already handled Presets if needed)
                     // Pass presetsHandling and versionTag to CopyDirectory
                     CopyDirectory(tempExtractPath, targetPath, true, presetsHandling, versionTag, targetPath);
                     
-                    _logger.LogInformation("Final copy completed");
+                    _logger.LogDebug("Final copy completed");
                     
                     // Verify Presets in target after copy
                     bool presetsInTargetAfterCopy = Directory.Exists(presetsTargetPath);
@@ -435,7 +405,7 @@ public class HoYoShadeInstallService
                         try
                         {
                             var finalPresetsFiles = Directory.GetFiles(presetsTargetPath, "*", SearchOption.AllDirectories);
-                            _logger.LogInformation("Final Presets folder contains {Count} files", finalPresetsFiles.Length);
+                            _logger.LogDebug("Final Presets folder contains {Count} files", finalPresetsFiles.Length);
                         }
                         catch (Exception ex)
                         {
@@ -490,9 +460,6 @@ public class HoYoShadeInstallService
     
     private void CopyDirectory(string sourceDir, string destDir, bool overwrite, int presetsHandling = 0, string versionTag = null, string rootTargetDir = null)
     {
-        _logger.LogInformation("CopyDirectory called - Source: {Source}, Dest: {Dest}, Overwrite: {Overwrite}", 
-            sourceDir, destDir, overwrite);
-
         if (presetsHandling == 1 && !string.IsNullOrWhiteSpace(rootTargetDir))
         {
             try
@@ -505,7 +472,7 @@ public class HoYoShadeInstallService
                 if (fullDestDir.Equals(fullPresetsRoot, StringComparison.OrdinalIgnoreCase) ||
                     fullDestDir.StartsWith(fullPresetsRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogInformation("KeepExisting: Blocking copy into Presets target path: {Dest}", fullDestDir);
+                    _logger.LogDebug("KeepExisting: Blocking copy into Presets target path: {Dest}", fullDestDir);
                     return;
                 }
             }
@@ -518,25 +485,16 @@ public class HoYoShadeInstallService
         Directory.CreateDirectory(destDir);
         
         var files = Directory.GetFiles(sourceDir);
-        _logger.LogInformation("Copying {Count} files from {Source}", files.Length, Path.GetFileName(sourceDir));
         
         foreach (string file in files)
         {
             string fileName = Path.GetFileName(file);
             string destFile = Path.Combine(destDir, fileName);
             
-            // Special logging for Presets folder - though files are inside Presets folder
-            if (sourceDir.EndsWith("Presets", StringComparison.OrdinalIgnoreCase) || 
-                destDir.EndsWith("Presets", StringComparison.OrdinalIgnoreCase))
-            {
-                _logger.LogInformation("  [PRESETS] Copying file: {FileName} -> {DestFile}", fileName, destFile);
-            }
-            
             File.Copy(file, destFile, overwrite);
         }
         
         var directories = Directory.GetDirectories(sourceDir);
-        _logger.LogInformation("Processing {Count} subdirectories from {Source}", directories.Length, Path.GetFileName(sourceDir));
         
         foreach (string dir in directories)
         {
@@ -545,11 +503,8 @@ public class HoYoShadeInstallService
             // Special handling for Presets folder during copy traversal
             if (dirName.Equals("Presets", StringComparison.OrdinalIgnoreCase))
             {
-                _logger.LogInformation("!!! PRESETS FOLDER ENCOUNTERED: {Source} !!!", dir);
-                
                 if (presetsHandling == 1) // KeepExisting
                 {
-                    _logger.LogInformation("SKIPPING Presets folder copy as requested (KeepExisting mode).");
                     continue; // Skip recursive copy for this folder
                 }
                 else if (presetsHandling == 2 && !string.IsNullOrEmpty(versionTag)) // SeparateFolder
@@ -567,7 +522,7 @@ public class HoYoShadeInstallService
 
                     string baseTarget = string.IsNullOrWhiteSpace(rootTargetDir) ? destDir : rootTargetDir;
                     string versionedPath = Path.Combine(baseTarget, "Presets", safeVersionTag);
-                    _logger.LogInformation("REDIRECTING Presets copy to versioned folder: {Path}", versionedPath);
+                    _logger.LogDebug("Redirecting presets copy to versioned folder: {Path}", versionedPath);
                     
                     // Recursively copy to the new location, but reset handling to 0 for the inner copy so it doesn't loop or skip
                     CopyDirectory(dir, versionedPath, true, 0, null, rootTargetDir);
@@ -579,8 +534,6 @@ public class HoYoShadeInstallService
             string destSubDir = Path.Combine(destDir, dirName);
             CopyDirectory(dir, destSubDir, overwrite, presetsHandling, versionTag, rootTargetDir);
         }
-        
-        _logger.LogInformation("Finished copying directory: {Dir}", Path.GetFileName(sourceDir));
     }
 
     private static string SanitizeFolderName(string input)
