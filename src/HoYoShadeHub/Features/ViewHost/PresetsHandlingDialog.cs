@@ -62,16 +62,50 @@ public static class PresetsHandlingDialog
         var dialog = new ContentDialog
         {
             XamlRoot = xamlRoot,
-            Title = "你希望如何处理现有的预设文件？",
-            Content = stackPanel,
-            PrimaryButtonText = "继续",
-            CloseButtonText = "取消",
-            DefaultButton = ContentDialogButton.Primary
+            Title = "你希望如何处理现有的预设文件?",
+            // Content set later
         };
 
-        var result = await dialog.ShowAsync();
+        var btnCancel = new Button
+        {
+            Content = "取消",
+            HorizontalAlignment = HorizontalAlignment.Stretch
+        };
+        
+        var btnContinue = new Button
+        {
+            Content = "继续",
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Style = (Style)Application.Current.Resources["AccentButtonStyle"]
+        };
 
-        if (result != ContentDialogResult.Primary)
+        bool isConfirmed = false;
+        btnCancel.Click += (s, e) => dialog.Hide();
+        btnContinue.Click += (s, e) => 
+        {
+            isConfirmed = true;
+            dialog.Hide();
+        };
+
+        var buttonGrid = new Grid
+        {
+            Margin = new Thickness(0, 24, 0, 0),
+            ColumnSpacing = 12
+        };
+        buttonGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        buttonGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        Grid.SetColumn(btnCancel, 0);
+        buttonGrid.Children.Add(btnCancel);
+        Grid.SetColumn(btnContinue, 1);
+        buttonGrid.Children.Add(btnContinue);
+
+        stackPanel.Children.Add(buttonGrid);
+        dialog.Content = stackPanel;
+
+        await dialog.ShowAsync();
+
+        if (!isConfirmed)
         {
             return (true, PresetsHandlingOption.SeparateFolder);
         }
