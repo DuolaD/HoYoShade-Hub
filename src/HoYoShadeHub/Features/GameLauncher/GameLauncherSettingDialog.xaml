@@ -135,6 +135,9 @@
                 <NavigationViewItem Content="{x:Bind lang:Lang.GameLauncherSettingDialog_CustomBackground}"
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                     Tag="2" />
+                <NavigationViewItem Content="联动第三方程序"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Tag="3" />
             </NavigationView.MenuItems>
 
 
@@ -660,6 +663,94 @@
                         </Grid>
 
                     </StackPanel>
+                </FlipViewItem>
+
+                <!--  联动第三方程序  -->
+                <FlipViewItem>
+                    <ScrollViewer>
+                        <StackPanel Spacing="16">
+                            <!--  标题  -->
+                            <TextBlock Text="联动第三方程序" FontSize="20" FontWeight="SemiBold" />
+                            
+                            <!--  提示信息  -->
+                            <TextBlock Text="您可以使用以下命令将HoYoShade或OpenHoYoShade框架与第三方程序联动。" 
+                                       TextWrapping="Wrap"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                            <!--  未安装任何框架的提示  -->
+                            <InfoBar x:Name="InfoBar_NoFrameworkInstalled"
+                                     IsOpen="False"
+                                     Message="您尚未安装任何框架。请前往启动器设置-管理界面下载并安装HoYoShade或OpenHoYoShade框架。"
+                                     Severity="Warning" />
+
+                            <!--  HoYoShade 部分  -->
+                            <StackPanel x:Name="StackPanel_HoYoShade" Spacing="8" Visibility="Collapsed">
+                                <TextBlock FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Text="联动HoYoShade" />
+
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox x:Name="TextBox_HoYoShadeCommand"
+                                             Grid.Column="0"
+                                             IsReadOnly="True"
+                                             FontFamily="Consolas,Cascadia Mono,Courier New"
+                                             FontSize="12"
+                                             Text="" />
+
+                                    <Button Grid.Column="1"
+                                            Height="32"
+                                            BorderThickness="0"
+                                            CornerRadius="8"
+                                            Click="Button_CopyHoYoShadeCommand_Click"
+                                            Style="{ThemeResource AccentButtonStyle}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon FontSize="14" Glyph="&#xE8C8;" />
+                                            <TextBlock Text="复制" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </StackPanel>
+
+                            <!--  OpenHoYoShade 部分  -->
+                            <StackPanel x:Name="StackPanel_OpenHoYoShade" Spacing="8" Visibility="Collapsed">
+                                <TextBlock FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Text="联动OpenHoYoShade" />
+
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox x:Name="TextBox_OpenHoYoShadeCommand"
+                                             Grid.Column="0"
+                                             IsReadOnly="True"
+                                             FontFamily="Consolas,Cascadia Mono,Courier New"
+                                             FontSize="12"
+                                             Text="" />
+
+                                    <Button Grid.Column="1"
+                                            Height="32"
+                                            BorderThickness="0"
+                                            CornerRadius="8"
+                                            Click="Button_CopyOpenHoYoShadeCommand_Click"
+                                            Style="{ThemeResource AccentButtonStyle}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon FontSize="14" Glyph="&#xE8C8;" />
+                                            <TextBlock Text="复制" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </ScrollViewer>
                 </FlipViewItem>
 
                 <!--  游戏包体  -->

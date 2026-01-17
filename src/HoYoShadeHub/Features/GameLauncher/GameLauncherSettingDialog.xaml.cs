@@ -141,6 +141,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         InitializeStartArgument();
         InitializeCustomBg();
         await InitializeGamePackagesAsync();
+        await InitializeThirdPartyIntegrationAsync();
     }
 
 
@@ -778,38 +779,156 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
                 }
                 CustomBg = name;
                 AppConfig.SetCustomBg(CurrentGameBiz, name);
-                if (EnableCustomBg)
-                {
-                    WeakReferenceMessenger.Default.Send(new BackgroundChangedMessage());
-                }
-                else
-                {
-                    EnableCustomBg = true;
-                }
+                WeakReferenceMessenger.Default.Send(new BackgroundChangedMessage());
+                ChangeBgError = null;
             }
-        }
-        catch (COMException ex)
-        {
-            ChangeBgError = Lang.GameLauncherSettingDialog_CannotDecodeFile;
-            _logger.LogError(ex, "Change custom background failed");
         }
         catch (Exception ex)
         {
-            ChangeBgError = Lang.GameLauncherSettingDialog_AnUnknownErrorOccurredPleaseCheckTheLogs;
+            ChangeBgError = ex.Message;
             _logger.LogError(ex, "Change custom background failed");
         }
         defer.Complete();
     }
 
+    private async void Button_OpenThirdPartyIntegration_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            WeakReferenceMessenger.Default.Send(new MainWindowDragRectAdaptToGameIconMessage(true));
+            var dialog = new ViewHost.ThirdPartyIntegrationDialog
+            {
+                XamlRoot = this.XamlRoot,
+                CurrentGameId = this.CurrentGameId
+            };
+            await dialog.ShowAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Open third-party integration dialog");
+        }
+        finally
+        {
+            WeakReferenceMessenger.Default.Send(new MainWindowDragRectAdaptToGameIconMessage());
+        }
+    }
 
 
     #endregion
 
+    #region Third-Party Integration
+
+    private async Task InitializeThirdPartyIntegrationAsync()
+    {
+        try
+        {
+            bool hoYoShadeInstalled = false;
+            bool openHoYoShadeInstalled = false;
+            string hoYoShadeCommand = "";
+            string openHoYoShadeCommand = "";
+
+            // Get game exe name
+            string gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+
+            // Check HoYoShade installation
+            string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+            if (Directory.Exists(hoYoShadePath))
+            {
+                string injectExePath = Path.Combine(hoYoShadePath, "inject.exe");
+                if (File.Exists(injectExePath))
+                {
+                    hoYoShadeInstalled = true;
+                    hoYoShadeCommand = $"\"{injectExePath}\" {gameExeName}";
+                }
+            }
+
+            // Check OpenHoYoShade installation
+            string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+            if (Directory.Exists(openHoYoShadePath))
+            {
+                string injectExePath = Path.Combine(openHoYoShadePath, "inject.exe");
+                if (File.Exists(injectExePath))
+                {
+                    openHoYoShadeInstalled = true;
+                    openHoYoShadeCommand = $"\"{injectExePath}\" {gameExeName}";
+                }
+            }
+
+            // Update UI based on installation status
+            if (!hoYoShadeInstalled && !openHoYoShadeInstalled)
+            {
+                // No framework installed - show warning
+                InfoBar_NoFrameworkInstalled.IsOpen = true;
+                StackPanel_HoYoShade.Visibility = Visibility.Collapsed;
+                StackPanel_OpenHoYoShade.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                // At least one framework installed
+                InfoBar_NoFrameworkInstalled.IsOpen = false;
+
+                if (hoYoShadeInstalled)
+                {
+                    StackPanel_HoYoShade.Visibility = Visibility.Visible;
+                    TextBox_HoYoShadeCommand.Text = hoYoShadeCommand;
+                }
+                else
+                {
+                    StackPanel_HoYoShade.Visibility = Visibility.Collapsed;
+                }
+
+                if (openHoYoShadeInstalled)
+                {
+                    StackPanel_OpenHoYoShade.Visibility = Visibility.Visible;
+                    TextBox_OpenHoYoShadeCommand.Text = openHoYoShadeCommand;
+                }
+                else
+                {
+                    StackPanel_OpenHoYoShade.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            _logger.LogInformation("Third-party integration initialized. HoYoShade: {HoYoShade}, OpenHoYoShade: {OpenHoYoShade}",
+                hoYoShadeInstalled, openHoYoShadeInstalled);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to initialize third-party integration");
+        }
+    }
+
+    private void Button_CopyHoYoShadeCommand_Click(object sender, RoutedEventArgs e)
+    {
+        CopyCommandToClipboard(TextBox_HoYoShadeCommand.Text, "HoYoShade");
+    }
+
+    private void Button_CopyOpenHoYoShadeCommand_Click(object sender, RoutedEventArgs e)
+    {
+        CopyCommandToClipboard(TextBox_OpenHoYoShadeCommand.Text, "OpenHoYoShade");
+    }
+
+    private void CopyCommandToClipboard(string text, string frameworkName)
+    {
+        try
+        {
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(text);
+            Clipboard.SetContent(dataPackage);
+
+            InAppToast.MainWindow?.Success($"{frameworkName}命令已复制到剪贴板");
+            _logger.LogInformation("Copied {FrameworkName} command to clipboard", frameworkName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to copy {FrameworkName} command to clipboard", frameworkName);
+            InAppToast.MainWindow?.Error("复制失败", ex.Message);
+        }
+    }
+
+    #endregion
 
 
-    #region 游戏包体
-
-
+    #region Game Packages
 
     /// <summary>
     /// 最新版本
@@ -853,7 +972,6 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     {
         await Task.CompletedTask;
     }
-
 
 
     private async Task CopySuccessAsync(Button button)

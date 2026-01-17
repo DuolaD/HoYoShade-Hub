@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="HoYoShadeHub.Features.ViewHost.ThirdPartyIntegrationDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:HoYoShadeHub.Language"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DefaultButton="Close"
+    mc:Ignorable="d">
+
+    <ContentDialog.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="FontFamily" Value="Consolas,Cascadia Mono,Courier New" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+    </ContentDialog.Resources>
+
+    <ScrollViewer MaxHeight="600">
+        <StackPanel Spacing="12">
+            <!--  提示信息  -->
+            <TextBlock
+                Foreground="{ThemeResource SystemFillColorAttentionBrush}"
+                IsTextSelectionEnabled="True"
+                Text="您可以使用以下命令将HoYoShade或OpenHoYoShade框架与第三方程序联动。复制命令后，请在第三方程序中执行。"
+                TextWrapping="Wrap" />
+
+            <!--  未安装任何框架的提示  -->
+            <InfoBar
+                x:Name="InfoBar_NoFrameworkInstalled"
+                IsOpen="False"
+                Message="您尚未安装任何框架。请前往启动器设置-管理界面下载并安装HoYoShade或OpenHoYoShade框架。"
+                Severity="Warning" />
+
+            <!--  HoYoShade 部分  -->
+            <StackPanel x:Name="StackPanel_HoYoShade" Spacing="8">
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Text="HoYoShade" />
+
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                        x:Name="TextBox_HoYoShadeCommand"
+                        Grid.Column="0"
+                        IsReadOnly="True"
+                        Text="" />
+
+                    <Button
+                        Grid.Column="1"
+                        Click="Button_CopyHoYoShadeCommand_Click"
+                        Content="复制" />
+                </Grid>
+
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    IsTextSelectionEnabled="True"
+                    Text="示例：将此命令添加到您的第三方程序中，以在游戏启动时自动注入HoYoShade。"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!--  OpenHoYoShade 部分  -->
+            <StackPanel x:Name="StackPanel_OpenHoYoShade" Spacing="8">
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Text="OpenHoYoShade" />
+
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                        x:Name="TextBox_OpenHoYoShadeCommand"
+                        Grid.Column="0"
+                        IsReadOnly="True"
+                        Text="" />
+
+                    <Button
+                        Grid.Column="1"
+                        Click="Button_CopyOpenHoYoShadeCommand_Click"
+                        Content="复制" />
+                </Grid>
+
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    IsTextSelectionEnabled="True"
+                    Text="示例：将此命令添加到您的第三方程序中，以在游戏启动时自动注入OpenHoYoShade。"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</ContentDialog>
