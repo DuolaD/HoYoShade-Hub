@@ -52,6 +52,8 @@ public sealed partial class ReShadeCustomSelectionDialog : ContentDialog, INotif
         }
     }
 
+    public ContentDialogResult DialogResult { get; private set; } = ContentDialogResult.None;
+
     public event PropertyChangedEventHandler PropertyChanged;
 
     private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -120,11 +122,15 @@ public sealed partial class ReShadeCustomSelectionDialog : ContentDialog, INotif
         return selected;
     }
 
-    private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    private void OnConfirmClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        DialogResult = ContentDialogResult.Primary;
+        Hide();
     }
 
-    private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+    private void OnCancelClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        DialogResult = ContentDialogResult.Secondary;
+        Hide();
     }
 }

@@ -430,9 +430,9 @@ public sealed partial class ReShadeDownloadView : UserControl
 
             var dialog = new ReShadeCustomSelectionDialog(_cachedEffectPackages, _cachedAddons);
             dialog.XamlRoot = this.XamlRoot;
-            var result = await dialog.ShowAsync();
+            await dialog.ShowAsync();
 
-            if (result == ContentDialogResult.Primary)
+            if (dialog.DialogResult == ContentDialogResult.Primary)
             {
                 _customSelectedPackages = dialog.GetSelectedPackages();
             }
