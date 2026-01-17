@@ -625,26 +625,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             presetsSnapshot = CapturePresetsSnapshot(targetPath);
             _logger.LogInformation("Presets snapshot captured. TargetPath={TargetPath}, Existed={Existed}, Files={FileCount}", targetPath, presetsSnapshot.Existed, presetsSnapshot.RelativeFiles.Count);
         }
-
-        if (!RpcClientFactory.CheckRpcServerRunning())
-        {
-            StatusMessage = Lang.HoYoShadeDownloadView_StatusStartingRPC;
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = AppConfig.HoYoShadeHubExecutePath,
-                Verb = "runas",
-                UseShellExecute = true,
-                CreateNoWindow = true,
-                Arguments = $"rpc {RpcClientFactory.StartupMagic} {Environment.ProcessId}",
-            });
-            
-            // Wait for it to start
-            for (int i = 0; i < 10; i++)
-            {
-                await Task.Delay(500);
-                if (RpcClientFactory.CheckRpcServerRunning()) break;
-            }
-        }
+        
+        await EnsureFreshRpcServerAsync(_downloadCts.Token);
 
         // Target path is UserDataFolder/HoYoShade or UserDataFolder/OpenHoYoShade
         // The content will be extracted directly to this folder, not to a subfolder
@@ -1134,34 +1116,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             IsControlButtonsVisible = true;
             DownloadProgress = 0;
             
-            if (!RpcClientFactory.CheckRpcServerRunning())
-            {
-                _logger.LogInformation("RPC server not running, starting it");
-                StatusMessage = Lang.HoYoShadeDownloadView_StatusStartingRPC;
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = AppConfig.HoYoShadeHubExecutePath,
-                    Verb = "runas",
-                    UseShellExecute = true,
-                    CreateNoWindow = true,
-                    Arguments = $"rpc {RpcClientFactory.StartupMagic} {Environment.ProcessId}",
-                });
-                
-                for (int i = 0; i < 10; i++)
-                {
-                    await Task.Delay(500);
-                    if (RpcClientFactory.CheckRpcServerRunning())
-                    {
-                        _logger.LogInformation("RPC server started successfully");
-                        break;
-                    }
-                }
-                
-                if (!RpcClientFactory.CheckRpcServerRunning())
-                {
-                    throw new Exception("Failed to start RPC server");
-                }
-            }
+            await EnsureFreshRpcServerAsync(CancellationToken.None);
             
             var targetPath = System.IO.Path.Combine(AppConfig.UserDataFolder, packageType);
             _logger.LogInformation("Local install target path: {TargetPath}", targetPath);
@@ -1397,6 +1352,52 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         finally
         {
             await Task.CompletedTask;
+        }
+    }
+
+    private async Task EnsureFreshRpcServerAsync(CancellationToken cancellationToken)
+    {
+        if (RpcClientFactory.CheckRpcServerRunning())
+        {
+            _logger.LogInformation("RPC server is running, stopping it to apply latest installer logic");
+            try
+            {
+                await AppConfig.GetService<RpcService>().StopRpcServerAsync(DateTime.UtcNow.AddSeconds(3));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to request RPC server stop");
+            }
+
+            for (int i = 0; i < 20; i++)
+            {
+                await Task.Delay(200, cancellationToken);
+                if (!RpcClientFactory.CheckRpcServerRunning()) break;
+            }
+        }
+
+        if (!RpcClientFactory.CheckRpcServerRunning())
+        {
+            StatusMessage = Lang.HoYoShadeDownloadView_StatusStartingRPC;
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = AppConfig.HoYoShadeHubExecutePath,
+                Verb = "runas",
+                UseShellExecute = true,
+                CreateNoWindow = true,
+                Arguments = $"rpc {RpcClientFactory.StartupMagic} {Environment.ProcessId}",
+            });
+
+            for (int i = 0; i < 10; i++)
+            {
+                await Task.Delay(500, cancellationToken);
+                if (RpcClientFactory.CheckRpcServerRunning()) break;
+            }
+        }
+
+        if (!RpcClientFactory.CheckRpcServerRunning())
+        {
+            throw new Exception("Failed to start RPC server");
         }
     }
     

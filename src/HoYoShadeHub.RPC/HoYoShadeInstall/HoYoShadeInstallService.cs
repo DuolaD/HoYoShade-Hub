@@ -249,14 +249,21 @@ public class HoYoShadeInstallService
                                 }
                             }
                         }
-                        else if (presetsHandling == 2 && hasExistingPresets && !string.IsNullOrEmpty(versionTag)) // SeparateFolder
+                        else if (presetsHandling == 2 && !string.IsNullOrEmpty(versionTag)) // SeparateFolder
                         {
                             _logger.LogInformation("=== Mode 2: SeparateFolder - Placing new presets in versioned folder ===");
                             _logger.LogInformation("Version tag: {VersionTag}", versionTag);
                             
-                            string versionedPresetsPath = Path.Combine(presetsTargetPath, versionTag);
+                            string safeVersionTag = SanitizeFolderName(versionTag);
+                            if (string.IsNullOrWhiteSpace(safeVersionTag))
+                            {
+                                safeVersionTag = "Version";
+                            }
+
+                            string versionedPresetsPath = Path.Combine(presetsTargetPath, safeVersionTag);
                             _logger.LogInformation("Versioned Presets path: {Path}", versionedPresetsPath);
                             
+                            Directory.CreateDirectory(presetsTargetPath);
                             Directory.CreateDirectory(versionedPresetsPath);
                             
                             // Move contents of Presets from temp to versioned folder
@@ -313,6 +320,36 @@ public class HoYoShadeInstallService
                         catch (Exception ex)
                         {
                             _logger.LogWarning(ex, "KeepExisting: Failed to delete some Presets directories from temp extraction");
+                        }
+                    }
+                    else if (presetsHandling == 2)
+                    {
+                        try
+                        {
+                            var allPresetsDirs = Directory.EnumerateDirectories(tempExtractPath, "*", SearchOption.AllDirectories)
+                                .Where(d => Path.GetFileName(d).Equals("Presets", StringComparison.OrdinalIgnoreCase))
+                                .OrderByDescending(d => d.Length)
+                                .ToList();
+
+                            if (Path.GetFileName(tempExtractPath).Equals("Presets", StringComparison.OrdinalIgnoreCase))
+                            {
+                                allPresetsDirs.Add(tempExtractPath);
+                            }
+
+                            if (allPresetsDirs.Count > 0)
+                            {
+                                _logger.LogInformation("SeparateFolder: Deleting {Count} Presets directories from temp extraction", allPresetsDirs.Count);
+                                foreach (var dir in allPresetsDirs)
+                                {
+                                    if (!Directory.Exists(dir)) continue;
+                                    _logger.LogInformation("SeparateFolder: Deleting Presets directory: {Path}", dir);
+                                    Directory.Delete(dir, true);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "SeparateFolder: Failed to delete some Presets directories from temp extraction");
                         }
                     }
 
@@ -522,7 +559,14 @@ public class HoYoShadeInstallService
                     // If we are at destDir, normally Presets would go to destDir/Presets
                     // We want destDir/Presets/VersionTag/
                     
-                    string versionedPath = Path.Combine(destDir, "Presets", versionTag);
+                    string safeVersionTag = SanitizeFolderName(versionTag);
+                    if (string.IsNullOrWhiteSpace(safeVersionTag))
+                    {
+                        safeVersionTag = "Version";
+                    }
+
+                    string baseTarget = string.IsNullOrWhiteSpace(rootTargetDir) ? destDir : rootTargetDir;
+                    string versionedPath = Path.Combine(baseTarget, "Presets", safeVersionTag);
                     _logger.LogInformation("REDIRECTING Presets copy to versioned folder: {Path}", versionedPath);
                     
                     // Recursively copy to the new location, but reset handling to 0 for the inner copy so it doesn't loop or skip
@@ -537,6 +581,32 @@ public class HoYoShadeInstallService
         }
         
         _logger.LogInformation("Finished copying directory: {Dir}", Path.GetFileName(sourceDir));
+    }
+
+    private static string SanitizeFolderName(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+        var invalid = Path.GetInvalidFileNameChars();
+        var chars = input.Trim().ToCharArray();
+        for (int i = 0; i < chars.Length; i++)
+        {
+            char c = chars[i];
+            if (c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar || c == ':')
+            {
+                chars[i] = '_';
+                continue;
+            }
+            for (int j = 0; j < invalid.Length; j++)
+            {
+                if (c == invalid[j])
+                {
+                    chars[i] = '_';
+                    break;
+                }
+            }
+        }
+        return new string(chars).Trim().Trim('.', ' ');
     }
 
     /// <summary>
