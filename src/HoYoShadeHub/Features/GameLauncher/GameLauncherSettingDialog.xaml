@@ -687,7 +687,15 @@
                             <StackPanel x:Name="StackPanel_HoYoShade"
                                         Spacing="8"
                                         Visibility="Collapsed">
-                                <TextBlock FontWeight="SemiBold" Text="联动 HoYoShade" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock FontWeight="SemiBold" Text="联动 HoYoShade" />
+                                    <TextBlock x:Name="TextBlock_HoYoShadeCopySuccess"
+                                               VerticalAlignment="Center"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                               Text="复制成功"
+                                               Visibility="Collapsed" />
+                                </StackPanel>
                                 <Grid Background="{ThemeResource ControlFillColorDefaultBrush}"
                                       BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
                                       BorderThickness="1"
@@ -727,7 +735,15 @@
                             <StackPanel x:Name="StackPanel_OpenHoYoShade"
                                         Spacing="8"
                                         Visibility="Collapsed">
-                                <TextBlock FontWeight="SemiBold" Text="联动 OpenHoYoShade" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock FontWeight="SemiBold" Text="联动 OpenHoYoShade" />
+                                    <TextBlock x:Name="TextBlock_OpenHoYoShadeCopySuccess"
+                                               VerticalAlignment="Center"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                               Text="复制成功"
+                                               Visibility="Collapsed" />
+                                </StackPanel>
                                 <Grid Background="{ThemeResource ControlFillColorDefaultBrush}"
                                       BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
                                       BorderThickness="1"

@@ -897,14 +897,40 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         }
     }
 
-    private void Button_CopyHoYoShadeCommand_Click(object sender, RoutedEventArgs e)
+    private async void Button_CopyHoYoShadeCommand_Click(object sender, RoutedEventArgs e)
     {
         CopyCommandToClipboard(TextBox_HoYoShadeCommand.Text, "HoYoShade");
+        await ShowCopySuccessAsync(sender as Button, TextBlock_HoYoShadeCopySuccess);
     }
 
-    private void Button_CopyOpenHoYoShadeCommand_Click(object sender, RoutedEventArgs e)
+    private async void Button_CopyOpenHoYoShadeCommand_Click(object sender, RoutedEventArgs e)
     {
         CopyCommandToClipboard(TextBox_OpenHoYoShadeCommand.Text, "OpenHoYoShade");
+        await ShowCopySuccessAsync(sender as Button, TextBlock_OpenHoYoShadeCopySuccess);
+    }
+
+    private async Task ShowCopySuccessAsync(Button? button, TextBlock? successTextBlock)
+    {
+        if (button?.Content is not FontIcon icon) return;
+
+        try
+        {
+            button.IsEnabled = false;
+            string originalGlyph = icon.Glyph;
+
+            // Checkmark
+            icon.Glyph = "\uE73E";
+            if (successTextBlock != null) successTextBlock.Visibility = Visibility.Visible;
+
+            await Task.Delay(2000);
+
+            icon.Glyph = originalGlyph;
+        }
+        finally
+        {
+            button.IsEnabled = true;
+            if (successTextBlock != null) successTextBlock.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void CopyCommandToClipboard(string text, string frameworkName)
@@ -915,7 +941,6 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
             dataPackage.SetText(text);
             Clipboard.SetContent(dataPackage);
 
-            InAppToast.MainWindow?.Success($"{frameworkName}命令已复制到剪贴板");
             _logger.LogInformation("Copied {FrameworkName} command to clipboard", frameworkName);
         }
         catch (Exception ex)
