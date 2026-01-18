@@ -668,14 +668,16 @@
                 <!--  联动第三方程序  -->
                 <FlipViewItem>
                     <ScrollViewer>
-                        <StackPanel Spacing="16">
+                        <StackPanel Padding="0,0,0,24" Spacing="16">
                             <!--  标题  -->
-                            <TextBlock Text="联动第三方程序" FontSize="20" FontWeight="SemiBold" />
+                            <TextBlock FontSize="20"
+                                       FontWeight="SemiBold"
+                                       Text="联动第三方程序" />
                             
                             <!--  提示信息  -->
-                            <TextBlock Text="您可以使用以下命令将HoYoShade或OpenHoYoShade框架与第三方程序联动。" 
+                            <!--<TextBlock Text="您可以使用以下命令将HoYoShade或OpenHoYoShade框架与第三方程序联动。" 
                                        TextWrapping="Wrap"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />-->
 
                             <!--  未安装任何框架的提示  -->
                             <InfoBar x:Name="InfoBar_NoFrameworkInstalled"
@@ -777,6 +779,102 @@
                                         <FontIcon FontSize="14" Glyph="&#xE8C8;" />
                                     </Button>
                                 </Grid>
+                            </StackPanel>
+
+                            <!--  底部提示信息  -->
+                            <StackPanel Spacing="8">
+                                <TextBlock FontSize="12"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           Text="你可以使用此界面所示的命令，设置第三方程序启动游戏客户端之前运行此命令，即可无缝启动HoYoShade/OpenHoYoShade框架。"
+                                           TextWrapping="Wrap" />
+
+                                <TextBlock Margin="0,4,0,0"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           Text="注意：" />
+
+                                <StackPanel Spacing="4">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Margin="0,0,8,0"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="•" />
+                                        <TextBlock Grid.Column="1"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="不同游戏/客户端所使用的命令可能会有所不同，你可能需要在目标游戏客户端的游戏设置界面中，获取适用于当前客户端的的命令。"
+                                                   TextWrapping="Wrap" />
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Margin="0,0,8,0"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="•" />
+                                        <TextBlock Grid.Column="1"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="如果HoYoShade框架/OpenHoYoShade框架/启动器路径发生变化，你需要返回此界面获取新的命令。"
+                                                   TextWrapping="Wrap" />
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Margin="0,0,8,0"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="•" />
+                                        <TextBlock Grid.Column="1"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="部分第三方程序可能不支持调用此处显示的命令进行联动，你可能需要对命令进行更改，才能在你所使用的第三方程序进行调用。详情请查看第三方程序相关说明。"
+                                                   TextWrapping="Wrap" />
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Margin="0,0,8,0"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="•" />
+                                        <TextBlock Grid.Column="1"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="并非所有第三方程序均支持调用第三方程序，详情请查看第三方程序相关说明。"
+                                                   TextWrapping="Wrap" />
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Margin="0,0,8,0"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="•" />
+                                        <TextBlock Grid.Column="1"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   Text="并非所有第三方程序均支持调用命令进行联动，HoYoShade 贡献者将不对仅允许用户使用其随附的注入器进行启动的第三方程序的适配。"
+                                                   TextWrapping="Wrap" />
+                                    </Grid>
+                                </StackPanel>
                             </StackPanel>
 
                         </StackPanel>
