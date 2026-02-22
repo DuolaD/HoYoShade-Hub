@@ -61,6 +61,7 @@ public sealed partial class MainView : UserControl
         UpdateNavigationView();
         WeakReferenceMessenger.Default.Register<MainViewNavigateMessage>(this, OnMainViewNavigateMessageReceived);
         WeakReferenceMessenger.Default.Register<BH3GlobalGameServerChangedMessage>(this, OnBH3GlobalGameServerChanged);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) => this.DispatcherQueue.TryEnqueue(() => this.Bindings.Update()));
     }
 
 

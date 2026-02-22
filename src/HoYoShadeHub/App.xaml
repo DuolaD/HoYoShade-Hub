@@ -74,7 +74,7 @@
             <!--  Custom Font  -->
             <!--  Uncomment the following line to use a custom font.  -->
             <!--  Place your font file in Assets/Fonts folder and replace "FileName.ttf" and "Font Name" with your font's filename and name.  -->
-            <FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Assets/Fonts/MiSans VF.ttf#MiSans VF</FontFamily>
+            <FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Assets/Font/MiSans VF.ttf#MiSans VF</FontFamily>
 
             <!--  Accent Color  -->
             <ResourceDictionary.ThemeDictionaries>

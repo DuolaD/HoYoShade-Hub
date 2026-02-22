@@ -40,7 +40,6 @@
                         </Grid.ColumnDefinitions>
                         <FontIcon Grid.Column="0" 
                                   FontSize="14" 
-                                  FontFamily="Segoe Fluent Icons"
                                   Margin="0,0,8,0"
                                   Glyph="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallGlyphConverter}}" 
                                   Foreground="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallColorConverter}}" />
@@ -61,7 +60,6 @@
                         </Grid.ColumnDefinitions>
                         <FontIcon Grid.Column="0" 
                                   FontSize="14" 
-                                  FontFamily="Segoe Fluent Icons"
                                   Margin="0,0,8,0"
                                   Glyph="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallGlyphConverter}}" 
                                   Foreground="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallColorConverter}}" />

@@ -53,6 +53,7 @@ public static class AppConfig
     {
         try
         {
+            SystemCulture = CultureInfo.CurrentUICulture;
             AppVersion = typeof(AppConfig).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "";
 
             IsAppInRemovableStorage = DriveHelper.IsDeviceRemovableOrOnUSB(AppContext.BaseDirectory);
@@ -154,6 +155,9 @@ public static class AppConfig
 
 
     public static bool IsAppInRemovableStorage { get; private set; }
+
+
+    public static CultureInfo SystemCulture { get; private set; }
 
 
     public static string CacheFolder { get; private set; }

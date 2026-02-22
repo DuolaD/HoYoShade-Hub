@@ -139,9 +139,9 @@ public sealed partial class ReShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(CanInstallToBoth))]
     private bool isUpdateMode;
 
-    public string Title => IsUpdateMode ? "½ÓÏÂÀ´£¬ÈÃÎÒÃÇ¸üÐÂ ReShade ×ÅÉ«Æ÷ºÍ²å¼þ" : Lang.ReShadeDownloadView_Title;
+    public string Title => IsUpdateMode ? "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ ReShade ï¿½ï¿½É«ï¿½ï¿½ï¿½Í²ï¿½ï¿½" : Lang.ReShadeDownloadView_Title;
     
-    public string UpdateHintText => "Èç¹û±¾´Î¸üÐÂÉæ¼°µ½ReShade°æ±¾Éý¼¶£¬ÎÒÃÇ½¨ÒéÄã¸üÐÂËùÓÐÒÑ°²×°µÄ×ÅÉ«Æ÷ºÍ²å¼þ¡£";
+    public string UpdateHintText => "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¸ï¿½ï¿½ï¿½ï¿½æ¼°ï¿½ï¿½ReShadeï¿½æ±¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ°ï¿½×°ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½ï¿½";
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
@@ -279,7 +279,7 @@ public sealed partial class ReShadeDownloadView : UserControl
             ComboBox_Language.Items.Clear();
             ComboBox_Language.Items.Add(new ComboBoxItem
             {
-                Content = Lang.ResourceManager.GetString(nameof(Lang.SettingPage_FollowSystem), CultureInfo.InstalledUICulture),
+                Content = Lang.ResourceManager.GetString(nameof(Lang.SettingPage_FollowSystem), AppConfig.SystemCulture),
                 Tag = "",
             });
             ComboBox_Language.SelectedIndex = 0;
@@ -315,7 +315,7 @@ public sealed partial class ReShadeDownloadView : UserControl
                     AppConfig.Language = lang;
                     if (string.IsNullOrWhiteSpace(lang))
                     {
-                        CultureInfo.CurrentUICulture = CultureInfo.InstalledUICulture;
+                        CultureInfo.CurrentUICulture = AppConfig.SystemCulture;
                     }
                     else
                     {
@@ -364,34 +364,34 @@ public sealed partial class ReShadeDownloadView : UserControl
             IsOpenHoYoShadeInstalled = HasContent(openHoYoShadeFolder);
 
             // Logic: Select installation target based on which frameworks are installed
-            // - If only HoYoShade is installed ¡ú select HoYoShade (install shaders to the installed framework)
-            // - If only OpenHoYoShade is installed ¡ú select OpenHoYoShade (install shaders to the installed framework)
-            // - If both are installed ¡ú default to HoYoShade, all options available
-            // - If neither is installed ¡ú default to HoYoShade (should not happen in this page)
+            // - If only HoYoShade is installed ï¿½ï¿½ select HoYoShade (install shaders to the installed framework)
+            // - If only OpenHoYoShade is installed ï¿½ï¿½ select OpenHoYoShade (install shaders to the installed framework)
+            // - If both are installed ï¿½ï¿½ default to HoYoShade, all options available
+            // - If neither is installed ï¿½ï¿½ default to HoYoShade (should not happen in this page)
             if (IsHoYoShadeInstalled && !IsOpenHoYoShadeInstalled)
             {
-                // Only HoYoShade installed ¡ú select HoYoShade
+                // Only HoYoShade installed ï¿½ï¿½ select HoYoShade
                 IsInstallToHoYoShadeOnly = true;
                 IsInstallToOpenHoYoShadeOnly = false;
                 IsInstallToBoth = false;
             }
             else if (!IsHoYoShadeInstalled && IsOpenHoYoShadeInstalled)
             {
-                // Only OpenHoYoShade installed ¡ú select OpenHoYoShade
+                // Only OpenHoYoShade installed ï¿½ï¿½ select OpenHoYoShade
                 IsInstallToHoYoShadeOnly = false;
                 IsInstallToOpenHoYoShadeOnly = true;
                 IsInstallToBoth = false;
             }
             else if (IsHoYoShadeInstalled && IsOpenHoYoShadeInstalled)
             {
-                // Both installed ¡ú default to HoYoShade, but all options available
+                // Both installed ï¿½ï¿½ default to HoYoShade, but all options available
                 IsInstallToHoYoShadeOnly = true;
                 IsInstallToOpenHoYoShadeOnly = false;
                 IsInstallToBoth = false;
             }
             else
             {
-                // Neither installed ¡ú default to HoYoShade (fallback, shouldn't happen)
+                // Neither installed ï¿½ï¿½ default to HoYoShade (fallback, shouldn't happen)
                 IsInstallToHoYoShadeOnly = true;
                 IsInstallToOpenHoYoShadeOnly = false;
                 IsInstallToBoth = false;

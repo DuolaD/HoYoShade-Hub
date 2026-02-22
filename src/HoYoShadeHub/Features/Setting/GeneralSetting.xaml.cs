@@ -64,7 +64,7 @@ public sealed partial class GeneralSetting : PageBase
             ComboBox_Language.Items.Clear();
             ComboBox_Language.Items.Add(new ComboBoxItem
             {
-                Content = Lang.ResourceManager.GetString(nameof(Lang.SettingPage_FollowSystem), CultureInfo.InstalledUICulture),
+                Content = Lang.ResourceManager.GetString(nameof(Lang.SettingPage_FollowSystem), AppConfig.SystemCulture),
                 Tag = "",
             });
             ComboBox_Language.SelectedIndex = 0;
@@ -108,7 +108,7 @@ public sealed partial class GeneralSetting : PageBase
                     AppConfig.Language = lang;
                     if (string.IsNullOrWhiteSpace(lang))
                     {
-                        CultureInfo.CurrentUICulture = CultureInfo.InstalledUICulture;
+                        CultureInfo.CurrentUICulture = AppConfig.SystemCulture;
                     }
                     else
                     {
@@ -124,7 +124,7 @@ public sealed partial class GeneralSetting : PageBase
         }
         catch (CultureNotFoundException)
         {
-            CultureInfo.CurrentUICulture = CultureInfo.InstalledUICulture;
+            CultureInfo.CurrentUICulture = AppConfig.SystemCulture;
             Lang.Culture = CultureInfo.CurrentUICulture;
         }
         catch (Exception ex)

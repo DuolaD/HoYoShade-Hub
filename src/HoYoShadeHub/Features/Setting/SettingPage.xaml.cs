@@ -28,12 +28,16 @@ public sealed partial class SettingPage : PageBase
     {
         // Ensure Lang uses the current culture
         Lang.Culture = CultureInfo.CurrentUICulture;
-        
-        // Update bindings
-        this.Bindings.Update();
-        
-        // Manually update NavigationView menu items
-        UpdateNavigationViewMenuItems();
+
+        // Use DispatcherQueue to ensure UI updates happen on the UI thread and after current processing
+        this.DispatcherQueue.TryEnqueue(() =>
+        {
+            // Update bindings
+            this.Bindings.Update();
+
+            // Manually update NavigationView menu items
+            UpdateNavigationViewMenuItems();
+        });
     }
 
 
