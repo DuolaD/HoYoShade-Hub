@@ -24,6 +24,22 @@ public partial class BoolToInstallGlyphConverter : IValueConverter
 }
 
 /// <summary>
+/// Convert bool (installed status) to localized text
+/// </summary>
+public partial class BoolToInstallStatusTextConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        return value is true ? HoYoShadeHub.Language.Lang.WelcomeView_Installed : HoYoShadeHub.Language.Lang.WelcomeView_NotInstalled;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
 /// Convert bool (installed status) to color
 /// </summary>
 public partial class BoolToInstallColorConverter : IValueConverter

@@ -39,6 +39,7 @@
             <scv:WhiteSpaceStringToVisibilityConverter x:Key="WhiteSpaceStringToVisibilityConverter" />
             <scv:BoolToInstallGlyphConverter x:Key="BoolToInstallGlyphConverter" />
             <scv:BoolToInstallColorConverter x:Key="BoolToInstallColorConverter" />
+            <scv:BoolToInstallStatusTextConverter x:Key="BoolToInstallStatusTextConverter" />
             <scv:BoolToCheckMarkConverter x:Key="BoolToCheckMarkConverter" />
             <scv:BoolToColorConverter x:Key="BoolToColorConverter" />
 
