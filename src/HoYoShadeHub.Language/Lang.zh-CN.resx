@@ -120,6 +120,69 @@
   <data name="Language_Chinese" xml:space="preserve">
     <value>汉语</value>
   </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>HoYoShadeHub - 更新</value>
+  </data>
+  <data name="UpdateWindow_ReleaseTime" xml:space="preserve">
+    <value>发布时间：</value>
+  </data>
+  <data name="HoYoShadeDownloadView_UpdateModeTitle" xml:space="preserve">
+    <value>下载并安装 HoYoShade 框架</value>
+  </data>
+  <data name="ReShadeDownloadView_UpdateModeTitle" xml:space="preserve">
+    <value>下载并安装 ReShade 着色器和插件</value>
+  </data>
+  <data name="ReShadeDownloadView_UpdateModeHint" xml:space="preserve">
+    <value>更新可能涉及 ReShade 版本变动，请选择要安装的组件。</value>
+  </data>
+  <data name="PresetsDialog_Title" xml:space="preserve">
+    <value>如何处理现有的预设文件？</value>
+  </data>
+  <data name="PresetsDialog_Description" xml:space="preserve">
+    <value>检测到现有预设，请选择处理方式：</value>
+  </data>
+  <data name="PresetsDialog_KeepExisting" xml:space="preserve">
+    <value>保留现有预设文件</value>
+  </data>
+  <data name="PresetsDialog_KeepExisting_Tooltip" xml:space="preserve">
+    <value>保留所有当前预设，新版本预设可能会导致不兼容。</value>
+  </data>
+  <data name="PresetsDialog_Overwrite" xml:space="preserve">
+    <value>覆盖现有预设</value>
+  </data>
+  <data name="PresetsDialog_Overwrite_Tooltip" xml:space="preserve">
+    <value>新版本预设将完全替换现有预设，任何自定义修改都会丢失。</value>
+  </data>
+  <data name="PresetsDialog_SeparateFolder" xml:space="preserve">
+    <value>分开文件夹保留现有预设</value>
+  </data>
+  <data name="PresetsDialog_SeparateFolder_Tooltip" xml:space="preserve">
+    <value>将新版本预设存放在单独文件夹，是最安全的选项。</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_Intro" xml:space="preserve">
+    <value>此对话框提供指令以在第三方启动器中集成 HoYoShade/OpenHoYoShade，启动游戏时自动注入。</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_NoFrameworkWarning" xml:space="preserve">
+    <value>未安装任何框架。请先下载并安装 HoYoShade/OpenHoYoShade。</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_Copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_HoYoShadeDesc" xml:space="preserve">
+    <value>示例：将该指令添加到你的启动器中，启动游戏时会自动注册 HoYoShade。</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_OpenHoYoShadeDesc" xml:space="preserve">
+    <value>示例：将该指令添加到你的启动器中，启动游戏时会自动注册 OpenHoYoShade。</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_ErrorFormat" xml:space="preserve">
+    <value>初始化失败：{0}</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_CopySuccessFormat" xml:space="preserve">
+    <value>{0} 指令已复制到剪贴板</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_CopyErrorFormat" xml:space="preserve">
+    <value>复制失败：{0}</value>
+  </data>
   <data name="Language_English" xml:space="preserve">
     <value>英语</value>
   </data>

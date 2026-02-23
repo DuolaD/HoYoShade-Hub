@@ -2246,6 +2246,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Download and install HoYoShade framework 的本地化字符串。
+        /// </summary>
+        public static string HoYoShadeDownloadView_UpdateModeTitle {
+            get {
+                return ResourceManager.GetString("HoYoShadeDownloadView_UpdateModeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Convert failed 的本地化字符串。
         /// </summary>
         public static string ImageBatchConvertWindow_ConvertFailed {
@@ -2868,6 +2877,78 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Existing presets detected. Choose how to handle them: 的本地化字符串。
+        /// </summary>
+        public static string PresetsDialog_Description {
+            get {
+                return ResourceManager.GetString("PresetsDialog_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Keep existing preset files 的本地化字符串。
+        /// </summary>
+        public static string PresetsDialog_KeepExisting {
+            get {
+                return ResourceManager.GetString("PresetsDialog_KeepExisting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Keep all current presets; new version presets may cause incompatibilities. 的本地化字符串。
+        /// </summary>
+        public static string PresetsDialog_KeepExisting_Tooltip {
+            get {
+                return ResourceManager.GetString("PresetsDialog_KeepExisting_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Overwrite existing presets 的本地化字符串。
+        /// </summary>
+        public static string PresetsDialog_Overwrite {
+            get {
+                return ResourceManager.GetString("PresetsDialog_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 New version presets will replace existing ones; custom changes will be lost. 的本地化字符串。
+        /// </summary>
+        public static string PresetsDialog_Overwrite_Tooltip {
+            get {
+                return ResourceManager.GetString("PresetsDialog_Overwrite_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Keep existing in a separate folder 的本地化字符串。
+        /// </summary>
+        public static string PresetsDialog_SeparateFolder {
+            get {
+                return ResourceManager.GetString("PresetsDialog_SeparateFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Store new version presets in a separate folder; safest option. 的本地化字符串。
+        /// </summary>
+        public static string PresetsDialog_SeparateFolder_Tooltip {
+            get {
+                return ResourceManager.GetString("PresetsDialog_SeparateFolder_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 How to handle existing preset files? 的本地化字符串。
+        /// </summary>
+        public static string PresetsDialog_Title {
+            get {
+                return ResourceManager.GetString("PresetsDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Cancel 的本地化字符串。
         /// </summary>
         public static string ResetReShadeIniDialog_Cancel {
@@ -3228,6 +3309,24 @@ namespace HoYoShadeHub.Language {
         public static string ReShadeDownloadView_UpdateHint {
             get {
                 return ResourceManager.GetString("ReShadeDownloadView_UpdateHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Updating may involve ReShade version changes; choose components to install. 的本地化字符串。
+        /// </summary>
+        public static string ReShadeDownloadView_UpdateModeHint {
+            get {
+                return ResourceManager.GetString("ReShadeDownloadView_UpdateModeHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Download and install ReShade shaders &amp; plugins 的本地化字符串。
+        /// </summary>
+        public static string ReShadeDownloadView_UpdateModeTitle {
+            get {
+                return ResourceManager.GetString("ReShadeDownloadView_UpdateModeTitle", resourceCulture);
             }
         }
         
@@ -4052,6 +4151,78 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Copy 的本地化字符串。
+        /// </summary>
+        public static string ThirdPartyIntegrationDialog_Copy {
+            get {
+                return ResourceManager.GetString("ThirdPartyIntegrationDialog_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Copy failed: {0} 的本地化字符串。
+        /// </summary>
+        public static string ThirdPartyIntegrationDialog_CopyErrorFormat {
+            get {
+                return ResourceManager.GetString("ThirdPartyIntegrationDialog_CopyErrorFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {0} command copied to clipboard 的本地化字符串。
+        /// </summary>
+        public static string ThirdPartyIntegrationDialog_CopySuccessFormat {
+            get {
+                return ResourceManager.GetString("ThirdPartyIntegrationDialog_CopySuccessFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Initialization failed: {0} 的本地化字符串。
+        /// </summary>
+        public static string ThirdPartyIntegrationDialog_ErrorFormat {
+            get {
+                return ResourceManager.GetString("ThirdPartyIntegrationDialog_ErrorFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Example: add this command to your launcher; HoYoShade will be auto-registered when starting the game. 的本地化字符串。
+        /// </summary>
+        public static string ThirdPartyIntegrationDialog_HoYoShadeDesc {
+            get {
+                return ResourceManager.GetString("ThirdPartyIntegrationDialog_HoYoShadeDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This dialog provides commands to integrate HoYoShade/OpenHoYoShade with third-party launchers to auto-inject when starting the game. 的本地化字符串。
+        /// </summary>
+        public static string ThirdPartyIntegrationDialog_Intro {
+            get {
+                return ResourceManager.GetString("ThirdPartyIntegrationDialog_Intro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No framework is installed. Please download and install HoYoShade/OpenHoYoShade first. 的本地化字符串。
+        /// </summary>
+        public static string ThirdPartyIntegrationDialog_NoFrameworkWarning {
+            get {
+                return ResourceManager.GetString("ThirdPartyIntegrationDialog_NoFrameworkWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Example: add this command to your launcher; OpenHoYoShade will be auto-registered when starting the game. 的本地化字符串。
+        /// </summary>
+        public static string ThirdPartyIntegrationDialog_OpenHoYoShadeDesc {
+            get {
+                return ResourceManager.GetString("ThirdPartyIntegrationDialog_OpenHoYoShadeDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Blender Plugin Repair Tool 的本地化字符串。
         /// </summary>
         public static string ToolboxSetting_BlenderRepairTool {
@@ -4381,6 +4552,24 @@ namespace HoYoShadeHub.Language {
         public static string UpdateWindow_FullPackage {
             get {
                 return ResourceManager.GetString("UpdateWindow_FullPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Published Time: 的本地化字符串。
+        /// </summary>
+        public static string UpdateWindow_ReleaseTime {
+            get {
+                return ResourceManager.GetString("UpdateWindow_ReleaseTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 HoYoShadeHub - Update 的本地化字符串。
+        /// </summary>
+        public static string UpdateWindow_Title {
+            get {
+                return ResourceManager.GetString("UpdateWindow_Title", resourceCulture);
             }
         }
         

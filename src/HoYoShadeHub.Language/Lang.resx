@@ -120,6 +120,69 @@
 	<data name="Language_Chinese" xml:space="preserve">
     <value>Chinese</value>
   </data>
+  <data name="UpdateWindow_Title" xml:space="preserve">
+    <value>HoYoShadeHub - Update</value>
+  </data>
+  <data name="UpdateWindow_ReleaseTime" xml:space="preserve">
+    <value>Published Time:</value>
+  </data>
+  <data name="HoYoShadeDownloadView_UpdateModeTitle" xml:space="preserve">
+    <value>Download and install HoYoShade framework</value>
+  </data>
+  <data name="ReShadeDownloadView_UpdateModeTitle" xml:space="preserve">
+    <value>Download and install ReShade shaders &amp; plugins</value>
+  </data>
+  <data name="ReShadeDownloadView_UpdateModeHint" xml:space="preserve">
+    <value>Updating may involve ReShade version changes; choose components to install.</value>
+  </data>
+  <data name="PresetsDialog_Title" xml:space="preserve">
+    <value>How to handle existing preset files?</value>
+  </data>
+  <data name="PresetsDialog_Description" xml:space="preserve">
+    <value>Existing presets detected. Choose how to handle them:</value>
+  </data>
+  <data name="PresetsDialog_KeepExisting" xml:space="preserve">
+    <value>Keep existing preset files</value>
+  </data>
+  <data name="PresetsDialog_KeepExisting_Tooltip" xml:space="preserve">
+    <value>Keep all current presets; new version presets may cause incompatibilities.</value>
+  </data>
+  <data name="PresetsDialog_Overwrite" xml:space="preserve">
+    <value>Overwrite existing presets</value>
+  </data>
+  <data name="PresetsDialog_Overwrite_Tooltip" xml:space="preserve">
+    <value>New version presets will replace existing ones; custom changes will be lost.</value>
+  </data>
+  <data name="PresetsDialog_SeparateFolder" xml:space="preserve">
+    <value>Keep existing in a separate folder</value>
+  </data>
+  <data name="PresetsDialog_SeparateFolder_Tooltip" xml:space="preserve">
+    <value>Store new version presets in a separate folder; safest option.</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_Intro" xml:space="preserve">
+    <value>This dialog provides commands to integrate HoYoShade/OpenHoYoShade with third-party launchers to auto-inject when starting the game.</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_NoFrameworkWarning" xml:space="preserve">
+    <value>No framework is installed. Please download and install HoYoShade/OpenHoYoShade first.</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_HoYoShadeDesc" xml:space="preserve">
+    <value>Example: add this command to your launcher; HoYoShade will be auto-registered when starting the game.</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_OpenHoYoShadeDesc" xml:space="preserve">
+    <value>Example: add this command to your launcher; OpenHoYoShade will be auto-registered when starting the game.</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_ErrorFormat" xml:space="preserve">
+    <value>Initialization failed: {0}</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_CopySuccessFormat" xml:space="preserve">
+    <value>{0} command copied to clipboard</value>
+  </data>
+  <data name="ThirdPartyIntegrationDialog_CopyErrorFormat" xml:space="preserve">
+    <value>Copy failed: {0}</value>
+  </data>
 	<data name="Language_English" xml:space="preserve">
     <value>English</value>
   </data>

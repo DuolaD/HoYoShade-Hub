@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Windows.Graphics;
 using Windows.System;
 using HoYoShadeHub.Core.HoYoShade;
+using HoYoShadeHub.Language;
 
 
 namespace HoYoShadeHub.Features.Update;
@@ -122,7 +123,7 @@ public sealed partial class UpdateWindow : WindowEx
     private void InitializeWindow()
     {
         AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-        Title = "HoYoShadeHub - Update";
+        Title = Lang.UpdateWindow_Title;
         RootGrid.RequestedTheme = ShouldAppsUseDarkMode() ? ElementTheme.Dark : ElementTheme.Light;
         SystemBackdrop = new DesktopAcrylicBackdrop();
         AdaptTitleBarButtonColorToActuallTheme();
@@ -276,7 +277,7 @@ public sealed partial class UpdateWindow : WindowEx
     /// Release time label: "发布时间" for framework, "编译时间" for hub
     /// </summary>
     public string ReleaseTimeLabel => (NewVersion?.DisableAutoUpdate ?? false) 
-        ? "发布时间：" 
+        ? Lang.UpdateWindow_ReleaseTime 
         : Lang.UpdatePage_BuiltTime;
 
     /// <summary>

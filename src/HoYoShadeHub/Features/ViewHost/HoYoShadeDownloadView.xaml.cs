@@ -130,7 +130,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(CanImport))]
     private bool isUpdateMode;
 
-    public string Title => IsUpdateMode ? "�����Ǹ��� HoYoShade ���" : Lang.HoYoShadeDownloadView_Title;
+    public string Title => IsUpdateMode ? Lang.HoYoShadeDownloadView_UpdateModeTitle : Lang.HoYoShadeDownloadView_Title;
 
     // Allow selection always (unless downloading) so users can repair/reinstall if needed
     public bool IsHoYoShadeSelectionEnabled => !IsDownloading;

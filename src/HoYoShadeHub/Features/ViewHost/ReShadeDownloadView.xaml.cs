@@ -139,9 +139,9 @@ public sealed partial class ReShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(CanInstallToBoth))]
     private bool isUpdateMode;
 
-    public string Title => IsUpdateMode ? "�������������Ǹ��� ReShade ��ɫ���Ͳ��" : Lang.ReShadeDownloadView_Title;
+    public string Title => IsUpdateMode ? Lang.ReShadeDownloadView_UpdateModeTitle : Lang.ReShadeDownloadView_Title;
     
-    public string UpdateHintText => "������θ����漰��ReShade�汾���������ǽ�������������Ѱ�װ����ɫ���Ͳ����";
+    public string UpdateHintText => Lang.ReShadeDownloadView_UpdateModeHint;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]

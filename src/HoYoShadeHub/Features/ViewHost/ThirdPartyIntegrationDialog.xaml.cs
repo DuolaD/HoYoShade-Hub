@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using HoYoShadeHub.Language;
 
 namespace HoYoShadeHub.Features.ViewHost;
 
@@ -108,7 +109,7 @@ public sealed partial class ThirdPartyIntegrationDialog : ContentDialog
         {
             _logger.LogError(ex, "Failed to initialize third-party integration commands");
             InfoBar_NoFrameworkInstalled.IsOpen = true;
-            InfoBar_NoFrameworkInstalled.Message = $"≥ı ºªØ ß∞‹£∫{ex.Message}";
+            InfoBar_NoFrameworkInstalled.Message = string.Format(Lang.ThirdPartyIntegrationDialog_ErrorFormat, ex.Message);
             StackPanel_HoYoShade.Visibility = Visibility.Collapsed;
             StackPanel_OpenHoYoShade.Visibility = Visibility.Collapsed;
         }
@@ -132,13 +133,13 @@ public sealed partial class ThirdPartyIntegrationDialog : ContentDialog
             dataPackage.SetText(text);
             Clipboard.SetContent(dataPackage);
 
-            InAppToast.MainWindow?.Success($"{frameworkName}√¸¡Ó“—∏¥÷∆µΩºÙÃ˘∞Â");
+            InAppToast.MainWindow?.Success(string.Format(Lang.ThirdPartyIntegrationDialog_CopySuccessFormat, frameworkName));
             _logger.LogInformation("Copied {FrameworkName} command to clipboard", frameworkName);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to copy {FrameworkName} command to clipboard", frameworkName);
-            InAppToast.MainWindow?.Error($"∏¥÷∆ ß∞‹£∫{ex.Message}");
+            InAppToast.MainWindow?.Error(string.Format(Lang.ThirdPartyIntegrationDialog_CopyErrorFormat, ex.Message));
         }
     }
 }

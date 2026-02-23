@@ -19,21 +19,21 @@
 
     <ScrollViewer MaxHeight="600">
         <StackPanel Spacing="12">
-            <!--  提示信息  -->
+            <!--  鎻愮ず淇℃伅  -->
             <TextBlock
                 Foreground="{ThemeResource SystemFillColorAttentionBrush}"
                 IsTextSelectionEnabled="True"
-                Text="您可以使用以下命令将HoYoShade或OpenHoYoShade框架与第三方程序联动。复制命令后，请在第三方程序中执行。"
+                Text="{x:Bind lang:Lang.ThirdPartyIntegrationDialog_Intro}"
                 TextWrapping="Wrap" />
 
-            <!--  未安装任何框架的提示  -->
+            <!--  鏈畨瑁呬换浣曟鏋剁殑鎻愮ず  -->
             <InfoBar
                 x:Name="InfoBar_NoFrameworkInstalled"
                 IsOpen="False"
-                Message="您尚未安装任何框架。请前往启动器设置-管理界面下载并安装HoYoShade或OpenHoYoShade框架。"
+                Message="{x:Bind lang:Lang.ThirdPartyIntegrationDialog_NoFrameworkWarning}"
                 Severity="Warning" />
 
-            <!--  HoYoShade 部分  -->
+            <!--  HoYoShade 锟斤拷锟斤拷  -->
             <StackPanel x:Name="StackPanel_HoYoShade" Spacing="8">
                 <TextBlock
                     FontSize="16"
@@ -55,17 +55,17 @@
                     <Button
                         Grid.Column="1"
                         Click="Button_CopyHoYoShadeCommand_Click"
-                        Content="复制" />
+                        Content="{x:Bind lang:Lang.ThirdPartyIntegrationDialog_Copy}" />
                 </Grid>
 
                 <TextBlock
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     IsTextSelectionEnabled="True"
-                    Text="示例：将此命令添加到您的第三方程序中，以在游戏启动时自动注入HoYoShade。"
+                    Text="{x:Bind lang:Lang.ThirdPartyIntegrationDialog_HoYoShadeDesc}"
                     TextWrapping="Wrap" />
             </StackPanel>
 
-            <!--  OpenHoYoShade 部分  -->
+            <!--  OpenHoYoShade 锟斤拷锟斤拷  -->
             <StackPanel x:Name="StackPanel_OpenHoYoShade" Spacing="8">
                 <TextBlock
                     FontSize="16"
@@ -87,13 +87,13 @@
                     <Button
                         Grid.Column="1"
                         Click="Button_CopyOpenHoYoShadeCommand_Click"
-                        Content="复制" />
+                        Content="{x:Bind lang:Lang.ThirdPartyIntegrationDialog_Copy}" />
                 </Grid>
 
                 <TextBlock
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     IsTextSelectionEnabled="True"
-                    Text="示例：将此命令添加到您的第三方程序中，以在游戏启动时自动注入OpenHoYoShade。"
+                    Text="{x:Bind lang:Lang.ThirdPartyIntegrationDialog_OpenHoYoShadeDesc}"
                     TextWrapping="Wrap" />
             </StackPanel>
 

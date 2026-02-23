@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
 using System.Threading.Tasks;
 using System;
+using HoYoShadeHub.Language;
 
 namespace HoYoShadeHub.Features.ViewHost;
 
@@ -18,28 +19,28 @@ public static class PresetsHandlingDialog
     {
         var radioKeepExisting = new RadioButton
         {
-            Content = "不更新预设文件（不推荐）",
+            Content = Lang.PresetsDialog_KeepExisting,
             Tag = PresetsHandlingOption.KeepExisting,
             Margin = new Thickness(0, 8, 0, 0)
         };
-        ToolTipService.SetToolTip(radioKeepExisting, "保留现有的预设文件，不安装新版本的预设文件。可能导致新功能无法使用。");
+        ToolTipService.SetToolTip(radioKeepExisting, Lang.PresetsDialog_KeepExisting_Tooltip);
 
         var radioOverwrite = new RadioButton
         {
-            Content = "覆盖（不推荐）",
+            Content = Lang.PresetsDialog_Overwrite,
             Tag = PresetsHandlingOption.Overwrite,
             Margin = new Thickness(0, 8, 0, 0)
         };
-        ToolTipService.SetToolTip(radioOverwrite, "用新版本的预设文件完全覆盖现有预设。你的自定义预设和修改将会丢失。");
+        ToolTipService.SetToolTip(radioOverwrite, Lang.PresetsDialog_Overwrite_Tooltip);
 
         var radioSeparateFolder = new RadioButton
         {
-            Content = "单独放置新版本预设文件（推荐）",
+            Content = Lang.PresetsDialog_SeparateFolder,
             Tag = PresetsHandlingOption.SeparateFolder,
             IsChecked = true,
             Margin = new Thickness(0, 8, 0, 0)
         };
-        ToolTipService.SetToolTip(radioSeparateFolder, "将新版本的预设文件放入以版本号命名的独立文件夹中，保留原有预设。这是最安全的选项。");
+        ToolTipService.SetToolTip(radioSeparateFolder, Lang.PresetsDialog_SeparateFolder_Tooltip);
 
         var stackPanel = new StackPanel
         {
@@ -48,7 +49,7 @@ public static class PresetsHandlingDialog
 
         var description = new TextBlock
         {
-            Text = "检测到你正在更新HoYoShade框架，新版本包含更新的预设文件。请选择如何处理现有的预设：",
+            Text = Lang.PresetsDialog_Description,
             TextWrapping = TextWrapping.Wrap,
             Opacity = 0.8,
             Margin = new Thickness(0, 0, 0, 16)
@@ -62,19 +63,19 @@ public static class PresetsHandlingDialog
         var dialog = new ContentDialog
         {
             XamlRoot = xamlRoot,
-            Title = "你希望如何处理现有的预设文件?",
+            Title = Lang.PresetsDialog_Title,
             // Content set later
         };
 
         var btnCancel = new Button
         {
-            Content = "取消",
+            Content = Lang.Common_Cancel,
             HorizontalAlignment = HorizontalAlignment.Stretch
         };
         
         var btnContinue = new Button
         {
-            Content = "继续",
+            Content = Lang.Common_Confirm,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Style = (Style)Application.Current.Resources["AccentButtonStyle"]
         };
