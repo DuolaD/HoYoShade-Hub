@@ -1679,4 +1679,49 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="Injector_UnknownError" xml:space="preserve">
     <value>{0} 注入器退出咗，錯誤代碼：0x{1:X}</value>
   </data>
+  <data name="GameLauncherSettingDialog_ThirdPartyIntegration" xml:space="preserve">
+    <value>連動第三方程式</value>
+  </data>
+  <data name="GameLauncherSettingDialog_NoFrameworkInstalled" xml:space="preserve">
+    <value>你仲未安裝任何框架。請去啟動器設定-管理介面下載同安裝 HoYoShade 或者 OpenHoYoShade 框架。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkHoYoShade" xml:space="preserve">
+    <value>連動 HoYoShade</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CopySuccess" xml:space="preserve">
+    <value>複製成功</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkOpenHoYoShade" xml:space="preserve">
+    <value>連動 OpenHoYoShade</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkDescription" xml:space="preserve">
+    <value>你可以用呢個介面顯示嘅命令，設定第三方程式啟動遊戲之前執行呢個命令，就可以無縫啟動 HoYoShade/OpenHoYoShade 框架。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note" xml:space="preserve">
+    <value>注意：</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note1" xml:space="preserve">
+    <value>唔同遊戲/客戶端用嘅命令可能會有啲唔同，你可能需要喺目標遊戲客戶端嘅遊戲設定介面入面，搵返啱而家客戶端用嘅命令。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note2" xml:space="preserve">
+    <value>如果 HoYoShade 框架/OpenHoYoShade 框架/啟動器路徑變咗，你需要返嚟呢個介面攞過新嘅命令。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note3" xml:space="preserve">
+    <value>部分第三方程式可能唔支援用呢度顯示嘅命令進行連動，你可能需要改吓個命令，先可以喺你用緊嘅第三方程式度用到。詳情請睇返第三方程式相關說明。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note4" xml:space="preserve">
+    <value>唔係所有第三方程式都支援連動第三方程式，詳情請睇返第三方程式相關說明。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note5" xml:space="preserve">
+    <value>唔係所有第三方程式都支援用命令進行連動，HoYoShade 貢獻者唔會對只係畀用佢附帶嘅注入器啟動嘅第三方程式做適配。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
+    <value>多遊戲目錄</value>
+  </data>
+  <data name="GameLauncherSettingDialog_MultiGameDirectoryDesc" xml:space="preserve">
+    <value>為呢隻遊戲加多幾個安裝目錄，快速切換唔同版本</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CopyFailed" xml:space="preserve">
+    <value>複製失敗</value>
+  </data>
 </root>

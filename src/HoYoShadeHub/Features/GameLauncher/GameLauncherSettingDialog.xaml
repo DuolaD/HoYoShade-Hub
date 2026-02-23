@@ -135,7 +135,7 @@
                 <NavigationViewItem Content="{x:Bind lang:Lang.GameLauncherSettingDialog_CustomBackground}"
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                     Tag="2" />
-                <NavigationViewItem Content="联动第三方程序"
+                <NavigationViewItem Content="{x:Bind lang:Lang.GameLauncherSettingDialog_ThirdPartyIntegration}"
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                     Tag="3" />
             </NavigationView.MenuItems>
@@ -284,10 +284,10 @@
                         <StackPanel Spacing="4" Visibility="Collapsed">
                             <TextBlock FontSize="14"
                                        FontWeight="SemiBold"
-                                       Text="多游戏目录" />
+                                       Text="{x:Bind lang:Lang.GameLauncherSettingDialog_MultiGameDirectory}" />
                             <TextBlock FontSize="12"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="为该游戏添加多个安装目录，快速切换不同版本"
+                                       Text="{x:Bind lang:Lang.GameLauncherSettingDialog_MultiGameDirectoryDesc}"
                                        TextWrapping="Wrap" />
                         </StackPanel>
                         
@@ -672,7 +672,7 @@
                             <!--  标题  -->
                             <TextBlock FontSize="20"
                                        FontWeight="SemiBold"
-                                       Text="联动第三方程序" />
+                                       Text="{x:Bind lang:Lang.GameLauncherSettingDialog_ThirdPartyIntegration}" />
                             
                             <!--  提示信息  -->
                             <!--<TextBlock Text="您可以使用以下命令将HoYoShade或OpenHoYoShade框架与第三方程序联动。" 
@@ -682,7 +682,7 @@
                             <!--  未安装任何框架的提示  -->
                             <InfoBar x:Name="InfoBar_NoFrameworkInstalled"
                                      IsOpen="False"
-                                     Message="您尚未安装任何框架。请前往启动器设置-管理界面下载并安装HoYoShade或OpenHoYoShade框架。"
+                                     Message="{x:Bind lang:Lang.GameLauncherSettingDialog_NoFrameworkInstalled}"
                                      Severity="Warning" />
 
                             <!--  HoYoShade 部分  -->
@@ -690,12 +690,12 @@
                                         Spacing="8"
                                         Visibility="Collapsed">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock FontWeight="SemiBold" Text="联动 HoYoShade" />
+                                    <TextBlock FontWeight="SemiBold" Text="{x:Bind lang:Lang.GameLauncherSettingDialog_LinkHoYoShade}" />
                                     <TextBlock x:Name="TextBlock_HoYoShadeCopySuccess"
                                                VerticalAlignment="Center"
                                                FontSize="12"
                                                Foreground="{ThemeResource SystemFillColorSuccessBrush}"
-                                               Text="复制成功"
+                                               Text="{x:Bind lang:Lang.GameLauncherSettingDialog_CopySuccess}"
                                                Visibility="Collapsed" />
                                 </StackPanel>
                                 <Grid Background="{ThemeResource ControlFillColorDefaultBrush}"
@@ -727,7 +727,7 @@
                                             BorderThickness="0"
                                             Click="Button_CopyHoYoShadeCommand_Click"
                                             CornerRadius="4"
-                                            ToolTipService.ToolTip="复制">
+                                            ToolTipService.ToolTip="{x:Bind lang:Lang.Common_Copy}">
                                         <FontIcon FontSize="14" Glyph="&#xE8C8;" />
                                     </Button>
                                 </Grid>
@@ -738,12 +738,12 @@
                                         Spacing="8"
                                         Visibility="Collapsed">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock FontWeight="SemiBold" Text="联动 OpenHoYoShade" />
+                                    <TextBlock FontWeight="SemiBold" Text="{x:Bind lang:Lang.GameLauncherSettingDialog_LinkOpenHoYoShade}" />
                                     <TextBlock x:Name="TextBlock_OpenHoYoShadeCopySuccess"
                                                VerticalAlignment="Center"
                                                FontSize="12"
                                                Foreground="{ThemeResource SystemFillColorSuccessBrush}"
-                                               Text="复制成功"
+                                               Text="{x:Bind lang:Lang.GameLauncherSettingDialog_CopySuccess}"
                                                Visibility="Collapsed" />
                                 </StackPanel>
                                 <Grid Background="{ThemeResource ControlFillColorDefaultBrush}"
@@ -775,7 +775,7 @@
                                             BorderThickness="0"
                                             Click="Button_CopyOpenHoYoShadeCommand_Click"
                                             CornerRadius="4"
-                                            ToolTipService.ToolTip="复制">
+                                            ToolTipService.ToolTip="{x:Bind lang:Lang.Common_Copy}">
                                         <FontIcon FontSize="14" Glyph="&#xE8C8;" />
                                     </Button>
                                 </Grid>
@@ -785,14 +785,14 @@
                             <StackPanel Spacing="8">
                                 <TextBlock FontSize="12"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           Text="你可以使用此界面所示的命令，设置第三方程序启动游戏客户端之前运行此命令，即可无缝启动HoYoShade/OpenHoYoShade框架。"
+                                           Text="{x:Bind lang:Lang.GameLauncherSettingDialog_LinkDescription}"
                                            TextWrapping="Wrap" />
 
                                 <TextBlock Margin="0,4,0,0"
                                            FontSize="12"
                                            FontWeight="SemiBold"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           Text="注意：" />
+                                           Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note}" />
 
                                 <StackPanel Spacing="4">
                                     <Grid>
@@ -807,7 +807,7 @@
                                         <TextBlock Grid.Column="1"
                                                    FontSize="12"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="不同游戏/客户端所使用的命令可能会有所不同，你可能需要在目标游戏客户端的游戏设置界面中，获取适用于当前客户端的的命令。"
+                                                   Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note1}"
                                                    TextWrapping="Wrap" />
                                     </Grid>
 
@@ -823,7 +823,7 @@
                                         <TextBlock Grid.Column="1"
                                                    FontSize="12"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="如果HoYoShade框架/OpenHoYoShade框架/启动器路径发生变化，你需要返回此界面获取新的命令。"
+                                                   Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note2}"
                                                    TextWrapping="Wrap" />
                                     </Grid>
 
@@ -839,7 +839,7 @@
                                         <TextBlock Grid.Column="1"
                                                    FontSize="12"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="部分第三方程序可能不支持调用此处显示的命令进行联动，你可能需要对命令进行更改，才能在你所使用的第三方程序进行调用。详情请查看第三方程序相关说明。"
+                                                   Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note3}"
                                                    TextWrapping="Wrap" />
                                     </Grid>
 
@@ -855,7 +855,7 @@
                                         <TextBlock Grid.Column="1"
                                                    FontSize="12"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="并非所有第三方程序均支持调用第三方程序，详情请查看第三方程序相关说明。"
+                                                   Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note4}"
                                                    TextWrapping="Wrap" />
                                     </Grid>
 
@@ -871,7 +871,7 @@
                                         <TextBlock Grid.Column="1"
                                                    FontSize="12"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="并非所有第三方程序均支持调用命令进行联动，HoYoShade 贡献者将不对仅允许用户使用其随附的注入器进行启动的第三方程序的适配。"
+                                                   Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note5}"
                                                    TextWrapping="Wrap" />
                                     </Grid>
                                 </StackPanel>

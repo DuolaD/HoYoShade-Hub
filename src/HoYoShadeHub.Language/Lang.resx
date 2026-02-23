@@ -1682,4 +1682,49 @@ Please scan QR code while Injector run next time to login again.</value>
 	<data name="Injector_UnknownError" xml:space="preserve">
     <value>{0} injector exited with error code: 0x{1:X}</value>
   </data>
+  <data name="GameLauncherSettingDialog_ThirdPartyIntegration" xml:space="preserve">
+    <value>Third-party Integration</value>
+  </data>
+  <data name="GameLauncherSettingDialog_NoFrameworkInstalled" xml:space="preserve">
+    <value>No framework installed. Please go to Launcher Settings - Manage Interface to download and install HoYoShade or OpenHoYoShade framework.</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkHoYoShade" xml:space="preserve">
+    <value>Integrate with HoYoShade</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CopySuccess" xml:space="preserve">
+    <value>Copied successfully</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkOpenHoYoShade" xml:space="preserve">
+    <value>Integrate with OpenHoYoShade</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkDescription" xml:space="preserve">
+    <value>You can use the command shown here to set the third-party program to run this command before launching the game client, enabling seamless launch of HoYoShade/OpenHoYoShade framework.</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note" xml:space="preserve">
+    <value>Note:</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note1" xml:space="preserve">
+    <value>Commands may vary for different games/clients. You may need to obtain the appropriate command for the current client in the game settings interface of the target game client.</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note2" xml:space="preserve">
+    <value>If the HoYoShade/OpenHoYoShade framework or launcher path changes, you need to return to this interface to get the new command.</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note3" xml:space="preserve">
+    <value>Some third-party programs may not support calling the command shown here for integration. You may need to modify the command to use it in your third-party program. Please refer to the third-party program documentation for details.</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note4" xml:space="preserve">
+    <value>Not all third-party programs support third-party program integration. Please refer to the third-party program documentation for details.</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note5" xml:space="preserve">
+    <value>Not all third-party programs support integration via commands. HoYoShade contributors will not adapt to third-party programs that only allow users to launch with their included injector.</value>
+  </data>
+  <data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
+    <value>Multi-Game Directory</value>
+  </data>
+  <data name="GameLauncherSettingDialog_MultiGameDirectoryDesc" xml:space="preserve">
+    <value>Add multiple installation directories for this game to quickly switch between versions</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CopyFailed" xml:space="preserve">
+    <value>Copy Failed</value>
+  </data>
 </root>

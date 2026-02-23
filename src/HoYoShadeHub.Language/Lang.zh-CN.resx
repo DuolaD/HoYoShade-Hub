@@ -1668,4 +1668,49 @@
   <data name="Injector_UnknownError" xml:space="preserve">
     <value>{0} 注入器退出，错误代码：0x{1:X}</value>
   </data>
+  <data name="GameLauncherSettingDialog_ThirdPartyIntegration" xml:space="preserve">
+    <value>联动第三方程序</value>
+  </data>
+  <data name="GameLauncherSettingDialog_NoFrameworkInstalled" xml:space="preserve">
+    <value>您尚未安装任何框架。请前往启动器设置-管理界面下载并安装 HoYoShade 或 OpenHoYoShade 框架。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkHoYoShade" xml:space="preserve">
+    <value>联动 HoYoShade</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CopySuccess" xml:space="preserve">
+    <value>复制成功</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkOpenHoYoShade" xml:space="preserve">
+    <value>联动 OpenHoYoShade</value>
+  </data>
+  <data name="GameLauncherSettingDialog_LinkDescription" xml:space="preserve">
+    <value>你可以使用此界面所示的命令，设置第三方程序启动游戏客户端之前运行此命令，即可无缝启动 HoYoShade/OpenHoYoShade 框架。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note" xml:space="preserve">
+    <value>注意：</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note1" xml:space="preserve">
+    <value>不同游戏/客户端所使用的命令可能会有所不同，你可能需要在目标游戏客户端的游戏设置界面中，获取适用于当前客户端的的命令。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note2" xml:space="preserve">
+    <value>如果 HoYoShade 框架/OpenHoYoShade 框架/启动器路径发生变化，你需要返回此界面获取新的命令。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note3" xml:space="preserve">
+    <value>部分第三方程序可能不支持调用此处显示的命令进行联动，你可能需要对命令进行更改，才能在你所使用的第三方程序进行调用。详情请查看第三方程序相关说明。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note4" xml:space="preserve">
+    <value>并非所有第三方程序均支持调用第三方程序，详情请查看第三方程序相关说明。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_Note5" xml:space="preserve">
+    <value>并非所有第三方程序均支持调用命令进行联动，HoYoShade 贡献者将不对仅允许用户使用其随附的注入器进行启动的第三方程序的适配。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
+    <value>多游戏目录</value>
+  </data>
+  <data name="GameLauncherSettingDialog_MultiGameDirectoryDesc" xml:space="preserve">
+    <value>为该游戏添加多个安装目录，快速切换不同版本</value>
+  </data>
+  <data name="GameLauncherSettingDialog_CopyFailed" xml:space="preserve">
+    <value>复制失败</value>
+  </data>
 </root>

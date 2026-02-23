@@ -2938,6 +2938,141 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("PresetsDialog_SeparateFolder_Tooltip", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_ThirdPartyIntegration {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_ThirdPartyIntegration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_NoFrameworkInstalled {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_NoFrameworkInstalled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_LinkHoYoShade {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_LinkHoYoShade", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_CopySuccess {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_CopySuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_LinkOpenHoYoShade {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_LinkOpenHoYoShade", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_LinkDescription {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_LinkDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note1 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note1", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note2 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note2", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note3 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note3", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note4 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note4", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note5 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note5", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_MultiGameDirectory {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_MultiGameDirectory", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_MultiGameDirectoryDesc {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_MultiGameDirectoryDesc", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_CopyFailed {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_CopyFailed", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   查找类似 How to handle existing preset files? 的本地化字符串。

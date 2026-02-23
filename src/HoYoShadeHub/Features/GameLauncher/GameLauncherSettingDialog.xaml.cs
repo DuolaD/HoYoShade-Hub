@@ -12,6 +12,7 @@ using HoYoShadeHub.Features.Background;
 using HoYoShadeHub.Features.GameSelector;
 using HoYoShadeHub.Features.HoYoPlay;
 using HoYoShadeHub.Helpers;
+using HoYoShadeHub.Language;
 using HoYoShadeHub.RPC.GameInstall;
 using System;
 using System.Collections.Generic;
@@ -946,7 +947,7 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to copy {FrameworkName} command to clipboard", frameworkName);
-            InAppToast.MainWindow?.Error("复制失败", ex.Message);
+            InAppToast.MainWindow?.Error(Lang.GameLauncherSettingDialog_CopyFailed, ex.Message);
         }
     }
 
