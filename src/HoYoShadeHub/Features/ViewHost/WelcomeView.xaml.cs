@@ -262,7 +262,7 @@ public sealed partial class WelcomeView : UserControl
     {
         try
         {
-            const string url = "https://starward.scighost.com/metadata/test/test_100kb";
+            const string url = "https://speed.cloudflare.com/__down?bytes=102400";
             NetworkDelay = null;
             NetworkSpeed = null;
             using HttpClient httpClient = new HttpClient(new SocketsHttpHandler { AutomaticDecompression = DecompressionMethods.All })
