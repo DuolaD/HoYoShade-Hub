@@ -242,12 +242,32 @@ public sealed partial class UpdateWindow : WindowEx
 
 
 
-    public ReleaseInfoDetail? NewVersion { get; set; }
+    public ReleaseInfoDetail? NewVersion
+    {
+        get => field;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                OnPropertyChanged(nameof(ReleaseTimeLabel));
+            }
+        }
+    }
 
     /// <summary>
     /// Current framework version (for HoYoShade/OpenHoYoShade updates)
     /// </summary>
-    public string? CurrentFrameworkVersion { get; set; }
+    public string? CurrentFrameworkVersion
+    {
+        get => field;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                OnPropertyChanged(nameof(CurrentVersionText));
+            }
+        }
+    }
 
     /// <summary>
     /// Version of the pending framework update (for showing changelog after update)
@@ -283,7 +303,7 @@ public sealed partial class UpdateWindow : WindowEx
     /// <summary>
     /// Release time text
     /// </summary>
-    public string ReleaseTimeText { get; set; } = "";
+    public string ReleaseTimeText { get => field; set => SetProperty(ref field, value); } = "";
 
     private async Task FetchAndDisplayReleaseTimeAsync()
     {
