@@ -1092,7 +1092,7 @@
     <value>OpenHoYoShade</value>
   </data>
 	<data name="HoYoShadeDownloadView_Server_GithubDirect" xml:space="preserve">
-    <value>GitHub (Direct)</value>
+    <value>GitHub</value>
   </data>
 	<data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
     <value>GitHub (Proxy)</value>

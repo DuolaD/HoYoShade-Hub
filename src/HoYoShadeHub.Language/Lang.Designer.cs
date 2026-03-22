@@ -1381,6 +1381,24 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Copy Failed 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_CopyFailed {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_CopyFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Copied successfully 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_CopySuccess {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_CopySuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Custom Background 的本地化字符串。
         /// </summary>
         public static string GameLauncherSettingDialog_CustomBackground {
@@ -1417,6 +1435,114 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 You can use the command shown here to set the third-party program to run this command before launching the game client, enabling seamless launch of HoYoShade/OpenHoYoShade framework. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_LinkDescription {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_LinkDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Integrate with HoYoShade 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_LinkHoYoShade {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_LinkHoYoShade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Integrate with OpenHoYoShade 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_LinkOpenHoYoShade {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_LinkOpenHoYoShade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Multi-Game Directory 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_MultiGameDirectory {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_MultiGameDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Add multiple installation directories for this game to quickly switch between versions 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_MultiGameDirectoryDesc {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_MultiGameDirectoryDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No framework installed. Please go to Launcher Settings - Manage Interface to download and install HoYoShade or OpenHoYoShade framework. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_NoFrameworkInstalled {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_NoFrameworkInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Note: 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Commands may vary for different games/clients. You may need to obtain the appropriate command for the current client in the game settings interface of the target game client. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note1 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 If the HoYoShade/OpenHoYoShade framework or launcher path changes, you need to return to this interface to get the new command. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note2 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Some third-party programs may not support calling the command shown here for integration. You may need to modify the command to use it in your third-party program. Please refer to the third-party program documentation for details. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note3 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Not all third-party programs support third-party program integration. Please refer to the third-party program documentation for details. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note4 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Not all third-party programs support integration via commands. HoYoShade contributors will not adapt to third-party programs that only allow users to launch with their included injector. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_Note5 {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_Note5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Relocate Game 的本地化字符串。
         /// </summary>
         public static string GameLauncherSettingDialog_RelocateGame {
@@ -1449,6 +1575,15 @@ namespace HoYoShadeHub.Language {
         public static string GameLauncherSettingDialog_StartupArguments {
             get {
                 return ResourceManager.GetString("GameLauncherSettingDialog_StartupArguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Third-party Integration 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_ThirdPartyIntegration {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_ThirdPartyIntegration", resourceCulture);
             }
         }
         
@@ -2111,7 +2246,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 GitHub (Direct) 的本地化字符串。
+        ///   查找类似 GitHub 的本地化字符串。
         /// </summary>
         public static string HoYoShadeDownloadView_Server_GithubDirect {
             get {
@@ -2936,141 +3071,6 @@ namespace HoYoShadeHub.Language {
         public static string PresetsDialog_SeparateFolder_Tooltip {
             get {
                 return ResourceManager.GetString("PresetsDialog_SeparateFolder_Tooltip", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_ThirdPartyIntegration {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_ThirdPartyIntegration", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_NoFrameworkInstalled {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_NoFrameworkInstalled", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_LinkHoYoShade {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_LinkHoYoShade", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_CopySuccess {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_CopySuccess", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_LinkOpenHoYoShade {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_LinkOpenHoYoShade", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_LinkDescription {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_LinkDescription", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_Note {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_Note", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_Note1 {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_Note1", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_Note2 {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_Note2", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_Note3 {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_Note3", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_Note4 {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_Note4", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_Note5 {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_Note5", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_MultiGameDirectory {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_MultiGameDirectory", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_MultiGameDirectoryDesc {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_MultiGameDirectoryDesc", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   查找类似 ... 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_CopyFailed {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_CopyFailed", resourceCulture);
             }
         }
         
