@@ -21,6 +21,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
+using HoYoShadeHub.Models;
+using Microsoft.UI.Xaml.Media;
 
 namespace HoYoShadeHub.Features.ViewHost;
 
@@ -35,7 +37,7 @@ public sealed partial class ReShadeDownloadView : UserControl
     public ReShadeDownloadView()
     {
         this.InitializeComponent();
-        DownloadServers = new ObservableCollection<string>();
+        DownloadServers = new ObservableCollection<DownloadServerItem>();
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         
         // Register for installation change messages from other views/windows
@@ -91,26 +93,54 @@ public sealed partial class ReShadeDownloadView : UserControl
 
     private void UpdateDownloadServers()
     {
-        var selectedIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+        var selectedIndex = SelectedDownloadServer?.ServerIndex ?? 0;
         DownloadServers.Clear();
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubDirect);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_Cloudflare);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_TencentCloud);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_AlibabaCloud);
-        if (selectedIndex >= 0 && selectedIndex < DownloadServers.Count)
-        {
-            SelectedDownloadServer = DownloadServers[selectedIndex];
-        }
-        else
-        {
-            SelectedDownloadServer = DownloadServers[0];
-        }
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AlibabaCloud, ServerIndex = 3 });
+        
+        var toSelect = DownloadServers.FirstOrDefault(x => x.ServerIndex == selectedIndex);
+        SelectedDownloadServer = toSelect ?? DownloadServers[0];
+        
+        _ = UpdateLatenciesAsync();
     }
 
-    public ObservableCollection<string> DownloadServers { get; }
+    private async Task UpdateLatenciesAsync()
+    {
+        var httpClient = AppConfig.GetService<HttpClient>();
+        if (httpClient == null) return;
+
+        var serversToUpdate = DownloadServers.ToList();
+        foreach (var server in serversToUpdate)
+        {
+            server.LatencyText = "Ping...";
+            server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
+        }
+
+        var tasks = serversToUpdate.Select(async server =>
+        {
+            long latency = await CloudProxyManager.PingServerAsync(server.ServerIndex, httpClient);
+            if (latency >= 0)
+            {
+                server.LatencyText = $"{latency}ms";
+                if (latency < 100) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Green);
+                else if (latency < 300) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Orange);
+                else server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+            else
+            {
+                server.LatencyText = "Timeout";
+                server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+        });
+        await Task.WhenAll(tasks);
+    }
+
+    public ObservableCollection<DownloadServerItem> DownloadServers { get; }
 
     [ObservableProperty]
-    private string selectedDownloadServer;
+    private DownloadServerItem selectedDownloadServer;
 
     [ObservableProperty]
     private bool isHoYoShadeInstalled;
@@ -599,13 +629,13 @@ public sealed partial class ReShadeDownloadView : UserControl
 
             // Determine download server - pass the server index to RPC
             // RPC will use CloudProxyManager to handle proxy selection
-            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            int serverIndex = SelectedDownloadServer?.ServerIndex ?? 0;
             string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
             bool useProxy = !string.IsNullOrWhiteSpace(proxyUrl);
             
             // For backward compatibility with RPC, pass a proxy indicator string
             // The RPC service will need to be updated to use the same CloudProxyManager logic
-            string downloadServer = SelectedDownloadServer;
+            string downloadServer = SelectedDownloadServer?.Name ?? "";
 
             var basePath = AppConfig.UserDataFolder;
 

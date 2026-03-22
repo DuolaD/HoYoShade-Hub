@@ -29,6 +29,7 @@ using Windows.Graphics;
 using Windows.System;
 using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Language;
+using HoYoShadeHub.Models;
 
 
 namespace HoYoShadeHub.Features.Update;
@@ -59,7 +60,7 @@ public sealed partial class UpdateWindow : WindowEx
         _timer.Tick += _timer_Tick;
         
         // Initialize download servers
-        DownloadServers = new ObservableCollection<string>();
+        DownloadServers = new ObservableCollection<DownloadServerItem>();
         UpdateDownloadServers();
         
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => 
@@ -73,10 +74,10 @@ public sealed partial class UpdateWindow : WindowEx
     
     #region Download Server Selection
     
-    public ObservableCollection<string> DownloadServers { get; }
+    public ObservableCollection<DownloadServerItem> DownloadServers { get; }
 
-    private string _selectedDownloadServer;
-    public string SelectedDownloadServer 
+    private DownloadServerItem _selectedDownloadServer;
+    public DownloadServerItem SelectedDownloadServer 
     { 
         get => _selectedDownloadServer; 
         set
@@ -84,10 +85,9 @@ public sealed partial class UpdateWindow : WindowEx
             if (SetProperty(ref _selectedDownloadServer, value))
             {
                 // Save the selected server index to AppConfig
-                int selectedIndex = DownloadServers.IndexOf(value);
-                if (selectedIndex >= 0)
+                if (value != null)
                 {
-                    AppConfig.LauncherUpdateDownloadServer = selectedIndex;
+                    AppConfig.LauncherUpdateDownloadServer = value.ServerIndex;
                 }
             }
         }
@@ -99,21 +99,48 @@ public sealed partial class UpdateWindow : WindowEx
         int savedIndex = AppConfig.LauncherUpdateDownloadServer;
         
         DownloadServers.Clear();
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_Cloudflare);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_TencentCloud);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_AlibabaCloud);
+        // Skip GitHub direct for launcher updates
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AlibabaCloud, ServerIndex = 3 });
         
-        // Restore the previously selected server
-        if (savedIndex >= 0 && savedIndex < DownloadServers.Count)
-        {
-            _selectedDownloadServer = DownloadServers[savedIndex];
-        }
-        else
-        {
-            _selectedDownloadServer = DownloadServers[0];
-        }
+        var toSelect = DownloadServers.FirstOrDefault(x => x.ServerIndex == savedIndex);
+        _selectedDownloadServer = toSelect ?? DownloadServers[0];
         
         OnPropertyChanged(nameof(SelectedDownloadServer));
+        
+        _ = UpdateLatenciesAsync();
+    }
+
+    private async Task UpdateLatenciesAsync()
+    {
+        var httpClient = AppConfig.GetService<System.Net.Http.HttpClient>();
+        if (httpClient == null) return;
+
+        var serversToUpdate = DownloadServers.ToList();
+        foreach (var server in serversToUpdate)
+        {
+            server.LatencyText = "Ping...";
+            server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
+        }
+
+        var tasks = serversToUpdate.Select(async server =>
+        {
+            long latency = await CloudProxyManager.PingServerAsync(server.ServerIndex, httpClient);
+            if (latency >= 0)
+            {
+                server.LatencyText = $"{latency}ms";
+                if (latency < 100) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Green);
+                else if (latency < 300) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Orange);
+                else server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+            else
+            {
+                server.LatencyText = "Timeout";
+                server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+        });
+        await Task.WhenAll(tasks);
     }
     
     #endregion

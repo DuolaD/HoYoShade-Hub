@@ -7,6 +7,7 @@
              xmlns:lang="using:HoYoShadeHub.Language"
              xmlns:local="using:HoYoShadeHub.Features.Setting"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:HoYoShadeHub.Models"
              xmlns:s="using:HoYoShadeHub"
              xmlns:sf="using:HoYoShadeHub.Frameworks"
              x:DefaultBindMode="OneWay"
@@ -61,10 +62,23 @@
             <TextBlock Margin="0,12,0,4"
                        Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-            <ComboBox Width="240"
+            <ComboBox MinWidth="240"
                       HorizontalAlignment="Left"
                       ItemsSource="{x:Bind DownloadServers}"
-                      SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}" />
+                      SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="models:DownloadServerItem">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="0,0,16,0" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" />
+                        </Grid>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             
             <Grid Margin="0,12,0,0" ColumnSpacing="16">
                 <Grid.ColumnDefinitions>

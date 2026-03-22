@@ -149,6 +149,52 @@ public class CloudProxyManager
     }
 
     /// <summary>
+    /// Ping the download server to measure latency
+    /// </summary>
+    /// <param name="serverIndex">Server index</param>
+    /// <param name="httpClient">HttpClient</param>
+    /// <returns>Latency in milliseconds, or -1 if failed</returns>
+    public static async Task<long> PingServerAsync(int serverIndex, HttpClient httpClient)
+    {
+        string pingUrl;
+        if (serverIndex == 0) // GitHub Direct
+        {
+            pingUrl = "https://github.com/";
+        }
+        else
+        {
+            var proxies = GetAllProxiesForServer(serverIndex);
+            if (proxies.Length == 0) return -1;
+            // Use the first proxy to check latency, with /success.html/ to avoid 403 Forbidden
+            string proxy = proxies[0].TrimEnd('/');
+            pingUrl = $"{proxy}/success.html/";
+        }
+
+        try
+        {
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            // Send HEAD request to avoid downloading the whole page if possible, 
+            // but GET is safer for just a quick success.html
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var request = new HttpRequestMessage(HttpMethod.Get, pingUrl);
+            // Disable keep-alive to avoid connection reuse skewing the latency
+            request.Headers.ConnectionClose = true;
+            using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
+            stopwatch.Stop();
+            
+            if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                return stopwatch.ElapsedMilliseconds;
+            }
+            return -1;
+        }
+        catch
+        {
+            return -1;
+        }
+    }
+
+    /// <summary>
     /// Get a random proxy from the array
     /// </summary>
     private static string GetRandomProxy(string[] proxies)

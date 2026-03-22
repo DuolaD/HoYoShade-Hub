@@ -12,6 +12,8 @@ using HoYoShadeHub.Features.ViewHost;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
+using HoYoShadeHub.Models;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
@@ -37,17 +39,17 @@ public sealed partial class FileManageSetting : PageBase
     public FileManageSetting()
     {
         this.InitializeComponent();
-        DownloadServers = new ObservableCollection<string>();
+        DownloadServers = new ObservableCollection<DownloadServerItem>();
         UpdateDownloadServers();
         
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => UpdateDownloadServers());
     }
     
-    public ObservableCollection<string> DownloadServers { get; }
+    public ObservableCollection<DownloadServerItem> DownloadServers { get; }
 
-    private string _selectedDownloadServer;
-    public string SelectedDownloadServer 
+    private DownloadServerItem _selectedDownloadServer;
+    public DownloadServerItem SelectedDownloadServer 
     { 
         get => _selectedDownloadServer; 
         set
@@ -55,10 +57,9 @@ public sealed partial class FileManageSetting : PageBase
             if (SetProperty(ref _selectedDownloadServer, value))
             {
                 // Save the selected server index to AppConfig
-                int selectedIndex = DownloadServers.IndexOf(value);
-                if (selectedIndex >= 0)
+                if (value != null)
                 {
-                    AppConfig.HoYoShadeFrameworkDownloadServer = selectedIndex;
+                    AppConfig.HoYoShadeFrameworkDownloadServer = value.ServerIndex;
                 }
             }
         }
@@ -70,22 +71,48 @@ public sealed partial class FileManageSetting : PageBase
         int savedIndex = AppConfig.HoYoShadeFrameworkDownloadServer;
         
         DownloadServers.Clear();
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_GithubDirect);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_Cloudflare);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_TencentCloud);
-        DownloadServers.Add(Lang.HoYoShadeDownloadView_Server_AlibabaCloud);
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AlibabaCloud, ServerIndex = 3 });
         
-        // Restore the previously selected server
-        if (savedIndex >= 0 && savedIndex < DownloadServers.Count)
-        {
-            _selectedDownloadServer = DownloadServers[savedIndex];
-        }
-        else
-        {
-            _selectedDownloadServer = DownloadServers[0];
-        }
+        var toSelect = DownloadServers.FirstOrDefault(x => x.ServerIndex == savedIndex);
+        _selectedDownloadServer = toSelect ?? DownloadServers[0];
         
         OnPropertyChanged(nameof(SelectedDownloadServer));
+        
+        _ = UpdateLatenciesAsync();
+    }
+
+    private async Task UpdateLatenciesAsync()
+    {
+        var httpClient = AppConfig.GetService<System.Net.Http.HttpClient>();
+        if (httpClient == null) return;
+
+        var serversToUpdate = DownloadServers.ToList();
+        foreach (var server in serversToUpdate)
+        {
+            server.LatencyText = "Ping...";
+            server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
+        }
+
+        var tasks = serversToUpdate.Select(async server =>
+        {
+            long latency = await CloudProxyManager.PingServerAsync(server.ServerIndex, httpClient);
+            if (latency >= 0)
+            {
+                server.LatencyText = $"{latency}ms";
+                if (latency < 100) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Green);
+                else if (latency < 300) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Orange);
+                else server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+            else
+            {
+                server.LatencyText = "Timeout";
+                server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+        });
+        await Task.WhenAll(tasks);
     }
 
 
@@ -1092,7 +1119,7 @@ public sealed partial class FileManageSetting : PageBase
             HoYoShadeUpdateInfo = "Checking for updates...";
             
             // Get proxy URL from selected server
-            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            int serverIndex = SelectedDownloadServer?.ServerIndex ?? 0;
             string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
             
             var updateService = new HoYoShadeUpdateService(_versionService);
