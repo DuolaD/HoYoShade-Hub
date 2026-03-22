@@ -130,9 +130,8 @@ public sealed partial class UpdateWindow : WindowEx
             if (latency >= 0)
             {
                 server.LatencyText = $"{latency}ms";
-                if (latency < 100) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Green);
-                else if (latency < 300) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Orange);
-                else server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+                if (latency <= 600) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.LimeGreen);
+                else server.LatencyColor = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0xC5, 0x7F, 0x0A));
             }
             else
             {
