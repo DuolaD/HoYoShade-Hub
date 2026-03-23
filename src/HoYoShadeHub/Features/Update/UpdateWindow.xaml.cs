@@ -100,7 +100,7 @@ public sealed partial class UpdateWindow : WindowEx
         
         DownloadServers.Clear();
         // Add Auto Select option
-        DownloadServers.Add(new DownloadServerItem { Name = "自动选择", ServerIndex = -1 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AutoSelect, ServerIndex = -1 });
         // Skip GitHub direct for launcher updates
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });

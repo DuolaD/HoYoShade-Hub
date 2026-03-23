@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1105,6 +1105,12 @@
   </data>
   <data name="HoYoShadeDownloadView_Server_AlibabaCloud" xml:space="preserve">
     <value>阿里雲</value>
+  </data>
+  <data name="HoYoShadeDownloadView_Server_AutoSelect" xml:space="preserve">
+    <value>自動選擇</value>
+  </data>
+  <data name="HoYoShadeDownloadView_StatusDownloadingFromServer" xml:space="preserve">
+    <value>{0} - 正在從 {1} 中下載...</value>
   </data>
   <data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
     <value>{0}/s - {1}%</value>

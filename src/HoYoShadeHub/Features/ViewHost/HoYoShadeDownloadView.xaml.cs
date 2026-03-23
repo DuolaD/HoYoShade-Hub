@@ -102,7 +102,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
      {
          var selectedIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
          DownloadServers.Clear();
-         DownloadServers.Add(new DownloadServerItem { Name = "自动选择", ServerIndex = -1 });
+         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AutoSelect, ServerIndex = -1 });
          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
@@ -690,11 +690,12 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 string serverName = currentServerIndex switch {
                     0 => "GitHub",
                     1 => "Cloudflare",
-                    2 => "腾讯云",
-                    3 => "阿里云",
+                    2 => Lang.HoYoShadeDownloadView_Server_TencentCloud,
+                    3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
                     _ => "Unknown"
                 };
-                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0}) - 正在从 {1} 中下载..", keyword, serverName);
+                string baseStatus = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
+                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
             }
 
             string[] proxies = currentServerIndex == 0 ? new string[] { null! } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
@@ -755,8 +756,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                         {
                             if (serverIndex == -1)
                             {
-                                string serverName = currentServerIndex switch { 0 => "GitHub", 1 => "Cloudflare", 2 => "腾讯云", 3 => "阿里云", _ => "Unknown" };
-                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0}) - 正在从 {1} 中下载..", keyword, serverName);
+                                string serverName = currentServerIndex switch { 0 => "GitHub", 1 => "Cloudflare", 2 => Lang.HoYoShadeDownloadView_Server_TencentCloud, 3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud, _ => "Unknown" };
+                                string baseStatus = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
+                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
                             }
                             else
                             {
