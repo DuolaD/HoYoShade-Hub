@@ -71,7 +71,12 @@ internal class RpcService
             }
             catch (RpcException ex) when (ex.Status is { StatusCode: StatusCode.DeadlineExceeded })
             {
-                throw new TimeoutException("Checking RPC server timed out.");
+                var logPath = System.IO.Path.Combine(AppConfig.CacheFolder, "log");
+                string errorMsg = $"Checking RPC server timed out.\n" +
+                                  $"The RPC process might have failed to start or crashed.\n" +
+                                  $"You can check the logs in: {logPath}\n" +
+                                  $"Also, ensure that your antivirus software is not blocking 'HoYoShadeHub.RPC.exe' or 'HoYoShadeHub.exe'.";
+                throw new TimeoutException(errorMsg);
             }
             await SetEnviromentAsync();
         }

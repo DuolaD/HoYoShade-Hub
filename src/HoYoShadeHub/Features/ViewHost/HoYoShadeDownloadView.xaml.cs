@@ -1519,7 +1519,11 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
         if (!RpcClientFactory.CheckRpcServerRunning())
         {
-            throw new Exception("Failed to start RPC server");
+            var logPath = System.IO.Path.Combine(AppConfig.CacheFolder, "log");
+            string errorMsg = $"Failed to start RPC server. The process may have been blocked or crashed.\n" +
+                              $"You can check the logs in: {logPath}\n" +
+                              $"Also, ensure that your antivirus software is not blocking 'HoYoShadeHub.RPC.exe' or 'HoYoShadeHub.exe'.";
+            throw new Exception(errorMsg);
         }
     }
     
