@@ -1,4 +1,4 @@
-﻿param(
+param(
     [string] $Architecture = "x64",
     [string] $Version = "1.0.0",
     [string] $Output = "build/HoYoShadeHub",

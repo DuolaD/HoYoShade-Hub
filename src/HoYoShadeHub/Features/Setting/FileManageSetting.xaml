@@ -185,14 +185,15 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="0,0,16,0" VerticalAlignment="Center" />
                                      <Border Grid.Column="1" 
-                                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
-                                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                             BorderThickness="1"
-                                             CornerRadius="4" 
-                                             Padding="6,2" 
-                                             VerticalAlignment="Center">
-                                         <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" UseLayoutRounding="True" />
-                                     </Border>
+                                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                              BorderThickness="1"
+                                              CornerRadius="4" 
+                                              Padding="6,2" 
+                                              VerticalAlignment="Center"
+                                              Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
+                                          <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" UseLayoutRounding="True" />
+                                      </Border>
                                 </Grid>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>

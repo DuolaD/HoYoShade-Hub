@@ -748,21 +748,21 @@ public static class AppConfig
     }
 
     /// <summary>
-    /// 启动器更新下载服务器选择 (0=Cloudflare, 1=Tencent, 2=Alibaba)
+    /// 启动器更新下载服务器选择 (-1=Auto Select, 1=Cloudflare, 2=Tencent, 3=Alibaba)
     /// </summary>
     public static int LauncherUpdateDownloadServer
     {
-        get => GetValue(0);
-        set => SetValue(value);
+        get => GetValue(-1, "LauncherUpdateDownloadServer_V2");
+        set => SetValue(value, "LauncherUpdateDownloadServer_V2");
     }
 
     /// <summary>
-    /// HoYoShade框架下载服务器选择 (0=GitHub Direct, 1=Cloudflare, 2=Tencent, 3=Alibaba)
+    /// HoYoShade框架下载服务器选择 (-1=Auto Select, 0=GitHub Direct, 1=Cloudflare, 2=Tencent, 3=Alibaba)
     /// </summary>
     public static int HoYoShadeFrameworkDownloadServer
     {
-        get => GetValue(0);
-        set => SetValue(value);
+        get => GetValue(-1, "HoYoShadeFrameworkDownloadServer_V2");
+        set => SetValue(value, "HoYoShadeFrameworkDownloadServer_V2");
     }
 
 

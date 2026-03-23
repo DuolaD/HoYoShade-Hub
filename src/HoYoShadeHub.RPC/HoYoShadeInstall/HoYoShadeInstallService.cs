@@ -569,7 +569,7 @@ public class HoYoShadeInstallService
     public async Task InstallReShadePackAsync(
         string basePath,
         ReShadeInstallTarget installTarget,
-        bool useProxy,
+        string proxyUrl,
         List<EffectPackage> selectedEffectPackages,
         List<Addon> selectedAddons,
         CancellationToken cancellationToken)
@@ -577,8 +577,8 @@ public class HoYoShadeInstallService
         try
         {
             _logger.LogInformation("=== Starting ReShade pack installation ===");
-            _logger.LogInformation("BasePath: {BasePath}, Target: {Target}, UseProxy: {UseProxy}",
-                basePath, installTarget, useProxy);
+            _logger.LogInformation("BasePath: {BasePath}, Target: {Target}, ProxyUrl: {ProxyUrl}",
+                basePath, installTarget, proxyUrl);
             _logger.LogInformation("Selected {EffectCount} effect packages and {AddonCount} addons",
                 selectedEffectPackages.Count, selectedAddons.Count);
 
@@ -626,7 +626,7 @@ public class HoYoShadeInstallService
                 {
                     _logger.LogInformation("Downloading effect package: {PackageName}", package.Name);
                     CurrentFileType = 0; // Shader
-                    var result = await DownloadAndInstallEffectPackageAsync(package, targetDir, useProxy, cancellationToken);
+                    var result = await DownloadAndInstallEffectPackageAsync(package, targetDir, proxyUrl, cancellationToken);
                     if (result == InstallResult.Success) successCount++;
                     else if (result == InstallResult.Failed) failedCount++;
                     else skippedCount++;
@@ -637,7 +637,7 @@ public class HoYoShadeInstallService
                 {
                     _logger.LogInformation("Downloading addon: {AddonName}", addon.Name);
                     CurrentFileType = 1; // Addon
-                    var result = await DownloadAndInstallAddonAsync(addon, targetDir, useProxy, cancellationToken);
+                    var result = await DownloadAndInstallAddonAsync(addon, targetDir, proxyUrl, cancellationToken);
                     if (result == InstallResult.Success) successCount++;
                     else if (result == InstallResult.Failed) failedCount++;
                     else skippedCount++;
@@ -683,7 +683,7 @@ public class HoYoShadeInstallService
     private async Task<InstallResult> DownloadAndInstallEffectPackageAsync(
         EffectPackage package,
         string targetBaseDir,
-        bool useProxy,
+        string proxyUrl,
         CancellationToken cancellationToken)
     {
         try
@@ -698,9 +698,8 @@ public class HoYoShadeInstallService
 
             CurrentFile = package.Name;
             
-            // Apply proxy URL if needed (legacy ghproxy support for backward compatibility)
-            // New proxy logic should use CloudProxyManager on client side
-            var downloadUrl = useProxy ? $"https://ghproxy.com/{package.DownloadUrl}" : package.DownloadUrl;
+            // Apply proxy URL if needed
+            var downloadUrl = string.IsNullOrWhiteSpace(proxyUrl) ? package.DownloadUrl : $"{proxyUrl}/{package.DownloadUrl}";
             
             _logger.LogInformation(">>> Downloading effect package: {Package}", package.Name);
             _logger.LogInformation("    Download URL: {Url}", downloadUrl);
@@ -852,7 +851,7 @@ public class HoYoShadeInstallService
     private async Task<InstallResult> DownloadAndInstallAddonAsync(
         Addon addon,
         string targetBaseDir,
-        bool useProxy,
+        string proxyUrl,
         CancellationToken cancellationToken)
     {
         try
@@ -866,7 +865,7 @@ public class HoYoShadeInstallService
             }
 
             CurrentFile = addon.Name;
-            var downloadUrl = useProxy ? $"https://ghproxy.com/{addon.DownloadUrl}" : addon.DownloadUrl;
+            var downloadUrl = string.IsNullOrWhiteSpace(proxyUrl) ? addon.DownloadUrl : $"{proxyUrl}/{addon.DownloadUrl}";
             
             _logger.LogInformation(">>> Downloading addon: {Addon}", addon.Name);
             _logger.LogInformation("    Download URL: {Url}", downloadUrl);
@@ -1084,11 +1083,11 @@ public class HoYoShadeInstallService
     /// Fetch effect packages from official API
     /// Reference: SelectEffectsPage.xaml.cs -> constructor
     /// </summary>
-    public async Task<List<EffectPackage>> FetchEffectPackagesAsync(bool useProxy, CancellationToken cancellationToken)
+    public async Task<List<EffectPackage>> FetchEffectPackagesAsync(string proxyUrl, CancellationToken cancellationToken)
     {
         try
         {
-            var url = ReShadeDownloadServer.GetEffectPackagesUrl(useProxy);
+            var url = ReShadeDownloadServer.GetEffectPackagesUrl(proxyUrl);
             _logger.LogInformation("Fetching effect packages from {Url}", url);
             
             using var stream = await _httpClient.GetStreamAsync(url, cancellationToken);
@@ -1149,11 +1148,11 @@ public class HoYoShadeInstallService
     /// Fetch addons from official API
     /// Reference: SelectAddonsPage.xaml.cs -> constructor
     /// </summary>
-    public async Task<List<Addon>> FetchAddonsAsync(bool useProxy, CancellationToken cancellationToken)
+    public async Task<List<Addon>> FetchAddonsAsync(string proxyUrl, CancellationToken cancellationToken)
     {
         try
         {
-            var url = ReShadeDownloadServer.GetAddonsUrl(useProxy);
+            var url = ReShadeDownloadServer.GetAddonsUrl(proxyUrl);
             _logger.LogInformation("Fetching addons from {Url}", url);
             
             using var stream = await _httpClient.GetStreamAsync(url, cancellationToken);

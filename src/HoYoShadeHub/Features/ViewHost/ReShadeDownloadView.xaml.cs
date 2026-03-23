@@ -93,8 +93,9 @@ public sealed partial class ReShadeDownloadView : UserControl
 
     private void UpdateDownloadServers()
     {
-        var selectedIndex = SelectedDownloadServer?.ServerIndex ?? 0;
+        var selectedIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
         DownloadServers.Clear();
+        DownloadServers.Add(new DownloadServerItem { Name = "自动选择", ServerIndex = -1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
@@ -111,7 +112,7 @@ public sealed partial class ReShadeDownloadView : UserControl
         var httpClient = AppConfig.GetService<HttpClient>();
         if (httpClient == null) return;
 
-        var serversToUpdate = DownloadServers.ToList();
+        var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
         foreach (var server in serversToUpdate)
         {
             server.LatencyText = "Ping...";
@@ -140,6 +141,14 @@ public sealed partial class ReShadeDownloadView : UserControl
 
     [ObservableProperty]
     private DownloadServerItem selectedDownloadServer;
+
+    partial void OnSelectedDownloadServerChanged(DownloadServerItem value)
+    {
+        if (value != null)
+        {
+            AppConfig.HoYoShadeFrameworkDownloadServer = value.ServerIndex;
+        }
+    }
 
     [ObservableProperty]
     private bool isHoYoShadeInstalled;
@@ -626,160 +635,208 @@ public sealed partial class ReShadeDownloadView : UserControl
                 }
             }
 
-            // Determine download server - pass the server index to RPC
-            // RPC will use CloudProxyManager to handle proxy selection
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? 0;
-            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-            bool useProxy = !string.IsNullOrWhiteSpace(proxyUrl);
-            
-            // For backward compatibility with RPC, pass a proxy indicator string
-            // The RPC service will need to be updated to use the same CloudProxyManager logic
-            string downloadServer = SelectedDownloadServer?.Name ?? "";
-
-            var basePath = AppConfig.UserDataFolder;
-
-            // Create RPC client
-            var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
-
-            var request = new InstallReShadePackRequest
-            {
-                BasePath = basePath,
-                InstallTarget = installTarget,
-                InstallMode = installMode,
-                DownloadServer = downloadServer
-            };
-
-            if (installMode == 2)
-            {
-                request.CustomPackages.AddRange(_customSelectedPackages);
+            int[] serverSequence;
+            if (serverIndex == -1) {
+                serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(false);
+            } else {
+                serverSequence = new[] { serverIndex };
             }
 
-            // Call RPC and stream progress
-            using var call = client.InstallReShadePack(request, cancellationToken: _cancellationTokenSource.Token);
+            var basePath = AppConfig.UserDataFolder;
+            var httpClient = AppConfig.GetService<HttpClient>();
+            bool success = false;
+            Exception lastException = null;
+            string lastErrorMessage = null;
 
-            while (await call.ResponseStream.MoveNext(_cancellationTokenSource.Token))
+            foreach (var currentServerIndex in serverSequence)
             {
-                var progress = call.ResponseStream.Current;
+                if (_cancellationTokenSource.IsCancellationRequested) break;
 
-                // Update UI with progress
-                if (progress.TotalFiles > 0)
+                // Ping check for Auto Select
+                if (serverIndex == -1)
                 {
-                    DownloadProgress = (double)progress.DownloadedFiles / progress.TotalFiles * 100;
-                }
-
-                if (progress.State == 1) // Downloading
-                {
-                    // Format type label with proper localization
-                    string typeLabel = progress.CurrentFileType == 0
-                        ? Lang.ReShadeDownloadView_TypeShaders
-                        : Lang.ReShadeDownloadView_TypeAddons;
-
-                    StatusMessage = $"{Lang.ReShadeDownloadView_StatusDownloading}: [{typeLabel}] {progress.CurrentFile ?? ""}";
-
-                    // Format progress: [speed] - [percentage] - [count]
-                    // Important: Use the LATEST values from progress for accurate percentage
-                    double currentProgress = progress.TotalFiles > 0 ? ((double)progress.DownloadedFiles / progress.TotalFiles * 100) : 0;
-                    string speedText = FormatSpeed(progress.DownloadSpeedBytesPerSec);
-                    string percentText = currentProgress.ToString("F1") + "%";
-                    string countText = $"{progress.DownloadedFiles}/{progress.TotalFiles}";
-                    SpeedAndProgress = $"{speedText} - {percentText} - {countText}";
-                }
-                else if (progress.State == 3) // Finished
-                {
-                    StatusMessage = Lang.ReShadeDownloadView_StatusFinished;
-                    DownloadProgress = 100;
-
-                    // Update final progress display - hide speed info when complete for cleaner look
-                    if (progress.TotalFiles > 0)
+                    long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
+                    if (ping < 0)
                     {
-                        SpeedAndProgress = $"100.0% - {progress.TotalFiles}/{progress.TotalFiles}";
+                        _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
+                        continue;
                     }
 
-                    // Mark installation as completed
-                    _hasInstalledAtLeastOnce = true;
+                    string serverName = currentServerIndex switch {
+                        0 => "GitHub",
+                        1 => "Cloudflare",
+                        2 => "腾讯云",
+                        3 => "阿里云",
+                        _ => "Unknown"
+                    };
+                    StatusMessage = $"{Lang.ReShadeDownloadView_StatusDownloading} - 正在从 {serverName} 中下载..";
+                }
 
-                    // Handle auto-switch logic for single target installations
-                    if (IsInstallToHoYoShadeOnly && (!_hasInstalledHoYoShadeTarget || IsUpdateMode))
+                string[] proxies = currentServerIndex == 0 ? new string[] { "" } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+                foreach (var proxyUrl in proxies)
+                {
+                    if (_cancellationTokenSource.IsCancellationRequested) break;
+
+                    try
                     {
-                        // Just installed HoYoShade only
-                        _hasInstalledHoYoShadeTarget = true;
+                        // Create RPC client
+                        var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
 
-                        // Refresh UI states
-                        OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
-                        OnPropertyChanged(nameof(CanInstallToBoth));
-
-                        if (!IsUpdateMode)
+                        var request = new InstallReShadePackRequest
                         {
-                            // Disable HoYoShade options and check if OpenHoYoShade is available
-                            
-                            // If OpenHoYoShade option is available, auto-select it; otherwise don't select anything
-                            IsInstallToHoYoShadeOnly = false;
-                            IsInstallToBoth = false;
-                            if (CanInstallToOpenHoYoShadeOnly)
+                            BasePath = basePath,
+                            InstallTarget = installTarget,
+                            InstallMode = installMode,
+                            DownloadServer = proxyUrl
+                        };
+
+                        if (installMode == 2)
+                        {
+                            request.CustomPackages.AddRange(_customSelectedPackages);
+                        }
+
+                        // Call RPC and stream progress
+                        using var call = client.InstallReShadePack(request, cancellationToken: _cancellationTokenSource.Token);
+
+                        bool hasError = false;
+                        while (await call.ResponseStream.MoveNext(_cancellationTokenSource.Token))
+                        {
+                            var progress = call.ResponseStream.Current;
+
+                            // Update UI with progress
+                            if (progress.TotalFiles > 0)
                             {
-                                IsInstallToOpenHoYoShadeOnly = true;
+                                DownloadProgress = (double)progress.DownloadedFiles / progress.TotalFiles * 100;
                             }
-                            else
+
+                            if (progress.State == 1) // Downloading
                             {
-                                IsInstallToOpenHoYoShadeOnly = false;
+                                // Format type label with proper localization
+                                string typeLabel = progress.CurrentFileType == 0
+                                    ? Lang.ReShadeDownloadView_TypeShaders
+                                    : Lang.ReShadeDownloadView_TypeAddons;
+
+                                if (serverIndex == -1)
+                                {
+                                    string serverName = currentServerIndex switch { 0 => "GitHub", 1 => "Cloudflare", 2 => "腾讯云", 3 => "阿里云", _ => "Unknown" };
+                                    StatusMessage = $"{Lang.ReShadeDownloadView_StatusDownloading}: [{typeLabel}] {progress.CurrentFile ?? ""} - 正在从 {serverName} 中下载..";
+                                }
+                                else
+                                {
+                                    StatusMessage = $"{Lang.ReShadeDownloadView_StatusDownloading}: [{typeLabel}] {progress.CurrentFile ?? ""}";
+                                }
+
+                                // Format progress: [speed] - [percentage] - [count]
+                                double currentProgress = progress.TotalFiles > 0 ? ((double)progress.DownloadedFiles / progress.TotalFiles * 100) : 0;
+                                string speedText = FormatSpeed(progress.DownloadSpeedBytesPerSec);
+                                string percentText = currentProgress.ToString("F1") + "%";
+                                string countText = $"{progress.DownloadedFiles}/{progress.TotalFiles}";
+                                SpeedAndProgress = $"{speedText} - {percentText} - {countText}";
+                            }
+                            else if (progress.State == 3) // Finished
+                            {
+                                StatusMessage = Lang.ReShadeDownloadView_StatusFinished;
+                                DownloadProgress = 100;
+
+                                if (progress.TotalFiles > 0)
+                                {
+                                    SpeedAndProgress = $"100.0% - {progress.TotalFiles}/{progress.TotalFiles}";
+                                }
+
+                                _hasInstalledAtLeastOnce = true;
+
+                                // Handle auto-switch logic for single target installations
+                                if (IsInstallToHoYoShadeOnly && (!_hasInstalledHoYoShadeTarget || IsUpdateMode))
+                                {
+                                    _hasInstalledHoYoShadeTarget = true;
+                                    OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
+                                    OnPropertyChanged(nameof(CanInstallToBoth));
+
+                                    if (!IsUpdateMode)
+                                    {
+                                        IsInstallToHoYoShadeOnly = false;
+                                        IsInstallToBoth = false;
+                                        if (CanInstallToOpenHoYoShadeOnly)
+                                        {
+                                            IsInstallToOpenHoYoShadeOnly = true;
+                                        }
+                                        else
+                                        {
+                                            IsInstallToOpenHoYoShadeOnly = false;
+                                        }
+                                    }
+                                }
+                                else if (IsInstallToOpenHoYoShadeOnly && (!_hasInstalledOpenHoYoShadeTarget || IsUpdateMode))
+                                {
+                                    _hasInstalledOpenHoYoShadeTarget = true;
+                                    OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
+                                    OnPropertyChanged(nameof(CanInstallToBoth));
+
+                                    if (!IsUpdateMode)
+                                    {
+                                        IsInstallToOpenHoYoShadeOnly = false;
+                                        IsInstallToBoth = false;
+                                        if (CanInstallToHoYoShadeOnly)
+                                        {
+                                            IsInstallToHoYoShadeOnly = true;
+                                        }
+                                        else
+                                        {
+                                            IsInstallToHoYoShadeOnly = false;
+                                        }
+                                    }
+                                }
+                                else if (IsInstallToBoth)
+                                {
+                                    _hasInstalledHoYoShadeTarget = true;
+                                    _hasInstalledOpenHoYoShadeTarget = true;
+                                    OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
+                                    OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
+                                    OnPropertyChanged(nameof(CanInstallToBoth));
+
+                                    if (!IsUpdateMode)
+                                    {
+                                        IsInstallToHoYoShadeOnly = false;
+                                        IsInstallToOpenHoYoShadeOnly = false;
+                                        IsInstallToBoth = false;
+                                    }
+                                }
+
+                                OnPropertyChanged(nameof(CanNext));
+                                OnPropertyChanged(nameof(CanDownload));
+                                success = true;
+                                break;
+                            }
+                            else if (progress.State == 4) // Error
+                            {
+                                hasError = true;
+                                lastErrorMessage = progress.ErrorMessage ?? "Unknown error";
+                                break; // Break out of response stream reading to try next proxy
                             }
                         }
-                    }
-                    else if (IsInstallToOpenHoYoShadeOnly && (!_hasInstalledOpenHoYoShadeTarget || IsUpdateMode))
-                    {
-                        // Just installed OpenHoYoShade only
-                        _hasInstalledOpenHoYoShadeTarget = true;
-                        
-                        // Refresh UI states
-                        OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
-                        OnPropertyChanged(nameof(CanInstallToBoth));
 
-                        if (!IsUpdateMode)
+                        if (success) break;
+                        if (hasError && serverIndex != -1)
                         {
-                            // Disable OpenHoYoShade options and check if HoYoShade is available
-
-                            // If HoYoShade option is available, auto-select it; otherwise don't select anything
-                            IsInstallToOpenHoYoShadeOnly = false;
-                            IsInstallToBoth = false;
-                            if (CanInstallToHoYoShadeOnly)
-                            {
-                                IsInstallToHoYoShadeOnly = true;
-                            }
-                            else
-                            {
-                                IsInstallToHoYoShadeOnly = false;
-                            }
+                            // If not auto select, we still try next proxy for the same server.
+                            // but actually we should throw if it's the last proxy. Let the outer loop handle it.
                         }
                     }
-                    else if (IsInstallToBoth)
+                    catch (Exception ex)
                     {
-                        // Installed to both targets
-                        _hasInstalledHoYoShadeTarget = true;
-                        _hasInstalledOpenHoYoShadeTarget = true;
-
-                        // Refresh UI states
-                        OnPropertyChanged(nameof(CanInstallToHoYoShadeOnly));
-                        OnPropertyChanged(nameof(CanInstallToOpenHoYoShadeOnly));
-                        OnPropertyChanged(nameof(CanInstallToBoth));
-
-                        if (!IsUpdateMode)
-                        {
-                            // Disable all options and don't select anything
-                            IsInstallToHoYoShadeOnly = false;
-                            IsInstallToOpenHoYoShadeOnly = false;
-                            IsInstallToBoth = false;
-                        }
+                        lastException = ex;
+                        if (_cancellationTokenSource.Token.IsCancellationRequested) throw;
                     }
+                }
 
-                    OnPropertyChanged(nameof(CanNext));
-                    OnPropertyChanged(nameof(CanDownload));
-                    break;
-                }
-                else if (progress.State == 4) // Error
-                {
-                    StatusMessage = string.Format(Lang.ReShadeDownloadView_StatusError, progress.ErrorMessage ?? "Unknown error");
-                    break;
-                }
+                if (success) break;
+            }
+
+            if (!success && !_cancellationTokenSource.IsCancellationRequested)
+            {
+                StatusMessage = string.Format(Lang.ReShadeDownloadView_StatusError, lastErrorMessage ?? lastException?.Message ?? "All servers failed");
             }
 
             IsDownloading = false;

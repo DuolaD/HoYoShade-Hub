@@ -100,8 +100,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
  
      private void UpdateDownloadServers()
      {
-         var selectedIndex = SelectedDownloadServer?.ServerIndex ?? 0;
+         var selectedIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
          DownloadServers.Clear();
+         DownloadServers.Add(new DownloadServerItem { Name = "自动选择", ServerIndex = -1 });
          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
@@ -118,7 +119,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
          var httpClient = AppConfig.GetService<HttpClient>();
          if (httpClient == null) return;
 
-         var serversToUpdate = DownloadServers.ToList();
+         var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
          foreach (var server in serversToUpdate)
          {
              server.LatencyText = "Ping...";
@@ -183,6 +184,14 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     [ObservableProperty]
     private DownloadServerItem selectedDownloadServer;
+
+    partial void OnSelectedDownloadServerChanged(DownloadServerItem value)
+    {
+        if (value != null)
+        {
+            AppConfig.HoYoShadeFrameworkDownloadServer = value.ServerIndex;
+        }
+    }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(DownloadCommand))]
@@ -394,8 +403,13 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
             
             // Apply proxy based on selected server
-            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
             string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+            
+            if (serverIndex == -1)
+            {
+                proxyUrl = CloudProxyManager.GetProxyUrl(0); // Default to GitHub direct for metadata check
+            }
             if (!string.IsNullOrWhiteSpace(proxyUrl))
             {
                 apiUrl = CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
@@ -595,14 +609,6 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             return;
         }
 
-        // Apply proxy based on selected server
-        int serverIndex = SelectedDownloadServer?.ServerIndex ?? 0;
-        string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-        if (!string.IsNullOrWhiteSpace(proxyUrl))
-        {
-            assetUrl = CloudProxyManager.ApplyProxy(assetUrl, proxyUrl);
-        }
-
         // Check if this is an update (existing installation)
         var targetPath = System.IO.Path.Combine(AppConfig.UserDataFolder, folderName);
         var presetsPath = System.IO.Path.Combine(targetPath, "Presets");
@@ -654,70 +660,150 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             presetsSnapshot = CapturePresetsSnapshot(targetPath);
             _logger.LogDebug("Presets snapshot captured. TargetPath={TargetPath}, Existed={Existed}, Files={FileCount}", targetPath, presetsSnapshot.Existed, presetsSnapshot.RelativeFiles.Count);
         }
-        
-        await EnsureFreshRpcServerAsync(_downloadCts.Token);
 
-        // Target path is UserDataFolder/HoYoShade or UserDataFolder/OpenHoYoShade
-        // The content will be extracted directly to this folder, not to a subfolder
-        var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
-        var request = new InstallHoYoShadeRequest
+        int serverIndex = SelectedDownloadServer?.ServerIndex ?? 0;
+        int[] serverSequence;
+        if (serverIndex == -1) {
+            serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(false);
+        } else {
+            serverSequence = new[] { serverIndex };
+        }
+
+        bool success = false;
+        Exception? lastException = null;
+        var httpClient = AppConfig.GetService<HttpClient>();
+
+        foreach (var currentServerIndex in serverSequence)
         {
-            DownloadUrl = assetUrl,
-            TargetPath = targetPath,
-            PresetsHandling = presetsHandling,
-            VersionTag = versionTag
-        };
-        _logger.LogInformation("Install request: Keyword={Keyword}, TargetPath={TargetPath}, PresetsHandling={PresetsHandling}, VersionTag={VersionTag}, UrlIsFile={UrlIsFile}", keyword, targetPath, presetsHandling, versionTag, assetUrl?.StartsWith("file://", StringComparison.OrdinalIgnoreCase) == true);
+            if (_downloadCts.IsCancellationRequested) break;
 
-        using var call = client.InstallHoYoShade(request, cancellationToken: _downloadCts.Token);
-        
-        long lastBytes = 0;
-        var lastTime = DateTime.Now;
-
-        while (await call.ResponseStream.MoveNext(_downloadCts.Token))
-        {
-            var progress = call.ResponseStream.Current;
-            if (progress.TotalBytes > 0)
+            // Optional Ping check for Auto Select
+            if (serverIndex == -1)
             {
-                DownloadProgress = (double)progress.DownloadBytes / progress.TotalBytes * 100;
-                
-                var now = DateTime.Now;
-                var elapsed = (now - lastTime).TotalSeconds;
-                if (elapsed >= 1)
+                long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
+                if (ping < 0)
                 {
-                    var bytesDiff = progress.DownloadBytes - lastBytes;
-                    if (bytesDiff < 0) bytesDiff = 0;
-                    var speed = bytesDiff / elapsed;
+                    _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
+                    continue;
+                }
+
+                string serverName = currentServerIndex switch {
+                    0 => "GitHub",
+                    1 => "Cloudflare",
+                    2 => "腾讯云",
+                    3 => "阿里云",
+                    _ => "Unknown"
+                };
+                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0}) - 正在从 {1} 中下载..", keyword, serverName);
+            }
+
+            string[] proxies = currentServerIndex == 0 ? new string[] { null! } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+            foreach (var proxyUrl in proxies)
+            {
+                if (_downloadCts.IsCancellationRequested) break;
+
+                string tryUrl = assetUrl;
+                if (!string.IsNullOrWhiteSpace(proxyUrl))
+                {
+                    tryUrl = CloudProxyManager.ApplyProxy(tryUrl, proxyUrl);
+                }
+
+                try
+                {
+                    await EnsureFreshRpcServerAsync(_downloadCts.Token);
+
+                    var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
+                    var request = new InstallHoYoShadeRequest
+                    {
+                        DownloadUrl = tryUrl,
+                        TargetPath = targetPath,
+                        PresetsHandling = presetsHandling,
+                        VersionTag = versionTag
+                    };
+                    _logger.LogInformation("Install request: Keyword={Keyword}, TargetPath={TargetPath}, PresetsHandling={PresetsHandling}, Url={Url}", keyword, targetPath, presetsHandling, tryUrl);
+
+                    using var call = client.InstallHoYoShade(request, cancellationToken: _downloadCts.Token);
                     
-                    string speedStr = FormatBytes((long)speed);
-                    SpeedAndProgress = string.Format(Lang.HoYoShadeDownloadView_ProgressFormat, speedStr, DownloadProgress.ToString("F1"));
-                    
-                    lastBytes = progress.DownloadBytes;
-                    lastTime = now;
+                    long lastBytes = 0;
+                    var lastTime = DateTime.Now;
+
+                    while (await call.ResponseStream.MoveNext(_downloadCts.Token))
+                    {
+                        var progress = call.ResponseStream.Current;
+                        if (progress.TotalBytes > 0)
+                        {
+                            DownloadProgress = (double)progress.DownloadBytes / progress.TotalBytes * 100;
+                            
+                            var now = DateTime.Now;
+                            var elapsed = (now - lastTime).TotalSeconds;
+                            if (elapsed >= 1)
+                            {
+                                var bytesDiff = progress.DownloadBytes - lastBytes;
+                                if (bytesDiff < 0) bytesDiff = 0;
+                                var speed = bytesDiff / elapsed;
+                                
+                                string speedStr = FormatBytes((long)speed);
+                                SpeedAndProgress = string.Format(Lang.HoYoShadeDownloadView_ProgressFormat, speedStr, DownloadProgress.ToString("F1"));
+                                
+                                lastBytes = progress.DownloadBytes;
+                                lastTime = now;
+                            }
+                        }
+                        
+                        if (progress.State == 1)
+                        {
+                            if (serverIndex == -1)
+                            {
+                                string serverName = currentServerIndex switch { 0 => "GitHub", 1 => "Cloudflare", 2 => "腾讯云", 3 => "阿里云", _ => "Unknown" };
+                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0}) - 正在从 {1} 中下载..", keyword, serverName);
+                            }
+                            else
+                            {
+                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
+                            }
+                        }
+                        else if (progress.State == 2) StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusExtracting + " ({0})", keyword);
+                        else if (progress.State == 3) 
+                        {
+                            // Download of this variant completed successfully
+                            await SaveVersionInfoAfterInstallAsync(keyword, SelectedVersion.TagName, "github_release");
+                            if (presetsHandling == 1 && presetsSnapshot != null)
+                            {
+                                await RestorePresetsSnapshotAsync(targetPath, presetsSnapshot);
+                            }
+                            DownloadProgress = 0;
+                            SpeedAndProgress = "";
+                            success = true;
+                            break;
+                        }
+                        else if (progress.State == 4)
+                        {
+                            var errorDetail = string.IsNullOrWhiteSpace(progress.ErrorMessage) ? "Unknown error" : progress.ErrorMessage;
+                            throw new Exception(errorDetail);
+                        }
+                    }
+
+                    if (success) break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to download with proxy {Proxy}", proxyUrl ?? "GitHub Direct");
+                    lastException = ex;
+                    if (_downloadCts.Token.IsCancellationRequested) throw;
                 }
             }
-            
-            if (progress.State == 1) StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
-            else if (progress.State == 2) StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusExtracting + " ({0})", keyword);
-            else if (progress.State == 3) 
-            {
-                // Download of this variant completed successfully - save version information
-                await SaveVersionInfoAfterInstallAsync(keyword, SelectedVersion.TagName, "github_release");
-                if (presetsHandling == 1 && presetsSnapshot != null)
-                {
-                    await RestorePresetsSnapshotAsync(targetPath, presetsSnapshot);
-                }
-                DownloadProgress = 0;
-                SpeedAndProgress = "";
-            }
-            else if (progress.State == 4)
-            {
-                var errorDetail = string.IsNullOrWhiteSpace(progress.ErrorMessage) ? "Unknown error (installer returned empty message)" : progress.ErrorMessage;
-                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusError + " ({0}): {1}", keyword, errorDetail);
-                IsDownloading = false;
-                IsControlButtonsVisible = false;
-                throw new Exception(errorDetail);
-            }
+
+            if (success) break;
+        }
+
+        if (!success)
+        {
+            var errorDetail = lastException != null ? (string.IsNullOrWhiteSpace(lastException.Message) ? lastException.GetType().Name : lastException.Message) : "All servers failed";
+            StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusError + " ({0}): {1}", keyword, errorDetail);
+            IsDownloading = false;
+            IsControlButtonsVisible = false;
+            throw new Exception(errorDetail);
         }
     }
 

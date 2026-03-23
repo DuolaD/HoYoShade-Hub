@@ -25,6 +25,8 @@ message UpdateRequest {
     string target_path = 4;
     // 当前版本
     string current_version = 5;
+    // Proxy URL prefix
+    string proxy_url = 6;
 }
 
 

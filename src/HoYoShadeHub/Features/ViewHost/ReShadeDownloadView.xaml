@@ -225,7 +225,8 @@
                                          BorderThickness="1"
                                          CornerRadius="4" 
                                          Padding="6,2" 
-                                         VerticalAlignment="Center">
+                                         VerticalAlignment="Center"
+                                         Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
                                      <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" UseLayoutRounding="True" />
                                  </Border>
                             </Grid>

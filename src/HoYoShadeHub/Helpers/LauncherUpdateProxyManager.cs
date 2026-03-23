@@ -9,7 +9,7 @@ namespace HoYoShadeHub.Helpers;
 public class LauncherUpdateProxyManager
 {
     // Tencent Cloud proxy URLs  
-    // ÌÚÑ¶ÔÆ´úÀí·þÎñÆ÷ÓÃÓÚ´úÀí https://cdn.cf.storage.hub.hoyosha.de/release
+    // ï¿½ï¿½Ñ¶ï¿½Æ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ https://cdn.cf.storage.hub.hoyosha.de/release
     private static readonly string[] TencentCloudProxies = new[]
     {
         "https://hoyoshadehub-glasses-edgeone.edgeone.app",
@@ -19,7 +19,7 @@ public class LauncherUpdateProxyManager
     };
 
     // Alibaba Cloud proxy URLs
-    // °¢ÀïÔÆ´úÀí·þÎñÆ÷ÓÃÓÚ´úÀí https://cdn.cf.storage.hub.hoyosha.de/release
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Æ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ https://cdn.cf.storage.hub.hoyosha.de/release
     private static readonly string[] AlibabaCloudProxies = new[]
     {
         "https://hoyoshadehub-glasses.0e9398a1.er.aliyun-esa.net",
@@ -33,16 +33,29 @@ public class LauncherUpdateProxyManager
     /// <summary>
     /// Get proxy URL for the specified download server
     /// </summary>
-    /// <param name="serverIndex">Server index from DownloadServers list (0=Cloudflare(Ä¬ÈÏ), 1=Tencent, 2=Alibaba)</param>
+    /// <param name="serverIndex">Server index from DownloadServers list (0=Cloudflare(Ä¬ï¿½ï¿½), 1=Tencent, 2=Alibaba)</param>
     /// <returns>Proxy URL or null if using Cloudflare direct</returns>
     public static string? GetProxyUrl(int serverIndex)
     {
         return serverIndex switch
         {
-            0 => null, // Cloudflare (Direct - the built-in API is already on Cloudflare)
-            1 => GetRandomProxy(TencentCloudProxies),
-            2 => GetRandomProxy(AlibabaCloudProxies),
+            1 => null, // Cloudflare (Direct)
+            2 => GetRandomProxy(TencentCloudProxies),
+            3 => GetRandomProxy(AlibabaCloudProxies),
             _ => null
+        };
+    }
+
+    /// <summary>
+    /// Get all proxy URLs for a specific cloud provider
+    /// </summary>
+    public static string[] GetAllProxiesForServer(int serverIndex)
+    {
+        return serverIndex switch
+        {
+            2 => TencentCloudProxies,
+            3 => AlibabaCloudProxies,
+            _ => Array.Empty<string>()
         };
     }
 

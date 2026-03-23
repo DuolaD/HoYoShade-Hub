@@ -47,6 +47,8 @@ internal class UpdateService
 
     private ReleaseManifest releaseManifest;
 
+    private string? proxyUrl;
+
     private ConcurrentDictionary<string, string> currentVersionFilesHash;
 
 
@@ -91,13 +93,14 @@ internal class UpdateService
 
 
 
-    public async Task PrepareForUpdateAsync(ReleaseManifest manifest, string targetPath, CancellationToken cancellationToken = default)
+    public async Task PrepareForUpdateAsync(ReleaseManifest manifest, string targetPath, string? proxyUrl, CancellationToken cancellationToken = default)
     {
         try
         {
             _logger.LogInformation("Prepare for update starward");
             State = UpdateState.Pending;
             this.targetPath = targetPath;
+            this.proxyUrl = proxyUrl;
             releaseManifest = manifest;
             updateCacheFolder = Path.Combine(AppConfig.CacheFolder, "HoYoShadeHub\\update");
             Directory.CreateDirectory(updateCacheFolder);
@@ -283,6 +286,13 @@ internal class UpdateService
     private async Task DownloadReleaseFileAsync((string Id, long Size, string Hash) item, CancellationToken cancellationToken = default)
     {
         string url = releaseManifest.UrlPrefix + item.Id;
+        
+        // Apply proxy if provided
+        if (!string.IsNullOrWhiteSpace(proxyUrl))
+        {
+            url = $"{proxyUrl}/{url}";
+        }
+        
         string path = Path.Combine(updateCacheFolder, item.Id);
 
         using var fs = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite | FileShare.Delete);

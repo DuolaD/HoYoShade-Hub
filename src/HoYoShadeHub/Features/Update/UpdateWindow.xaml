@@ -33,14 +33,14 @@
                             Spacing="8">
                     <TextBlock VerticalAlignment="Bottom"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind CurrentVersionText}" />
+                               Text="{x:Bind CurrentVersionText, Mode=OneWay}" />
                     <FontIcon VerticalAlignment="Bottom"
                               FontSize="16"
                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                               Glyph="&#xEBE7;" />
                     <TextBlock VerticalAlignment="Bottom"
                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                               Text="{x:Bind NewVersion.Version}" />
+                               Text="{x:Bind NewVersion.Version, Mode=OneWay}" />
                 </StackPanel>
 
                 <!--  版本信息  -->
@@ -65,7 +65,7 @@
                     <TextBlock x:Name="TextBlock_ArchValue"
                                Grid.Row="0"
                                Grid.Column="1"
-                               Text="{x:Bind NewVersion.Architecture}" />
+                               Text="{x:Bind NewVersion.Architecture, Mode=OneWay}" />
                     <!--  发布渠道  -->
                     <TextBlock Grid.Row="1"
                                Grid.Column="0"
@@ -73,17 +73,17 @@
                                Text="{x:Bind lang:Lang.UpdatePage_ReleaseChannel}" />
                     <TextBlock Grid.Row="1"
                                Grid.Column="1"
-                               Text="{x:Bind ChannelText}" />
+                               Text="{x:Bind ChannelText, Mode=OneWay}" />
                     <!--  发布时间：  -->
                     <TextBlock x:Name="TextBlock_BuildTimeLabel"
                                Grid.Row="2"
                                Grid.Column="0"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind ReleaseTimeLabel}" />
+                               Text="{x:Bind ReleaseTimeLabel, Mode=OneWay}" />
                     <TextBlock x:Name="TextBlock_BuildTimeValue"
                                Grid.Row="2"
                                Grid.Column="1"
-                               Text="{x:Bind ReleaseTimeText}" />
+                               Text="{x:Bind ReleaseTimeText, Mode=OneWay}" />
                 </Grid>
 
                 <!--  相关链接  -->
@@ -100,14 +100,14 @@
                         <HyperlinkButton Click="HyperlinkButton_Click"
                                          Content="{x:Bind lang:Lang.UpdatePage_ReleasePage}"
                                          Tag="release" />
-                        <!--  Window 内不能用 Converter  -->
                         <HyperlinkButton Click="HyperlinkButton_Click"
                                          Tag="package"
-                                         Visibility="{x:Bind local:UpdateWindow.StringToVisibility(NewVersion.PackageUrl)}">
+                                         Visibility="{x:Bind StringToVisibility(NewVersion.PackageUrl), Mode=OneWay}">
                             <TextBlock>
                                 <Run Text="{x:Bind lang:Lang.UpdateWindow_FullPackage}" />
-                                <Run Text="" />
-                                <Run Text="(" /><Run Text="{x:Bind local:UpdateWindow.ByteLengthToString(NewVersion.PackageSize)}" /><Run Text=")" />
+                                <Run Text=" (" />
+                                <Run Text="{x:Bind ByteLengthToString(NewVersion.PackageSize), Mode=OneWay}" />
+                                <Run Text=")" />
                             </TextBlock>
                         </HyperlinkButton>
                     </StackPanel>
@@ -139,14 +139,15 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="0,0,16,0" VerticalAlignment="Center" />
                                      <Border Grid.Column="1" 
-                                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
-                                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                             BorderThickness="1"
-                                             CornerRadius="4" 
-                                             Padding="6,2" 
-                                             VerticalAlignment="Center">
-                                         <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" UseLayoutRounding="True" />
-                                     </Border>
+                                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                              BorderThickness="1"
+                                              CornerRadius="4" 
+                                              Padding="6,2" 
+                                              VerticalAlignment="Center"
+                                              Visibility="{Binding LatencyText, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
+                                          <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" UseLayoutRounding="True" />
+                                      </Border>
                                 </Grid>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
@@ -209,9 +210,9 @@
                 <TextBlock Grid.Row="2"
                            MaxWidth="360"
                            HorizontalAlignment="Left"
-                           Text="{x:Bind ErrorMessage}"
+                           Text="{x:Bind ErrorMessage, Mode=OneWay}"
                            TextWrapping="Wrap"
-                           Visibility="{x:Bind local:UpdateWindow.StringToVisibility(ErrorMessage)}" />
+                           Visibility="{x:Bind StringToVisibility(ErrorMessage), Mode=OneWay}" />
                 <!--  防止内容隐藏后改变布局  -->
                 <TextBlock Grid.Row="2" />
             </Grid>

@@ -56,6 +56,8 @@ public sealed partial class AboutSetting : PageBase
         int savedIndex = AppConfig.LauncherUpdateDownloadServer;
         
         DownloadServers.Clear();
+        // Add Auto Select option
+        DownloadServers.Add(new DownloadServerItem { Name = "自动选择", ServerIndex = -1 });
         // Skip GitHub direct for launcher updates
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
@@ -74,7 +76,7 @@ public sealed partial class AboutSetting : PageBase
         var httpClient = AppConfig.GetService<System.Net.Http.HttpClient>();
         if (httpClient == null) return;
 
-        var serversToUpdate = DownloadServers.ToList();
+        var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
         foreach (var server in serversToUpdate)
         {
             server.LatencyText = "Ping...";
@@ -142,8 +144,16 @@ public sealed partial class AboutSetting : PageBase
             UpdateErrorText = null;
             
             // Get proxy URL from selected server
-            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
             string? proxyUrl = LauncherUpdateProxyManager.GetProxyUrl(serverIndex);
+            
+            // Pass proxy URL to CheckUpdateAsync (we only check updates, Auto Select fallback for checking can just use the first available or we can modify CheckUpdateAsync to take serverIndex and do fallback)
+            // Wait, CheckUpdateAsync only checks metadata. We can just use the proxyUrl.
+            // If AutoSelect (-1), we can just try Cloudflare (1) for metadata check.
+            if (serverIndex == -1)
+            {
+                proxyUrl = LauncherUpdateProxyManager.GetProxyUrl(1); // Default to Cloudflare for metadata
+            }
             
             // Pass proxy URL to CheckUpdateAsync
             var release = await AppConfig.GetService<UpdateService>().CheckUpdateAsync(true, proxyUrl);

@@ -35,7 +35,14 @@ internal class UpdateController : Updater.UpdaterBase
     {
         try
         {
-            _logger.LogInformation("Start to update ({Version}), target path: {path}.", request.Version, request.TargetPath);
+            _logger.LogInformation("Start to update ({Version}), target path: {path}, proxy: {proxy}.", request.Version, request.TargetPath, request.ProxyUrl);
+            
+            // Set proxy url for metadata client
+            if (!string.IsNullOrWhiteSpace(request.ProxyUrl))
+            {
+                _metadataClient.SetProxyUrl(request.ProxyUrl);
+            }
+            
             var release = await _metadataClient.GetReleaseInfoAsync(request.Version, (Architecture)request.Architecture, (InstallType)request.InstallType, context.CancellationToken);
             string manifestUrl = release.ManifestUrl;
             if (release.Diffs?.TryGetValue(request.CurrentVersion, out var diff) ?? false)
@@ -43,7 +50,7 @@ internal class UpdateController : Updater.UpdaterBase
                 manifestUrl = diff.ManifestUrl;
             }
             var manifest = await _metadataClient.GetReleaseManifestAsync(manifestUrl, context.CancellationToken);
-            _ = _updateService.PrepareForUpdateAsync(manifest, request.TargetPath, context.CancellationToken);
+            _ = _updateService.PrepareForUpdateAsync(manifest, request.TargetPath, request.ProxyUrl, context.CancellationToken);
             using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
             while (await timer.WaitForNextTickAsync(context.CancellationToken))
             {

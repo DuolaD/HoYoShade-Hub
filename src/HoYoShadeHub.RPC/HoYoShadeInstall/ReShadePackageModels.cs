@@ -22,14 +22,14 @@ public static class ReShadeDownloadServer
     public const string EffectPackagesUrl = "https://raw.githubusercontent.com/crosire/reshade-shaders/list/EffectPackages.ini";
     public const string AddonsUrl = "https://raw.githubusercontent.com/crosire/reshade-shaders/list/Addons.ini";
     
-    public static string GetEffectPackagesUrl(bool useProxy)
+    public static string GetEffectPackagesUrl(string proxyUrl)
     {
-        return useProxy ? $"https://ghproxy.com/{EffectPackagesUrl}" : EffectPackagesUrl;
+        return string.IsNullOrWhiteSpace(proxyUrl) ? EffectPackagesUrl : $"{proxyUrl}/{EffectPackagesUrl}";
     }
     
-    public static string GetAddonsUrl(bool useProxy)
+    public static string GetAddonsUrl(string proxyUrl)
     {
-        return useProxy ? $"https://ghproxy.com/{AddonsUrl}" : AddonsUrl;
+        return string.IsNullOrWhiteSpace(proxyUrl) ? AddonsUrl : $"{proxyUrl}/{AddonsUrl}";
     }
 }
 

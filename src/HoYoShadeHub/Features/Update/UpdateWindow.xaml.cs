@@ -99,6 +99,8 @@ public sealed partial class UpdateWindow : WindowEx
         int savedIndex = AppConfig.LauncherUpdateDownloadServer;
         
         DownloadServers.Clear();
+        // Add Auto Select option
+        DownloadServers.Add(new DownloadServerItem { Name = "自动选择", ServerIndex = -1 });
         // Skip GitHub direct for launcher updates
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
@@ -117,7 +119,7 @@ public sealed partial class UpdateWindow : WindowEx
         var httpClient = AppConfig.GetService<System.Net.Http.HttpClient>();
         if (httpClient == null) return;
 
-        var serversToUpdate = DownloadServers.ToList();
+        var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
         foreach (var server in serversToUpdate)
         {
             server.LatencyText = "Ping...";
@@ -497,7 +499,60 @@ public sealed partial class UpdateWindow : WindowEx
             if (NewVersion != null)
             {
                 _timer.Start();
-                await _updateService.StartUpdateAsync(NewVersion);
+
+                int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
+                int[] serverSequence;
+                if (serverIndex == -1) {
+                    serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(true);
+                } else {
+                    serverSequence = new[] { serverIndex };
+                }
+
+                bool success = false;
+                var httpClient = AppConfig.GetService<System.Net.Http.HttpClient>();
+
+                foreach (var currentServerIndex in serverSequence)
+                {
+                    // Ping check for Auto Select
+                    if (serverIndex == -1)
+                    {
+                        long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
+                        if (ping < 0)
+                        {
+                            _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
+                            continue;
+                        }
+                    }
+
+                    string[] proxies = currentServerIndex == 1 ? new string[] { null } : LauncherUpdateProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+                    foreach (var proxyUrl in proxies)
+                    {
+                        try
+                        {
+                            if (!_timer.IsRunning) _timer.Start();
+                            await _updateService.StartUpdateAsync(NewVersion, proxyUrl);
+                            
+                            if (_updateService.State is UpdateState.Finish)
+                            {
+                                success = true;
+                                break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Update failed with proxy {ProxyUrl}", proxyUrl);
+                        }
+                    }
+
+                    if (success) break;
+                }
+
+                if (!success)
+                {
+                    _logger.LogError("All servers failed for update");
+                    ErrorMessage = Lang.DownloadGamePage_UnknownError;
+                }
             }
         }
         catch (Exception ex)
@@ -1201,9 +1256,9 @@ public sealed partial class UpdateWindow : WindowEx
 
 
 
-    public static string ByteLengthToString(long byteLength)
+    public string ByteLengthToString(long byteLength)
     {
-        double length = byteLength;
+        double length = (double)byteLength;
         return length switch
         {
             >= (1 << 30) => $"{length / (1 << 30):F2} GB",
@@ -1214,7 +1269,8 @@ public sealed partial class UpdateWindow : WindowEx
 
 
 
-    public static Visibility StringToVisibility(string value)
+
+    public Visibility StringToVisibility(string? value)
     {
         return string.IsNullOrWhiteSpace(value) ? Visibility.Collapsed : Visibility.Visible;
     }

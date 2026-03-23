@@ -71,6 +71,7 @@ public sealed partial class FileManageSetting : PageBase
         int savedIndex = AppConfig.HoYoShadeFrameworkDownloadServer;
         
         DownloadServers.Clear();
+        DownloadServers.Add(new DownloadServerItem { Name = "自动选择", ServerIndex = -1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
@@ -89,7 +90,7 @@ public sealed partial class FileManageSetting : PageBase
         var httpClient = AppConfig.GetService<System.Net.Http.HttpClient>();
         if (httpClient == null) return;
 
-        var serversToUpdate = DownloadServers.ToList();
+        var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
         foreach (var server in serversToUpdate)
         {
             server.LatencyText = "Ping...";
@@ -1118,8 +1119,13 @@ public sealed partial class FileManageSetting : PageBase
             HoYoShadeUpdateInfo = "Checking for updates...";
             
             // Get proxy URL from selected server
-            int serverIndex = SelectedDownloadServer?.ServerIndex ?? 0;
+            int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
             string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+            
+            if (serverIndex == -1)
+            {
+                proxyUrl = CloudProxyManager.GetProxyUrl(0); // Default to GitHub Direct for metadata check
+            }
             
             var updateService = new HoYoShadeUpdateService(_versionService);
             var latestRelease = await updateService.CheckHoYoShadeUpdateAsync(
@@ -1159,8 +1165,13 @@ public sealed partial class FileManageSetting : PageBase
             OpenHoYoShadeUpdateInfo = "Checking for updates...";
             
             // Get proxy URL from selected server
-            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
+            int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
             string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+            
+            if (serverIndex == -1)
+            {
+                proxyUrl = CloudProxyManager.GetProxyUrl(0); // Default to GitHub Direct for metadata check
+            }
             
             var updateService = new HoYoShadeUpdateService(_versionService);
             var latestRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(

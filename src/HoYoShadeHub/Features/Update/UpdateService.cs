@@ -82,7 +82,7 @@ internal class UpdateService
     private CancellationTokenSource? _cancellationTokenSource;
 
 
-    public async Task StartUpdateAsync(ReleaseInfoDetail release)
+    public async Task StartUpdateAsync(ReleaseInfoDetail release, string? proxyUrl = null)
     {
         if (_isUpdating || UpdateFinished)
         {
@@ -103,7 +103,7 @@ internal class UpdateService
                 State = UpdateState.NotSupport;
                 return;
             }
-            await StartInternalAsync(release, _cancellationTokenSource.Token);
+            await StartInternalAsync(release, proxyUrl, _cancellationTokenSource.Token);
             if (State is UpdateState.Finish)
             {
                 UpdateFinished = true;
@@ -129,7 +129,7 @@ internal class UpdateService
 
 
 
-    private async Task StartInternalAsync(ReleaseInfoDetail release, CancellationToken cancellationToken = default)
+    private async Task StartInternalAsync(ReleaseInfoDetail release, string? proxyUrl, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -148,6 +148,7 @@ internal class UpdateService
                 InstallType = (int)release.InstallType,
                 TargetPath = Path.GetDirectoryName(AppConfig.HoYoShadeHubLauncherExecutePath),
                 CurrentVersion = AppConfig.AppVersion,
+                ProxyUrl = proxyUrl ?? string.Empty
             };
             using var call = client.Update(request, cancellationToken: cancellationToken);
             await foreach (UpdateProgress progress in call.ResponseStream.ReadAllAsync(cancellationToken))

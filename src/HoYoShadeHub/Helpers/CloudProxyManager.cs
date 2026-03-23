@@ -91,6 +91,34 @@ public class CloudProxyManager
     }
 
     /// <summary>
+    /// Get the fallback sequence for Auto Select mode
+    /// </summary>
+    public static int[] GetAutoSelectFallbackSequence(bool isLauncherUpdate)
+    {
+        if (isLauncherUpdate)
+        {
+            // Launcher Update: Cloudflare -> Tencent -> Alibaba
+            return new[] { 1, 2, 3 };
+        }
+        else
+        {
+            // HoYoShade/ReShade: GitHub -> Tencent -> Random(Cloudflare, Alibaba)
+            var sequence = new List<int> { 0, 2 };
+            if (_random.Next(2) == 0)
+            {
+                sequence.Add(1);
+                sequence.Add(3);
+            }
+            else
+            {
+                sequence.Add(3);
+                sequence.Add(1);
+            }
+            return sequence.ToArray();
+        }
+    }
+
+    /// <summary>
     /// Try downloading with fallback to other proxies if the selected one fails
     /// </summary>
     /// <param name="originalUrl">Original URL to download</param>

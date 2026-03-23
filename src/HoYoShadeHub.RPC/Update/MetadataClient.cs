@@ -126,6 +126,11 @@ public class MetadataClient
 
     public async Task<ReleaseManifest> GetReleaseManifestAsync(string url, CancellationToken cancellationToken = default)
     {
+        // Apply proxy if it's a URL to our CDN
+        if (!string.IsNullOrWhiteSpace(_proxyUrl) && url.Contains("cdn.cf.storage.hub.hoyosha.de"))
+        {
+            url = $"{_proxyUrl}/{url}";
+        }
         return await CommonGetAsync<ReleaseManifest>(url, cancellationToken);
     }
 

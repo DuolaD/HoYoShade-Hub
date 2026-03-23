@@ -65,12 +65,12 @@ internal class HoYoShadeInstallController : HoYoShadeInstaller.HoYoShadeInstalle
         try
         {
             var installTarget = (ReShadeInstallTarget)request.InstallTarget;
-            bool useProxy = request.DownloadServer.Contains("ghproxy.com", StringComparison.OrdinalIgnoreCase);
+            string proxyUrl = request.DownloadServer;
 
             // Fetch packages from official API
-            _logger.LogInformation("Fetching packages from official API, useProxy: {UseProxy}", useProxy);
-            var effectPackages = await _service.FetchEffectPackagesAsync(useProxy, context.CancellationToken);
-            var addons = await _service.FetchAddonsAsync(useProxy, context.CancellationToken);
+            _logger.LogInformation("Fetching packages from official API, proxyUrl: {ProxyUrl}", proxyUrl);
+            var effectPackages = await _service.FetchEffectPackagesAsync(proxyUrl, context.CancellationToken);
+            var addons = await _service.FetchAddonsAsync(proxyUrl, context.CancellationToken);
             
             _logger.LogInformation("Fetched {EffectCount} effect packages and {AddonCount} addons",
                 effectPackages.Count, addons.Count);
@@ -116,7 +116,7 @@ internal class HoYoShadeInstallController : HoYoShadeInstaller.HoYoShadeInstalle
             _ = _service.InstallReShadePackAsync(
                 request.BasePath,
                 installTarget,
-                useProxy,
+                proxyUrl,
                 selectedEffects,
                 selectedAddons,
                 context.CancellationToken);
