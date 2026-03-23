@@ -15,6 +15,18 @@ Write-Host "  - HDiff creation: DISABLED" -ForegroundColor Yellow;
 Write-Host "========================================" -ForegroundColor Cyan;
 Write-Host "";
 
+$cleanupTargets = @(
+    "src/HoYoShadeHub/bin",
+    "src/HoYoShadeHub/obj",
+    "src/HoYoShadeHub.RPC/bin",
+    "src/HoYoShadeHub.RPC/obj",
+    $Output
+)
+foreach ($target in $cleanupTargets) {
+    Remove-Item -Recurse -Force $target -ErrorAction SilentlyContinue
+}
+New-Item -ItemType Directory -Path $Output -Force | Out-Null
+
 # Run the build script
 .\build.ps1 -Version $Version -Architecture $Architecture -Output $Output;
 
