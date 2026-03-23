@@ -57,6 +57,27 @@ public static class Program
             }
         }
 
+        if (AppConfig.IsAdmin)
+        {
+            try
+            {
+                if (Helpers.ZoneIdentifierHelper.HasZoneIdentifier(AppConfig.HoYoShadeHubExecutePath))
+                {
+                    string targetDir = AppContext.BaseDirectory;
+                    if (AppConfig.IsPortable)
+                    {
+                        var parentDir = new DirectoryInfo(AppContext.BaseDirectory).Parent;
+                        if (parentDir != null)
+                        {
+                            targetDir = parentDir.FullName;
+                        }
+                    }
+                    Helpers.ZoneIdentifierHelper.ClearDirectoryZoneIdentifiers(targetDir);
+                }
+            }
+            catch { }
+        }
+
         if (args.Length > 0)
         {
             IConfiguration config = new ConfigurationBuilder().AddCommandLine(args).Build();
