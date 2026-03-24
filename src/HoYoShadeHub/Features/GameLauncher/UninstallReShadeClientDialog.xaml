@@ -1,0 +1,65 @@
+<ContentDialog x:Class="HoYoShadeHub.Features.GameLauncher.UninstallReShadeClientDialog"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:lang="using:HoYoShadeHub.Language"
+               xmlns:local="using:HoYoShadeHub.Features.GameLauncher"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               x:DefaultBindMode="OneWay"
+               DefaultButton="None"
+               mc:Ignorable="d">
+
+    <Grid MinWidth="500">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Spacing="12">
+            <TextBlock FontSize="16"
+                       FontWeight="SemiBold"
+                       Text="{x:Bind DialogTitleText}"
+                       TextWrapping="Wrap" />
+            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind WarningMessage1}"
+                       TextWrapping="Wrap" />
+            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind WarningMessage2}"
+                       TextWrapping="Wrap" />
+            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind WarningMessage3}"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Margin="0,24,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Spacing="12">
+            <Button MinWidth="120"
+                    Command="{x:Bind CancelCommand}"
+                    Content="{x:Bind lang:Lang.UninstallShadeDialog_Cancel}" />
+
+            <Button MinWidth="120"
+                    Command="{x:Bind UninstallCommand}"
+                    Content="{x:Bind lang:Lang.UninstallShadeDialog_Uninstall}"
+                    Visibility="{x:Bind ShowUninstallButton, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+            <Button MinWidth="120"
+                    Command="{x:Bind UninstallCommand}"
+                    Content="{x:Bind lang:Lang.UninstallShadeDialog_ConfirmUninstall}"
+                    Visibility="{x:Bind ShowConfirmButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A52414" />
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#8A1F11" />
+                    <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#3C3C3C" />
+                    <SolidColorBrush x:Key="ButtonForeground" Color="White" />
+                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
+                    <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
+                    <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#787878" />
+                </Button.Resources>
+            </Button>
+        </StackPanel>
+    </Grid>
+</ContentDialog>

@@ -391,6 +391,24 @@
                                     Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
                                 <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind lang:Lang.GameLauncherSettingDialog_RelocateGame}" />
                             </Button>
+
+                            <Button Height="36"
+                                    MinWidth="220"
+                                    Command="{x:Bind UninstallOrRestoreReShadeForClientCommand}"
+                                    CornerRadius="8"
+                                    Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
+                                <Button.Resources>
+                                    <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A52414" />
+                                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#8A1F11" />
+                                    <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#3C3C3C" />
+                                    <SolidColorBrush x:Key="ButtonForeground" Color="White" />
+                                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
+                                    <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
+                                    <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#787878" />
+                                </Button.Resources>
+                                <TextBlock Text="卸载/还原ReShade对此客户端的改动" />
+                            </Button>
                         </StackPanel>
 
                         <!--  选择语音包  -->
@@ -414,8 +432,7 @@
                         </cwc:Segmented>
 
                         <!--  使用 CMD 启动游戏  -->
-                        <StackPanel Margin="0,-12,0,0"
-                                    Orientation="Horizontal"
+                        <StackPanel Orientation="Horizontal"
                                     Spacing="8">
                             <ToggleSwitch IsOn="{x:Bind StartGameWithCMD, Mode=TwoWay}"
                                           OffContent="{x:Bind lang:Lang.GameLauncherSettingDialog_LaunchGameUsingCMD}"
@@ -436,6 +453,12 @@
                                 </Button.Flyout>
                             </Button>
                         </StackPanel>
+
+                        <TextBlock VerticalAlignment="Center"
+                                   Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                   Text="已完成卸载/还原ReShade对此客户端的改动。"
+                                   TextWrapping="Wrap"
+                                   Visibility="{x:Bind ShowUninstallReShadeCompletedMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                     </StackPanel>
                 </FlipViewItem>
@@ -953,6 +976,64 @@
                       Glyph="&#xE711;"
                       IsTextScaleFactorEnabled="False" />
         </Button>
+
+        <Grid Background="{ThemeResource CustomOverlayAcrylicBrush}"
+              Visibility="{x:Bind IsUninstallReShadeDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Border Width="500"
+                    Padding="20"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource LayerFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                <StackPanel Spacing="12">
+                    <TextBlock FontSize="22"
+                               FontWeight="SemiBold"
+                               Text="卸载/还原ReShade改动" />
+                    <TextBlock FontSize="16"
+                               FontWeight="SemiBold"
+                               Text="您确定要卸载/还原当前客户端的ReShade改动吗？"
+                               TextWrapping="Wrap" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="这将尝试删除当前客户端中与 ReShade 相关的改动内容。"
+                               TextWrapping="Wrap" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="执行后可能无法恢复，请在操作前先完成备份。"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Margin="0,12,0,0"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal"
+                                Spacing="12">
+                        <Button MinWidth="120"
+                                Command="{x:Bind CancelUninstallReShadeDialogCommand}"
+                                Content="{x:Bind lang:Lang.UninstallShadeDialog_Cancel}" />
+
+                        <Button MinWidth="120"
+                                Command="{x:Bind ConfirmUninstallReShadeCommand}"
+                                Content="{x:Bind lang:Lang.UninstallShadeDialog_Uninstall}"
+                                Visibility="{x:Bind ShowUninstallReShadeFirstButton, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                        <Button MinWidth="120"
+                                Command="{x:Bind ConfirmUninstallReShadeCommand}"
+                                Content="{x:Bind lang:Lang.UninstallShadeDialog_ConfirmUninstall}"
+                                Visibility="{x:Bind ShowUninstallReShadeConfirmButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A52414" />
+                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#8A1F11" />
+                                <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#3C3C3C" />
+                                <SolidColorBrush x:Key="ButtonForeground" Color="White" />
+                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
+                                <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
+                                <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#787878" />
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
 
 
     </Grid>

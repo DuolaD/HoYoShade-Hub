@@ -198,6 +198,30 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     /// </summary>
     public bool UninstallAndRepairEnabled { get; set => SetProperty(ref field, value); }
 
+    /// <summary>
+    /// 卸载/还原 ReShade 改动完成提示
+    /// </summary>
+    public bool ShowUninstallReShadeCompletedMessage { get; set => SetProperty(ref field, value); }
+
+    public bool IsUninstallReShadeDialogOpen { get; set => SetProperty(ref field, value); }
+
+    public bool IsUninstallReShadeFirstConfirmation
+    {
+        get;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                OnPropertyChanged(nameof(ShowUninstallReShadeFirstButton));
+                OnPropertyChanged(nameof(ShowUninstallReShadeConfirmButton));
+            }
+        }
+    } = true;
+
+    public bool ShowUninstallReShadeFirstButton => IsUninstallReShadeDialogOpen && IsUninstallReShadeFirstConfirmation;
+
+    public bool ShowUninstallReShadeConfirmButton => IsUninstallReShadeDialogOpen && !IsUninstallReShadeFirstConfirmation;
+
 
 
 
@@ -223,6 +247,9 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     {
         try
         {
+            ShowUninstallReShadeCompletedMessage = false;
+            IsUninstallReShadeDialogOpen = false;
+            IsUninstallReShadeFirstConfirmation = true;
             if (CurrentGameId.GameBiz.IsKnown())
             {
                 CurrentGameBizIcon = new GameBizIcon(CurrentGameId.GameBiz);
@@ -407,6 +434,47 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     {
         // Removed game repair internal logic
         await Task.CompletedTask;
+    }
+
+
+    [RelayCommand]
+    private void UninstallOrRestoreReShadeForClient()
+    {
+        ShowUninstallReShadeCompletedMessage = false;
+        IsUninstallReShadeFirstConfirmation = true;
+        IsUninstallReShadeDialogOpen = true;
+        OnPropertyChanged(nameof(ShowUninstallReShadeFirstButton));
+        OnPropertyChanged(nameof(ShowUninstallReShadeConfirmButton));
+    }
+
+
+    [RelayCommand]
+    private void CancelUninstallReShadeDialog()
+    {
+        IsUninstallReShadeDialogOpen = false;
+        IsUninstallReShadeFirstConfirmation = true;
+        OnPropertyChanged(nameof(ShowUninstallReShadeFirstButton));
+        OnPropertyChanged(nameof(ShowUninstallReShadeConfirmButton));
+    }
+
+
+    [RelayCommand]
+    private async Task ConfirmUninstallReShadeAsync()
+    {
+        if (IsUninstallReShadeFirstConfirmation)
+        {
+            IsUninstallReShadeFirstConfirmation = false;
+            return;
+        }
+
+        IsUninstallReShadeDialogOpen = false;
+        IsUninstallReShadeFirstConfirmation = true;
+        ShowUninstallReShadeCompletedMessage = true;
+        OnPropertyChanged(nameof(ShowUninstallReShadeFirstButton));
+        OnPropertyChanged(nameof(ShowUninstallReShadeConfirmButton));
+
+        await Task.Delay(5000);
+        ShowUninstallReShadeCompletedMessage = false;
     }
 
 

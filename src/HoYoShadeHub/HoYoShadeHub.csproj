@@ -75,6 +75,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+    <Page Update="Features\GameLauncher\UninstallReShadeClientDialog.xaml">
+		<BuildAction>Page</BuildAction>
+	  </Page>
 	  <Page Update="Features\Setting\IntegrationSetting.xaml">
 	    <BuildAction>Page</BuildAction>
 	  </Page>
