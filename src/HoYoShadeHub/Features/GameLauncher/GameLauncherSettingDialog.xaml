@@ -977,7 +977,9 @@
                       IsTextScaleFactorEnabled="False" />
         </Button>
 
-        <Grid Background="{ThemeResource CustomOverlayAcrylicBrush}"
+        <Grid Margin="-24,-24,-24,0"
+              Background="{ThemeResource CustomOverlayAcrylicBrush}"
+              CornerRadius="8"
               Visibility="{x:Bind IsUninstallReShadeDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}">
             <Border Width="500"
                     Padding="20"
