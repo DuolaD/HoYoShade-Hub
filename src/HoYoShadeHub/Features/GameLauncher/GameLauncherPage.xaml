@@ -524,6 +524,7 @@
                                    Grid.Column="2"
                                    HorizontalAlignment="Right"
                                    EnableGameLaunch="{x:Bind ShouldEnableStartButton}"
+                                   IsShaderOnlyLaunchMode="{x:Bind IsShaderOnlyLaunchMode}"
                                    GameCommand="{x:Bind ClickStartGameButtonCommand}"
                                    GameState="{x:Bind GameState}"
                                    RunningGameInfo="{x:Bind RunningGameInfo}"

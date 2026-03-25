@@ -299,7 +299,7 @@ public sealed partial class GameLauncherPage : PageBase
                         CheckGameVersion();
                     }
                 }
-                OnPropertyChanged(nameof(ShouldEnableStartButton));
+                NotifyLaunchModeChanged();
             }
         }
     }
@@ -313,7 +313,7 @@ public sealed partial class GameLauncherPage : PageBase
         get
         {
             // 如果选择了Starward启动器或Blender插件，总是启用启动按钮
-            if (UseStarwardLauncher || LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin)
+            if (UseStarwardLauncher || LaunchGenshinBlenderPlugin || LaunchZZZBlenderPlugin || UseHoYoShade || UseOpenHoYoShade)
             {
                 return true;
             }
@@ -323,17 +323,29 @@ public sealed partial class GameLauncherPage : PageBase
         }
     }
 
+    public bool IsShaderOnlyLaunchMode =>
+        !EnableGameLaunch &&
+        !UseStarwardLauncher &&
+        !LaunchGenshinBlenderPlugin &&
+        !LaunchZZZBlenderPlugin &&
+        (UseHoYoShade || UseOpenHoYoShade);
+
     private bool _useHoYoShade;
     public bool UseHoYoShade
     {
         get => _useHoYoShade;
         set
         {
-            if (SetProperty(ref _useHoYoShade, value) && value)
+            if (SetProperty(ref _useHoYoShade, value))
             {
-                // Uncheck OpenHoYoShade if HoYoShade is checked
-                UseOpenHoYoShade = false;
-                _logger.LogInformation("UseHoYoShade enabled, UseOpenHoYoShade disabled");
+                if (value)
+                {
+                    // Uncheck OpenHoYoShade if HoYoShade is checked
+                    UseOpenHoYoShade = false;
+                    _logger.LogInformation("UseHoYoShade enabled, UseOpenHoYoShade disabled");
+                }
+
+                NotifyLaunchModeChanged();
             }
         }
     }
@@ -344,11 +356,16 @@ public sealed partial class GameLauncherPage : PageBase
         get => _useOpenHoYoShade;
         set
         {
-            if (SetProperty(ref _useOpenHoYoShade, value) && value)
+            if (SetProperty(ref _useOpenHoYoShade, value))
             {
-                // Uncheck HoYoShade if OpenHoYoShade is checked
-                UseHoYoShade = false;
-                _logger.LogInformation("UseOpenHoYoShade enabled, UseHoYoShade disabled");
+                if (value)
+                {
+                    // Uncheck HoYoShade if OpenHoYoShade is checked
+                    UseHoYoShade = false;
+                    _logger.LogInformation("UseOpenHoYoShade enabled, UseHoYoShade disabled");
+                }
+
+                NotifyLaunchModeChanged();
             }
         }
     }
@@ -432,7 +449,7 @@ public sealed partial class GameLauncherPage : PageBase
                     
                     _logger.LogInformation("LaunchGenshinBlenderPlugin disabled, restored previous launch option");
                 }
-                OnPropertyChanged(nameof(ShouldEnableStartButton));
+                NotifyLaunchModeChanged();
             }
         }
     }
@@ -487,7 +504,7 @@ public sealed partial class GameLauncherPage : PageBase
                     
                     _logger.LogInformation("LaunchZZZBlenderPlugin disabled, restored previous launch option");
                 }
-                OnPropertyChanged(nameof(ShouldEnableStartButton));
+                NotifyLaunchModeChanged();
             }
         }
     }
@@ -522,9 +539,15 @@ public sealed partial class GameLauncherPage : PageBase
                     // 取消Starward时，重新检查游戏版本
                     CheckGameVersion();
                 }
-                OnPropertyChanged(nameof(ShouldEnableStartButton));
+                NotifyLaunchModeChanged();
             }
         }
+    }
+
+    private void NotifyLaunchModeChanged()
+    {
+        OnPropertyChanged(nameof(ShouldEnableStartButton));
+        OnPropertyChanged(nameof(IsShaderOnlyLaunchMode));
     }
 
     private bool _isStarwardProtocolAvailable;
@@ -1194,7 +1217,31 @@ public sealed partial class GameLauncherPage : PageBase
                 return;
             }
 
-            // Case 3: Normal game launch
+            // Case 4: Shader-only launch (injector only, no game launch)
+            if (useShader && !EnableGameLaunch)
+            {
+                bool started = false;
+
+                if (UseHoYoShade)
+                {
+                    string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+                    started = await LaunchShaderInjectorOnlyAsync(hoYoShadePath, "HoYoShade");
+                }
+                else if (UseOpenHoYoShade)
+                {
+                    string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+                    started = await LaunchShaderInjectorOnlyAsync(openHoYoShadePath, "OpenHoYoShade");
+                }
+
+                if (started)
+                {
+                    InAppToast.MainWindow?.Warning(null, "注意： 你需要另行启动游戏。", 5000);
+                }
+
+                return;
+            }
+
+            // Case 5: Normal game launch
             Process? process = null;
 
             if (UseHoYoShade)
@@ -1226,6 +1273,54 @@ public sealed partial class GameLauncherPage : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Start game");
+        }
+    }
+
+    private async Task<bool> LaunchShaderInjectorOnlyAsync(string shadePath, string shadeName)
+    {
+        try
+        {
+            if (!Directory.Exists(shadePath))
+            {
+                _logger.LogWarning("{ShadeName} directory not found at {Path}", shadeName, shadePath);
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ShaderNotInstalled, shadeName));
+                return false;
+            }
+
+            string injectExePath = Path.Combine(shadePath, "inject.exe");
+            if (!File.Exists(injectExePath))
+            {
+                _logger.LogWarning("inject.exe not found in {ShadeName} at {Path}", shadeName, injectExePath);
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectExeNotFound, shadeName));
+                return false;
+            }
+
+            var gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = injectExePath,
+                Arguments = gameExeName,
+                WorkingDirectory = shadePath,
+                UseShellExecute = true
+            };
+
+            Process? process = Process.Start(startInfo);
+            if (process is null)
+            {
+                _logger.LogError("Failed to start {ShadeName} injector in shader-only mode", shadeName);
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectorStartFailed, shadeName, "unknown error"));
+                return false;
+            }
+
+            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_InjectorStarted, shadeName));
+            _logger.LogInformation("{ShadeName} injector launched in shader-only mode (PID: {Pid})", shadeName, process.Id);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Launch {ShadeName} injector in shader-only mode", shadeName);
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_InjectorStartFailed, shadeName, ex.Message));
+            return false;
         }
     }
 

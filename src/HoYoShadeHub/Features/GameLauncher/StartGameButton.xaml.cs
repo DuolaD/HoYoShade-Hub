@@ -39,6 +39,9 @@ public sealed partial class StartGameButton : UserControl
     public bool EnableGameLaunch { get; set { if (SetProperty(ref field, value)) UpdateActionButtonState(); } }
 
 
+    public bool IsShaderOnlyLaunchMode { get; set { if (SetProperty(ref field, value)) UpdateActionButtonState(); } }
+
+
     public GameState GameState { get; set { if (SetProperty(ref field, value)) UpdateActionButtonState(); } }
 
 
@@ -61,7 +64,7 @@ public sealed partial class StartGameButton : UserControl
 
     public string StartGameButtonText => GameState switch
     {
-        GameState.StartGame => Lang.LauncherPage_StartGame,
+        GameState.StartGame => IsShaderOnlyLaunchMode ? "启动模组" : Lang.LauncherPage_StartGame,
         GameState.GameIsRunning => Lang.LauncherPage_GameIsRunning,
         GameState.InstallGame => Lang.InstallGameDialog_LocateGame,
         GameState.UpdateGame => Lang.LauncherPage_UpdateGame,
