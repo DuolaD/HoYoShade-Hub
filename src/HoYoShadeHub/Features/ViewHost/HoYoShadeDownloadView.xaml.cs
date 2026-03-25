@@ -19,6 +19,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
@@ -401,21 +402,60 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
             
             string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
-            
-            // Apply proxy based on selected server
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
-            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-            
+            GithubRelease[]? releases = null;
+
             if (serverIndex == -1)
             {
-                proxyUrl = CloudProxyManager.GetProxyUrl(0); // Default to GitHub direct for metadata check
+                // Auto Select: GitHub -> Tencent -> (Cloudflare/Alibaba).
+                // If GitHub is rate-limited (403), fall back to subsequent servers.
+                var serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(false);
+                bool githubRateLimited = false;
+                Exception? lastFallbackException = null;
+
+                foreach (var currentServerIndex in serverSequence)
+                {
+                    string? proxyUrl = CloudProxyManager.GetProxyUrl(currentServerIndex);
+                    string currentApiUrl = string.IsNullOrWhiteSpace(proxyUrl)
+                        ? apiUrl
+                        : CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
+
+                    try
+                    {
+                        releases = await client.GetFromJsonAsync<GithubRelease[]>(currentApiUrl, _loadVersionsCts.Token);
+                        if (releases != null)
+                        {
+                            break;
+                        }
+                    }
+                    catch (HttpRequestException ex) when (currentServerIndex == 0 && IsGitHubRateLimitExceeded(ex))
+                    {
+                        githubRateLimited = true;
+                        lastFallbackException = ex;
+                        _logger.LogWarning(ex, "GitHub API rate limit hit in auto-select mode, switching to next download server.");
+                    }
+                    catch (Exception ex) when (githubRateLimited)
+                    {
+                        lastFallbackException = ex;
+                        _logger.LogWarning(ex, "Failed to fetch releases from fallback server {ServerIndex} after GitHub rate limit.", currentServerIndex);
+                    }
+                }
+
+                if (releases == null)
+                {
+                    throw lastFallbackException ?? new HttpRequestException("Failed to fetch release list from all fallback servers.");
+                }
             }
-            if (!string.IsNullOrWhiteSpace(proxyUrl))
+            else
             {
-                apiUrl = CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
+                string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+                if (!string.IsNullOrWhiteSpace(proxyUrl))
+                {
+                    apiUrl = CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
+                }
+
+                releases = await client.GetFromJsonAsync<GithubRelease[]>(apiUrl, _loadVersionsCts.Token);
             }
-            
-            var releases = await client.GetFromJsonAsync<GithubRelease[]>(apiUrl, _loadVersionsCts.Token);
             
             if (releases != null)
             {
@@ -461,6 +501,12 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         {
             IsLoadingVersions = false;
         }
+    }
+
+    private static bool IsGitHubRateLimitExceeded(HttpRequestException ex)
+    {
+        return ex.StatusCode == HttpStatusCode.Forbidden &&
+            ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
