@@ -369,7 +369,7 @@
                         </ItemsControl>
 
                         <!--  一些操作  -->
-                        <StackPanel Orientation="Horizontal" Spacing="12">
+                        <cwc:WrapPanel HorizontalSpacing="12" VerticalSpacing="12">
                             <!--  游戏大小  -->
                             <Button Height="36"
                                     CornerRadius="8"
@@ -392,24 +392,14 @@
                                 <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind lang:Lang.GameLauncherSettingDialog_RelocateGame}" />
                             </Button>
 
-                            <Button Height="36"
-                                    MinWidth="220"
-                                    Command="{x:Bind UninstallOrRestoreReShadeForClientCommand}"
-                                    CornerRadius="8"
-                                    Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
-                                <Button.Resources>
-                                    <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
-                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A52414" />
-                                    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#8A1F11" />
-                                    <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#3C3C3C" />
-                                    <SolidColorBrush x:Key="ButtonForeground" Color="White" />
-                                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
-                                    <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
-                                    <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#787878" />
-                                </Button.Resources>
-                                <TextBlock Text="{x:Bind lang:Lang.UninstallReShadeFromClient}" />
-                            </Button>
-                        </StackPanel>
+                            <HyperlinkButton Height="36"
+                                             Command="{x:Bind UninstallOrRestoreReShadeForClientCommand}"
+                                             Visibility="{x:Bind InstallPath, Converter={StaticResource ObjectToVisibilityConverter}}">
+                                <TextBlock Text="{x:Bind lang:Lang.UninstallReShadeFromClient}"
+                                           TextWrapping="Wrap"
+                                           Foreground="#C42B1C" />
+                            </HyperlinkButton>
+                        </cwc:WrapPanel>
 
                         <!--  选择语音包  -->
                         <cwc:Segmented x:Name="Segmented_SelectLanguage"
@@ -992,7 +982,8 @@
                 <StackPanel Spacing="12">
                     <TextBlock FontSize="22"
                                FontWeight="SemiBold"
-                               Text="{x:Bind lang:Lang.UninstallReShadeFromClient}" />
+                               Text="{x:Bind lang:Lang.UninstallReShadeFromClient}"
+                               TextWrapping="Wrap" />
                     <TextBlock FontSize="16"
                                FontWeight="SemiBold"
                                Text="{x:Bind lang:Lang.UninstallReShadeFromClient_Confirm}"
@@ -1022,14 +1013,9 @@
                                 Content="{x:Bind lang:Lang.UninstallShadeDialog_ConfirmUninstall}"
                                 Visibility="{x:Bind ShowUninstallReShadeConfirmButton, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Button.Resources>
-                                <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
-                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A52414" />
-                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#8A1F11" />
-                                <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#3C3C3C" />
-                                <SolidColorBrush x:Key="ButtonForeground" Color="White" />
-                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
-                                <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
-                                <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#787878" />
+                                <SolidColorBrush x:Key="ButtonForeground" Color="#C42B1C" />
+                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#A52414" />
+                                <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#8A1F11" />
                             </Button.Resources>
                         </Button>
                     </StackPanel>
