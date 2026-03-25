@@ -289,6 +289,7 @@ public sealed partial class ReShadeDownloadView : UserControl
 
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
         InitializeLanguageSelector();
         CheckInstallationStatus();
         await LoadInstalledVersionsAsync();

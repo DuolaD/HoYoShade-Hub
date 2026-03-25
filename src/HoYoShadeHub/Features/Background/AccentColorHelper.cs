@@ -14,6 +14,7 @@ namespace HoYoShadeHub.Features.Background;
 
 internal static class AccentColorHelper
 {
+    private static readonly Color DefaultLauncherAccentColor = Color.FromArgb(0xFF, 0xCB, 0xAD, 0x8E);
 
 
 
@@ -127,6 +128,20 @@ internal static class AccentColorHelper
         Application.Current.Resources["SystemAccentColorDark1"] = dark1;
         Application.Current.Resources["SystemAccentColorDark2"] = dark2;
         Application.Current.Resources["SystemAccentColorDark3"] = dark3;
+
+        WeakReferenceMessenger.Default.Send(new AccentColorChangedMessage());
+    }
+
+
+    public static void ResetToDefaultLauncherAccentColor()
+    {
+        Application.Current.Resources["SystemAccentColor"] = DefaultLauncherAccentColor;
+        Application.Current.Resources["SystemAccentColorLight1"] = DefaultLauncherAccentColor;
+        Application.Current.Resources["SystemAccentColorLight2"] = DefaultLauncherAccentColor;
+        Application.Current.Resources["SystemAccentColorLight3"] = DefaultLauncherAccentColor;
+        Application.Current.Resources["SystemAccentColorDark1"] = DefaultLauncherAccentColor;
+        Application.Current.Resources["SystemAccentColorDark2"] = DefaultLauncherAccentColor;
+        Application.Current.Resources["SystemAccentColorDark3"] = DefaultLauncherAccentColor;
 
         WeakReferenceMessenger.Default.Send(new AccentColorChangedMessage());
     }

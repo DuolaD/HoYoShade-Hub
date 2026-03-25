@@ -301,6 +301,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
         InitializeLanguageSelector();
         // Unregister first to avoid duplicate registration crash if Grid_Loaded is called multiple times
         WeakReferenceMessenger.Default.Unregister<LanguageChangedMessage>(this);
