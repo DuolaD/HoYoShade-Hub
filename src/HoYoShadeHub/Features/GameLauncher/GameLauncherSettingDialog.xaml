@@ -407,7 +407,7 @@
                                     <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
                                     <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#787878" />
                                 </Button.Resources>
-                                <TextBlock Text="卸载/还原ReShade对此客户端的改动" />
+                                <TextBlock Text="{x:Bind lang:Lang.UninstallReShadeFromClient}" />
                             </Button>
                         </StackPanel>
 
@@ -456,7 +456,7 @@
 
                         <TextBlock VerticalAlignment="Center"
                                    Foreground="{ThemeResource SystemFillColorSuccessBrush}"
-                                   Text="已完成卸载/还原ReShade对此客户端的改动。"
+                                   Text="{x:Bind lang:Lang.UninstallReShadeFromClient_Completed}"
                                    TextWrapping="Wrap"
                                    Visibility="{x:Bind ShowUninstallReShadeCompletedMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
 
@@ -992,16 +992,16 @@
                 <StackPanel Spacing="12">
                     <TextBlock FontSize="22"
                                FontWeight="SemiBold"
-                               Text="卸载/还原ReShade改动" />
+                               Text="{x:Bind lang:Lang.UninstallReShadeFromClient}" />
                     <TextBlock FontSize="16"
                                FontWeight="SemiBold"
-                               Text="您确定要卸载/还原当前客户端的ReShade改动吗？"
+                               Text="{x:Bind lang:Lang.UninstallReShadeFromClient_Confirm}"
                                TextWrapping="Wrap" />
                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="这将尝试删除当前客户端中与 ReShade 相关的改动内容。"
+                               Text="{x:Bind lang:Lang.UninstallReShadeFromClient_Desc1}"
                                TextWrapping="Wrap" />
                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="执行后可能无法恢复，请在操作前先完成备份。"
+                               Text="{x:Bind lang:Lang.UninstallReShadeFromClient_Desc2}"
                                TextWrapping="Wrap" />
 
                     <StackPanel Margin="0,12,0,0"

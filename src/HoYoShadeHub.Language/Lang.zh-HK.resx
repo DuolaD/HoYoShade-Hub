@@ -1730,4 +1730,19 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="GameLauncherSettingDialog_CopyFailed" xml:space="preserve">
     <value>複製失敗</value>
   </data>
+  <data name="UninstallReShadeFromClient" xml:space="preserve">
+    <value>卸載/還原ReShade對呢個客戶端嘅改動</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Confirm" xml:space="preserve">
+    <value>你確定要卸載/還原ReShade對呢個客戶端嘅改動嗎？</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Desc1" xml:space="preserve">
+    <value>呢個操作會卸載/還原ReShade對呢個客戶端嘅所有改動，所有擺喺呢個客戶端入面嘅ReShade相關檔案都會被刪除，呢個都可以解決潛在嘅/已經發生嘅反作弊檢測問題。不過你會冇晒所有保存喺呢個客戶端目錄入面嘅ReShade相關檔案，包括一啲由你自行設定嘅個人化設置。一經執行卸載操作，呢啲數據就會永遠無法恢復。</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Desc2" xml:space="preserve">
+    <value>如果你仲有重要數據未備份，請喺卸載之前先進行備份。</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Completed" xml:space="preserve">
+    <value>已經完成卸載/還原ReShade對呢個客戶端嘅改動。</value>
+  </data>
 </root>

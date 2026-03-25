@@ -469,6 +469,54 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
 
         IsUninstallReShadeDialogOpen = false;
         IsUninstallReShadeFirstConfirmation = true;
+
+        if (!string.IsNullOrWhiteSpace(InstallPath) && Directory.Exists(InstallPath))
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    var filesToDelete = new[]
+                    {
+                        "ReShade.ini",
+                        "ReShade.log",
+                        "opengl32.dll",
+                        "opengl64.dll",
+                        "ReShade32.dll",
+                        "ReShade64.dll",
+                        "inject.exe",
+                        "ShaderToggler.ini"
+                    };
+
+                    foreach (var file in filesToDelete)
+                    {
+                        var filePath = Path.Combine(InstallPath, file);
+                        if (File.Exists(filePath))
+                        {
+                            File.Delete(filePath);
+                        }
+                    }
+
+                    var addonFiles = Directory.GetFiles(InstallPath, "*.addon32")
+                        .Concat(Directory.GetFiles(InstallPath, "*.addon64"));
+                    foreach (var addonFile in addonFiles)
+                    {
+                        File.Delete(addonFile);
+                    }
+
+                    var shadersFolder = Path.Combine(InstallPath, "reshade-shaders");
+                    if (Directory.Exists(shadersFolder))
+                    {
+                        Directory.Delete(shadersFolder, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to uninstall ReShade files from {Path}", InstallPath);
+                }
+            });
+        }
+
         ShowUninstallReShadeCompletedMessage = true;
         OnPropertyChanged(nameof(ShowUninstallReShadeFirstButton));
         OnPropertyChanged(nameof(ShowUninstallReShadeConfirmButton));

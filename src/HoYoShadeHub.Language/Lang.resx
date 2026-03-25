@@ -1733,4 +1733,19 @@ Please scan QR code while Injector run next time to login again.</value>
   <data name="GameLauncherSettingDialog_CopyFailed" xml:space="preserve">
     <value>Copy Failed</value>
   </data>
+  <data name="UninstallReShadeFromClient" xml:space="preserve">
+    <value>Uninstall/Restore ReShade changes to this client</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Confirm" xml:space="preserve">
+    <value>Are you sure you want to uninstall/restore ReShade changes to this client?</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Desc1" xml:space="preserve">
+    <value>This will uninstall/restore all ReShade changes to this client. All ReShade-related files placed in this client will be deleted. This can also resolve potential or occurred anti-cheat detection issues. However, you will lose all ReShade-related files saved in this client directory, including some personalized settings you configured. Once uninstalled, this data cannot be recovered.</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Desc2" xml:space="preserve">
+    <value>If you have important data that hasn't been backed up, please back it up before uninstalling.</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Completed" xml:space="preserve">
+    <value>Successfully uninstalled/restored ReShade changes to this client.</value>
+  </data>
 </root>

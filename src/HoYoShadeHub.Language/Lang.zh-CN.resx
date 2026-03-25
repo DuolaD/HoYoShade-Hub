@@ -1719,4 +1719,19 @@
   <data name="GameLauncherSettingDialog_CopyFailed" xml:space="preserve">
     <value>复制失败</value>
   </data>
+  <data name="UninstallReShadeFromClient" xml:space="preserve">
+    <value>卸载/还原ReShade对此客户端的改动</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Confirm" xml:space="preserve">
+    <value>你确定要卸载/还原ReShade对此客户端的改动吗？</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Desc1" xml:space="preserve">
+    <value>这将会卸载/还原ReShade对此客户端的所有改动，所有放置于此客户端中的ReShade相关文件都将会删除，这也可以解决潜在的/已经发生的反作弊检测问题。但你会失去所有保存在此客户端目录中的ReShade相关文件，包括一些由您自行设置的个性化设置。一旦执行卸载操作，这些数据将会永远无法恢复。</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Desc2" xml:space="preserve">
+    <value>如果您还有重要数据且未进行备份，请在卸载前先进行备份。</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Completed" xml:space="preserve">
+    <value>已完成卸载/还原ReShade对此客户端的改动。</value>
+  </data>
 </root>

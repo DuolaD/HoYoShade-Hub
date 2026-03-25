@@ -4844,5 +4844,50 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("WelcomeView_WelcomeToHoYoShadeHubDescription", resourceCulture);
             }
         }
-    }
+    
+        /// <summary>
+        ///   查找类似 UninstallReShadeFromClient 的本地化字符串。
+        /// </summary>
+        public static string UninstallReShadeFromClient {
+            get {
+                return ResourceManager.GetString("UninstallReShadeFromClient", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 UninstallReShadeFromClient_Confirm 的本地化字符串。
+        /// </summary>
+        public static string UninstallReShadeFromClient_Confirm {
+            get {
+                return ResourceManager.GetString("UninstallReShadeFromClient_Confirm", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 UninstallReShadeFromClient_Desc1 的本地化字符串。
+        /// </summary>
+        public static string UninstallReShadeFromClient_Desc1 {
+            get {
+                return ResourceManager.GetString("UninstallReShadeFromClient_Desc1", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 UninstallReShadeFromClient_Desc2 的本地化字符串。
+        /// </summary>
+        public static string UninstallReShadeFromClient_Desc2 {
+            get {
+                return ResourceManager.GetString("UninstallReShadeFromClient_Desc2", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 UninstallReShadeFromClient_Completed 的本地化字符串。
+        /// </summary>
+        public static string UninstallReShadeFromClient_Completed {
+            get {
+                return ResourceManager.GetString("UninstallReShadeFromClient_Completed", resourceCulture);
+            }
+        }
+}
 }

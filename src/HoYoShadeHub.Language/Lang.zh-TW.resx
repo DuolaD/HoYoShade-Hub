@@ -1730,4 +1730,19 @@
   <data name="GameLauncherSettingDialog_CopyFailed" xml:space="preserve">
     <value>複製失敗</value>
   </data>
+  <data name="UninstallReShadeFromClient" xml:space="preserve">
+    <value>卸載/還原ReShade對此用戶端的更動</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Confirm" xml:space="preserve">
+    <value>你確定要卸載/還原ReShade對此用戶端的更動嗎？</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Desc1" xml:space="preserve">
+    <value>這將會卸載/還原ReShade對此用戶端的所有更動，所有放置於此用戶端中的ReShade相關檔案都將會刪除，這也可以解決潛在的/已經發生的反作弊偵測問題。但你會失去所有保存在此用戶端目錄中的ReShade相關檔案，包括一些由您自行設定的個人化設定。一旦執行卸載操作，這些資料將會永遠無法恢復。</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Desc2" xml:space="preserve">
+    <value>如果您還有重要資料且未進行備份，請在卸載前先進行備份。</value>
+  </data>
+  <data name="UninstallReShadeFromClient_Completed" xml:space="preserve">
+    <value>已完成卸載/還原ReShade對此用戶端的更動。</value>
+  </data>
 </root>
