@@ -1006,16 +1006,29 @@
                         <Button MinWidth="120"
                                 Command="{x:Bind ConfirmUninstallReShadeCommand}"
                                 Content="{x:Bind lang:Lang.UninstallShadeDialog_Uninstall}"
-                                Visibility="{x:Bind ShowUninstallReShadeFirstButton, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                Visibility="{x:Bind ShowUninstallReShadeFirstButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                                    <Setter Property="Background" Value="{ThemeResource AccentButtonBackground}" />
+                                    <Setter Property="Foreground" Value="{ThemeResource AccentButtonForeground}" />
+                                    <Setter Property="BorderBrush" Value="{ThemeResource AccentButtonBorderBrush}" />
+                                </Style>
+                            </Button.Style>
+                        </Button>
 
                         <Button MinWidth="120"
                                 Command="{x:Bind ConfirmUninstallReShadeCommand}"
                                 Content="{x:Bind lang:Lang.UninstallShadeDialog_ConfirmUninstall}"
                                 Visibility="{x:Bind ShowUninstallReShadeConfirmButton, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Button.Resources>
-                                <SolidColorBrush x:Key="ButtonForeground" Color="#C42B1C" />
-                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#A52414" />
-                                <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#8A1F11" />
+                                <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A52414" />
+                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#8A1F11" />
+                                <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#3C3C3C" />
+                                <SolidColorBrush x:Key="ButtonForeground" Color="White" />
+                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
+                                <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
+                                <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#787878" />
                             </Button.Resources>
                         </Button>
                     </StackPanel>
