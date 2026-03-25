@@ -22,9 +22,9 @@ public sealed partial class UninstallShadersDialog : ContentDialog
     }
 
     private string _shadePath = "";
-    public string ShadePath 
-    { 
-        get => _shadePath; 
+    public string ShadePath
+    {
+        get => _shadePath;
         set
         {
             if (SetProperty(ref _shadePath, value))
@@ -34,11 +34,11 @@ public sealed partial class UninstallShadersDialog : ContentDialog
             }
         }
     }
-    
+
     private string _shadeName = "";
-    public string ShadeName 
-    { 
-        get => _shadeName; 
+    public string ShadeName
+    {
+        get => _shadeName;
         set
         {
             if (SetProperty(ref _shadeName, value))
@@ -48,12 +48,11 @@ public sealed partial class UninstallShadersDialog : ContentDialog
             }
         }
     }
-    
-    // 警告标题
+
     public string WarningTitle => string.Format(Lang.UninstallShadersDialog_Title, ShadeName);
-    
+
     public string WarningMessage1 => string.Format(Lang.UninstallShadersDialog_Message1, ShadeName);
-    
+
     public string WarningMessage2 => Lang.UninstallShadersDialog_Message2;
 
     public bool IsUninstalling { get => field; set => SetProperty(ref field, value); }
@@ -71,7 +70,14 @@ public sealed partial class UninstallShadersDialog : ContentDialog
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanCancel))]
     [NotifyPropertyChangedFor(nameof(ShowUninstallButton))]
+    [NotifyPropertyChangedFor(nameof(ShowConfirmButton))]
     private bool isCompleted;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(UninstallButtonText))]
+    [NotifyPropertyChangedFor(nameof(ShowUninstallButton))]
+    [NotifyPropertyChangedFor(nameof(ShowConfirmButton))]
+    private bool isFirstConfirmation = true;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CancelButtonText))]
@@ -79,11 +85,13 @@ public sealed partial class UninstallShadersDialog : ContentDialog
 
     public bool CanCancel => !IsUninstalling || IsCompleted;
 
-    public bool ShowUninstallButton => !IsUninstalling && !IsCompleted;
-    
+    public bool ShowUninstallButton => !IsUninstalling && !IsCompleted && IsFirstConfirmation;
+
+    public bool ShowConfirmButton => !IsUninstalling && !IsCompleted && !IsFirstConfirmation;
+
     public string CancelButtonText => IsCompleted ? Lang.UninstallShadeDialog_Close : Lang.UninstallShadeDialog_Cancel;
-    
-    public string UninstallButtonText => Lang.UninstallShadeDialog_Uninstall;
+
+    public string UninstallButtonText => IsFirstConfirmation ? Lang.UninstallShadeDialog_Uninstall : Lang.UninstallShadeDialog_ConfirmUninstall;
 
     private CancellationTokenSource? _cancellationTokenSource;
 
@@ -92,8 +100,14 @@ public sealed partial class UninstallShadersDialog : ContentDialog
     {
         try
         {
-            _logger.LogInformation("UninstallAsync called");
-            
+            _logger.LogInformation("UninstallAsync called, IsFirstConfirmation={IsFirstConfirmation}", IsFirstConfirmation);
+
+            if (IsFirstConfirmation)
+            {
+                IsFirstConfirmation = false;
+                return;
+            }
+
             _cancellationTokenSource = new CancellationTokenSource();
             IsUninstalling = true;
             CanUninstall = false;
@@ -101,17 +115,16 @@ public sealed partial class UninstallShadersDialog : ContentDialog
             StatusMessage = Lang.UninstallShadeDialog_PreparingUninstall;
             ShowProgressText = false;
 
-            await Task.Delay(500); // 短暂延迟让UI更新
+            await Task.Delay(500);
 
-            // 开始卸载
             await PerformUninstallAsync(_cancellationTokenSource.Token);
 
             IsIndeterminate = false;
             UninstallProgress = 100;
             StatusMessage = Lang.UninstallShadeDialog_UninstallCompleted;
             IsCompleted = true;
-            
-            await Task.Delay(1000); // 显示完成状态
+
+            await Task.Delay(1000);
         }
         catch (OperationCanceledException)
         {
@@ -123,7 +136,7 @@ public sealed partial class UninstallShadersDialog : ContentDialog
         catch (Exception ex)
         {
             _logger.LogError(ex, "Uninstall shaders for {shade} failed", ShadeName);
-            StatusMessage = $"卸载失败: {ex.Message}";
+            StatusMessage = $"\u5378\u8F7D\u5931\u8D25: {ex.Message}";
             IsUninstalling = false;
             CanUninstall = true;
             IsIndeterminate = false;
@@ -133,20 +146,18 @@ public sealed partial class UninstallShadersDialog : ContentDialog
     private async Task PerformUninstallAsync(CancellationToken cancellationToken)
     {
         string shadersPath = Path.Combine(ShadePath, "reshade-shaders");
-        
+
         if (!Directory.Exists(shadersPath))
         {
             _logger.LogWarning("Shaders path does not exist: {path}", shadersPath);
             return;
         }
 
-        // 获取所有文件和文件数
         var allFiles = Directory.GetFiles(shadersPath, "*", SearchOption.AllDirectories).ToList();
         var totalFiles = allFiles.Count;
-        
+
         if (totalFiles == 0)
         {
-            // 没有文件，清理所有子文件夹
             try
             {
                 foreach (var dir in Directory.GetDirectories(shadersPath))
@@ -171,7 +182,6 @@ public sealed partial class UninstallShadersDialog : ContentDialog
 
         await Task.Run(() =>
         {
-            // 删除所有文件
             foreach (var file in allFiles)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -181,12 +191,11 @@ public sealed partial class UninstallShadersDialog : ContentDialog
                     File.SetAttributes(file, FileAttributes.Normal);
                     File.Delete(file);
                     deletedFiles++;
-                    
-                    // 更新进度 - 在UI线程上执行
+
                     var currentProgress = (double)deletedFiles / totalFiles * 100;
                     var progressText = $"{currentProgress:F1}%";
                     var statusMsg = string.Format(Lang.UninstallShadeDialog_DeletingFiles, deletedFiles, totalFiles);
-                    
+
                     DispatcherQueue.TryEnqueue(() =>
                     {
                         UninstallProgress = currentProgress;
@@ -200,14 +209,13 @@ public sealed partial class UninstallShadersDialog : ContentDialog
                 }
             }
 
-            // 删除所有子文件夹
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             DispatcherQueue.TryEnqueue(() =>
             {
                 StatusMessage = Lang.UninstallShadeDialog_DeletingDirectories;
             });
-            
+
             try
             {
                 foreach (var dir in Directory.GetDirectories(shadersPath))

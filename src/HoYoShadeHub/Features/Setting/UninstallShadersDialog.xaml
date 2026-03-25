@@ -17,7 +17,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!--  警告内容  -->
+        <!-- Warning content -->
         <StackPanel Grid.Row="0" Spacing="12">
             <TextBlock FontSize="16"
                        FontWeight="SemiBold"
@@ -31,7 +31,7 @@
                        TextWrapping="Wrap" />
         </StackPanel>
 
-        <!--  进度显示  -->
+        <!-- Progress -->
         <StackPanel Grid.Row="1"
                     Margin="0,16,0,0"
                     Spacing="8"
@@ -50,24 +50,37 @@
             </Grid>
         </StackPanel>
 
-        <!--  按钮区  -->
+        <!-- Buttons -->
         <StackPanel Grid.Row="2"
                     Margin="0,24,0,0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="12">
-            <!--  取消/关闭按钮  -->
             <Button MinWidth="120"
                     Command="{x:Bind CancelCommand}"
                     Content="{x:Bind CancelButtonText}"
                     IsEnabled="{x:Bind CanCancel}" />
 
-            <!--  卸载按钮  -->
             <Button MinWidth="120"
                     Command="{x:Bind UninstallCommand}"
                     Content="{x:Bind UninstallButtonText, Mode=OneWay}"
                     IsEnabled="{x:Bind CanUninstall}"
                     Visibility="{x:Bind ShowUninstallButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Button.Style>
+                    <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                        <Setter Property="Background" Value="{ThemeResource AccentButtonBackground}" />
+                        <Setter Property="Foreground" Value="{ThemeResource AccentButtonForeground}" />
+                        <Setter Property="BorderBrush" Value="{ThemeResource AccentButtonBorderBrush}" />
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button MinWidth="120"
+                    x:Name="ConfirmUninstallButton"
+                    Command="{x:Bind UninstallCommand}"
+                    Content="{x:Bind UninstallButtonText, Mode=OneWay}"
+                    IsEnabled="{x:Bind CanUninstall}"
+                    Visibility="{x:Bind ShowConfirmButton, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Button.Resources>
                     <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A52414" />
