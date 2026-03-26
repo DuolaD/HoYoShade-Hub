@@ -315,6 +315,9 @@
 	<data name="LauncherPage_StartGame" xml:space="preserve">
     <value>Start Game</value>
   </data>
+	<data name="LauncherPage_StartMod" xml:space="preserve">
+    <value>Launch Mod</value>
+  </data>
 	<data name="LauncherPage_GameIsRunning" xml:space="preserve">
     <value>Game is Running</value>
   </data>
@@ -1435,6 +1438,9 @@ Do you want to continue with the reset operation?</value>
   </data>
 	<data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
     <value>{0} is not installed. Please install it before use</value>
+  </data>
+	<data name="GameLauncher_ShaderOnlyLaunchNotice" xml:space="preserve">
+    <value>Notice: You need to start the game separately.</value>
   </data>
 	<data name="GameLauncher_InjectExeNotFound" xml:space="preserve">
     <value>inject.exe not found in {0}</value>

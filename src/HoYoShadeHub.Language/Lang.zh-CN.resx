@@ -315,6 +315,9 @@
   <data name="LauncherPage_StartGame" xml:space="preserve">
     <value>开始游戏</value>
   </data>
+  <data name="LauncherPage_StartMod" xml:space="preserve">
+    <value>启动模组</value>
+  </data>
   <data name="LauncherPage_GameIsRunning" xml:space="preserve">
     <value>游戏正在运行</value>
   </data>
@@ -1421,6 +1424,9 @@
   </data>
   <data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
     <value>{0} 未安装，请先安装后再使用</value>
+  </data>
+  <data name="GameLauncher_ShaderOnlyLaunchNotice" xml:space="preserve">
+    <value>注意： 你需要另行启动游戏。</value>
   </data>
   <data name="GameLauncher_InjectExeNotFound" xml:space="preserve">
     <value>{0} 中未找到 inject.exe</value>

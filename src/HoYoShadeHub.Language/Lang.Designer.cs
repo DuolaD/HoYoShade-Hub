@@ -1208,6 +1208,15 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("GameLauncher_ShaderNotInstalled", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Notice: You need to start the game separately. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncher_ShaderOnlyLaunchNotice {
+            get {
+                return ResourceManager.GetString("GameLauncher_ShaderOnlyLaunchNotice", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   查找类似 Failed to launch game via Starward: {0} 的本地化字符串。
@@ -2954,6 +2963,15 @@ namespace HoYoShadeHub.Language {
         public static string LauncherPage_StartGame {
             get {
                 return ResourceManager.GetString("LauncherPage_StartGame", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Launch Mod 的本地化字符串。
+        /// </summary>
+        public static string LauncherPage_StartMod {
+            get {
+                return ResourceManager.GetString("LauncherPage_StartMod", resourceCulture);
             }
         }
         

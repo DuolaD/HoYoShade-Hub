@@ -1235,7 +1235,7 @@ public sealed partial class GameLauncherPage : PageBase
 
                 if (started)
                 {
-                    InAppToast.MainWindow?.Warning(null, "注意： 你需要另行启动游戏。", 5000);
+                    InAppToast.MainWindow?.Warning(null, Lang.GameLauncher_ShaderOnlyLaunchNotice, 5000);
                 }
 
                 return;

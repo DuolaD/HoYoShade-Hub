@@ -315,6 +315,9 @@
   <data name="LauncherPage_StartGame" xml:space="preserve">
     <value>啟動遊戲</value>
   </data>
+  <data name="LauncherPage_StartMod" xml:space="preserve">
+    <value>開模組</value>
+  </data>
   <data name="LauncherPage_GameIsRunning" xml:space="preserve">
     <value>遊戲執行緊</value>
   </data>
@@ -1432,6 +1435,9 @@
   </data>
   <data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
     <value>{0} 未安裝，請先安裝咗先至用得</value>
+  </data>
+  <data name="GameLauncher_ShaderOnlyLaunchNotice" xml:space="preserve">
+    <value>注意：你要自己另外開遊戲。</value>
   </data>
   <data name="GameLauncher_InjectExeNotFound" xml:space="preserve">
     <value>{0} 入面搵唔到 inject.exe</value>

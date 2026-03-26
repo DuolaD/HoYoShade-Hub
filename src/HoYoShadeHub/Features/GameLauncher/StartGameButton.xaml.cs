@@ -64,7 +64,7 @@ public sealed partial class StartGameButton : UserControl
 
     public string StartGameButtonText => GameState switch
     {
-        GameState.StartGame => IsShaderOnlyLaunchMode ? "启动模组" : Lang.LauncherPage_StartGame,
+        GameState.StartGame => IsShaderOnlyLaunchMode ? Lang.LauncherPage_StartMod : Lang.LauncherPage_StartGame,
         GameState.GameIsRunning => Lang.LauncherPage_GameIsRunning,
         GameState.InstallGame => Lang.InstallGameDialog_LocateGame,
         GameState.UpdateGame => Lang.LauncherPage_UpdateGame,
