@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Navigation;
 using HoYoShadeHub.Core;
 using HoYoShadeHub.Core.HoYoPlay;
 using HoYoShadeHub.Core.HoYoShade;
@@ -41,6 +42,7 @@ public sealed partial class GameLauncherPage : PageBase
     private readonly HoYoShadeVersionService _versionService ;
 
     private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _dispatchTimer;
+    private bool _isApplyingSavedLaunchOptions;
 
     /// <summary>
     /// 获取本地化的游戏名称
@@ -65,6 +67,12 @@ public sealed partial class GameLauncherPage : PageBase
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         _dispatchTimer = DispatcherQueue.CreateTimer();
         _dispatchTimer.Interval = TimeSpan.FromMilliseconds(100);
+    }
+
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        LoadLaunchOptionsForCurrentClient();
     }
 
 
@@ -548,6 +556,79 @@ public sealed partial class GameLauncherPage : PageBase
     {
         OnPropertyChanged(nameof(ShouldEnableStartButton));
         OnPropertyChanged(nameof(IsShaderOnlyLaunchMode));
+        SaveLaunchOptionsForCurrentClient();
+    }
+
+    private void LoadLaunchOptionsForCurrentClient()
+    {
+        if (CurrentGameId is null)
+        {
+            return;
+        }
+
+        _isApplyingSavedLaunchOptions = true;
+        try
+        {
+            bool enableGameLaunch = AppConfig.GetEnableGameLaunchOption(CurrentGameId);
+            bool useStarwardLauncher = AppConfig.GetUseStarwardLaunchOption(CurrentGameId);
+            bool useHoYoShade = AppConfig.GetUseHoYoShadeLaunchOption(CurrentGameId);
+            bool useOpenHoYoShade = AppConfig.GetUseOpenHoYoShadeLaunchOption(CurrentGameId);
+            bool launchGenshinBlenderPlugin = AppConfig.GetLaunchGenshinBlenderPluginOption(CurrentGameId);
+            bool launchZZZBlenderPlugin = AppConfig.GetLaunchZZZBlenderPluginOption(CurrentGameId);
+
+            if (useHoYoShade && useOpenHoYoShade)
+            {
+                useOpenHoYoShade = false;
+            }
+
+            if (enableGameLaunch && useStarwardLauncher)
+            {
+                useStarwardLauncher = false;
+            }
+
+            if (launchGenshinBlenderPlugin || launchZZZBlenderPlugin)
+            {
+                enableGameLaunch = false;
+                useStarwardLauncher = false;
+            }
+
+            _enableGameLaunch = enableGameLaunch;
+            _useStarwardLauncher = useStarwardLauncher;
+            _useHoYoShade = useHoYoShade;
+            _useOpenHoYoShade = useOpenHoYoShade;
+            _launchGenshinBlenderPlugin = launchGenshinBlenderPlugin;
+            _launchZZZBlenderPlugin = launchZZZBlenderPlugin;
+
+            OnPropertyChanged(nameof(EnableGameLaunch));
+            OnPropertyChanged(nameof(UseStarwardLauncher));
+            OnPropertyChanged(nameof(UseHoYoShade));
+            OnPropertyChanged(nameof(UseOpenHoYoShade));
+            OnPropertyChanged(nameof(LaunchGenshinBlenderPlugin));
+            OnPropertyChanged(nameof(LaunchZZZBlenderPlugin));
+
+            UpdateGameLaunchCheckboxState();
+        }
+        finally
+        {
+            _isApplyingSavedLaunchOptions = false;
+        }
+
+        NotifyLaunchModeChanged();
+    }
+
+    private void SaveLaunchOptionsForCurrentClient()
+    {
+        if (_isApplyingSavedLaunchOptions || CurrentGameId is null)
+        {
+            return;
+        }
+
+        AppConfig.SetEnableGameLaunchOption(CurrentGameId, _enableGameLaunch);
+        AppConfig.SetUseStarwardLaunchOption(CurrentGameId, _useStarwardLauncher);
+        AppConfig.SetUseHoYoShadeLaunchOption(CurrentGameId, _useHoYoShade);
+        AppConfig.SetUseOpenHoYoShadeLaunchOption(CurrentGameId, _useOpenHoYoShade);
+        AppConfig.SetLaunchGenshinBlenderPluginOption(CurrentGameId, _launchGenshinBlenderPlugin);
+        AppConfig.SetLaunchZZZBlenderPluginOption(CurrentGameId, _launchZZZBlenderPlugin);
     }
 
     private bool _isStarwardProtocolAvailable;

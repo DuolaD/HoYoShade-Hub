@@ -897,6 +897,71 @@ public static class AppConfig
     /// </summary>
     /// <param name="biz"></param>
     /// <returns></returns>
+    private static string BuildLaunchOptionKey(GameId gameId, string optionName)
+    {
+        return $"launch_option_{optionName}_{gameId.GameBiz}_{gameId.Id}";
+    }
+
+    public static bool GetEnableGameLaunchOption(GameId gameId)
+    {
+        return GetValue(true, BuildLaunchOptionKey(gameId, "enable_game_launch"));
+    }
+
+    public static void SetEnableGameLaunchOption(GameId gameId, bool value)
+    {
+        SetValue(value, BuildLaunchOptionKey(gameId, "enable_game_launch"));
+    }
+
+    public static bool GetUseStarwardLaunchOption(GameId gameId)
+    {
+        return GetValue(false, BuildLaunchOptionKey(gameId, "use_starward"));
+    }
+
+    public static void SetUseStarwardLaunchOption(GameId gameId, bool value)
+    {
+        SetValue(value, BuildLaunchOptionKey(gameId, "use_starward"));
+    }
+
+    public static bool GetUseHoYoShadeLaunchOption(GameId gameId)
+    {
+        return GetValue(false, BuildLaunchOptionKey(gameId, "use_hoyoshade"));
+    }
+
+    public static void SetUseHoYoShadeLaunchOption(GameId gameId, bool value)
+    {
+        SetValue(value, BuildLaunchOptionKey(gameId, "use_hoyoshade"));
+    }
+
+    public static bool GetUseOpenHoYoShadeLaunchOption(GameId gameId)
+    {
+        return GetValue(false, BuildLaunchOptionKey(gameId, "use_open_hoyoshade"));
+    }
+
+    public static void SetUseOpenHoYoShadeLaunchOption(GameId gameId, bool value)
+    {
+        SetValue(value, BuildLaunchOptionKey(gameId, "use_open_hoyoshade"));
+    }
+
+    public static bool GetLaunchGenshinBlenderPluginOption(GameId gameId)
+    {
+        return GetValue(false, BuildLaunchOptionKey(gameId, "genshin_blender_plugin"));
+    }
+
+    public static void SetLaunchGenshinBlenderPluginOption(GameId gameId, bool value)
+    {
+        SetValue(value, BuildLaunchOptionKey(gameId, "genshin_blender_plugin"));
+    }
+
+    public static bool GetLaunchZZZBlenderPluginOption(GameId gameId)
+    {
+        return GetValue(false, BuildLaunchOptionKey(gameId, "zzz_blender_plugin"));
+    }
+
+    public static void SetLaunchZZZBlenderPluginOption(GameId gameId, bool value)
+    {
+        SetValue(value, BuildLaunchOptionKey(gameId, "zzz_blender_plugin"));
+    }
+
     public static bool GetUsePopupWindow(GameBiz biz)
     {
         return GetValue<bool>(false, $"use_popup_window_{biz}");
