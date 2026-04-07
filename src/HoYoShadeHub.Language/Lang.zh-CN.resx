@@ -1266,6 +1266,12 @@
   <data name="FileSettingPage_InstallStatus" xml:space="preserve">
     <value>安装状态</value>
   </data>
+  <data name="FileSettingPage_FrameworkVersion" xml:space="preserve">
+    <value>框架版本</value>
+  </data>
+  <data name="FileSettingPage_ReShadeVersion" xml:space="preserve">
+    <value>ReShade版本</value>
+  </data>
   <data name="FileSettingPage_TotalSize" xml:space="preserve">
     <value>总占用</value>
   </data>

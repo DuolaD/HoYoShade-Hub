@@ -235,13 +235,13 @@
                 </StackPanel>
 
                 <!-- Version -->
-                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Version" 
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind lang:Lang.FileSettingPage_FrameworkVersion}" 
                            Visibility="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                 <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind HoYoShadeVersion, Mode=OneWay}" 
                            Visibility="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
 
                 <!-- ReShade Version -->
-                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="ReShade Version" 
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind lang:Lang.FileSettingPage_ReShadeVersion}" 
                            Visibility="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                 <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind HoYoShadeReShadeVersion, Mode=OneWay}" 
                            Visibility="{x:Bind HoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
@@ -435,13 +435,13 @@
                 </StackPanel>
 
                 <!-- Version -->
-                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Version"
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind lang:Lang.FileSettingPage_FrameworkVersion}"
                            Visibility="{x:Bind OpenHoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                 <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind OpenHoYoShadeVersion, Mode=OneWay}"
                            Visibility="{x:Bind OpenHoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
 
                 <!-- ReShade Version -->
-                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="ReShade Version"
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind lang:Lang.FileSettingPage_ReShadeVersion}"
                            Visibility="{x:Bind OpenHoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                 <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind OpenHoYoShadeReShadeVersion, Mode=OneWay}"
                            Visibility="{x:Bind OpenHoYoShadeInstalled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />

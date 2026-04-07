@@ -1269,6 +1269,12 @@ If you are unsure what to choose, we recommend downloading and installing all sh
 	<data name="FileSettingPage_InstallStatus" xml:space="preserve">
     <value>Install Status</value>
   </data>
+    <data name="FileSettingPage_FrameworkVersion" xml:space="preserve">
+    <value>Version</value>
+  </data>
+    <data name="FileSettingPage_ReShadeVersion" xml:space="preserve">
+    <value>ReShade Version</value>
+  </data>
 	<data name="FileSettingPage_TotalSize" xml:space="preserve">
     <value>Total Size</value>
   </data>

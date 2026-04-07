@@ -949,6 +949,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Version 的本地化字符串。
+        /// </summary>
+        public static string FileSettingPage_FrameworkVersion {
+            get {
+                return ResourceManager.GetString("FileSettingPage_FrameworkVersion", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   查找类似 Install Status 的本地化字符串。
         /// </summary>
         public static string FileSettingPage_InstallStatus {
@@ -984,6 +993,15 @@ namespace HoYoShadeHub.Language {
             }
         }
         
+        /// <summary>
+        ///   查找类似 ReShade Version 的本地化字符串。
+        /// </summary>
+        public static string FileSettingPage_ReShadeVersion {
+            get {
+                return ResourceManager.GetString("FileSettingPage_ReShadeVersion", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   查找类似 Reset ReShade.ini 的本地化字符串。
         /// </summary>
