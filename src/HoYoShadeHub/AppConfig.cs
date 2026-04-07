@@ -704,7 +704,7 @@ public static class AppConfig
     /// </summary>
     public static bool StartGameWithCMD
     {
-        get => GetValue<bool>();
+        get => GetValue(true);
         set => SetValue(value);
     }
 
