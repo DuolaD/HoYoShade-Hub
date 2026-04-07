@@ -168,9 +168,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     public string Title => IsUpdateMode ? Lang.HoYoShadeDownloadView_UpdateModeTitle : Lang.HoYoShadeDownloadView_Title;
 
-    // Allow selection always (unless downloading) so users can repair/reinstall if needed
-    public bool IsHoYoShadeSelectionEnabled => !IsDownloading;
-    public bool IsOpenHoYoShadeSelectionEnabled => !IsDownloading;
+    // In normal mode: installed frameworks are checked but not selectable.
+    // In update mode: keep selectable to allow reinstall/repair.
+    public bool IsHoYoShadeSelectionEnabled => !IsDownloading && (IsUpdateMode || !IsHoYoShadeInstalled);
+    public bool IsOpenHoYoShadeSelectionEnabled => !IsDownloading && (IsUpdateMode || !IsOpenHoYoShadeInstalled);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
