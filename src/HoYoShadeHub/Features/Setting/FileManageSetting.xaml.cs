@@ -434,7 +434,7 @@ public sealed partial class FileManageSetting : PageBase
         try
         {
             _logger.LogInformation("Navigate to HoYoShade installation page");
-            WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
+            WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage(isUpdateMode: false));
         }
         catch (Exception ex)
         {
@@ -452,7 +452,10 @@ public sealed partial class FileManageSetting : PageBase
         try
         {
             _logger.LogInformation("Navigate to ReShade shader installation page");
-            WeakReferenceMessenger.Default.Send(new NavigateToReShadeDownloadPageMessage());
+            WeakReferenceMessenger.Default.Send(new NavigateToReShadeDownloadPageMessage
+            {
+                IsUpdateMode = false
+            });
         }
         catch (Exception ex)
         {
