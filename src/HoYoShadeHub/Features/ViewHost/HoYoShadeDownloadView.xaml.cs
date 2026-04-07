@@ -38,6 +38,11 @@ namespace HoYoShadeHub.Features.ViewHost;
 public sealed partial class HoYoShadeDownloadView : UserControl
 {
     private readonly ILogger<HoYoShadeDownloadView> _logger = AppConfig.GetLogger<HoYoShadeDownloadView>();
+    private static readonly HashSet<string> HiddenIncompatibleVersionTags = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "3.0.0-beta.1",
+        "3.0.0-beta.2",
+    };
 
     private sealed class PresetsSnapshot
     {
@@ -464,6 +469,12 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 bool isFirst = true;
                 foreach (var release in releases)
                 {
+                    // Hide known incompatible framework versions from the selection list.
+                    if (IsHiddenIncompatibleVersionTag(release.TagName))
+                    {
+                        continue;
+                    }
+
                     // Filter: only allow V3 and above
                     if (IsVersionV3OrAbove(release.TagName))
                     {
@@ -535,6 +546,22 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         
         // If we can't parse it, be conservative and exclude it
         return false;
+    }
+
+    private static bool IsHiddenIncompatibleVersionTag(string? tagName)
+    {
+        if (string.IsNullOrWhiteSpace(tagName))
+        {
+            return false;
+        }
+
+        string normalizedTag = tagName.Trim();
+        if (normalizedTag.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+        {
+            normalizedTag = normalizedTag[1..];
+        }
+
+        return HiddenIncompatibleVersionTags.Contains(normalizedTag);
     }
 
     [RelayCommand(CanExecute = nameof(CanDownload))]
