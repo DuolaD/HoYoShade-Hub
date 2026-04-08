@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using NuGet.Versioning;
 using HoYoShadeHub.Core;
+using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Core.HoYoPlay;
 using HoYoShadeHub.Features.GameLauncher;
 using HoYoShadeHub.Features.GameSetting;
@@ -72,6 +73,7 @@ public sealed partial class MainView : UserControl
         CheckSystemProxy();
         HotkeyManager.InitializeHotkey(this.XamlRoot.GetWindowHandle());
         _ = CheckUpdateOrShowRecentUpdateContentAsync();
+        _ = CheckFrameworkUpdatesOnStartupAsync();
         AppConfig.GetService<RpcService>().TrySetEnviromentAsync();
     }
 
@@ -92,6 +94,52 @@ public sealed partial class MainView : UserControl
         CurrentGameId = e.Item1;
         CurrentGameFeatureConfig = GameFeatureConfig.FromGameId(CurrentGameId);
         UpdateNavigationView();
+    }
+
+
+    private async Task CheckFrameworkUpdatesOnStartupAsync()
+    {
+        try
+        {
+#if CI || DEBUG
+            return;
+#endif
+#pragma warning disable CS0162
+            await Task.Delay(800);
+#pragma warning restore CS0162
+
+            var versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
+            var updateService = new HoYoShadeUpdateService(versionService);
+
+            int serverIndex = AppConfig.HoYoShadeFrameworkDownloadServer;
+            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
+            if (serverIndex == -1)
+            {
+                proxyUrl = CloudProxyManager.GetProxyUrl(0);
+            }
+
+            var hoYoShadeRelease = await updateService.CheckHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
+            if (hoYoShadeRelease != null)
+            {
+                InAppToast.MainWindow?.Information("HoYoShade", string.Format(GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"), hoYoShadeRelease.TagName), 8000);
+            }
+
+            var openHoYoShadeRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
+            if (openHoYoShadeRelease != null)
+            {
+                InAppToast.MainWindow?.Information("OpenHoYoShade", string.Format(GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"), openHoYoShadeRelease.TagName), 8000);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Check framework updates on startup");
+        }
+    }
+
+
+    private static string GetLangString(string key, string fallback)
+    {
+        return Lang.ResourceManager.GetString(key, Lang.Culture) ?? fallback;
     }
 
 
