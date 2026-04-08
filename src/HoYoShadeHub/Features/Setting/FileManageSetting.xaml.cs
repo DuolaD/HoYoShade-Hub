@@ -35,6 +35,11 @@ public sealed partial class FileManageSetting : PageBase
     private readonly ILogger<FileManageSetting> _logger = AppConfig.GetLogger<FileManageSetting>();
     private readonly HoYoShadeVersionService _versionService = new(AppConfig.UserDataFolder);
 
+    private static string GetLangString(string key, string fallback)
+    {
+        return Lang.ResourceManager.GetString(key, Lang.Culture) ?? fallback;
+    }
+
 
     public FileManageSetting()
     {
@@ -93,7 +98,7 @@ public sealed partial class FileManageSetting : PageBase
         var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
         foreach (var server in serversToUpdate)
         {
-            server.LatencyText = "Ping...";
+            server.LatencyText = GetLangString("FileSettingPage_ServerLatencyChecking", "Ping...");
             server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
         }
 
@@ -108,7 +113,7 @@ public sealed partial class FileManageSetting : PageBase
             }
             else
             {
-                server.LatencyText = "Timeout";
+                server.LatencyText = GetLangString("FileSettingPage_ServerLatencyTimeout", "Timeout");
                 server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
             }
         });
@@ -1119,7 +1124,7 @@ public sealed partial class FileManageSetting : PageBase
     {
         try
         {
-            HoYoShadeUpdateInfo = "Checking for updates...";
+            HoYoShadeUpdateInfo = GetLangString("FileSettingPage_CheckingForUpdates", "Checking for updates...");
             
             // Get proxy URL from selected server
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
@@ -1136,7 +1141,9 @@ public sealed partial class FileManageSetting : PageBase
             
             if (latestRelease != null)
             {
-                HoYoShadeUpdateInfo = $"New version available: {latestRelease.TagName}";
+                HoYoShadeUpdateInfo = string.Format(
+                    GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
+                    latestRelease.TagName);
                 _logger.LogInformation("HoYoShade update available: {Version}", latestRelease.TagName);
                 
                 // Show update dialog
@@ -1144,16 +1151,21 @@ public sealed partial class FileManageSetting : PageBase
             }
             else
             {
-                HoYoShadeUpdateInfo = "You are running the latest version";
+                HoYoShadeUpdateInfo = GetLangString("FileSettingPage_FrameworkRunningLatestVersion", "You are running the latest version");
                 _logger.LogInformation("HoYoShade is up to date");
-                InAppToast.MainWindow?.Success("HoYoShade is up to date!");
+                InAppToast.MainWindow?.Success(string.Format(
+                    GetLangString("FileSettingPage_FrameworkUpToDateToastFormat", "{0} is up to date!"),
+                    "HoYoShade"));
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Check HoYoShade update");
-            HoYoShadeUpdateInfo = $"Failed to check for updates: {ex.Message}";
-            InAppToast.MainWindow?.Error($"Failed to check for updates: {ex.Message}");
+            var checkUpdateError = string.Format(
+                GetLangString("FileSettingPage_CheckForUpdatesFailedFormat", "Failed to check for updates: {0}"),
+                ex.Message);
+            HoYoShadeUpdateInfo = checkUpdateError;
+            InAppToast.MainWindow?.Error(checkUpdateError);
         }
     }
     
@@ -1165,7 +1177,7 @@ public sealed partial class FileManageSetting : PageBase
     {
         try
         {
-            OpenHoYoShadeUpdateInfo = "Checking for updates...";
+            OpenHoYoShadeUpdateInfo = GetLangString("FileSettingPage_CheckingForUpdates", "Checking for updates...");
             
             // Get proxy URL from selected server
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
@@ -1182,7 +1194,9 @@ public sealed partial class FileManageSetting : PageBase
             
             if (latestRelease != null)
             {
-                OpenHoYoShadeUpdateInfo = $"New version available: {latestRelease.TagName}";
+                OpenHoYoShadeUpdateInfo = string.Format(
+                    GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
+                    latestRelease.TagName);
                 _logger.LogInformation("OpenHoYoShade update available: {Version}", latestRelease.TagName);
                 
                 // Show update dialog
@@ -1190,16 +1204,21 @@ public sealed partial class FileManageSetting : PageBase
             }
             else
             {
-                OpenHoYoShadeUpdateInfo = "You are running the latest version";
+                OpenHoYoShadeUpdateInfo = GetLangString("FileSettingPage_FrameworkRunningLatestVersion", "You are running the latest version");
                 _logger.LogInformation("OpenHoYoShade is up to date");
-                InAppToast.MainWindow?.Success("OpenHoYoShade is up to date!");
+                InAppToast.MainWindow?.Success(string.Format(
+                    GetLangString("FileSettingPage_FrameworkUpToDateToastFormat", "{0} is up to date!"),
+                    "OpenHoYoShade"));
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Check OpenHoYoShade update");
-            OpenHoYoShadeUpdateInfo = $"Failed to check for updates: {ex.Message}";
-            InAppToast.MainWindow?.Error($"Failed to check for updates: {ex.Message}");
+            var checkUpdateError = string.Format(
+                GetLangString("FileSettingPage_CheckForUpdatesFailedFormat", "Failed to check for updates: {0}"),
+                ex.Message);
+            OpenHoYoShadeUpdateInfo = checkUpdateError;
+            InAppToast.MainWindow?.Error(checkUpdateError);
         }
     }
     

@@ -183,6 +183,27 @@
   <data name="ThirdPartyIntegrationDialog_CopyErrorFormat" xml:space="preserve">
     <value>Copy failed: {0}</value>
   </data>
+ <data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
+        <value>You are running the latest version</value>
+    </data>
+    <data name="FileSettingPage_FrameworkUpToDateToastFormat" xml:space="preserve">
+        <value>{0} is up to date!</value>
+    </data>
+ <data name="FileSettingPage_CheckingForUpdates" xml:space="preserve">
+        <value>Checking for updates...</value>
+    </data>
+    <data name="FileSettingPage_NewVersionAvailableFormat" xml:space="preserve">
+        <value>New version available: {0}</value>
+    </data>
+    <data name="FileSettingPage_CheckForUpdatesFailedFormat" xml:space="preserve">
+        <value>Failed to check for updates: {0}</value>
+    </data>
+    <data name="FileSettingPage_ServerLatencyChecking" xml:space="preserve">
+        <value>Ping...</value>
+    </data>
+    <data name="FileSettingPage_ServerLatencyTimeout" xml:space="preserve">
+        <value>Timeout</value>
+    </data>
 	<data name="Language_English" xml:space="preserve">
     <value>English</value>
   </data>

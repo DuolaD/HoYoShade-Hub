@@ -183,6 +183,27 @@
   <data name="ThirdPartyIntegrationDialog_CopyErrorFormat" xml:space="preserve">
     <value>复制失败：{0}</value>
   </data>
+  <data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
+    <value>当前已是最新版本</value>
+  </data>
+  <data name="FileSettingPage_FrameworkUpToDateToastFormat" xml:space="preserve">
+    <value>{0} 已是最新版本！</value>
+  </data>
+  <data name="FileSettingPage_CheckingForUpdates" xml:space="preserve">
+    <value>正在检查更新...</value>
+  </data>
+  <data name="FileSettingPage_NewVersionAvailableFormat" xml:space="preserve">
+    <value>发现新版本：{0}</value>
+  </data>
+  <data name="FileSettingPage_CheckForUpdatesFailedFormat" xml:space="preserve">
+    <value>检查更新失败：{0}</value>
+  </data>
+  <data name="FileSettingPage_ServerLatencyChecking" xml:space="preserve">
+    <value>延迟检测中...</value>
+  </data>
+  <data name="FileSettingPage_ServerLatencyTimeout" xml:space="preserve">
+    <value>超时</value>
+  </data>
   <data name="Language_English" xml:space="preserve">
     <value>英语</value>
   </data>
