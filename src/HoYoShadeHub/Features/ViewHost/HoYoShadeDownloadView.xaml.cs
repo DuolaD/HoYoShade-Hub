@@ -844,6 +844,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                         else if (progress.State == 3) 
                         {
                             // Download of this variant completed successfully
+                            await RunIniBuildAsync(keyword, targetPath, _downloadCts.Token);
                             await SaveVersionInfoAfterInstallAsync(keyword, SelectedVersion.TagName, "github_release");
                             if (presetsHandling == 1 && presetsSnapshot != null)
                             {
@@ -1400,6 +1401,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 {
                     DownloadProgress = 100;
                     _logger.LogInformation("Local install completed successfully");
+
+                    await RunIniBuildAsync(packageType, targetPath, CancellationToken.None);
                     
                     // Save version info after successful installation from local package
                     try
@@ -1455,6 +1458,44 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             IsDownloading = false;
             IsControlButtonsVisible = false;
         }
+    }
+
+    private async Task RunIniBuildAsync(string frameworkName, string frameworkPath, CancellationToken cancellationToken)
+    {
+        var launcherResourcePath = Path.Combine(frameworkPath, "LauncherResource");
+        var iniBuildPath = Path.Combine(launcherResourcePath, "INIBuild.exe");
+
+        if (!File.Exists(iniBuildPath))
+        {
+            throw new FileNotFoundException($"INIBuild.exe not found for {frameworkName}: {iniBuildPath}", iniBuildPath);
+        }
+
+        _logger.LogInformation("Running INIBuild for {FrameworkName}. Path={IniBuildPath}", frameworkName, iniBuildPath);
+
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = iniBuildPath,
+                WorkingDirectory = launcherResourcePath,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        if (!process.Start())
+        {
+            throw new InvalidOperationException($"Failed to start INIBuild.exe for {frameworkName}.");
+        }
+
+        await process.WaitForExitAsync(cancellationToken);
+
+        if (process.ExitCode != 0)
+        {
+            throw new Exception($"INIBuild.exe exited with code {process.ExitCode} for {frameworkName}.");
+        }
+
+        _logger.LogInformation("INIBuild completed for {FrameworkName}", frameworkName);
     }
 
     private PresetsSnapshot CapturePresetsSnapshot(string targetPath)
