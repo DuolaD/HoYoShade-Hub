@@ -135,6 +135,17 @@ public sealed partial class FileManageSetting : PageBase
             }
         }
     } = AppConfig.EnableHoYoShadePreviewChannel;
+
+    public bool AutoCheckFrameworkUpdateOnStartup
+    {
+        get; set
+        {
+            if (SetProperty(ref field, value))
+            {
+                AppConfig.AutoCheckFrameworkUpdateOnStartup = value;
+            }
+        }
+    } = AppConfig.AutoCheckFrameworkUpdateOnStartup;
     
     /// <summary>
     /// HoYoShade 更新检测结果

@@ -119,6 +119,18 @@ public sealed partial class AboutSetting : PageBase
     } = AppConfig.EnablePreviewRelease;
 
 
+    public bool AutoCheckLauncherUpdateOnStartup
+    {
+        get; set
+        {
+            if (SetProperty(ref field, value))
+            {
+                AppConfig.AutoCheckLauncherUpdateOnStartup = value;
+            }
+        }
+    } = AppConfig.AutoCheckLauncherUpdateOnStartup;
+
+
     /// <summary>
     /// 是最新版
     /// </summary>

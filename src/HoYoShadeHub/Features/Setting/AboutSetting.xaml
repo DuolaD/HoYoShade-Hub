@@ -57,6 +57,11 @@
                           IsOn="{x:Bind EnablePreviewRelease, Mode=TwoWay}"
                           OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
                           OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
+
+            <ToggleSwitch Margin="0,8,0,0"
+                          IsOn="{x:Bind AutoCheckLauncherUpdateOnStartup, Mode=TwoWay}"
+                          OffContent="自动检测启动器更新"
+                          OnContent="自动检测启动器更新" />
             
             <!--  下载服务器选择  -->
             <TextBlock Margin="0,12,0,4"

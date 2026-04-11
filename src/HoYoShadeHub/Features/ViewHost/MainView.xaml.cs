@@ -101,6 +101,11 @@ public sealed partial class MainView : UserControl
     {
         try
         {
+            if (!AppConfig.AutoCheckFrameworkUpdateOnStartup)
+            {
+                return;
+            }
+
 #if CI || DEBUG
             return;
 #endif
@@ -302,6 +307,12 @@ public sealed partial class MainView : UserControl
                     return;
                 }
             }
+
+            if (!AppConfig.AutoCheckLauncherUpdateOnStartup)
+            {
+                return;
+            }
+
             var release = await AppConfig.GetService<UpdateService>().CheckUpdateAsync(false);
             if (release != null)
             {

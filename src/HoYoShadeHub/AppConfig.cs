@@ -327,6 +327,16 @@ public static class AppConfig
     }
 
 
+    /// <summary>
+    /// 启动时自动检测启动器更新
+    /// </summary>
+    public static bool AutoCheckLauncherUpdateOnStartup
+    {
+        get => GetValue(true);
+        set => SetValue(value);
+    }
+
+
     public static string? IgnoreVersion
     {
         get => GetValue<string>();
@@ -744,6 +754,15 @@ public static class AppConfig
     public static bool EnableHoYoShadePreviewChannel
     {
         get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// 启动时自动检测 HoYoShade 框架更新
+    /// </summary>
+    public static bool AutoCheckFrameworkUpdateOnStartup
+    {
+        get => GetValue(true);
         set => SetValue(value);
     }
 
