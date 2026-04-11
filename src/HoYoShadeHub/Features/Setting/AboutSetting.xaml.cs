@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Media;
 using HoYoShadeHub.Features.Update;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
+using HoYoShadeHub.Language;
 using HoYoShadeHub.Models;
 using System;
 using System.Linq;
@@ -28,7 +29,11 @@ public sealed partial class AboutSetting : PageBase
         UpdateDownloadServers();
         
         // Register for language change messages
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => UpdateDownloadServers());
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) =>
+        {
+            UpdateDownloadServers();
+            OnPropertyChanged(nameof(AutoCheckUpdatesText));
+        });
     }
     
     public ObservableCollection<DownloadServerItem> DownloadServers { get; }
@@ -129,6 +134,13 @@ public sealed partial class AboutSetting : PageBase
             }
         }
     } = AppConfig.AutoCheckLauncherUpdateOnStartup;
+
+    public string AutoCheckUpdatesText => GetLangString("SettingPage_AutoCheckUpdates", "Check for updates automatically");
+
+    private static string GetLangString(string key, string fallback)
+    {
+        return Lang.ResourceManager.GetString(key, Lang.Culture) ?? fallback;
+    }
 
 
     /// <summary>

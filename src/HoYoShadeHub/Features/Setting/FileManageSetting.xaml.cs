@@ -48,7 +48,11 @@ public sealed partial class FileManageSetting : PageBase
         UpdateDownloadServers();
         
         // Register for language change messages
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => UpdateDownloadServers());
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) =>
+        {
+            UpdateDownloadServers();
+            OnPropertyChanged(nameof(AutoCheckUpdatesText));
+        });
     }
     
     public ObservableCollection<DownloadServerItem> DownloadServers { get; }
@@ -146,6 +150,8 @@ public sealed partial class FileManageSetting : PageBase
             }
         }
     } = AppConfig.AutoCheckFrameworkUpdateOnStartup;
+
+    public string AutoCheckUpdatesText => GetLangString("SettingPage_AutoCheckUpdates", "Check for updates automatically");
     
     /// <summary>
     /// HoYoShade 更新检测结果

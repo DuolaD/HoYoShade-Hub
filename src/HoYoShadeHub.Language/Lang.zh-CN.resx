@@ -204,6 +204,9 @@
   <data name="FileSettingPage_ServerLatencyTimeout" xml:space="preserve">
     <value>超时</value>
   </data>
+  <data name="SettingPage_AutoCheckUpdates" xml:space="preserve">
+    <value>自动检查更新</value>
+  </data>
   <data name="Language_English" xml:space="preserve">
     <value>英语</value>
   </data>

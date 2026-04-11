@@ -204,6 +204,9 @@
     <data name="FileSettingPage_ServerLatencyTimeout" xml:space="preserve">
         <value>Timeout</value>
     </data>
+  <data name="SettingPage_AutoCheckUpdates" xml:space="preserve">
+    <value>Check for updates automatically</value>
+  </data>
 	<data name="Language_English" xml:space="preserve">
     <value>English</value>
   </data>

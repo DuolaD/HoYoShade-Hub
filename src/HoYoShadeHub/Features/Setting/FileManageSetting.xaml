@@ -169,8 +169,8 @@
                                   OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
                                   OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
                     <ToggleSwitch IsOn="{x:Bind AutoCheckFrameworkUpdateOnStartup, Mode=TwoWay}"
-                                  OffContent="自动检测框架更新"
-                                  OnContent="自动检测框架更新" />
+                                  OffContent="{x:Bind AutoCheckUpdatesText, Mode=OneWay}"
+                                  OnContent="{x:Bind AutoCheckUpdatesText, Mode=OneWay}" />
                 </StackPanel>
                 
                 <StackPanel Grid.Column="1" Spacing="4">
