@@ -11,7 +11,7 @@
              mc:Ignorable="d">
 
     <ScrollViewer x:Name="scr" Background="{x:Null}">
-        <StackPanel>
+        <StackPanel Margin="0,0,0,20">
 
             <!--  快捷键  -->
             <TextBlock FontSize="20" Text="{x:Bind lang:Lang.SettingPage_KeyboardShortcuts}" />

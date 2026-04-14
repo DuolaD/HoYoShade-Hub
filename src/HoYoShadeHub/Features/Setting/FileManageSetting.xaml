@@ -13,7 +13,7 @@
              mc:Ignorable="d">
 
     <ScrollViewer>
-        <StackPanel>
+        <StackPanel Margin="0,0,0,20">
 
 
             <!--  用户数据文件夹  -->
