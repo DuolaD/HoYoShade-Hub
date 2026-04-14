@@ -378,6 +378,9 @@
 	<data name="SettingPage_JoinPreviewReleaseChannel" xml:space="preserve">
     <value>Join Preview Release Channel</value>
   </data>
+   <data name="SettingPage_JoinPreviewReleaseChannelTip" xml:space="preserve">
+    <value>Get the latest experimental features and cutting-edge capabilities, but stability may be lower than the stable release.</value>
+  </data>
 	<data name="SettingPage_ReselectDataFolder" xml:space="preserve">
     <value>Reselect Data Folder</value>
   </data>

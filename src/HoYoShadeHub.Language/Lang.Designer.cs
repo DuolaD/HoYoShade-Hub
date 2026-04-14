@@ -3942,6 +3942,15 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("SettingPage_JoinPreviewReleaseChannel", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Get the latest experimental features and cutting-edge capabilities, but stability may be lower than the stable release. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_JoinPreviewReleaseChannelTip {
+            get {
+                return ResourceManager.GetString("SettingPage_JoinPreviewReleaseChannelTip", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   查找类似 Keep RPC Service Running in the Background 的本地化字符串。

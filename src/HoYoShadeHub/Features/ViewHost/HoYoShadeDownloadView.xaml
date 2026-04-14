@@ -104,10 +104,28 @@
                            FontSize="11" />
                 
                 <!-- Preview Channel Toggle -->
-                <ToggleSwitch IsOn="{x:Bind EnablePreviewChannel, Mode=TwoWay}"
-                              OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
-                              OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
-                              Margin="0,2,0,0" />
+                <StackPanel Margin="0,2,0,0"
+                            Orientation="Horizontal"
+                            Spacing="8">
+                    <ToggleSwitch IsOn="{x:Bind EnablePreviewChannel, Mode=TwoWay}"
+                                  OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
+                                  OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
+                    <Button Margin="0,2,0,0"
+                            Padding="4"
+                            VerticalAlignment="Center"
+                            Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
+                        <FontIcon FontSize="16"
+                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                  Glyph="&#xE9CE;" />
+                        <Button.Flyout>
+                            <Flyout>
+                                <TextBlock MaxWidth="380"
+                                           Text="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannelTip}"
+                                           TextWrapping="Wrap" />
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
             </StackPanel>
 
             <!-- Flavor Selection -->

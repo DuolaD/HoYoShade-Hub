@@ -378,6 +378,9 @@
   <data name="SettingPage_JoinPreviewReleaseChannel" xml:space="preserve">
     <value>加入预览版更新渠道</value>
   </data>
+  <data name="SettingPage_JoinPreviewReleaseChannelTip" xml:space="preserve">
+    <value>获取最新的实验性功能和前沿特性，但稳定性可能不如正式版。</value>
+  </data>
   <data name="SettingPage_ReselectDataFolder" xml:space="preserve">
     <value>重新选择数据文件夹</value>
   </data>
