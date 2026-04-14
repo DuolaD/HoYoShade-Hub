@@ -11,11 +11,11 @@ public class MetadataClient
 {
 
 
-    private const string API_PREFIX_CLOUDFLARE = "https://starward.scighost.com/metadata";
+    private const string API_PREFIX_CLOUDFLARE = "https://cdn.autumn.recipe.2dcd.cf.storage.hub.hoyosha.de/https://raw.githubusercontent.com/DuolaD/HoYoShade-Hub/metadata";
 
-    private const string API_PREFIX_GITHUB = "https://raw.githubusercontent.com/Scighost/HoYoShadeHub/metadata";
+    private const string API_PREFIX_GITHUB = "https://raw.githubusercontent.com/DuolaD/HoYoShade-Hub/metadata";
 
-    private const string API_PREFIX_JSDELIVR = "https://cdn.jsdelivr.net/gh/Scighost/HoYoShadeHub@metadata";
+    private const string API_PREFIX_JSDELIVR = "https://cdn.jsdelivr.net/gh/DuolaD/HoYoShade-Hub@metadata";
 
 
     private string API_PREFIX = API_PREFIX_CLOUDFLARE;
