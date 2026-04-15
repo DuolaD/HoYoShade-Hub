@@ -24,6 +24,7 @@ public static class CloudflareDohService
         AutomaticDecompression = DecompressionMethods.All,
         EnableMultipleHttp2Connections = true,
         EnableMultipleHttp3Connections = true,
+        ConnectCallback = ConnectWithDohAsync,
     })
     {
         DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
