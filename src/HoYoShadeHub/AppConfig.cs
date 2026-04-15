@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using HoYoShadeHub.Core;
 using HoYoShadeHub.Core.HoYoPlay;
+using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Core.SelfQuery;
 using HoYoShadeHub.Features.Background;
 using HoYoShadeHub.Features.Database;
@@ -254,6 +255,7 @@ public static class AppConfig
             var sc = new ServiceCollection();
             sc.AddMemoryCache();
             sc.AddLogging(c => c.AddSerilog(Log.Logger));
+            CloudflareDohService.Enabled = EnableCloudflareDohViaCloudflare;
             sc.AddHttpClient().ConfigureHttpClientDefaults(config =>
             {
                 config.RemoveAllLoggers();
@@ -262,12 +264,7 @@ public static class AppConfig
                     client.DefaultRequestHeaders.Add("User-Agent", $"HoYoShadeHub/{AppVersion}");
                     client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
                 });
-                config.ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-                {
-                    AutomaticDecompression = DecompressionMethods.All,
-                    EnableMultipleHttp2Connections = true,
-                    EnableMultipleHttp3Connections = true,
-                });
+                config.ConfigurePrimaryHttpMessageHandler(() => CloudflareDohService.CreateSocketsHttpHandler());
             });
 
             sc.AddSingleton<HoYoPlayClient>();
@@ -452,6 +449,17 @@ public static class AppConfig
     {
         get => GetValue(true);
         set => SetValue(value);
+    }
+
+
+    public static bool EnableCloudflareDohViaCloudflare
+    {
+        get => GetValue(false);
+        set
+        {
+            SetValue(value);
+            CloudflareDohService.Enabled = value;
+        }
     }
 
 

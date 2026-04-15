@@ -60,6 +60,11 @@
                           OffContent="{x:Bind lang:Lang.SettingPage_DefaultDisableVideoBackgroundPlayback}"
                           OnContent="{x:Bind lang:Lang.SettingPage_DefaultDisableVideoBackgroundPlayback}" />
 
+            <ToggleSwitch Margin="0,12,0,0"
+                          IsOn="{x:Bind EnableCloudflareDohViaCloudflare, Mode=TwoWay}"
+                          OffContent="启用DoH(DNS over HTTPS) via Cloudflare"
+                          OnContent="启用DoH(DNS over HTTPS) via Cloudflare" />
+
 
             <MenuFlyoutSeparator Margin="0,20,0,0" />
 

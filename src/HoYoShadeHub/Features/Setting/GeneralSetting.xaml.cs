@@ -44,6 +44,17 @@ public sealed partial class GeneralSetting : PageBase
     }
 
 
+    public bool EnableCloudflareDohViaCloudflare
+    {
+        get => AppConfig.EnableCloudflareDohViaCloudflare;
+        set
+        {
+            AppConfig.EnableCloudflareDohViaCloudflare = value;
+            OnPropertyChanged();
+        }
+    }
+
+
 
 
     #region 语言

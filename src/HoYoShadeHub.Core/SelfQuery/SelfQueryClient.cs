@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
+using HoYoShadeHub.Core.Networking;
 
 namespace HoYoShadeHub.Core.SelfQuery;
 
@@ -17,7 +18,7 @@ public class SelfQueryClient
     {
         if (httpClient is null)
         {
-            _httpClient = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All }) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+            _httpClient = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
         }
         else
         {

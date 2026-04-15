@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using HoYoShadeHub.Core.Networking;
 
 namespace HoYoShadeHub.Services.Cache;
 
@@ -80,7 +81,7 @@ public abstract class CacheBase<T>
     /// <summary>
     /// Gets instance of <see cref="HttpClient"/>
     /// </summary>
-    protected HttpClient HttpClient => _httpClient ??= new(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All }) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+    protected HttpClient HttpClient => _httpClient ??= new(CloudflareDohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
 
 
     /// <summary>

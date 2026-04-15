@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using HoYoShadeHub.Core.Networking;
 
 namespace HoYoShadeHub.Core.HoYoPlay;
 
@@ -15,7 +16,7 @@ public class HoYoPlayClient
 
     public HoYoPlayClient(HttpClient? httpClient = null)
     {
-        _httpClient = httpClient ?? new(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All }) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+        _httpClient = httpClient ?? new(CloudflareDohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
     }
 
 

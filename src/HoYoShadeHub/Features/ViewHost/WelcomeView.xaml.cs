@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
+using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.Database;
 using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Helpers;
@@ -265,7 +266,7 @@ public sealed partial class WelcomeView : UserControl
             const string url = "https://speed.cloudflare.com/__down?bytes=102400";
             NetworkDelay = null;
             NetworkSpeed = null;
-            using HttpClient httpClient = new HttpClient(new SocketsHttpHandler { AutomaticDecompression = DecompressionMethods.All })
+            using HttpClient httpClient = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
             {
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
             };

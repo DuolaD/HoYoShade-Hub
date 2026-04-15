@@ -1,4 +1,5 @@
 using HoYoShadeHub.Core.Metadata.Github;
+using HoYoShadeHub.Core.Networking;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -33,7 +34,7 @@ public class MetadataClient
     public MetadataClient(int apiIndex = 0, HttpClient? httpClient = null)
     {
         SetApiPrefix(apiIndex);
-        _httpClient = httpClient ?? new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All }) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+        _httpClient = httpClient ?? new HttpClient(CloudflareDohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
     }
 
 
