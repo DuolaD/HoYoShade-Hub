@@ -1,4 +1,5 @@
 using HoYoShadeHub.Core.Metadata.Github;
+using HoYoShadeHub.Core.Networking;
 using NuGet.Versioning;
 using System;
 using System.Linq;
@@ -124,7 +125,10 @@ public class HoYoShadeUpdateService
     {
         try
         {
-            using var client = new HttpClient();
+            using var client = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+            {
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+            };
             client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
 
             string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";

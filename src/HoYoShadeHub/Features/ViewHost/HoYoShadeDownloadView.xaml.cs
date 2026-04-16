@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using NuGet.Versioning;
 using HoYoShadeHub.Core.Metadata.Github;
 using HoYoShadeHub.Core.HoYoShade;
+using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.RPC;
 using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Language;
@@ -405,7 +406,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             IsLoadingVersions = true;
             StatusMessage = Lang.HoYoShadeDownloadView_StatusFetchingReleases;
             
-            using var client = new HttpClient();
+            using var client = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+            {
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+            };
             client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
             
             string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
@@ -1214,7 +1218,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 Debug.WriteLine($"Found SHA256 asset: {sha256Asset.Name}");
                 
                 // Download SHA256 file and compare
-                using var httpClient = new HttpClient();
+                using var httpClient = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+                {
+                    DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+                };
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
                 
                 string sha256Url = sha256Asset.BrowserDownloadUrl;

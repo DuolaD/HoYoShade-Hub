@@ -68,6 +68,7 @@ public static class CloudflareDohService
             EnableMultipleHttp2Connections = true,
             EnableMultipleHttp3Connections = true,
             ConnectCallback = ConnectWithDohAsync,
+            PooledConnectionIdleTimeout = TimeSpan.FromSeconds(15),
         };
     }
 
@@ -125,13 +126,33 @@ public static class CloudflareDohService
         var addresses = await ResolveHostAddressesAsync(host, cancellationToken);
         addresses = OrderAddressesByPreference(addresses);
 
+        if (await TryConnectAsync(addresses, context.DnsEndPoint.Port, cancellationToken) is Stream primaryStream)
+        {
+            return primaryStream;
+        }
+
+        var fallbackFamilyAddresses = await ResolveFallbackFamilyAddressesAsync(host, addresses, cancellationToken);
+        fallbackFamilyAddresses = OrderAddressesByPreference(fallbackFamilyAddresses);
+
+        if (await TryConnectAsync(fallbackFamilyAddresses, context.DnsEndPoint.Port, cancellationToken) is Stream fallbackStream)
+        {
+            return fallbackStream;
+        }
+
+        throw new SocketException((int)SocketError.HostNotFound);
+    }
+
+
+
+    private static async Task<Stream?> TryConnectAsync(IPAddress[] addresses, int port, CancellationToken cancellationToken)
+    {
         Exception? lastException = null;
         foreach (var ip in addresses)
         {
             var socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                await socket.ConnectAsync(ip, context.DnsEndPoint.Port, cancellationToken);
+                await socket.ConnectAsync(ip, port, cancellationToken);
                 return new NetworkStream(socket, ownsSocket: true);
             }
             catch (Exception ex)
@@ -141,7 +162,8 @@ public static class CloudflareDohService
             }
         }
 
-        throw lastException ?? new SocketException((int)SocketError.HostNotFound);
+        _ = lastException;
+        return null;
     }
 
 
@@ -241,6 +263,67 @@ public static class CloudflareDohService
         }
 
         return (OrderAddressesByPreference(addresses), TimeSpan.FromSeconds(minTtl));
+    }
+
+
+
+    private static async Task<IPAddress[]> ResolveFallbackFamilyAddressesAsync(string host, IPAddress[] primaryAddresses, CancellationToken cancellationToken)
+    {
+        if (IPAddress.TryParse(host, out _))
+        {
+            return [];
+        }
+
+        bool hasLocalIPv4 = HasLocalIPv4();
+        AddressFamily secondaryFamily = hasLocalIPv4 ? AddressFamily.InterNetworkV6 : AddressFamily.InterNetwork;
+
+        if (primaryAddresses.Any(ip => ip.AddressFamily == secondaryFamily))
+        {
+            return [];
+        }
+
+        IPAddress[] fallbackAddresses;
+        if (string.Equals(host, "cloudflare-dns.com", StringComparison.OrdinalIgnoreCase))
+        {
+            lock (_lock)
+            {
+                fallbackAddresses = _cloudflareDohServerAddresses
+                    .Where(ip => ip.AddressFamily == secondaryFamily)
+                    .ToArray();
+            }
+
+            if (fallbackAddresses.Length == 0)
+            {
+                fallbackAddresses = (await Dns.GetHostAddressesAsync(host, cancellationToken))
+                    .Where(ip => ip.AddressFamily == secondaryFamily)
+                    .ToArray();
+            }
+        }
+        else
+        {
+            string fallbackType = hasLocalIPv4 ? "AAAA" : "A";
+            var fallbackResult = await QueryDohRecordSafeAsync(host, fallbackType, cancellationToken);
+            fallbackAddresses = fallbackResult.Addresses;
+
+            if (fallbackAddresses.Length == 0)
+            {
+                fallbackAddresses = await Dns.GetHostAddressesAsync(host, cancellationToken);
+            }
+
+            fallbackAddresses = fallbackAddresses.Where(ip => ip.AddressFamily == secondaryFamily).ToArray();
+        }
+
+        if (fallbackAddresses.Length > 0)
+        {
+            var merged = primaryAddresses.Concat(fallbackAddresses).Distinct().ToArray();
+            _dnsCache[host] = new DnsCacheItem
+            {
+                Addresses = OrderAddressesByPreference(merged),
+                ExpireAt = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(1),
+            };
+        }
+
+        return fallbackAddresses;
     }
 
 

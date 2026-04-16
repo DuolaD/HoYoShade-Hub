@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using HoYoShadeHub.Core.HoYoShade;
+using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.RPC;
 using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Helpers;
@@ -498,7 +499,10 @@ public sealed partial class ReShadeDownloadView : UserControl
         try
         {
             StatusMessage = "Fetching package lists...";
-            using var client = new HttpClient();
+            using var client = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+            {
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+            };
             
             // Get proxy URL based on selected server
             int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);

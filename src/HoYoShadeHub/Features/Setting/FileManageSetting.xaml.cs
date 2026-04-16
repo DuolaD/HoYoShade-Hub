@@ -6,6 +6,7 @@ using Microsoft.Windows.AppLifecycle;
 using SharpSevenZip;
 using HoYoShadeHub.Core;
 using HoYoShadeHub.Core.HoYoShade;
+using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.Database;
 using HoYoShadeHub.Features.GameLauncher;
 using HoYoShadeHub.Features.ViewHost;
@@ -1266,7 +1267,10 @@ public sealed partial class FileManageSetting : PageBase
             try
             {
                 var apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{newVersion}";
-                using var httpClient = new System.Net.Http.HttpClient();
+                using var httpClient = new System.Net.Http.HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+                {
+                    DefaultVersionPolicy = System.Net.Http.HttpVersionPolicy.RequestVersionOrHigher,
+                };
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
                 
                 var response = await httpClient.GetStringAsync(apiUrl);
