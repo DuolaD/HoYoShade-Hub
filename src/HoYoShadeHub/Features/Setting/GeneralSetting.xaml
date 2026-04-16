@@ -56,7 +56,7 @@
 
             <TextBlock Margin="0,20,0,0"
                        FontSize="20"
-                       Text="主界面" />
+                       Text="{x:Bind lang:Lang.SettingPage_MainInterface}" />
 
 
             <!--  禁用自动播放视频背景  -->
@@ -67,7 +67,7 @@
 
             <TextBlock Margin="0,20,0,0"
                        FontSize="20"
-                       Text="网络" />
+                       Text="{x:Bind lang:Lang.SettingPage_Network}" />
 
             <ToggleSwitch Margin="0,12,0,0"
                           IsOn="{x:Bind EnableCloudflareDohViaCloudflare, Mode=TwoWay}"

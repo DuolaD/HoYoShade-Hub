@@ -1784,4 +1784,10 @@
   <data name="UninstallReShadeFromClient_Completed" xml:space="preserve">
     <value>已完成卸載/還原ReShade對此用戶端的更動。</value>
   </data>
+  <data name="SettingPage_MainInterface" xml:space="preserve">
+    <value>主介面</value>
+  </data>
+  <data name="SettingPage_Network" xml:space="preserve">
+    <value>網路</value>
+  </data>
 </root>

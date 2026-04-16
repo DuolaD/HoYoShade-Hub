@@ -1784,4 +1784,10 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="UninstallReShadeFromClient_Completed" xml:space="preserve">
     <value>已經完成卸載/還原ReShade對呢個客戶端嘅改動。</value>
   </data>
+  <data name="SettingPage_MainInterface" xml:space="preserve">
+    <value>主介面</value>
+  </data>
+  <data name="SettingPage_Network" xml:space="preserve">
+    <value>網絡</value>
+  </data>
 </root>

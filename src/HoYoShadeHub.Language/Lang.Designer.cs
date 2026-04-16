@@ -3978,6 +3978,24 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("SettingPage_Language", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Main Interface 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_MainInterface {
+            get {
+                return ResourceManager.GetString("SettingPage_MainInterface", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Network 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_Network {
+            get {
+                return ResourceManager.GetString("SettingPage_Network", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   查找类似 Last backup 的本地化字符串。
