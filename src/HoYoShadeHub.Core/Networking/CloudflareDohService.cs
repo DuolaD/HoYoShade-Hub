@@ -1,10 +1,10 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Buffers.Binary;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text.Json;
 
 namespace HoYoShadeHub.Core.Networking;
 
@@ -401,48 +401,176 @@ public static class CloudflareDohService
 
     private static async Task<(IPAddress[] Addresses, long MinTtl)> QueryDohRecordAsync(string host, string type, CancellationToken cancellationToken)
     {
-        string url = $"https://cloudflare-dns.com/dns-query?name={Uri.EscapeDataString(host)}&type={type}";
+        ushort queryType = type switch
+        {
+            "A" => 1,
+            "AAAA" => 28,
+            _ => throw new ArgumentOutOfRangeException(nameof(type)),
+        };
+
+        byte[] queryMessage = BuildDnsQueryMessage(host, queryType);
+        string dnsParam = Convert.ToBase64String(queryMessage).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        string url = $"https://cloudflare-dns.com/dns-query?dns={dnsParam}";
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Accept.ParseAdd("application/dns-json");
+        request.Headers.Accept.ParseAdd("application/dns-message");
 
         using var response = await _dohHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
+        byte[] responseMessage = await response.Content.ReadAsByteArrayAsync(cancellationToken);
+        return ParseDnsResponse(responseMessage, queryType);
+    }
 
-        if (document.RootElement.TryGetProperty("Status", out var status) && status.GetInt32() != 0)
+
+
+    private static byte[] BuildDnsQueryMessage(string host, ushort queryType)
+    {
+        var labels = host.Trim('.').Split('.', StringSplitOptions.RemoveEmptyEntries);
+        if (labels.Length == 0)
+        {
+            throw new ArgumentException("Invalid host.", nameof(host));
+        }
+
+        int qnameLength = labels.Sum(x => x.Length + 1) + 1;
+        byte[] message = new byte[12 + qnameLength + 4];
+        ushort id = (ushort)Random.Shared.Next(ushort.MaxValue + 1);
+        BinaryPrimitives.WriteUInt16BigEndian(message.AsSpan(0, 2), id);
+        BinaryPrimitives.WriteUInt16BigEndian(message.AsSpan(2, 2), 0x0100);
+        BinaryPrimitives.WriteUInt16BigEndian(message.AsSpan(4, 2), 1);
+
+        int offset = 12;
+        foreach (var label in labels)
+        {
+            int byteCount = System.Text.Encoding.ASCII.GetByteCount(label);
+            if (byteCount == 0 || byteCount > 63)
+            {
+                throw new ArgumentException("Invalid host.", nameof(host));
+            }
+
+            message[offset++] = (byte)byteCount;
+            System.Text.Encoding.ASCII.GetBytes(label, message.AsSpan(offset, byteCount));
+            offset += byteCount;
+        }
+
+        message[offset++] = 0;
+        BinaryPrimitives.WriteUInt16BigEndian(message.AsSpan(offset, 2), queryType);
+        offset += 2;
+        BinaryPrimitives.WriteUInt16BigEndian(message.AsSpan(offset, 2), 1);
+
+        return message;
+    }
+
+
+
+    private static (IPAddress[] Addresses, long MinTtl) ParseDnsResponse(byte[] message, ushort expectedType)
+    {
+        if (message.Length < 12)
         {
             return ([], 0);
         }
 
-        if (!document.RootElement.TryGetProperty("Answer", out var answer) || answer.ValueKind != JsonValueKind.Array)
+        ushort flags = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(2, 2));
+        int rcode = flags & 0x000F;
+        if (rcode != 0)
         {
             return ([], 0);
         }
 
-        List<IPAddress> addresses = new();
+        ushort questionCount = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(4, 2));
+        ushort answerCount = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(6, 2));
+
+        int offset = 12;
+        for (int i = 0; i < questionCount; i++)
+        {
+            if (!TrySkipDnsName(message, ref offset) || offset + 4 > message.Length)
+            {
+                return ([], 0);
+            }
+
+            offset += 4;
+        }
+
+        List<IPAddress> addresses = [];
         long minTtl = 0;
-        foreach (var item in answer.EnumerateArray())
-        {
-            if (!item.TryGetProperty("data", out var dataElement))
-            {
-                continue;
-            }
-            string? data = dataElement.GetString();
-            if (string.IsNullOrWhiteSpace(data) || !IPAddress.TryParse(data, out var address))
-            {
-                continue;
-            }
-            addresses.Add(address);
 
-            if (item.TryGetProperty("TTL", out var ttlElement))
+        for (int i = 0; i < answerCount; i++)
+        {
+            if (!TrySkipDnsName(message, ref offset) || offset + 10 > message.Length)
             {
-                long ttl = ttlElement.GetInt64();
-                minTtl = minTtl == 0 ? ttl : Math.Min(minTtl, ttl);
+                return (addresses.ToArray(), minTtl);
             }
+
+            ushort type = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(offset, 2));
+            offset += 2;
+            _ = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(offset, 2));
+            offset += 2;
+            uint ttl = BinaryPrimitives.ReadUInt32BigEndian(message.AsSpan(offset, 4));
+            offset += 4;
+            ushort rdLength = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(offset, 2));
+            offset += 2;
+
+            if (offset + rdLength > message.Length)
+            {
+                return (addresses.ToArray(), minTtl);
+            }
+
+            if (type == expectedType)
+            {
+                if (type == 1 && rdLength == 4)
+                {
+                    addresses.Add(new IPAddress(message.AsSpan(offset, 4)));
+                    minTtl = minTtl == 0 ? ttl : Math.Min(minTtl, ttl);
+                }
+                else if (type == 28 && rdLength == 16)
+                {
+                    addresses.Add(new IPAddress(message.AsSpan(offset, 16)));
+                    minTtl = minTtl == 0 ? ttl : Math.Min(minTtl, ttl);
+                }
+            }
+
+            offset += rdLength;
         }
 
         return (addresses.ToArray(), minTtl);
+    }
+
+
+
+    private static bool TrySkipDnsName(byte[] message, ref int offset)
+    {
+        int index = offset;
+        while (index < message.Length)
+        {
+            byte length = message[index];
+
+            if (length == 0)
+            {
+                index++;
+                offset = index;
+                return true;
+            }
+
+            if ((length & 0xC0) == 0xC0)
+            {
+                if (index + 1 >= message.Length)
+                {
+                    return false;
+                }
+
+                index += 2;
+                offset = index;
+                return true;
+            }
+
+            index++;
+            if (index + length > message.Length)
+            {
+                return false;
+            }
+
+            index += length;
+        }
+
+        return false;
     }
 }
