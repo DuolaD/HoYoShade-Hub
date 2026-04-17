@@ -734,6 +734,9 @@
 	<data name="WelcomeView_BeforeStartingSomeNecessaryEnvironmentChecksAreRequired" xml:space="preserve">
     <value>Before starting, some necessary environment checks are required.</value>
   </data>
+    <data name="WelcomeView_DohRecommendation" xml:space="preserve">
+    <value>If you encounter connectivity issues, or your network environment is censored, we recommend enabling DoH.</value>
+  </data>
 	<data name="WelcomeView_NetworkStatus" xml:space="preserve">
     <value>Network Status</value>
   </data>

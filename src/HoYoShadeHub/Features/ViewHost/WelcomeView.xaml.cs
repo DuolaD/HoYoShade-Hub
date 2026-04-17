@@ -2,16 +2,20 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.Web.WebView2.Core;
 using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.Database;
 using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
+using HoYoShadeHub.Models;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -29,6 +33,7 @@ public sealed partial class WelcomeView : UserControl
     public WelcomeView()
     {
         this.InitializeComponent();
+        DohProviders = new ObservableCollection<DownloadServerItem>();
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
     }
@@ -55,6 +60,65 @@ public sealed partial class WelcomeView : UserControl
     public string? NetworkSpeed { get; set => SetProperty(ref field, value); }
 
 
+    public string DohRecommendationText => GetLangString("WelcomeView_DohRecommendation");
+
+
+    public string DohSwitchText => GetLangString("SettingPage_DohDnsOverHttps");
+
+
+    private bool _welcomeEnableDoh;
+
+
+    public bool EnableDoh
+    {
+        get => _welcomeEnableDoh;
+        set
+        {
+            if (_welcomeEnableDoh == value)
+            {
+                return;
+            }
+
+            _welcomeEnableDoh = value;
+            AppConfig.EnableDoh = value;
+            OnPropertyChanged();
+            TestSpeedCommand.Execute(null);
+        }
+    }
+
+
+    public ObservableCollection<DownloadServerItem> DohProviders { get; }
+
+
+    private DownloadServerItem? _selectedDohProvider;
+
+
+    public DownloadServerItem? SelectedDohProvider
+    {
+        get => _selectedDohProvider;
+        set
+        {
+            if (ReferenceEquals(_selectedDohProvider, value))
+            {
+                return;
+            }
+
+            _selectedDohProvider = value;
+            if (value != null)
+            {
+                var provider = (DohProvider)value.ServerIndex;
+                if (AppConfig.DohProvider != provider)
+                {
+                    AppConfig.DohProvider = provider;
+                }
+            }
+
+            OnPropertyChanged();
+            TestSpeedCommand.Execute(null);
+        }
+    }
+
+
     public bool CanStartHoYoShadeHub { get; set => SetProperty(ref field, value); }
 
 
@@ -64,9 +128,18 @@ public sealed partial class WelcomeView : UserControl
     private bool _languageInitialized;
 
 
+    private static string GetLangString(string key)
+    {
+        return Lang.ResourceManager.GetString(key, Lang.Culture)
+            ?? Lang.ResourceManager.GetString(key, CultureInfo.InvariantCulture)
+            ?? key;
+    }
+
+
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         InitializeLanguageSelector();
+        InitializeDohProviders();
         IsWin11 = Environment.OSVersion.Version >= new Version(10, 0, 22000);
         InitializeDefaultUserDataFolder();
         await CheckWritePermissionAsync();
@@ -153,8 +226,88 @@ public sealed partial class WelcomeView : UserControl
 
     private void OnLanguageChanged()
     {
+        RefreshDohProviderNames();
+        OnPropertyChanged(nameof(DohRecommendationText));
+        OnPropertyChanged(nameof(DohSwitchText));
         // Re-check write permission to update error messages in current language
         _ = CheckWritePermissionAsync();
+    }
+
+
+    private void InitializeDohProviders()
+    {
+        _welcomeEnableDoh = AppConfig.EnableDoh;
+        OnPropertyChanged(nameof(EnableDoh));
+
+        int savedProvider = (int)AppConfig.DohProvider;
+
+        DohProviders.Clear();
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Cloudflare), ServerIndex = (int)DohProvider.Cloudflare });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Google), ServerIndex = (int)DohProvider.Google });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.CleanBrowsing), ServerIndex = (int)DohProvider.CleanBrowsing });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.OpenDns), ServerIndex = (int)DohProvider.OpenDns });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Quad9), ServerIndex = (int)DohProvider.Quad9 });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.AdGuard), ServerIndex = (int)DohProvider.AdGuard });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Aliyun), ServerIndex = (int)DohProvider.Aliyun });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Tencent), ServerIndex = (int)DohProvider.Tencent });
+
+        SelectedDohProvider = DohProviders.FirstOrDefault(x => x.ServerIndex == savedProvider) ?? DohProviders[0];
+        _ = UpdateDohLatenciesAsync();
+    }
+
+
+    private static string GetDohProviderName(DohProvider provider)
+    {
+        return provider switch
+        {
+            DohProvider.Aliyun => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
+            DohProvider.Tencent => Lang.HoYoShadeDownloadView_Server_TencentCloud,
+            DohProvider.OpenDns => "OpenDNS",
+            _ => provider.ToString(),
+        };
+    }
+
+
+    private void RefreshDohProviderNames()
+    {
+        foreach (var provider in DohProviders)
+        {
+            provider.Name = GetDohProviderName((DohProvider)provider.ServerIndex);
+        }
+    }
+
+
+    private async Task UpdateDohLatenciesAsync()
+    {
+        foreach (var provider in DohProviders)
+        {
+            provider.LatencyText = "Tcping...";
+            provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
+        }
+
+        var tasks = DohProviders.Select(async provider =>
+        {
+            long latency = await DohService.TcpPingAsync((DohProvider)provider.ServerIndex);
+            if (latency >= 0)
+            {
+                provider.LatencyText = $"{latency}ms";
+                if (latency <= 600)
+                {
+                    provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.LimeGreen);
+                }
+                else
+                {
+                    provider.LatencyColor = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0xC5, 0x7F, 0x0A));
+                }
+            }
+            else
+            {
+                provider.LatencyText = "Timeout";
+                provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+        });
+
+        await Task.WhenAll(tasks);
     }
 
 

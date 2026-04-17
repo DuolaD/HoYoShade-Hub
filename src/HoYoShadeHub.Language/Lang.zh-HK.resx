@@ -734,6 +734,9 @@
   <data name="WelcomeView_BeforeStartingSomeNecessaryEnvironmentChecksAreRequired" xml:space="preserve">
     <value>開始之前仲要檢查一啲必要嘅環境。</value>
   </data>
+  <data name="WelcomeView_DohRecommendation" xml:space="preserve">
+    <value>如果你遇到連線問題，或者你嘅網絡環境受到審查，我哋建議你開啟 DoH。</value>
+  </data>
   <data name="WelcomeView_NetworkStatus" xml:space="preserve">
     <value>網路狀態</value>
   </data>
