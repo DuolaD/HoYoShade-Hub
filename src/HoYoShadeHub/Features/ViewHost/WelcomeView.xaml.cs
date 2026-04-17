@@ -66,6 +66,9 @@ public sealed partial class WelcomeView : UserControl
     public string DohSwitchText => GetLangString("SettingPage_DohDnsOverHttps");
 
 
+    public string DohProviderText => GetLangString("SettingPage_DohProvider");
+
+
     private bool _welcomeEnableDoh;
 
 
@@ -229,6 +232,7 @@ public sealed partial class WelcomeView : UserControl
         RefreshDohProviderNames();
         OnPropertyChanged(nameof(DohRecommendationText));
         OnPropertyChanged(nameof(DohSwitchText));
+        OnPropertyChanged(nameof(DohProviderText));
         // Re-check write permission to update error messages in current language
         _ = CheckWritePermissionAsync();
     }

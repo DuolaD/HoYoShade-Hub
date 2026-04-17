@@ -205,37 +205,46 @@
                               OffContent="{x:Bind DohSwitchText}"
                               OnContent="{x:Bind DohSwitchText}" />
 
-                <ComboBox MinWidth="300"
-                          VerticalAlignment="Center"
-                          ItemsSource="{x:Bind DohProviders}"
-                          SelectedItem="{x:Bind SelectedDohProvider, Mode=TwoWay}"
-                          Visibility="{x:Bind EnableDoh, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="models:DownloadServerItem">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Margin="0,0,16,0" VerticalAlignment="Center" Text="{x:Bind Name}" />
-                                <Border Grid.Column="1"
-                                        Padding="6,2"
-                                        VerticalAlignment="Center"
-                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="4"
-                                        Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
-                                    <TextBlock FontSize="12"
-                                               VerticalAlignment="Center"
-                                               Foreground="{x:Bind LatencyColor, Mode=OneWay}"
-                                               Text="{x:Bind LatencyText, Mode=OneWay}"
-                                               UseLayoutRounding="True" />
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <StackPanel Orientation="Horizontal"
+                            Spacing="8"
+                            VerticalAlignment="Center"
+                            Visibility="{x:Bind EnableDoh, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <TextBlock VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               IsTextScaleFactorEnabled="False"
+                               Text="{x:Bind DohProviderText}" />
+
+                    <ComboBox MinWidth="220"
+                              VerticalAlignment="Center"
+                              ItemsSource="{x:Bind DohProviders}"
+                              SelectedItem="{x:Bind SelectedDohProvider, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:DownloadServerItem">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Margin="0,0,16,0" VerticalAlignment="Center" Text="{x:Bind Name}" />
+                                    <Border Grid.Column="1"
+                                            Padding="6,2"
+                                            VerticalAlignment="Center"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
+                                        <TextBlock FontSize="12"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{x:Bind LatencyColor, Mode=OneWay}"
+                                                   Text="{x:Bind LatencyText, Mode=OneWay}"
+                                                   UseLayoutRounding="True" />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
             </StackPanel>
 
             <!--  透明/动画效果  -->
