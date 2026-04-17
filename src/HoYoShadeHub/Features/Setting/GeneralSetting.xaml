@@ -77,7 +77,7 @@
 
             <TextBlock Margin="0,8,0,0"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       Text="{x:Bind DohDescriptionText, Mode=OneWay}" />
+                       Text="选择DNS提供商：" />
 
             <ComboBox MinWidth="300"
                       Margin="0,8,0,0"
@@ -110,6 +110,54 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+
+            <TextBlock Margin="0,8,0,0"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind DohDescriptionText, Mode=OneWay}"
+                       TextWrapping="Wrap" />
+            <TextBlock Margin="0,8,0,0"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind DohDescriptionText2, Mode=OneWay}"
+                       TextWrapping="Wrap" />
+
+            <StackPanel Height="32"
+                        Margin="0,12,0,0"
+                        Orientation="Horizontal"
+                        Spacing="12">
+                <FontIcon Margin="0,0,-4,0"
+                          FontSize="16"
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                          Glyph="&#xE701;"
+                          IsTextScaleFactorEnabled="False" />
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           IsTextScaleFactorEnabled="False"
+                           Text="{x:Bind lang:Lang.WelcomeView_NetworkStatus}" />
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           IsTextScaleFactorEnabled="False"
+                           Text="{x:Bind NetworkDelay}" />
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           IsTextScaleFactorEnabled="False"
+                           Text="{x:Bind NetworkSpeed}" />
+                <Button Padding="4"
+                        VerticalAlignment="Center"
+                        BorderThickness="0"
+                        Click="Button_RefreshNetworkStatus_Click"
+                        Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
+                    <Grid>
+                        <FontIcon FontSize="14"
+                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                  Glyph="&#xE72C;"
+                                  IsTextScaleFactorEnabled="False"
+                                  Visibility="{x:Bind IsRefreshingNetworkStatus, Converter={StaticResource BoolToVisibilityReversedConverter}}" />
+                        <ProgressRing Width="16"
+                                      Height="16"
+                                      IsActive="{x:Bind IsRefreshingNetworkStatus}" />
+                    </Grid>
+                </Button>
+            </StackPanel>
 
 
             <MenuFlyoutSeparator Margin="0,20,0,0" />

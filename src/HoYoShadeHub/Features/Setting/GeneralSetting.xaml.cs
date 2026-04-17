@@ -8,10 +8,14 @@ using HoYoShadeHub.Features.ViewHost;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Language;
 using HoYoShadeHub.Models;
+using System.Diagnostics;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.System;
 
@@ -40,6 +44,14 @@ public sealed partial class GeneralSetting : PageBase
     }
 
 
+    protected override void OnUnloaded()
+    {
+        _networkStatusCancellationTokenSource?.Cancel();
+        _networkStatusCancellationTokenSource?.Dispose();
+        _networkStatusCancellationTokenSource = null;
+    }
+
+
 
     public bool DefaultDisableVideoBackgroundPlayback
     {
@@ -64,6 +76,7 @@ public sealed partial class GeneralSetting : PageBase
 
             AppConfig.EnableDoh = value;
             OnPropertyChanged();
+            _ = RefreshNetworkStatusAsync();
         }
     }
 
@@ -95,11 +108,28 @@ public sealed partial class GeneralSetting : PageBase
             }
             OnPropertyChanged();
             OnPropertyChanged(nameof(DohDescriptionText));
+            OnPropertyChanged(nameof(DohDescriptionText2));
+            _ = RefreshNetworkStatusAsync();
         }
     }
 
 
-    public string DohDescriptionText => $"通过 {SelectedDohProvider?.Name ?? "Cloudflare"} 请求DNS记录。";
+    public string DohDescriptionText => $"这将会让 HoYoShade Hub 中的绝大多数DNS请求通过 DoH 向 {SelectedDohProvider?.Name ?? "Cloudflare"} 发送。";
+
+
+    public string DohDescriptionText2 => $"此选项对游戏客户端及设备中其它项目无效，若要为其它项目添加 DoH ，请访问 {SelectedDohProvider?.Name ?? "Cloudflare"} 支持界面。";
+
+
+    public string? NetworkDelay { get; set => SetProperty(ref field, value); }
+
+
+    public string? NetworkSpeed { get; set => SetProperty(ref field, value); }
+
+
+    public bool IsRefreshingNetworkStatus { get; set => SetProperty(ref field, value); }
+
+
+    private CancellationTokenSource? _networkStatusCancellationTokenSource;
 
 
     private void InitializeDohProviders()
@@ -151,6 +181,58 @@ public sealed partial class GeneralSetting : PageBase
             }
         });
         await Task.WhenAll(tasks);
+    }
+
+
+    private async Task RefreshNetworkStatusAsync()
+    {
+        _networkStatusCancellationTokenSource?.Cancel();
+        _networkStatusCancellationTokenSource?.Dispose();
+        var cancellationTokenSource = new CancellationTokenSource();
+        _networkStatusCancellationTokenSource = cancellationTokenSource;
+
+        try
+        {
+            const string url = "https://speed.cloudflare.com/__down?bytes=102400";
+            NetworkDelay = null;
+            NetworkSpeed = null;
+            IsRefreshingNetworkStatus = true;
+            using HttpClient httpClient = new HttpClient(DohService.CreateSocketsHttpHandler())
+            {
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+            };
+            var sw = Stopwatch.StartNew();
+            var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationTokenSource.Token);
+            sw.Stop();
+            NetworkDelay = $"{sw.ElapsedMilliseconds}ms";
+            sw.Start();
+            var bytes = await response.Content.ReadAsByteArrayAsync(cancellationTokenSource.Token);
+            sw.Stop();
+            double speed = bytes.Length / 1024.0 / sw.Elapsed.TotalSeconds;
+            if (speed < 1024)
+            {
+                NetworkSpeed = $"{speed:0.00}KB/s";
+            }
+            else
+            {
+                NetworkSpeed = $"{speed / 1024:0.00}MB/s";
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            NetworkSpeed = Lang.WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates;
+            _logger.LogWarning(ex, "Refresh network status failed.");
+        }
+        finally
+        {
+            if (ReferenceEquals(_networkStatusCancellationTokenSource, cancellationTokenSource))
+            {
+                IsRefreshingNetworkStatus = false;
+            }
+        }
     }
 
 
@@ -330,6 +412,12 @@ public sealed partial class GeneralSetting : PageBase
     private async void Hyperlink_VisualEffects_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
     {
         await Launcher.LaunchUriAsync(new Uri("ms-settings:easeofaccess-visualeffects"));
+    }
+
+
+    private async void Button_RefreshNetworkStatus_Click(object sender, RoutedEventArgs e)
+    {
+        await RefreshNetworkStatusAsync();
     }
 
 
