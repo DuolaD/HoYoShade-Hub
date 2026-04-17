@@ -21,12 +21,19 @@
 
 
 
-        <StackPanel Margin="48,0,48,0" VerticalAlignment="Center">
-            <!-- 语言 -->
+        <StackPanel Margin="0,48,48,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Spacing="8">
             <ComboBox Name="ComboBox_Language"
                       MinWidth="200"
-                      HorizontalAlignment="Left"
+                      HorizontalAlignment="Stretch"
                       SelectionChanged="ComboBox_Language_SelectionChanged" />
+        </StackPanel>
+
+
+
+        <StackPanel Margin="48,0,48,0" VerticalAlignment="Center">
 
             <!--  欢迎  -->
             <TextBlock Margin="0,20,0,0"
