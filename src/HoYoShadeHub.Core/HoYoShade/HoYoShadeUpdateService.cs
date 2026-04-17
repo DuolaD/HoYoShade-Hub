@@ -125,7 +125,7 @@ public class HoYoShadeUpdateService
     {
         try
         {
-            using var client = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+            using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
             {
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
             };

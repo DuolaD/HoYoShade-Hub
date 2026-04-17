@@ -2,11 +2,17 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.ViewHost;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Language;
+using HoYoShadeHub.Models;
 using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.System;
 
 
@@ -21,6 +27,7 @@ public sealed partial class GeneralSetting : PageBase
     public GeneralSetting()
     {
         this.InitializeComponent();
+        DohProviders = new ObservableCollection<DownloadServerItem>();
     }
 
 
@@ -29,6 +36,7 @@ public sealed partial class GeneralSetting : PageBase
     {
         InitializeLanguageSelector();
         InitializeCloseWindowOption();
+        InitializeDohProviders();
     }
 
 
@@ -44,14 +52,105 @@ public sealed partial class GeneralSetting : PageBase
     }
 
 
-    public bool EnableCloudflareDohViaCloudflare
+    public bool EnableDoh
     {
-        get => AppConfig.EnableCloudflareDohViaCloudflare;
+        get => AppConfig.EnableDoh;
         set
         {
-            AppConfig.EnableCloudflareDohViaCloudflare = value;
+            if (AppConfig.EnableDoh == value)
+            {
+                return;
+            }
+
+            AppConfig.EnableDoh = value;
             OnPropertyChanged();
         }
+    }
+
+
+    public ObservableCollection<DownloadServerItem> DohProviders { get; }
+
+
+    private DownloadServerItem? _selectedDohProvider;
+
+
+    public DownloadServerItem? SelectedDohProvider
+    {
+        get => _selectedDohProvider;
+        set
+        {
+            if (ReferenceEquals(_selectedDohProvider, value))
+            {
+                return;
+            }
+
+            _selectedDohProvider = value;
+            if (value != null)
+            {
+                var provider = (DohProvider)value.ServerIndex;
+                if (AppConfig.DohProvider != provider)
+                {
+                    AppConfig.DohProvider = provider;
+                }
+            }
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(DohDescriptionText));
+        }
+    }
+
+
+    public string DohDescriptionText => $"通过 {SelectedDohProvider?.Name ?? "Cloudflare"} 请求DNS记录。";
+
+
+    private void InitializeDohProviders()
+    {
+        int savedProvider = (int)AppConfig.DohProvider;
+
+        DohProviders.Clear();
+        DohProviders.Add(new DownloadServerItem { Name = "Cloudflare", ServerIndex = (int)DohProvider.Cloudflare });
+        DohProviders.Add(new DownloadServerItem { Name = "Google", ServerIndex = (int)DohProvider.Google });
+        DohProviders.Add(new DownloadServerItem { Name = "CleanBrowsing", ServerIndex = (int)DohProvider.CleanBrowsing });
+        DohProviders.Add(new DownloadServerItem { Name = "OpenDNS", ServerIndex = (int)DohProvider.OpenDns });
+        DohProviders.Add(new DownloadServerItem { Name = "Quad9", ServerIndex = (int)DohProvider.Quad9 });
+        DohProviders.Add(new DownloadServerItem { Name = "AdGuard", ServerIndex = (int)DohProvider.AdGuard });
+        DohProviders.Add(new DownloadServerItem { Name = "阿里云", ServerIndex = (int)DohProvider.Aliyun });
+        DohProviders.Add(new DownloadServerItem { Name = "腾讯云", ServerIndex = (int)DohProvider.Tencent });
+
+        SelectedDohProvider = DohProviders.FirstOrDefault(x => x.ServerIndex == savedProvider) ?? DohProviders[0];
+        _ = UpdateDohLatenciesAsync();
+    }
+
+
+    private async Task UpdateDohLatenciesAsync()
+    {
+        foreach (var provider in DohProviders)
+        {
+            provider.LatencyText = "Tcping...";
+            provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
+        }
+
+        var tasks = DohProviders.Select(async provider =>
+        {
+            long latency = await DohService.TcpPingAsync((DohProvider)provider.ServerIndex);
+            if (latency >= 0)
+            {
+                provider.LatencyText = $"{latency}ms";
+                if (latency <= 600)
+                {
+                    provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.LimeGreen);
+                }
+                else
+                {
+                    provider.LatencyColor = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0xC5, 0x7F, 0x0A));
+                }
+            }
+            else
+            {
+                provider.LatencyText = "Timeout";
+                provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+        });
+        await Task.WhenAll(tasks);
     }
 
 

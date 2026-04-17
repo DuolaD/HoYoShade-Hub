@@ -81,7 +81,7 @@ public abstract class CacheBase<T>
     /// <summary>
     /// Gets instance of <see cref="HttpClient"/>
     /// </summary>
-    protected HttpClient HttpClient => _httpClient ??= new(CloudflareDohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+    protected HttpClient HttpClient => _httpClient ??= new(DohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
 
 
     /// <summary>

@@ -343,7 +343,7 @@ public sealed partial class UpdateWindow : WindowEx
             var tag = NewVersion.Version;
             var apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{tag}";
             
-            using var httpClient = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+            using var httpClient = new HttpClient(DohService.CreateSocketsHttpHandler())
             {
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
             };
@@ -922,7 +922,7 @@ public sealed partial class UpdateWindow : WindowEx
                     
                     // Use GitHub API to get the release
                     var apiUrl = $"https://api.github.com/repos/{repoOwner}/{repoName}/releases/tags/{tag}";
-                    using var httpClient = new System.Net.Http.HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+                    using var httpClient = new System.Net.Http.HttpClient(DohService.CreateSocketsHttpHandler())
                     {
                         DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
                     };

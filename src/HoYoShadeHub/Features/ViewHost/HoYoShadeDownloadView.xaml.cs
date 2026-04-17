@@ -406,7 +406,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             IsLoadingVersions = true;
             StatusMessage = Lang.HoYoShadeDownloadView_StatusFetchingReleases;
             
-            using var client = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+            using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
             {
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
             };
@@ -1218,7 +1218,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                 Debug.WriteLine($"Found SHA256 asset: {sha256Asset.Name}");
                 
                 // Download SHA256 file and compare
-                using var httpClient = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+                using var httpClient = new HttpClient(DohService.CreateSocketsHttpHandler())
                 {
                     DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
                 };

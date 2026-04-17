@@ -34,7 +34,7 @@ public class MetadataClient
     public MetadataClient(int apiIndex = 0, HttpClient? httpClient = null)
     {
         SetApiPrefix(apiIndex);
-        _httpClient = httpClient ?? new HttpClient(CloudflareDohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+        _httpClient = httpClient ?? new HttpClient(DohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
     }
 
 

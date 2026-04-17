@@ -499,7 +499,7 @@ public sealed partial class ReShadeDownloadView : UserControl
         try
         {
             StatusMessage = "Fetching package lists...";
-            using var client = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+            using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
             {
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
             };

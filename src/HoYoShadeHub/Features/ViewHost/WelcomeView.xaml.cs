@@ -266,7 +266,7 @@ public sealed partial class WelcomeView : UserControl
             const string url = "https://speed.cloudflare.com/__down?bytes=102400";
             NetworkDelay = null;
             NetworkSpeed = null;
-            using HttpClient httpClient = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+            using HttpClient httpClient = new HttpClient(DohService.CreateSocketsHttpHandler())
             {
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
             };

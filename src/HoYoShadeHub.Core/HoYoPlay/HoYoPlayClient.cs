@@ -16,7 +16,7 @@ public class HoYoPlayClient
 
     public HoYoPlayClient(HttpClient? httpClient = null)
     {
-        _httpClient = httpClient ?? new(CloudflareDohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+        _httpClient = httpClient ?? new(DohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
     }
 
 

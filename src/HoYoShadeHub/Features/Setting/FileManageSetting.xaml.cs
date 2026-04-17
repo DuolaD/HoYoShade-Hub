@@ -1267,7 +1267,7 @@ public sealed partial class FileManageSetting : PageBase
             try
             {
                 var apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{newVersion}";
-                using var httpClient = new System.Net.Http.HttpClient(CloudflareDohService.CreateSocketsHttpHandler())
+                using var httpClient = new System.Net.Http.HttpClient(DohService.CreateSocketsHttpHandler())
                 {
                     DefaultVersionPolicy = System.Net.Http.HttpVersionPolicy.RequestVersionOrHigher,
                 };

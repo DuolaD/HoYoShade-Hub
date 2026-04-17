@@ -255,7 +255,8 @@ public static class AppConfig
             var sc = new ServiceCollection();
             sc.AddMemoryCache();
             sc.AddLogging(c => c.AddSerilog(Log.Logger));
-            CloudflareDohService.Enabled = EnableCloudflareDohViaCloudflare;
+            DohService.Provider = DohProvider;
+            DohService.Enabled = EnableDoh;
             sc.AddHttpClient().ConfigureHttpClientDefaults(config =>
             {
                 config.RemoveAllLoggers();
@@ -264,7 +265,7 @@ public static class AppConfig
                     client.DefaultRequestHeaders.Add("User-Agent", $"HoYoShadeHub/{AppVersion}");
                     client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
                 });
-                config.ConfigurePrimaryHttpMessageHandler(() => CloudflareDohService.CreateSocketsHttpHandler());
+                config.ConfigurePrimaryHttpMessageHandler(() => DohService.CreateSocketsHttpHandler());
             });
 
             sc.AddSingleton<HoYoPlayClient>();
@@ -452,14 +453,43 @@ public static class AppConfig
     }
 
 
-    public static bool EnableCloudflareDohViaCloudflare
+    public static bool EnableDoh
     {
-        get => GetValue(false);
+        get => GetValue(false, nameof(EnableCloudflareDohViaCloudflare));
         set
         {
-            SetValue(value);
-            CloudflareDohService.Enabled = value;
+            if (EnableDoh == value)
+            {
+                return;
+            }
+
+            SetValue(value, nameof(EnableCloudflareDohViaCloudflare));
+            DohService.Enabled = value;
         }
+    }
+
+
+    public static DohProvider DohProvider
+    {
+        get => GetValue(HoYoShadeHub.Core.Networking.DohProvider.Cloudflare);
+        set
+        {
+            if (DohProvider == value)
+            {
+                return;
+            }
+
+            SetValue(value);
+            DohService.Provider = value;
+        }
+    }
+
+
+    [Obsolete("Use EnableDoh", false)]
+    public static bool EnableCloudflareDohViaCloudflare
+    {
+        get => EnableDoh;
+        set => EnableDoh = value;
     }
 
 

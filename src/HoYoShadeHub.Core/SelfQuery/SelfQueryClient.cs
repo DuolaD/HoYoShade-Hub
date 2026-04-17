@@ -18,7 +18,7 @@ public class SelfQueryClient
     {
         if (httpClient is null)
         {
-            _httpClient = new HttpClient(CloudflareDohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+            _httpClient = new HttpClient(DohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
         }
         else
         {

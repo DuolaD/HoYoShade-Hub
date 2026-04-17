@@ -6,6 +6,7 @@
              xmlns:lang="using:HoYoShadeHub.Language"
              xmlns:local="using:HoYoShadeHub.Features.Setting"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+              xmlns:models="using:HoYoShadeHub.Models"
              xmlns:sf="using:HoYoShadeHub.Frameworks"
              xmlns:sfv="using:HoYoShadeHub.Features.ViewHost"
              x:DefaultBindMode="OneWay"
@@ -70,9 +71,45 @@
                        Text="{x:Bind lang:Lang.SettingPage_Network}" />
 
             <ToggleSwitch Margin="0,12,0,0"
-                          IsOn="{x:Bind EnableCloudflareDohViaCloudflare, Mode=TwoWay}"
-                          OffContent="启用DoH(DNS over HTTPS) via Cloudflare"
-                          OnContent="启用DoH(DNS over HTTPS) via Cloudflare" />
+                          IsOn="{x:Bind EnableDoh, Mode=TwoWay}"
+                          OffContent="DoH(DNS over HTTPS)"
+                          OnContent="DoH(DNS over HTTPS)" />
+
+            <TextBlock Margin="0,8,0,0"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind DohDescriptionText, Mode=OneWay}" />
+
+            <ComboBox MinWidth="300"
+                      Margin="0,8,0,0"
+                      HorizontalAlignment="Left"
+                      ItemsSource="{x:Bind DohProviders}"
+                      SelectedItem="{x:Bind SelectedDohProvider, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="models:DownloadServerItem">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Margin="0,0,16,0" VerticalAlignment="Center" Text="{x:Bind Name}" />
+                            <Border Grid.Column="1"
+                                    Padding="6,2"
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
+                                <TextBlock FontSize="12"
+                                           VerticalAlignment="Center"
+                                           Foreground="{x:Bind LatencyColor, Mode=OneWay}"
+                                           Text="{x:Bind LatencyText, Mode=OneWay}"
+                                           UseLayoutRounding="True" />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
 
             <MenuFlyoutSeparator Margin="0,20,0,0" />
