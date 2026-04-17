@@ -513,6 +513,11 @@ public sealed partial class WelcomeView : UserControl
             }
             AppConfig.UserDataFolder = UserDataFolder;
             DatabaseService.SetDatabase(UserDataFolder);
+            AppConfig.EnableDoh = EnableDoh;
+            if (SelectedDohProvider is not null)
+            {
+                AppConfig.DohProvider = (DohProvider)SelectedDohProvider.ServerIndex;
+            }
             AppConfig.SaveConfiguration();
             WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
         }
