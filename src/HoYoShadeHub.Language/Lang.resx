@@ -1056,7 +1056,7 @@
     <value>Full Package</value>
   </data>
 	<data name="SettingPage_DefaultDisableVideoBackgroundPlayback" xml:space="preserve">
-    <value>Default disable video background playback</value>
+    <value>Disable video background playback</value>
   </data>
 	<data name="HoYoShadeDownloadView_Title" xml:space="preserve">
     <value>First, let's download and install the HoYoShade framework</value>
@@ -1792,5 +1792,26 @@ Please scan QR code while Injector run next time to login again.</value>
   </data>
   <data name="SettingPage_Network" xml:space="preserve">
     <value>Network</value>
+  </data>
+  <data name="SettingPage_DohDnsOverHttps" xml:space="preserve">
+    <value>DoH (DNS over HTTPS)</value>
+  </data>
+  <data name="SettingPage_DohProvider" xml:space="preserve">
+    <value>Choose DNS provider:</value>
+  </data>
+  <data name="SettingPage_DohIntro" xml:space="preserve">
+    <value>This feature helps HoYoShade Hub bypass some network restrictions based on traditional DNS hijacking/poisoning/spoofing in certain network environments, resolving some connectivity issues.</value>
+  </data>
+  <data name="SettingPage_DohDescriptionMostDnsRequestsFormat" xml:space="preserve">
+    <value>Most DNS requests in HoYoShade Hub will be sent to {0} via DoH.</value>
+  </data>
+  <data name="SettingPage_DohDescriptionOtherAppsFormat" xml:space="preserve">
+    <value>This option does not affect game clients or other apps on this device. To enable DoH for other apps, please visit the {0} support page.</value>
+  </data>
+  <data name="SettingPage_DohVpnProxyNotice" xml:space="preserve">
+    <value>VPN/proxy programs running on this device/network may affect the network status and DNS provider status shown here.</value>
+  </data>
+  <data name="SettingPage_DohTroubleshooting" xml:space="preserve">
+    <value>If connectivity issues occur, try switching to another DNS provider, or toggle DoH off/on.</value>
   </data>
 </root>

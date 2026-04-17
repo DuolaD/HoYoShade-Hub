@@ -111,12 +111,12 @@
 
             <ToggleSwitch Margin="0,12,0,0"
                           IsOn="{x:Bind EnableDoh, Mode=TwoWay}"
-                          OffContent="DoH(DNS over HTTPS)"
-                          OnContent="DoH(DNS over HTTPS)" />
+                          OffContent="{x:Bind DohSwitchText, Mode=OneWay}"
+                          OnContent="{x:Bind DohSwitchText, Mode=OneWay}" />
 
             <StackPanel Margin="0,8,0,0" Visibility="{x:Bind EnableDoh, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="选择DNS提供商：" />
+                           Text="{x:Bind DohProviderText, Mode=OneWay}" />
 
                 <ComboBox MinWidth="300"
                           Margin="0,8,0,0"
@@ -152,7 +152,7 @@
 
                 <TextBlock Margin="0,8,0,0"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="该功能可帮助 HoYoShade Hub 绕过部分网络环境下基于传统DNS劫持/污染/抢答的封锁措施，从而解决部分连接性问题。"
+                           Text="{x:Bind DohIntroText, Mode=OneWay}"
                            TextWrapping="Wrap" />
                 <TextBlock Margin="0,8,0,0"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -164,11 +164,11 @@
                            TextWrapping="Wrap" />
                 <TextBlock Margin="0,8,0,0"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="在此设备/在此网络中运行的VPN/代理程序可能会影响此处的网络状态/DNS提供商状态显示。"
+                           Text="{x:Bind DohVpnProxyNoticeText, Mode=OneWay}"
                            TextWrapping="Wrap" />
                 <TextBlock Margin="0,8,0,0"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="如果发生连接性问题，请先尝试更换其它DNS提供商，或尝试开启/关闭DoH。"
+                           Text="{x:Bind DohTroubleshootingText, Mode=OneWay}"
                            TextWrapping="Wrap" />
             </StackPanel>
 

@@ -1790,4 +1790,25 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="SettingPage_Network" xml:space="preserve">
     <value>網絡</value>
   </data>
+  <data name="SettingPage_DohDnsOverHttps" xml:space="preserve">
+    <value>DoH（DNS over HTTPS）</value>
+  </data>
+  <data name="SettingPage_DohProvider" xml:space="preserve">
+    <value>揀 DNS 供應商：</value>
+  </data>
+  <data name="SettingPage_DohIntro" xml:space="preserve">
+    <value>呢個功能可以幫 HoYoShade Hub 喺部分網絡環境下，繞過基於傳統 DNS 劫持/污染/搶答嘅封鎖措施，從而解決部分連線問題。</value>
+  </data>
+  <data name="SettingPage_DohDescriptionMostDnsRequestsFormat" xml:space="preserve">
+    <value>HoYoShade Hub 入面大部分 DNS 請求都會經 DoH 發送去 {0}。</value>
+  </data>
+  <data name="SettingPage_DohDescriptionOtherAppsFormat" xml:space="preserve">
+    <value>呢個選項對遊戲客戶端同裝置入面其他程式都冇效；如果你想幫其他程式加 DoH，請去 {0} 支援頁面。</value>
+  </data>
+  <data name="SettingPage_DohVpnProxyNotice" xml:space="preserve">
+    <value>喺呢部裝置/呢個網絡運行緊嘅 VPN/代理程式，可能會影響呢度顯示嘅網絡狀態/DNS 供應商狀態。</value>
+  </data>
+  <data name="SettingPage_DohTroubleshooting" xml:space="preserve">
+    <value>如果出現連線問題，請先試吓轉其他 DNS 供應商，或者試吓開/關 DoH。</value>
+  </data>
 </root>

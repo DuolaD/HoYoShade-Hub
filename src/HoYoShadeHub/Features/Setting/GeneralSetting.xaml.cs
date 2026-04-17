@@ -114,10 +114,25 @@ public sealed partial class GeneralSetting : PageBase
     }
 
 
-    public string DohDescriptionText => $"这将会让 HoYoShade Hub 中的绝大多数DNS请求通过 DoH 向 {SelectedDohProvider?.Name ?? "Cloudflare"} 发送。";
+    public string DohSwitchText => GetLangString("SettingPage_DohDnsOverHttps");
 
 
-    public string DohDescriptionText2 => $"此选项对游戏客户端及设备中其它项目无效，若要为其它项目添加 DoH ，请访问 {SelectedDohProvider?.Name ?? "Cloudflare"} 支持界面。";
+    public string DohProviderText => GetLangString("SettingPage_DohProvider");
+
+
+    public string DohIntroText => GetLangString("SettingPage_DohIntro");
+
+
+    public string DohDescriptionText => string.Format(CultureInfo.CurrentCulture, GetLangString("SettingPage_DohDescriptionMostDnsRequestsFormat"), SelectedDohProvider?.Name ?? "Cloudflare");
+
+
+    public string DohDescriptionText2 => string.Format(CultureInfo.CurrentCulture, GetLangString("SettingPage_DohDescriptionOtherAppsFormat"), SelectedDohProvider?.Name ?? "Cloudflare");
+
+
+    public string DohVpnProxyNoticeText => GetLangString("SettingPage_DohVpnProxyNotice");
+
+
+    public string DohTroubleshootingText => GetLangString("SettingPage_DohTroubleshooting");
 
 
     public string? NetworkDelay { get; set => SetProperty(ref field, value); }
@@ -132,22 +147,54 @@ public sealed partial class GeneralSetting : PageBase
     private CancellationTokenSource? _networkStatusCancellationTokenSource;
 
 
+    private static string GetLangString(string key)
+    {
+        return Lang.ResourceManager.GetString(key, Lang.Culture)
+            ?? Lang.ResourceManager.GetString(key, CultureInfo.InvariantCulture)
+            ?? key;
+    }
+
+
     private void InitializeDohProviders()
     {
         int savedProvider = (int)AppConfig.DohProvider;
 
         DohProviders.Clear();
-        DohProviders.Add(new DownloadServerItem { Name = "Cloudflare", ServerIndex = (int)DohProvider.Cloudflare });
-        DohProviders.Add(new DownloadServerItem { Name = "Google", ServerIndex = (int)DohProvider.Google });
-        DohProviders.Add(new DownloadServerItem { Name = "CleanBrowsing", ServerIndex = (int)DohProvider.CleanBrowsing });
-        DohProviders.Add(new DownloadServerItem { Name = "OpenDNS", ServerIndex = (int)DohProvider.OpenDns });
-        DohProviders.Add(new DownloadServerItem { Name = "Quad9", ServerIndex = (int)DohProvider.Quad9 });
-        DohProviders.Add(new DownloadServerItem { Name = "AdGuard", ServerIndex = (int)DohProvider.AdGuard });
-        DohProviders.Add(new DownloadServerItem { Name = "阿里云", ServerIndex = (int)DohProvider.Aliyun });
-        DohProviders.Add(new DownloadServerItem { Name = "腾讯云", ServerIndex = (int)DohProvider.Tencent });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Cloudflare), ServerIndex = (int)DohProvider.Cloudflare });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Google), ServerIndex = (int)DohProvider.Google });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.CleanBrowsing), ServerIndex = (int)DohProvider.CleanBrowsing });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.OpenDns), ServerIndex = (int)DohProvider.OpenDns });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Quad9), ServerIndex = (int)DohProvider.Quad9 });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.AdGuard), ServerIndex = (int)DohProvider.AdGuard });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Aliyun), ServerIndex = (int)DohProvider.Aliyun });
+        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Tencent), ServerIndex = (int)DohProvider.Tencent });
 
         SelectedDohProvider = DohProviders.FirstOrDefault(x => x.ServerIndex == savedProvider) ?? DohProviders[0];
         _ = UpdateDohLatenciesAsync();
+    }
+
+
+    private static string GetDohProviderName(DohProvider provider)
+    {
+        return provider switch
+        {
+            DohProvider.Aliyun => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
+            DohProvider.Tencent => Lang.HoYoShadeDownloadView_Server_TencentCloud,
+            DohProvider.OpenDns => "OpenDNS",
+            _ => provider.ToString(),
+        };
+    }
+
+
+    private void RefreshDohProviderNames()
+    {
+        foreach (var provider in DohProviders)
+        {
+            provider.Name = GetDohProviderName((DohProvider)provider.ServerIndex);
+        }
+
+        OnPropertyChanged(nameof(DohDescriptionText));
+        OnPropertyChanged(nameof(DohDescriptionText2));
     }
 
 
@@ -308,6 +355,7 @@ public sealed partial class GeneralSetting : PageBase
                     }
                     // Ensure Lang uses the current culture
                     Lang.Culture = CultureInfo.CurrentUICulture;
+                    RefreshDohProviderNames();
                     this.Bindings.Update();
                     WeakReferenceMessenger.Default.Send(new LanguageChangedMessage());
                     AppConfig.SaveConfiguration();
