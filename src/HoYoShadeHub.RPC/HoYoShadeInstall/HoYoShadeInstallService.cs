@@ -41,7 +41,7 @@ public class HoYoShadeInstallService
     private DateTime _lastSpeedUpdate = DateTime.Now;
     private long _lastDownloadBytes = 0;
 
-    public async Task StartInstallAsync(string url, string targetPath, CancellationToken cancellationToken, int presetsHandling = 0, string versionTag = null)
+    public async Task StartInstallAsync(string url, string targetPath, CancellationToken cancellationToken, int presetsHandling = 0, string versionTag = null, bool enableEch = false, string dohUrl = "", long totalBytes = 0)
     {
         string zipPath = "";
         bool isLocalFile = url.StartsWith("file://", StringComparison.OrdinalIgnoreCase);
@@ -78,53 +78,75 @@ public class HoYoShadeInstallService
                 string folderName = Path.GetFileName(targetPath);
                 zipPath = Path.Combine(Path.GetDirectoryName(targetPath) ?? targetPath, $"{folderName}_Install.zip");
 
-                long resumeOffset = 0;
-                if (File.Exists(zipPath))
+                bool curlSuccess = false;
+                if (enableEch)
                 {
-                    resumeOffset = new FileInfo(zipPath).Length;
-                }
-
-                var request = new HttpRequestMessage(HttpMethod.Get, url);
-                if (resumeOffset > 0)
-                {
-                    request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(resumeOffset, null);
-                }
-                
-                using (var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
-                {
-                    response.EnsureSuccessStatusCode();
-                    long totalContentLength = response.Content.Headers.ContentLength ?? 0;
-
-                    if (response.StatusCode == System.Net.HttpStatusCode.PartialContent)
+                    if (totalBytes > 0)
                     {
-                        if (response.Content.Headers.ContentRange?.Length.HasValue ?? false)
+                        TotalBytes = totalBytes;
+                    }
+                    // Delete previous temp zip if not resuming or start clean to avoid curl mismatch issues
+                    // But if it already has the exact total size, we are good, otherwise curl -C - will append/resume.
+                    curlSuccess = await CurlDownloadAsync(url, zipPath, dohUrl, (bytes) => {
+                        DownloadBytes = bytes;
+                    }, cancellationToken);
+
+                    if (!curlSuccess)
+                    {
+                        _logger.LogWarning("ECH download via curl failed, falling back to standard TLS...");
+                    }
+                }
+
+                if (!curlSuccess)
+                {
+                    long resumeOffset = 0;
+                    if (File.Exists(zipPath))
+                    {
+                        resumeOffset = new FileInfo(zipPath).Length;
+                    }
+
+                    var request = new HttpRequestMessage(HttpMethod.Get, url);
+                    if (resumeOffset > 0)
+                    {
+                        request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(resumeOffset, null);
+                    }
+                    
+                    using (var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+                    {
+                        response.EnsureSuccessStatusCode();
+                        long totalContentLength = response.Content.Headers.ContentLength ?? 0;
+
+                        if (response.StatusCode == System.Net.HttpStatusCode.PartialContent)
                         {
-                            TotalBytes = response.Content.Headers.ContentRange.Length.Value;
+                            if (response.Content.Headers.ContentRange?.Length.HasValue ?? false)
+                            {
+                                TotalBytes = response.Content.Headers.ContentRange.Length.Value;
+                            }
+                            else
+                            {
+                                TotalBytes = resumeOffset + totalContentLength;
+                            }
                         }
                         else
                         {
-                            TotalBytes = resumeOffset + totalContentLength;
+                            resumeOffset = 0;
+                            TotalBytes = totalContentLength;
                         }
-                    }
-                    else
-                    {
-                        resumeOffset = 0;
-                        TotalBytes = totalContentLength;
-                    }
 
-                    DownloadBytes = resumeOffset;
+                        DownloadBytes = resumeOffset;
 
-                    FileMode mode = (resumeOffset > 0 && response.StatusCode == System.Net.HttpStatusCode.PartialContent) ? FileMode.Append : FileMode.Create;
+                        FileMode mode = (resumeOffset > 0 && response.StatusCode == System.Net.HttpStatusCode.PartialContent) ? FileMode.Append : FileMode.Create;
 
-                    using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
-                    using (var fileStream = new FileStream(zipPath, mode, FileAccess.Write, FileShare.None, 8192, true))
-                    {
-                        var buffer = new byte[8192];
-                        int bytesRead;
-                        while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                        using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
+                        using (var fileStream = new FileStream(zipPath, mode, FileAccess.Write, FileShare.None, 8192, true))
                         {
-                            await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
-                            DownloadBytes += bytesRead;
+                            var buffer = new byte[8192];
+                            int bytesRead;
+                            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                            {
+                                await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+                                DownloadBytes += bytesRead;
+                            }
                         }
                     }
                 }
@@ -572,7 +594,9 @@ public class HoYoShadeInstallService
         string proxyUrl,
         List<EffectPackage> selectedEffectPackages,
         List<Addon> selectedAddons,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool enableEch = false,
+        string dohUrl = "")
     {
         try
         {
@@ -626,7 +650,7 @@ public class HoYoShadeInstallService
                 {
                     _logger.LogInformation("Downloading effect package: {PackageName}", package.Name);
                     CurrentFileType = 0; // Shader
-                    var result = await DownloadAndInstallEffectPackageAsync(package, targetDir, proxyUrl, cancellationToken);
+                    var result = await DownloadAndInstallEffectPackageAsync(package, targetDir, proxyUrl, cancellationToken, enableEch, dohUrl);
                     if (result == InstallResult.Success) successCount++;
                     else if (result == InstallResult.Failed) failedCount++;
                     else skippedCount++;
@@ -637,7 +661,7 @@ public class HoYoShadeInstallService
                 {
                     _logger.LogInformation("Downloading addon: {AddonName}", addon.Name);
                     CurrentFileType = 1; // Addon
-                    var result = await DownloadAndInstallAddonAsync(addon, targetDir, proxyUrl, cancellationToken);
+                    var result = await DownloadAndInstallAddonAsync(addon, targetDir, proxyUrl, cancellationToken, enableEch, dohUrl);
                     if (result == InstallResult.Success) successCount++;
                     else if (result == InstallResult.Failed) failedCount++;
                     else skippedCount++;
@@ -684,7 +708,9 @@ public class HoYoShadeInstallService
         EffectPackage package,
         string targetBaseDir,
         string proxyUrl,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool enableEch = false,
+        string dohUrl = "")
     {
         try
         {
@@ -706,27 +732,56 @@ public class HoYoShadeInstallService
 
             // Download to temp file
             string downloadPath = Path.Combine(Path.GetTempPath(), "ReShadeSetupDownload.tmp");
-            
-            _logger.LogInformation("    Sending HTTP request...");
-            using (var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+            if (File.Exists(downloadPath))
             {
-                response.EnsureSuccessStatusCode();
-                
-                var fileSize = response.Content.Headers.ContentLength ?? 0;
+                try { File.Delete(downloadPath); } catch { }
+            }
+
+            bool curlSuccess = false;
+            if (enableEch)
+            {
                 var startBytes = ReShadePackDownloadBytes;
-                
-                _logger.LogInformation("    File size: {Size} bytes, downloading...", fileSize);
-                
-                using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
-                using (var fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                curlSuccess = await CurlDownloadAsync(downloadUrl, downloadPath, dohUrl, (bytes) => {
+                    ReShadePackDownloadBytes = startBytes + bytes;
+                    UpdateDownloadSpeed();
+                }, cancellationToken);
+
+                if (curlSuccess)
                 {
-                    var buffer = new byte[8192];
-                    int bytesRead;
-                    while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                    if (File.Exists(downloadPath))
                     {
-                        await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
-                        ReShadePackDownloadBytes += bytesRead;
-                        UpdateDownloadSpeed();
+                        ReShadePackDownloadBytes = startBytes + new FileInfo(downloadPath).Length;
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("ECH download via curl failed for effect package, falling back to standard TLS...");
+                }
+            }
+
+            if (!curlSuccess)
+            {
+                _logger.LogInformation("    Sending HTTP request...");
+                using (var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+                {
+                    response.EnsureSuccessStatusCode();
+                    
+                    var fileSize = response.Content.Headers.ContentLength ?? 0;
+                    var startBytes = ReShadePackDownloadBytes;
+                    
+                    _logger.LogInformation("    File size: {Size} bytes, downloading...", fileSize);
+                    
+                    using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
+                    using (var fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        var buffer = new byte[8192];
+                        int bytesRead;
+                        while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                        {
+                            await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+                            ReShadePackDownloadBytes += bytesRead;
+                            UpdateDownloadSpeed();
+                        }
                     }
                 }
             }
@@ -852,7 +907,9 @@ public class HoYoShadeInstallService
         Addon addon,
         string targetBaseDir,
         string proxyUrl,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool enableEch = false,
+        string dohUrl = "")
     {
         try
         {
@@ -871,24 +928,53 @@ public class HoYoShadeInstallService
             _logger.LogInformation("    Download URL: {Url}", downloadUrl);
 
             string downloadPath = Path.Combine(Path.GetTempPath(), "ReShadeSetupDownload.tmp");
-            
-            using (var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+            if (File.Exists(downloadPath))
             {
-                response.EnsureSuccessStatusCode();
-                var fileSize = response.Content.Headers.ContentLength ?? 0;
-                
-                _logger.LogInformation("    File size: {Size} bytes, downloading...", fileSize);
-                
-                using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
-                using (var fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                try { File.Delete(downloadPath); } catch { }
+            }
+
+            bool curlSuccess = false;
+            if (enableEch)
+            {
+                var startBytes = ReShadePackDownloadBytes;
+                curlSuccess = await CurlDownloadAsync(downloadUrl, downloadPath, dohUrl, (bytes) => {
+                    ReShadePackDownloadBytes = startBytes + bytes;
+                    UpdateDownloadSpeed();
+                }, cancellationToken);
+
+                if (curlSuccess)
                 {
-                    var buffer = new byte[8192];
-                    int bytesRead;
-                    while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                    if (File.Exists(downloadPath))
                     {
-                        await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
-                        ReShadePackDownloadBytes += bytesRead;
-                        UpdateDownloadSpeed();
+                        ReShadePackDownloadBytes = startBytes + new FileInfo(downloadPath).Length;
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("ECH download via curl failed for addon, falling back to standard TLS...");
+                }
+            }
+
+            if (!curlSuccess)
+            {
+                using (var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+                {
+                    response.EnsureSuccessStatusCode();
+                    var fileSize = response.Content.Headers.ContentLength ?? 0;
+                    
+                    _logger.LogInformation("    File size: {Size} bytes, downloading...", fileSize);
+                    
+                    using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
+                    using (var fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        var buffer = new byte[8192];
+                        int bytesRead;
+                        while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                        {
+                            await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+                            ReShadePackDownloadBytes += bytesRead;
+                            UpdateDownloadSpeed();
+                        }
                     }
                 }
             }
@@ -1204,6 +1290,105 @@ public class HoYoShadeInstallService
         {
             _logger.LogError(ex, "Failed to fetch addons");
             return new List<Addon>();
+        }
+    }
+
+    private async Task<bool> CurlDownloadAsync(
+        string url, 
+        string targetPath, 
+        string dohUrl, 
+        Action<long> onProgress,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Starting download via curl: {Url} to {Path} using DoH: {Doh}", url, targetPath, dohUrl);
+        string curlPath = Path.Combine(AppContext.BaseDirectory, "curl.exe");
+        if (!File.Exists(curlPath))
+        {
+            _logger.LogError("curl.exe not found at {Path}", curlPath);
+            return false;
+        }
+
+        var argsBuilder = new System.Text.StringBuilder();
+        argsBuilder.Append("--ech true ");
+        if (!string.IsNullOrWhiteSpace(dohUrl))
+        {
+            argsBuilder.Append($"--doh-url \"{dohUrl}\" ");
+        }
+        argsBuilder.Append($"-L -f -C - -o \"{targetPath}\" \"{url}\"");
+
+        var startInfo = new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = curlPath,
+            Arguments = argsBuilder.ToString(),
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardError = true,
+            RedirectStandardOutput = false
+        };
+
+        try
+        {
+            using var process = new System.Diagnostics.Process { StartInfo = startInfo };
+            var errorBuilder = new System.Text.StringBuilder();
+            process.ErrorDataReceived += (s, e) => { if (e.Data != null) errorBuilder.AppendLine(e.Data); };
+            
+            if (!process.Start())
+            {
+                _logger.LogError("Failed to start curl process.");
+                return false;
+            }
+
+            process.BeginErrorReadLine();
+
+            while (!process.HasExited)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        process.Kill();
+                    }
+                    catch { }
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+
+                if (File.Exists(targetPath))
+                {
+                    try
+                    {
+                        using var fs = new FileStream(targetPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        onProgress(fs.Length);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                await Task.Delay(100, cancellationToken);
+            }
+
+            if (File.Exists(targetPath))
+            {
+                try
+                {
+                    using var fs = new FileStream(targetPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    onProgress(fs.Length);
+                }
+                catch { }
+            }
+
+            if (process.ExitCode != 0)
+            {
+                _logger.LogError("curl download failed with exit code {Code}. Stderr: {Error}", process.ExitCode, errorBuilder.ToString());
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exception during curl download");
+            return false;
         }
     }
 }

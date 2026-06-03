@@ -41,6 +41,8 @@ public static class DohService
 
     private static readonly ConcurrentDictionary<string, DnsCacheItem> _dnsCache = new(StringComparer.OrdinalIgnoreCase);
 
+    private static readonly ConcurrentDictionary<string, (bool Supported, DateTimeOffset ExpireAt)> _echCache = new(StringComparer.OrdinalIgnoreCase);
+
     private static readonly HttpClient _dohHttpClient = new HttpClient(new SocketsHttpHandler
     {
         AutomaticDecompression = DecompressionMethods.All,
@@ -116,7 +118,17 @@ public static class DohService
 
     private static bool _enabled;
 
+    private static bool _enableEch;
+
     private static DohProvider _provider = DohProvider.Cloudflare;
+
+
+
+    public static bool EnableEch
+    {
+        get => _enableEch;
+        set => _enableEch = value;
+    }
 
 
 
@@ -135,6 +147,21 @@ public static class DohService
             if (value)
             {
                 _ = RefreshDohServerAddressesAsync();
+            }
+        }
+    }
+
+
+
+    public static void SetProviderByUrl(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return;
+        foreach (var kvp in _providerEndpoints)
+        {
+            if (url.Contains(kvp.Value.DohHost, System.StringComparison.OrdinalIgnoreCase))
+            {
+                Provider = kvp.Key;
+                return;
             }
         }
     }
@@ -166,16 +193,16 @@ public static class DohService
 
 
 
-    public static SocketsHttpHandler CreateSocketsHttpHandler()
+    public static HttpMessageHandler CreateSocketsHttpHandler()
     {
-        return new SocketsHttpHandler
+        return new EchFallbackHttpMessageHandler(new SocketsHttpHandler
         {
             AutomaticDecompression = DecompressionMethods.All,
             EnableMultipleHttp2Connections = true,
             EnableMultipleHttp3Connections = true,
             ConnectCallback = ConnectWithDohAsync,
             PooledConnectionIdleTimeout = TimeSpan.FromSeconds(15),
-        };
+        });
     }
 
 
@@ -235,6 +262,7 @@ public static class DohService
     public static void ClearDnsCache(bool flushSystemDnsCache = false)
     {
         _dnsCache.Clear();
+        _echCache.Clear();
         if (!flushSystemDnsCache)
         {
             return;
@@ -266,6 +294,11 @@ public static class DohService
         }
 
         return _providerEndpoints[DohProvider.Cloudflare];
+    }
+
+    public static string GetCurrentDohUrl()
+    {
+        return GetProviderEndpoint(_provider).DohEndpoint;
     }
 
 
@@ -813,6 +846,152 @@ public static class DohService
     }
 
 
+
+    public static async Task<bool> DetectEchSupportAsync(string host, CancellationToken cancellationToken = default)
+    {
+        if (!_enabled)
+        {
+            return false;
+        }
+
+        if (_echCache.TryGetValue(host, out var cacheItem) && cacheItem.ExpireAt > DateTimeOffset.UtcNow)
+        {
+            return cacheItem.Supported;
+        }
+
+        try
+        {
+            byte[] queryMessage = BuildDnsQueryMessage(host, 65);
+            string dnsParam = Convert.ToBase64String(queryMessage).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+
+            var endpoint = GetProviderEndpoint(_provider);
+            string url = $"{endpoint.DohEndpoint}?dns={dnsParam}";
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Accept.ParseAdd("application/dns-message");
+
+            using var response = await _dohHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            byte[] responseMessage = await response.Content.ReadAsByteArrayAsync(cancellationToken);
+            bool supported = ParseDnsResponse65(responseMessage);
+
+            _echCache[host] = (supported, DateTimeOffset.UtcNow.AddMinutes(5));
+            return supported;
+        }
+        catch
+        {
+            // Cache failure briefly to avoid hammer if DNS fails
+            _echCache[host] = (false, DateTimeOffset.UtcNow.AddSeconds(30));
+            return false;
+        }
+    }
+
+    private static bool ParseDnsResponse65(byte[] message)
+    {
+        if (message.Length < 12)
+        {
+            return false;
+        }
+
+        ushort flags = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(2, 2));
+        int rcode = flags & 0x000F;
+        if (rcode != 0)
+        {
+            return false;
+        }
+
+        ushort questionCount = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(4, 2));
+        ushort answerCount = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(6, 2));
+
+        int offset = 12;
+        for (int i = 0; i < questionCount; i++)
+        {
+            if (!TrySkipDnsName(message, ref offset) || offset + 4 > message.Length)
+            {
+                return false;
+            }
+
+            offset += 4;
+        }
+
+        for (int i = 0; i < answerCount; i++)
+        {
+            if (!TrySkipDnsName(message, ref offset) || offset + 10 > message.Length)
+            {
+                return false;
+            }
+
+            ushort type = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(offset, 2));
+            offset += 2;
+            _ = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(offset, 2));
+            offset += 2;
+            uint ttl = BinaryPrimitives.ReadUInt32BigEndian(message.AsSpan(offset, 4));
+            offset += 4;
+            ushort rdLength = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(offset, 2));
+            offset += 2;
+
+            if (offset + rdLength > message.Length)
+            {
+                return false;
+            }
+
+            if (type == 65)
+            {
+                if (HasEchParam(message, offset, rdLength))
+                {
+                    return true;
+                }
+            }
+
+            offset += rdLength;
+        }
+
+        return false;
+    }
+
+    private static bool HasEchParam(byte[] message, int rdataStart, int rdLength)
+    {
+        if (rdLength < 2)
+        {
+            return false;
+        }
+
+        ushort priority = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(rdataStart, 2));
+        if (priority == 0)
+        {
+            return false;
+        }
+
+        int offset = rdataStart + 2;
+        if (!TrySkipDnsName(message, ref offset))
+        {
+            return false;
+        }
+
+        int rdataEnd = rdataStart + rdLength;
+        while (offset + 4 <= rdataEnd)
+        {
+            ushort paramKey = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(offset, 2));
+            offset += 2;
+            ushort paramLength = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(offset, 2));
+            offset += 2;
+
+            if (offset + paramLength > rdataEnd)
+            {
+                break;
+            }
+
+            if (paramKey == 5) // ech (RFC 9460)
+            {
+                return true;
+            }
+
+            offset += paramLength;
+        }
+
+        return false;
+    }
 
     private static IPAddress[] ParseIpAddresses(params string[] rawAddresses)
     {

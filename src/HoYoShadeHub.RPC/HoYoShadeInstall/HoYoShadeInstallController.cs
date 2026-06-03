@@ -23,7 +23,21 @@ internal class HoYoShadeInstallController : HoYoShadeInstaller.HoYoShadeInstalle
     {
         try
         {
-            _ = _service.StartInstallAsync(request.DownloadUrl, request.TargetPath, context.CancellationToken, request.PresetsHandling, request.VersionTag);
+            HoYoShadeHub.Core.Networking.DohService.EnableEch = request.EnableEch;
+            HoYoShadeHub.Core.Networking.DohService.Enabled = request.EnableEch;
+            if (request.EnableEch && !string.IsNullOrWhiteSpace(request.DohUrl))
+            {
+                HoYoShadeHub.Core.Networking.DohService.SetProviderByUrl(request.DohUrl);
+            }
+            _ = _service.StartInstallAsync(
+                request.DownloadUrl,
+                request.TargetPath,
+                context.CancellationToken,
+                request.PresetsHandling,
+                request.VersionTag,
+                request.EnableEch,
+                request.DohUrl,
+                request.TotalBytes);
 
             using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
             while (await timer.WaitForNextTickAsync(context.CancellationToken))
@@ -64,6 +78,12 @@ internal class HoYoShadeInstallController : HoYoShadeInstaller.HoYoShadeInstalle
     {
         try
         {
+            HoYoShadeHub.Core.Networking.DohService.EnableEch = request.EnableEch;
+            HoYoShadeHub.Core.Networking.DohService.Enabled = request.EnableEch;
+            if (request.EnableEch && !string.IsNullOrWhiteSpace(request.DohUrl))
+            {
+                HoYoShadeHub.Core.Networking.DohService.SetProviderByUrl(request.DohUrl);
+            }
             var installTarget = (ReShadeInstallTarget)request.InstallTarget;
             string proxyUrl = request.DownloadServer;
 
@@ -119,7 +139,9 @@ internal class HoYoShadeInstallController : HoYoShadeInstaller.HoYoShadeInstalle
                 proxyUrl,
                 selectedEffects,
                 selectedAddons,
-                context.CancellationToken);
+                context.CancellationToken,
+                request.EnableEch,
+                request.DohUrl);
 
             using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
             while (await timer.WaitForNextTickAsync(context.CancellationToken))

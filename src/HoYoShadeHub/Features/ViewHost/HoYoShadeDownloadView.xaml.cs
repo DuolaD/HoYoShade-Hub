@@ -105,18 +105,18 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         }
     }
  
-     private void UpdateDownloadServers()
-     {
-         var selectedIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
-         DownloadServers.Clear();
-         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AutoSelect, ServerIndex = -1 });
-         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
-         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
-         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
-         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AlibabaCloud, ServerIndex = 3 });
-         
-         var toSelect = DownloadServers.FirstOrDefault(x => x.ServerIndex == selectedIndex);
-         SelectedDownloadServer = toSelect ?? DownloadServers[0];
+      private void UpdateDownloadServers()
+      {
+          var selectedIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
+          DownloadServers.Clear();
+          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AutoSelect, ServerIndex = -1 });
+          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
+          DownloadServers.Add(new DownloadServerItem { Name = AppConfig.EnableEch ? "Cloudflare ECH" : Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
+          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
+          DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AlibabaCloud, ServerIndex = 3 });
+          
+          var toSelect = DownloadServers.FirstOrDefault(x => x.ServerIndex == selectedIndex);
+          SelectedDownloadServer = toSelect ?? DownloadServers[0];
          
          _ = UpdateLatenciesAsync();
      }
@@ -312,6 +312,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         InitializeLanguageSelector();
         // Unregister first to avoid duplicate registration crash if Grid_Loaded is called multiple times
         WeakReferenceMessenger.Default.Unregister<LanguageChangedMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<EchSettingChangedMessage>(this);
         
         // _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder); // Already initialized in constructor
         await LoadInstalledVersionsAsync();
@@ -324,6 +325,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
+        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
     }
 
     private void InitializeLanguageSelector()
@@ -670,16 +672,17 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private async Task DownloadShadeVariantAsync(string keyword, string folderName)
     {
         string assetUrl = null;
+        HoYoShadeHub.Core.Metadata.Github.GithubAsset? selectedAsset = null;
         if (SelectedVersion.Assets != null)
         {
-            var asset = SelectedVersion.Assets.FirstOrDefault(a => a.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase) && a.Name.EndsWith(".zip"));
+            selectedAsset = SelectedVersion.Assets.FirstOrDefault(a => a.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase) && a.Name.EndsWith(".zip"));
             
             // Fallback for HoYoShade
-            if (asset == null && keyword == "HoYoShade")
+            if (selectedAsset == null && keyword == "HoYoShade")
             {
-                asset = SelectedVersion.Assets.FirstOrDefault(a => !a.Name.Contains("OpenHoYoShade", StringComparison.OrdinalIgnoreCase) && a.Name.EndsWith(".zip"));
+                selectedAsset = SelectedVersion.Assets.FirstOrDefault(a => !a.Name.Contains("OpenHoYoShade", StringComparison.OrdinalIgnoreCase) && a.Name.EndsWith(".zip"));
             }
-            assetUrl = asset?.BrowserDownloadUrl;
+            assetUrl = selectedAsset?.BrowserDownloadUrl;
         }
 
         if (string.IsNullOrEmpty(assetUrl))
@@ -799,7 +802,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                         DownloadUrl = tryUrl,
                         TargetPath = targetPath,
                         PresetsHandling = presetsHandling,
-                        VersionTag = versionTag
+                        VersionTag = versionTag,
+                        EnableEch = AppConfig.EnableEch,
+                        DohUrl = AppConfig.EnableEch ? HoYoShadeHub.Core.Networking.DohService.GetCurrentDohUrl() : "",
+                        TotalBytes = selectedAsset?.Size ?? 0
                     };
                     _logger.LogInformation("Install request: Keyword={Keyword}, TargetPath={TargetPath}, PresetsHandling={PresetsHandling}, Url={Url}", keyword, targetPath, presetsHandling, tryUrl);
 

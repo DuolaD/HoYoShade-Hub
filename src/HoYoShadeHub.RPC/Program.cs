@@ -11,6 +11,7 @@ using HoYoShadeHub.RPC.Env;
 using HoYoShadeHub.RPC.GameInstall;
 using HoYoShadeHub.RPC.HoYoShadeInstall;
 using HoYoShadeHub.RPC.Update;
+using HoYoShadeHub.Core.Networking;
 using System;
 using System.IO;
 using System.IO.Pipes;
@@ -100,12 +101,12 @@ public static class RpcRunner
                 client.DefaultRequestHeaders.Add("User-Agent", $"HoYoShadeHub.RPC/{AppConfig.AppVersion}");
                 client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
             });
-            config.ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            config.ConfigurePrimaryHttpMessageHandler(() => new EchFallbackHttpMessageHandler(new SocketsHttpHandler
             {
                 AutomaticDecompression = DecompressionMethods.All,
                 EnableMultipleHttp2Connections = true,
                 EnableMultipleHttp3Connections = true,
-            });
+            }));
         });
         builder.Services.AddHttpClient<HoYoPlayClient>().AddPolicyHandler(GetHttpRetryPolicy());
 

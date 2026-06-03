@@ -33,8 +33,10 @@ public class MetadataClient
     {
         if (httpClient is null)
         {
-            _httpClient = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All });
-            _httpClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
+            _httpClient = new HttpClient(HoYoShadeHub.Core.Networking.DohService.CreateSocketsHttpHandler())
+            {
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+            };
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "HoYoShadeHub.RPC");
         }
         else

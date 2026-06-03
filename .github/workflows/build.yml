@@ -37,6 +37,24 @@ jobs:
       id: sha
       run: echo "sha=$("${{ github.sha }}".SubString(0, 7))" >> $env:GITHUB_OUTPUT
 
+    - name: Download curl
+      run: |
+        $curlUrl = if ($env:Platform -eq "arm64") { "https://github.com/stunnel/static-curl/releases/download/8.20.0/curl-windows-aarch64-8.20.0.tar.xz" } else { "https://github.com/stunnel/static-curl/releases/download/8.20.0/curl-windows-x86_64-8.20.0.tar.xz" }
+        New-Item -ItemType Directory -Force -Path "curl_temp"
+        Invoke-WebRequest -Uri $curlUrl -OutFile "curl_temp/curl.tar.xz"
+        New-Item -ItemType Directory -Force -Path "curl_temp/extracted"
+        tar -xf "curl_temp/curl.tar.xz" -C "curl_temp/extracted"
+        $curlExe = Get-ChildItem -Path "curl_temp/extracted" -Filter "curl.exe" -Recurse | Select-Object -First 1
+        $curlCrt = Get-ChildItem -Path "curl_temp/extracted" -Filter "curl-ca-bundle.crt" -Recurse | Select-Object -First 1
+        if ($null -eq $curlExe -or $null -eq $curlCrt) {
+            Write-Error "curl.exe or curl-ca-bundle.crt not found in extracted archive!"
+            exit 1
+        }
+        New-Item -ItemType Directory -Force -Path "src/HoYoShadeHub/Resources"
+        Copy-Item -Path $curlExe.FullName -Destination "src/HoYoShadeHub/Resources/curl.exe" -Force
+        Copy-Item -Path $curlCrt.FullName -Destination "src/HoYoShadeHub/Resources/curl-ca-bundle.crt" -Force
+        Remove-Item -Path "curl_temp" -Recurse -Force
+
     - name: Build
       run: |
         $sha = "${{ steps.sha.outputs.sha }}"

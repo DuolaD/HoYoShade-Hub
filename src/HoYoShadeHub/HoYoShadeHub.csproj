@@ -73,14 +73,24 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Features\GameLauncher\UninstallReShadeClientDialog.xaml">
+			<BuildAction>Page</BuildAction>
+		</Page>
+		<Page Update="Features\Setting\IntegrationSetting.xaml">
+			<BuildAction>Page</BuildAction>
+		</Page>
+	</ItemGroup>
 
 	<ItemGroup>
-    <Page Update="Features\GameLauncher\UninstallReShadeClientDialog.xaml">
-		<BuildAction>Page</BuildAction>
-	  </Page>
-	  <Page Update="Features\Setting\IntegrationSetting.xaml">
-	    <BuildAction>Page</BuildAction>
-	  </Page>
+		<None Include="Resources\curl.exe" Condition="Exists('Resources\curl.exe')">
+			<Link>curl.exe</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="Resources\curl-ca-bundle.crt" Condition="Exists('Resources\curl-ca-bundle.crt')">
+			<Link>curl-ca-bundle.crt</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

@@ -48,6 +48,9 @@ public sealed partial class ReShadeDownloadView : UserControl
         UpdateContentMargin();
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
+        
+        // Register for ECH settings change messages
+        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
     }
 
     private void OnLanguageChanged()
@@ -98,7 +101,7 @@ public sealed partial class ReShadeDownloadView : UserControl
         DownloadServers.Clear();
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AutoSelect, ServerIndex = -1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
-        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
+        DownloadServers.Add(new DownloadServerItem { Name = AppConfig.EnableEch ? "Cloudflare ECH" : Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AlibabaCloud, ServerIndex = 3 });
         
@@ -694,7 +697,9 @@ public sealed partial class ReShadeDownloadView : UserControl
                             BasePath = basePath,
                             InstallTarget = installTarget,
                             InstallMode = installMode,
-                            DownloadServer = proxyUrl
+                            DownloadServer = proxyUrl,
+                            EnableEch = AppConfig.EnableEch,
+                            DohUrl = AppConfig.EnableEch ? HoYoShadeHub.Core.Networking.DohService.GetCurrentDohUrl() : ""
                         };
 
                         if (installMode == 2)

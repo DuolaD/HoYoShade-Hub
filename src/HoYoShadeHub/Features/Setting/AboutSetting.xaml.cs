@@ -34,6 +34,12 @@ public sealed partial class AboutSetting : PageBase
             UpdateDownloadServers();
             OnPropertyChanged(nameof(AutoCheckUpdatesText));
         });
+
+        // Register for ECH settings change messages
+        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) =>
+        {
+            UpdateDownloadServers();
+        });
     }
     
     public ObservableCollection<DownloadServerItem> DownloadServers { get; }
@@ -64,7 +70,7 @@ public sealed partial class AboutSetting : PageBase
         // Add Auto Select option
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AutoSelect, ServerIndex = -1 });
         // Skip GitHub direct for launcher updates
-        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
+        DownloadServers.Add(new DownloadServerItem { Name = AppConfig.EnableEch ? "Cloudflare ECH" : Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
         DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AlibabaCloud, ServerIndex = 3 });
         

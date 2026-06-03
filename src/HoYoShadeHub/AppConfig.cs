@@ -257,6 +257,7 @@ public static class AppConfig
             sc.AddLogging(c => c.AddSerilog(Log.Logger));
             DohService.Provider = DohProvider;
             DohService.Enabled = EnableDoh;
+            DohService.EnableEch = EnableEch;
             sc.AddHttpClient().ConfigureHttpClientDefaults(config =>
             {
                 config.RemoveAllLoggers();
@@ -465,8 +466,30 @@ public static class AppConfig
 
             SetValue(value, nameof(EnableCloudflareDohViaCloudflare));
             DohService.Enabled = value;
+
+            if (!value)
+            {
+                EnableEch = false;
+            }
         }
     }
+
+
+    public static bool EnableEch
+    {
+        get => GetValue(false);
+        set
+        {
+            if (EnableEch == value)
+            {
+                return;
+            }
+
+            SetValue(value);
+            DohService.EnableEch = value;
+        }
+    }
+
 
 
     public static DohProvider DohProvider

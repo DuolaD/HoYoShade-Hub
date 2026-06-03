@@ -16,6 +16,9 @@ message InstallHoYoShadeRequest {
     string target_path = 2;
     int32 presets_handling = 3; // 0: Overwrite (default), 1: KeepExisting, 2: SeparateFolder
     string version_tag = 4; // Version tag for SeparateFolder option (e.g., "V3.0.0-Beta.1")
+    bool enable_ech = 5;
+    string doh_url = 6;
+    int64 total_bytes = 7;
 }
 
 message InstallHoYoShadeProgress {
@@ -31,6 +34,9 @@ message InstallReShadePackRequest {
     int32 install_mode = 3; // 0: All, 1: EssentialOnly, 2: Custom
     string download_server = 4; // Base URL for downloads (GitHub or proxy)
     repeated string custom_packages = 5; // Package names for custom mode
+    bool enable_ech = 6;
+    string doh_url = 7;
+    int64 total_bytes = 8;
 }
 
 message InstallReShadePackProgress {

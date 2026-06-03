@@ -76,9 +76,30 @@ public sealed partial class GeneralSetting : PageBase
 
             AppConfig.EnableDoh = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(EnableEch));
+            WeakReferenceMessenger.Default.Send(new EchSettingChangedMessage());
             _ = RefreshNetworkStatusAsync();
         }
     }
+
+
+    public bool EnableEch
+    {
+        get => AppConfig.EnableEch;
+        set
+        {
+            if (AppConfig.EnableEch == value)
+            {
+                return;
+            }
+
+            AppConfig.EnableEch = value;
+            OnPropertyChanged();
+            WeakReferenceMessenger.Default.Send(new EchSettingChangedMessage());
+        }
+    }
+
+
 
 
     public ObservableCollection<DownloadServerItem> DohProviders { get; }
