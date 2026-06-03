@@ -1804,4 +1804,13 @@
   <data name="SettingPage_DohDisabledDescription" xml:space="preserve">
     <value>启用安全加密的 DNS (DoH) 发送网络请求至指定 DNS 提供商，以绕过传统 DNS 劫持和污染，解决部分连接问题。</value>
   </data>
+  <data name="SettingPage_SystemProxyStatus" xml:space="preserve">
+    <value>系统代理：</value>
+  </data>
+  <data name="SettingPage_SystemProxyEnabled" xml:space="preserve">
+    <value>已启用 ({0})</value>
+  </data>
+  <data name="SettingPage_SystemProxyDisabled" xml:space="preserve">
+    <value>未启用</value>
+  </data>
 </root>

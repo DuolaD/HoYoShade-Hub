@@ -1815,4 +1815,13 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="SettingPage_DohDisabledDescription" xml:space="preserve">
     <value>啟用安全加密嘅 DNS (DoH) 發送網絡請求去指定嘅 DNS 供應商，用嚟繞過傳統嘅 DNS 劫持同污染，解決部分連線問題。</value>
   </data>
+  <data name="SettingPage_SystemProxyStatus" xml:space="preserve">
+    <value>系統代理：</value>
+  </data>
+  <data name="SettingPage_SystemProxyEnabled" xml:space="preserve">
+    <value>已開啟 ({0})</value>
+  </data>
+  <data name="SettingPage_SystemProxyDisabled" xml:space="preserve">
+    <value>未啟用</value>
+  </data>
 </root>

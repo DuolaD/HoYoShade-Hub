@@ -109,6 +109,25 @@
                 </Button>
             </StackPanel>
 
+            <StackPanel Height="32"
+                        Margin="0,4,0,0"
+                        Orientation="Horizontal"
+                        Spacing="12">
+                <FontIcon Margin="0,0,-4,0"
+                          FontSize="16"
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                          Glyph="&#xECC9;"
+                          IsTextScaleFactorEnabled="False" />
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           IsTextScaleFactorEnabled="False"
+                           Text="{x:Bind SystemProxyTitleText, Mode=OneWay}" />
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           IsTextScaleFactorEnabled="False"
+                           Text="{x:Bind SystemProxyStatusText, Mode=OneWay}" />
+            </StackPanel>
+
             <ToggleSwitch Margin="0,12,0,0"
                           IsOn="{x:Bind EnableDoh, Mode=TwoWay}"
                           OffContent="{x:Bind DohSwitchText, Mode=OneWay}"

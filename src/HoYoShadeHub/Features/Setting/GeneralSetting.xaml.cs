@@ -41,6 +41,7 @@ public sealed partial class GeneralSetting : PageBase
         InitializeLanguageSelector();
         InitializeCloseWindowOption();
         InitializeDohProviders();
+        RefreshSystemProxyStatus();
     }
 
 
@@ -167,6 +168,12 @@ public sealed partial class GeneralSetting : PageBase
     public bool IsRefreshingNetworkStatus { get; set => SetProperty(ref field, value); }
 
 
+    public string SystemProxyTitleText => GetLangString("SettingPage_SystemProxyStatus");
+
+
+    public string? SystemProxyStatusText { get; set => SetProperty(ref field, value); }
+
+
     private CancellationTokenSource? _networkStatusCancellationTokenSource;
 
 
@@ -175,6 +182,30 @@ public sealed partial class GeneralSetting : PageBase
         return Lang.ResourceManager.GetString(key, Lang.Culture)
             ?? Lang.ResourceManager.GetString(key, CultureInfo.InvariantCulture)
             ?? key;
+    }
+
+
+    private void RefreshSystemProxyStatus()
+    {
+        try
+        {
+            Uri targetUri = new Uri("https://starward.scighost.com");
+            Uri? proxy = HttpClient.DefaultProxy.GetProxy(targetUri);
+            if (proxy is not null && proxy != targetUri)
+            {
+                SystemProxyStatusText = string.Format(CultureInfo.CurrentCulture, GetLangString("SettingPage_SystemProxyEnabled"), proxy.ToString());
+            }
+            else
+            {
+                SystemProxyStatusText = GetLangString("SettingPage_SystemProxyDisabled");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to check system proxy.");
+            SystemProxyStatusText = GetLangString("SettingPage_SystemProxyDisabled");
+        }
+        OnPropertyChanged(nameof(SystemProxyTitleText));
     }
 
 
@@ -221,6 +252,7 @@ public sealed partial class GeneralSetting : PageBase
         OnPropertyChanged(nameof(DohDisabledDescriptionText));
         OnPropertyChanged(nameof(EchDescriptionText));
         OnPropertyChanged(nameof(EchRequirementNoticeText));
+        RefreshSystemProxyStatus();
     }
 
 
@@ -266,6 +298,7 @@ public sealed partial class GeneralSetting : PageBase
 
         try
         {
+            RefreshSystemProxyStatus();
             const string url = "https://speed.cloudflare.com/__down?bytes=102400";
             NetworkDelay = null;
             NetworkSpeed = null;
