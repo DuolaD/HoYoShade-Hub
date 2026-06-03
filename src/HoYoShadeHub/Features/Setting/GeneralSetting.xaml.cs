@@ -129,7 +129,6 @@ public sealed partial class GeneralSetting : PageBase
             }
             OnPropertyChanged();
             OnPropertyChanged(nameof(DohDescriptionText));
-            OnPropertyChanged(nameof(DohDescriptionText2));
             _ = RefreshNetworkStatusAsync();
         }
     }
@@ -147,7 +146,10 @@ public sealed partial class GeneralSetting : PageBase
     public string DohDescriptionText => string.Format(CultureInfo.CurrentCulture, GetLangString("SettingPage_DohDescriptionMostDnsRequestsFormat"), SelectedDohProvider?.Name ?? "Cloudflare");
 
 
-    public string DohDescriptionText2 => GetLangString("SettingPage_DohDescriptionOtherAppsFormat");
+    public string NetworkDescriptionText => GetLangString("SettingPage_NetworkDescription");
+
+
+    public string DohDisabledDescriptionText => GetLangString("SettingPage_DohDisabledDescription");
 
 
     public string EchDescriptionText => GetLangString("SettingPage_EchDescription");
@@ -215,7 +217,8 @@ public sealed partial class GeneralSetting : PageBase
         }
 
         OnPropertyChanged(nameof(DohDescriptionText));
-        OnPropertyChanged(nameof(DohDescriptionText2));
+        OnPropertyChanged(nameof(NetworkDescriptionText));
+        OnPropertyChanged(nameof(DohDisabledDescriptionText));
         OnPropertyChanged(nameof(EchDescriptionText));
         OnPropertyChanged(nameof(EchRequirementNoticeText));
     }

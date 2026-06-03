@@ -114,6 +114,12 @@
                           OffContent="{x:Bind DohSwitchText, Mode=OneWay}"
                           OnContent="{x:Bind DohSwitchText, Mode=OneWay}" />
 
+            <TextBlock Margin="0,8,0,0"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind DohDisabledDescriptionText, Mode=OneWay}"
+                       TextWrapping="Wrap"
+                       Visibility="{x:Bind EnableDoh, Converter={StaticResource BoolToVisibilityReversedConverter}}" />
+
             <StackPanel Margin="0,8,0,0" Visibility="{x:Bind EnableDoh, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            Text="{x:Bind DohProviderText, Mode=OneWay}" />
@@ -154,10 +160,6 @@
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            Text="{x:Bind DohDescriptionText, Mode=OneWay}"
                            TextWrapping="Wrap" />
-                <TextBlock Margin="0,8,0,0"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="{x:Bind DohDescriptionText2, Mode=OneWay}"
-                           TextWrapping="Wrap" />
             </StackPanel>
 
             <ToggleSwitch Margin="0,16,0,0"
@@ -176,6 +178,11 @@
                        Text="{x:Bind EchRequirementNoticeText, Mode=OneWay}"
                        TextWrapping="Wrap"
                        Visibility="{x:Bind EnableDoh, Converter={StaticResource BoolToVisibilityReversedConverter}}" />
+
+            <TextBlock Margin="0,20,0,0"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind NetworkDescriptionText, Mode=OneWay}"
+                       TextWrapping="Wrap" />
 
             <MenuFlyoutSeparator Margin="0,20,0,0" />
 
