@@ -138,6 +138,9 @@ public sealed partial class GeneralSetting : PageBase
     public string DohSwitchText => GetLangString("SettingPage_DohDnsOverHttps");
 
 
+    public string EchSwitchText => "ECH (Encrypted Client Hello)";
+
+
     public string DohProviderText => GetLangString("SettingPage_DohProvider");
 
 

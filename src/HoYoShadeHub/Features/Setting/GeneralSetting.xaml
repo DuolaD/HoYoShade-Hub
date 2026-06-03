@@ -114,11 +114,6 @@
                           OffContent="{x:Bind DohSwitchText, Mode=OneWay}"
                           OnContent="{x:Bind DohSwitchText, Mode=OneWay}" />
 
-            <ToggleSwitch Margin="0,12,0,0"
-                          Header="ECH"
-                          IsOn="{x:Bind EnableEch, Mode=TwoWay}"
-                          IsEnabled="{x:Bind EnableDoh, Mode=OneWay}" />
-
             <StackPanel Margin="0,8,0,0" Visibility="{x:Bind EnableDoh, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            Text="{x:Bind DohProviderText, Mode=OneWay}" />
@@ -177,6 +172,11 @@
                            TextWrapping="Wrap" />
             </StackPanel>
 
+            <ToggleSwitch Margin="0,16,0,0"
+                          IsOn="{x:Bind EnableEch, Mode=TwoWay}"
+                          IsEnabled="{x:Bind EnableDoh, Mode=OneWay}"
+                          OffContent="{x:Bind EchSwitchText, Mode=OneWay}"
+                          OnContent="{x:Bind EchSwitchText, Mode=OneWay}" />
 
             <MenuFlyoutSeparator Margin="0,20,0,0" />
 
