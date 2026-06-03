@@ -3953,6 +3953,25 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 To enable ECH, you need to enable DoH first. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_EchDescDisabled {
+            get {
+                return ResourceManager.GetString("SettingPage_EchDescDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Encrypts connection handshakes (SNI) to prevent man-in-the-middle snooping or blocking of the domains you visit, resolving some connection issues.
+        ///When the content provider supports ECH, the program will preferentially attempt to connect using ECH. If the ECH connection fails or the provider does not support ECH, a standard TLS connection will be used. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_EchDescEnabled {
+            get {
+                return ResourceManager.GetString("SettingPage_EchDescEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Management 的本地化字符串。
         /// </summary>
         public static string SettingPage_FileManagement {

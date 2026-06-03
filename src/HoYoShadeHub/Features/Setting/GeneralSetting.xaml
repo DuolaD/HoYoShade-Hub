@@ -166,6 +166,17 @@
                           OffContent="{x:Bind EchSwitchText, Mode=OneWay}"
                           OnContent="{x:Bind EchSwitchText, Mode=OneWay}" />
 
+            <TextBlock Margin="0,8,0,0"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind EchDescriptionText, Mode=OneWay}"
+                       TextWrapping="Wrap" />
+
+            <TextBlock Margin="0,8,0,0"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind EchRequirementNoticeText, Mode=OneWay}"
+                       TextWrapping="Wrap"
+                       Visibility="{x:Bind EnableDoh, Converter={StaticResource BoolToVisibilityReversedConverter}}" />
+
             <MenuFlyoutSeparator Margin="0,20,0,0" />
 
             <!--  透明/动画效果  -->

@@ -1803,6 +1803,13 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
     <value>啟用安全加密嘅 DNS (DoH) 發送網絡請求去 {0}，用嚟繞過傳統嘅 DNS 劫持同污染，解決部分連線問題。</value>
   </data>
   <data name="SettingPage_DohDescriptionOtherAppsFormat" xml:space="preserve">
-    <value>呢個設定淨係對本程式生效（唔影響遊戲）。用緊 VPN/代理可能會影響狀態顯示。如果遇到連線問題，請試吓轉 DNS 供應商或者開關 DoH。</value>
+    <value>提示：呢個設定淨係對本程式生效（唔影響遊戲）。用緊 VPN/代理可能會影響狀態顯示。如果遇到連線問題，請試吓轉 DNS 供應商或者開關 DoH。</value>
+  </data>
+  <data name="SettingPage_EchRequirementNotice" xml:space="preserve">
+    <value>如果要啟用 ECH，你必須先開啟 DoH。</value>
+  </data>
+  <data name="SettingPage_EchDescription" xml:space="preserve">
+    <value>加密連線握手（SNI）嚟防止中間人監控或者阻截你瀏覽嘅域名，解決部分連線問題。
+當內容提供商支援 ECH 嗰陣，程式會優先試吓用 ECH 訪問。如果 ECH 連線失敗或者內容提供商唔支援 ECH，就會用普通 TLS 嚟連線。</value>
   </data>
 </root>

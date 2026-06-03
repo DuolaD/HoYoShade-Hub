@@ -1794,4 +1794,11 @@
   <data name="SettingPage_DohDescriptionOtherAppsFormat" xml:space="preserve">
     <value>此设置仅对本程序生效（不影响游戏）。使用 VPN/代理可能会影响状态显示。若遇到连接问题，请尝试更换 DNS 提供商或开关 DoH。</value>
   </data>
+  <data name="SettingPage_EchRequirementNotice" xml:space="preserve">
+    <value>若要启动 ECH，你需要先为其启动 DoH。</value>
+  </data>
+  <data name="SettingPage_EchDescription" xml:space="preserve">
+    <value>加密连接握手（SNI）以防止中间人监视或拦截您访问的域名，解决部分连接问题。
+当内容提供商支持 ECH 时，程序将优先尝试使用 ECH 访问。若 ECH 连接失败或内容提供商不支持 ECH，则将使用普通 TLS 进行连接。</value>
+  </data>
 </root>

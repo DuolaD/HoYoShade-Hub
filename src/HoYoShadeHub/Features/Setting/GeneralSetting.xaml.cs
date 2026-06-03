@@ -150,6 +150,12 @@ public sealed partial class GeneralSetting : PageBase
     public string DohDescriptionText2 => GetLangString("SettingPage_DohDescriptionOtherAppsFormat");
 
 
+    public string EchDescriptionText => GetLangString("SettingPage_EchDescription");
+
+
+    public string EchRequirementNoticeText => GetLangString("SettingPage_EchRequirementNotice");
+
+
     public string? NetworkDelay { get; set => SetProperty(ref field, value); }
 
 
@@ -210,6 +216,8 @@ public sealed partial class GeneralSetting : PageBase
 
         OnPropertyChanged(nameof(DohDescriptionText));
         OnPropertyChanged(nameof(DohDescriptionText2));
+        OnPropertyChanged(nameof(EchDescriptionText));
+        OnPropertyChanged(nameof(EchRequirementNoticeText));
     }
 
 
