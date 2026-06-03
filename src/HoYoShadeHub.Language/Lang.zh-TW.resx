@@ -1799,19 +1799,10 @@
   <data name="SettingPage_DohProvider" xml:space="preserve">
     <value>選擇 DNS 供應商：</value>
   </data>
-  <data name="SettingPage_DohIntro" xml:space="preserve">
-    <value>此功能可協助 HoYoShade Hub 繞過部分網路環境下基於傳統 DNS 劫持/污染/搶答的封鎖措施，從而解決部分連線問題。</value>
-  </data>
   <data name="SettingPage_DohDescriptionMostDnsRequestsFormat" xml:space="preserve">
-    <value>這將會讓 HoYoShade Hub 中的絕大多數 DNS 請求透過 DoH 向 {0} 發送。</value>
+    <value>啟用安全加密的 DNS (DoH) 發送網路請求至 {0}，以繞過傳統 DNS 劫持和污染，解決部分連線問題。</value>
   </data>
   <data name="SettingPage_DohDescriptionOtherAppsFormat" xml:space="preserve">
-    <value>此選項對遊戲客戶端及裝置中其他項目無效，若要為其他項目添加 DoH，請訪問 {0} 支援介面。</value>
-  </data>
-  <data name="SettingPage_DohVpnProxyNotice" xml:space="preserve">
-    <value>在此裝置/在此網路中執行的 VPN/代理程式可能會影響此處的網路狀態/DNS 供應商狀態顯示。</value>
-  </data>
-  <data name="SettingPage_DohTroubleshooting" xml:space="preserve">
-    <value>如果發生連線問題，請先嘗試更換其他 DNS 供應商，或嘗試開啟/關閉 DoH。</value>
+    <value>此設定僅對本程式生效（不影響遊戲）。使用 VPN/代理可能會影響狀態顯示。若遇到連線問題，請嘗試更換 DNS 供應商或開關 DoH。</value>
   </data>
 </root>

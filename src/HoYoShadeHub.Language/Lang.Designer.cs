@@ -3899,7 +3899,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Most DNS requests in HoYoShade Hub will be sent to {0} via DoH. 的本地化字符串。
+        ///   查找类似 Enable secure encrypted DNS (DoH) via {0} to bypass DNS hijacking/poisoning and resolve connectivity issues. 的本地化字符串。
         /// </summary>
         public static string SettingPage_DohDescriptionMostDnsRequestsFormat {
             get {
@@ -3908,7 +3908,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 This option does not affect game clients or other apps on this device. To enable DoH for other apps, please visit the {0} support page. 的本地化字符串。
+        ///   查找类似 This setting only applies to this app (does not affect games). Using a VPN/proxy may affect status displays. If connection issues occur, try switching DNS providers or toggling DoH. 的本地化字符串。
         /// </summary>
         public static string SettingPage_DohDescriptionOtherAppsFormat {
             get {
@@ -3926,38 +3926,11 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 This feature helps HoYoShade Hub bypass some network restrictions based on traditional DNS hijacking/poisoning/spoofing in certain network environments, resolving some connectivity issues. 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_DohIntro {
-            get {
-                return ResourceManager.GetString("SettingPage_DohIntro", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 Choose DNS provider: 的本地化字符串。
         /// </summary>
         public static string SettingPage_DohProvider {
             get {
                 return ResourceManager.GetString("SettingPage_DohProvider", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 If connectivity issues occur, try switching to another DNS provider, or toggle DoH off/on. 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_DohTroubleshooting {
-            get {
-                return ResourceManager.GetString("SettingPage_DohTroubleshooting", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 VPN/proxy programs running on this device/network may affect the network status and DNS provider status shown here. 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_DohVpnProxyNotice {
-            get {
-                return ResourceManager.GetString("SettingPage_DohVpnProxyNotice", resourceCulture);
             }
         }
         
@@ -4984,6 +4957,15 @@ namespace HoYoShadeHub.Language {
         public static string WelcomeView_DearPlayerWelcomeToHoYoShadeHub {
             get {
                 return ResourceManager.GetString("WelcomeView_DearPlayerWelcomeToHoYoShadeHub", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 If you encounter connectivity issues, or your network environment is censored, we recommend enabling DoH. 的本地化字符串。
+        /// </summary>
+        public static string WelcomeView_DohRecommendation {
+            get {
+                return ResourceManager.GetString("WelcomeView_DohRecommendation", resourceCulture);
             }
         }
         

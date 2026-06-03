@@ -152,23 +152,11 @@
 
                 <TextBlock Margin="0,8,0,0"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="{x:Bind DohIntroText, Mode=OneWay}"
-                           TextWrapping="Wrap" />
-                <TextBlock Margin="0,8,0,0"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            Text="{x:Bind DohDescriptionText, Mode=OneWay}"
                            TextWrapping="Wrap" />
                 <TextBlock Margin="0,8,0,0"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            Text="{x:Bind DohDescriptionText2, Mode=OneWay}"
-                           TextWrapping="Wrap" />
-                <TextBlock Margin="0,8,0,0"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="{x:Bind DohVpnProxyNoticeText, Mode=OneWay}"
-                           TextWrapping="Wrap" />
-                <TextBlock Margin="0,8,0,0"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="{x:Bind DohTroubleshootingText, Mode=OneWay}"
                            TextWrapping="Wrap" />
             </StackPanel>
 

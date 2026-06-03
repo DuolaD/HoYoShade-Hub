@@ -144,19 +144,10 @@ public sealed partial class GeneralSetting : PageBase
     public string DohProviderText => GetLangString("SettingPage_DohProvider");
 
 
-    public string DohIntroText => GetLangString("SettingPage_DohIntro");
-
-
     public string DohDescriptionText => string.Format(CultureInfo.CurrentCulture, GetLangString("SettingPage_DohDescriptionMostDnsRequestsFormat"), SelectedDohProvider?.Name ?? "Cloudflare");
 
 
-    public string DohDescriptionText2 => string.Format(CultureInfo.CurrentCulture, GetLangString("SettingPage_DohDescriptionOtherAppsFormat"), SelectedDohProvider?.Name ?? "Cloudflare");
-
-
-    public string DohVpnProxyNoticeText => GetLangString("SettingPage_DohVpnProxyNotice");
-
-
-    public string DohTroubleshootingText => GetLangString("SettingPage_DohTroubleshooting");
+    public string DohDescriptionText2 => GetLangString("SettingPage_DohDescriptionOtherAppsFormat");
 
 
     public string? NetworkDelay { get; set => SetProperty(ref field, value); }
