@@ -3908,11 +3908,11 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 This setting only applies to this app (does not affect games). Using a VPN/proxy may affect status displays. If connection issues occur, try switching DNS providers or toggling DoH. 的本地化字符串。
+        ///   查找类似 Enable secure encrypted DNS (DoH) to send network requests to the specified DNS provider, bypassing traditional DNS hijacking and poisoning, resolving some connectivity issues. 的本地化字符串。
         /// </summary>
-        public static string SettingPage_DohDescriptionOtherAppsFormat {
+        public static string SettingPage_DohDisabledDescription {
             get {
-                return ResourceManager.GetString("SettingPage_DohDescriptionOtherAppsFormat", resourceCulture);
+                return ResourceManager.GetString("SettingPage_DohDisabledDescription", resourceCulture);
             }
         }
         
@@ -3953,21 +3953,21 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 To enable ECH, you need to enable DoH first. 的本地化字符串。
+        ///   查找类似 Encrypts connection handshakes (SNI) to prevent man-in-the-middle snooping or blocking of the domains you visit, resolving some connection issues.
+        ///When the content provider supports ECH, the program will preferentially attempt to connect using ECH. If the ECH connection fails or the provider does not support ECH, a standard TLS connection will be used. 的本地化字符串。
         /// </summary>
-        public static string SettingPage_EchDescDisabled {
+        public static string SettingPage_EchDescription {
             get {
-                return ResourceManager.GetString("SettingPage_EchDescDisabled", resourceCulture);
+                return ResourceManager.GetString("SettingPage_EchDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Encrypts connection handshakes (SNI) to prevent man-in-the-middle snooping or blocking of the domains you visit, resolving some connection issues.
-        ///When the content provider supports ECH, the program will preferentially attempt to connect using ECH. If the ECH connection fails or the provider does not support ECH, a standard TLS connection will be used. 的本地化字符串。
+        ///   查找类似 To enable ECH, you need to enable DoH first. 的本地化字符串。
         /// </summary>
-        public static string SettingPage_EchDescEnabled {
+        public static string SettingPage_EchRequirementNotice {
             get {
-                return ResourceManager.GetString("SettingPage_EchDescEnabled", resourceCulture);
+                return ResourceManager.GetString("SettingPage_EchRequirementNotice", resourceCulture);
             }
         }
         
@@ -4139,6 +4139,15 @@ namespace HoYoShadeHub.Language {
         public static string SettingPage_Network {
             get {
                 return ResourceManager.GetString("SettingPage_Network", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The network settings here only apply to this app (do not affect the device, system, or any other programs). Using a VPN/proxy may affect status displays. If connection issues occur, try switching DNS providers or toggling DoH / ECH. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_NetworkDescription {
+            get {
+                return ResourceManager.GetString("SettingPage_NetworkDescription", resourceCulture);
             }
         }
         
@@ -4337,6 +4346,33 @@ namespace HoYoShadeHub.Language {
         public static string SettingPage_StopService {
             get {
                 return ResourceManager.GetString("SettingPage_StopService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Disabled 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_SystemProxyDisabled {
+            get {
+                return ResourceManager.GetString("SettingPage_SystemProxyDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Enabled ({0}) 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_SystemProxyEnabled {
+            get {
+                return ResourceManager.GetString("SettingPage_SystemProxyEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 System Proxy 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_SystemProxyStatus {
+            get {
+                return ResourceManager.GetString("SettingPage_SystemProxyStatus", resourceCulture);
             }
         }
         

@@ -116,7 +116,7 @@
                 <FontIcon Margin="0,0,-4,0"
                           FontSize="16"
                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                          Glyph="&#xECC9;"
+                          Glyph="&#xE705;"
                           IsTextScaleFactorEnabled="False" />
                 <TextBlock VerticalAlignment="Center"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"

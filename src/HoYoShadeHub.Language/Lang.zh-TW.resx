@@ -1816,7 +1816,7 @@
     <value>啟用安全加密的 DNS (DoH) 發送網路請求至指定 DNS 供應商，以繞過傳統 DNS 劫持和污染，解決部分連線問題。</value>
   </data>
   <data name="SettingPage_SystemProxyStatus" xml:space="preserve">
-    <value>系統代理：</value>
+    <value>系統代理</value>
   </data>
   <data name="SettingPage_SystemProxyEnabled" xml:space="preserve">
     <value>已開啟 ({0})</value>

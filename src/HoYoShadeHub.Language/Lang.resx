@@ -1819,7 +1819,7 @@ When the content provider supports ECH, the program will preferentially attempt 
     <value>Enable secure encrypted DNS (DoH) to send network requests to the specified DNS provider, bypassing traditional DNS hijacking and poisoning, resolving some connectivity issues.</value>
   </data>
   <data name="SettingPage_SystemProxyStatus" xml:space="preserve">
-    <value>System Proxy:</value>
+    <value>System Proxy</value>
   </data>
   <data name="SettingPage_SystemProxyEnabled" xml:space="preserve">
     <value>Enabled ({0})</value>
