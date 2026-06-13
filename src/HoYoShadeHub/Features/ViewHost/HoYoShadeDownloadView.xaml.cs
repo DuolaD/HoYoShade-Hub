@@ -1870,4 +1870,11 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             Debug.WriteLine($"OnInstallationChanged error: {ex}");
         }
     }
+
+    private async void Button_NetworkSettings_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
+        await dialog.ShowAsync();
+    }
 }
+

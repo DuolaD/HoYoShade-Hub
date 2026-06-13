@@ -80,6 +80,10 @@
                       MinWidth="200"
                       HorizontalAlignment="Stretch"
                       SelectionChanged="ComboBox_Language_SelectionChanged" />
+
+            <Button HorizontalAlignment="Stretch"
+                    Content="{x:Bind lang:Lang.WelcomeView_NetworkSettingsButton}"
+                    Click="Button_NetworkSettings_Click" />
         </StackPanel>
 
         <StackPanel x:Name="MainContentPanel" 

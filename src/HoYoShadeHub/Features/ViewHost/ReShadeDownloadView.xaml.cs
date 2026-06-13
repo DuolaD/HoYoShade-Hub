@@ -1407,4 +1407,11 @@ public sealed partial class ReShadeDownloadView : UserControl
             InstalledOpenHoYoShadeVersion = null;
         }
     }
+
+    private async void Button_NetworkSettings_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
+        await dialog.ShowAsync();
+    }
 }
+
