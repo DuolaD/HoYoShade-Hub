@@ -62,6 +62,12 @@ public sealed partial class WelcomeView : UserControl
     public string? NetworkSpeed { get; set => SetProperty(ref field, value); }
 
 
+    public string SystemProxyTitleText => GetLangString("SettingPage_SystemProxyStatus");
+
+
+    public string? SystemProxyStatusText { get; set => SetProperty(ref field, value); }
+
+
     public string DohRecommendationText => GetLangString("WelcomeView_DohRecommendation");
 
 
@@ -85,6 +91,30 @@ public sealed partial class WelcomeView : UserControl
     }
 
 
+    private void RefreshSystemProxyStatus()
+    {
+        try
+        {
+            Uri targetUri = new Uri("https://starward.scighost.com");
+            Uri? proxy = HttpClient.DefaultProxy.GetProxy(targetUri);
+            if (proxy is not null && proxy != targetUri)
+            {
+                SystemProxyStatusText = string.Format(CultureInfo.CurrentCulture, GetLangString("SettingPage_SystemProxyEnabled"), proxy.ToString());
+            }
+            else
+            {
+                SystemProxyStatusText = GetLangString("SettingPage_SystemProxyDisabled");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            SystemProxyStatusText = GetLangString("SettingPage_SystemProxyDisabled");
+        }
+        OnPropertyChanged(nameof(SystemProxyTitleText));
+    }
+
+
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         InitializeLanguageSelector();
@@ -98,6 +128,7 @@ public sealed partial class WelcomeView : UserControl
         _welcomeDohProvider = AppConfig.DohProvider;
         _welcomeEnableEch = AppConfig.EnableEch;
 
+        RefreshSystemProxyStatus();
         TestSpeedCommand.Execute(null);
     }
 
@@ -182,6 +213,7 @@ public sealed partial class WelcomeView : UserControl
         OnPropertyChanged(nameof(DohRecommendationText));
         // Re-check write permission to update error messages in current language
         _ = CheckWritePermissionAsync();
+        RefreshSystemProxyStatus();
     }
 
 
@@ -293,6 +325,7 @@ public sealed partial class WelcomeView : UserControl
     {
         try
         {
+            RefreshSystemProxyStatus();
             const string url = "https://speed.cloudflare.com/__down?bytes=102400";
             NetworkDelay = null;
             NetworkSpeed = null;

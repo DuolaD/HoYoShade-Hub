@@ -140,6 +140,26 @@
                 </Button>
             </StackPanel>
 
+            <!--  系统代理  -->
+            <StackPanel Height="30"
+                        Margin="0,8,0,0"
+                        Orientation="Horizontal"
+                        Spacing="12">
+                <FontIcon Margin="0,0,-4,0"
+                          FontSize="16"
+                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                          Glyph="&#xE705;"
+                          IsTextScaleFactorEnabled="False" />
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           IsTextScaleFactorEnabled="False"
+                           Text="{x:Bind SystemProxyTitleText, Mode=OneWay}" />
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           IsTextScaleFactorEnabled="False"
+                           Text="{x:Bind SystemProxyStatusText, Mode=OneWay}" />
+            </StackPanel>
+
             <!--  WebView2  -->
             <StackPanel Height="30"
                         Margin="0,8,0,0"
