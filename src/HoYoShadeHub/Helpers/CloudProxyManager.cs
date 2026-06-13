@@ -33,7 +33,6 @@ public class CloudProxyManager
     // Alibaba Cloud proxy URLs
     private static readonly string[] AlibabaCloudProxies = new[]
     {
-        "https://hoyoshadehub-glasses.0e9398a1.er.aliyun-esa.net",
         "https://cdn.bold.wood.c623.ali.storage.hub.hoyosha.de",
         "https://cdn.jolly.snowflake.cd46.ali.storage.hub.hoyosha.de",
         "https://cdn.steep.pond.0c55.ali.storage.hub.hoyosha.de"

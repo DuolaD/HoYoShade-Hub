@@ -19,10 +19,9 @@ public class LauncherUpdateProxyManager
     };
 
     // Alibaba Cloud proxy URLs
-    // �����ƴ������������ڴ��� https://cdn.cf.storage.hub.hoyosha.de/release
+    // 阿里云代理下载直链，后端代理由 https://cdn.cf.storage.hub.hoyosha.de/release 托管
     private static readonly string[] AlibabaCloudProxies = new[]
     {
-        "https://hoyoshadehub-glasses.0e9398a1.er.aliyun-esa.net",
         "https://cdn.bold.wood.c623.ali.storage.hub.hoyosha.de",
         "https://cdn.jolly.snowflake.cd46.ali.storage.hub.hoyosha.de",
         "https://cdn.steep.pond.0c55.ali.storage.hub.hoyosha.de"
