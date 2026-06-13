@@ -87,7 +87,14 @@ public sealed partial class NetworkSettingDialog : ContentDialog
 
             _enableDoh = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(EnableEch));
+            if (!_enableDoh)
+            {
+                EnableEch = false;
+            }
+            else
+            {
+                OnPropertyChanged(nameof(EnableEch));
+            }
             OnNetworkSettingChanged(nameof(EnableDoh));
             _ = RefreshNetworkStatusAsync();
         }
