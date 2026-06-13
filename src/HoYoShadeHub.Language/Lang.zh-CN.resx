@@ -735,7 +735,13 @@
     <value>开始之前还需要检查一些必要环境。</value>
   </data>
   <data name="WelcomeView_DohRecommendation" xml:space="preserve">
-    <value>如果你遇到连接性问题，或者你的网络环境受到审查，我们建议你开启 DoH。</value>
+    <value>如果你遇到连接性问题，或者你的网络环境受到审查，我们建议你更改</value>
+  </data>
+  <data name="WelcomeView_NetworkSettingsButton" xml:space="preserve">
+    <value>网络设置</value>
+  </data>
+  <data name="WelcomeView_NetworkSettingsPeriod" xml:space="preserve">
+    <value>。</value>
   </data>
   <data name="WelcomeView_NetworkStatus" xml:space="preserve">
     <value>网络状态</value>

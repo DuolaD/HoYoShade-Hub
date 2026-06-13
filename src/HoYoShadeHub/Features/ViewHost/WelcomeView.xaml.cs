@@ -28,12 +28,14 @@ namespace HoYoShadeHub.Features.ViewHost;
 [INotifyPropertyChanged]
 public sealed partial class WelcomeView : UserControl
 {
+    private bool _welcomeEnableDoh;
+    private DohProvider _welcomeDohProvider = DohProvider.Cloudflare;
+    private bool _welcomeEnableEch;
 
 
     public WelcomeView()
     {
         this.InitializeComponent();
-        DohProviders = new ObservableCollection<DownloadServerItem>();
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
     }
@@ -63,63 +65,7 @@ public sealed partial class WelcomeView : UserControl
     public string DohRecommendationText => GetLangString("WelcomeView_DohRecommendation");
 
 
-    public string DohSwitchText => GetLangString("SettingPage_DohDnsOverHttps");
 
-
-    public string DohProviderText => GetLangString("SettingPage_DohProvider");
-
-
-    private bool _welcomeEnableDoh;
-
-
-    public bool EnableDoh
-    {
-        get => _welcomeEnableDoh;
-        set
-        {
-            if (_welcomeEnableDoh == value)
-            {
-                return;
-            }
-
-            _welcomeEnableDoh = value;
-            AppConfig.EnableDoh = value;
-            OnPropertyChanged();
-            TestSpeedCommand.Execute(null);
-        }
-    }
-
-
-    public ObservableCollection<DownloadServerItem> DohProviders { get; }
-
-
-    private DownloadServerItem? _selectedDohProvider;
-
-
-    public DownloadServerItem? SelectedDohProvider
-    {
-        get => _selectedDohProvider;
-        set
-        {
-            if (ReferenceEquals(_selectedDohProvider, value))
-            {
-                return;
-            }
-
-            _selectedDohProvider = value;
-            if (value != null)
-            {
-                var provider = (DohProvider)value.ServerIndex;
-                if (AppConfig.DohProvider != provider)
-                {
-                    AppConfig.DohProvider = provider;
-                }
-            }
-
-            OnPropertyChanged();
-            TestSpeedCommand.Execute(null);
-        }
-    }
 
 
     public bool CanStartHoYoShadeHub { get; set => SetProperty(ref field, value); }
@@ -142,12 +88,16 @@ public sealed partial class WelcomeView : UserControl
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         InitializeLanguageSelector();
-        InitializeDohProviders();
         IsWin11 = Environment.OSVersion.Version >= new Version(10, 0, 22000);
         InitializeDefaultUserDataFolder();
         await CheckWritePermissionAsync();
         CheckWebView2Support();
         await CheckWebpDecoderSupportAsync();
+
+        _welcomeEnableDoh = AppConfig.EnableDoh;
+        _welcomeDohProvider = AppConfig.DohProvider;
+        _welcomeEnableEch = AppConfig.EnableEch;
+
         TestSpeedCommand.Execute(null);
     }
 
@@ -229,90 +179,13 @@ public sealed partial class WelcomeView : UserControl
 
     private void OnLanguageChanged()
     {
-        RefreshDohProviderNames();
         OnPropertyChanged(nameof(DohRecommendationText));
-        OnPropertyChanged(nameof(DohSwitchText));
-        OnPropertyChanged(nameof(DohProviderText));
         // Re-check write permission to update error messages in current language
         _ = CheckWritePermissionAsync();
     }
 
 
-    private void InitializeDohProviders()
-    {
-        _welcomeEnableDoh = AppConfig.EnableDoh;
-        OnPropertyChanged(nameof(EnableDoh));
 
-        int savedProvider = (int)AppConfig.DohProvider;
-
-        DohProviders.Clear();
-        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Cloudflare), ServerIndex = (int)DohProvider.Cloudflare });
-        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Google), ServerIndex = (int)DohProvider.Google });
-        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.CleanBrowsing), ServerIndex = (int)DohProvider.CleanBrowsing });
-        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.OpenDns), ServerIndex = (int)DohProvider.OpenDns });
-        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Quad9), ServerIndex = (int)DohProvider.Quad9 });
-        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.AdGuard), ServerIndex = (int)DohProvider.AdGuard });
-        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Aliyun), ServerIndex = (int)DohProvider.Aliyun });
-        DohProviders.Add(new DownloadServerItem { Name = GetDohProviderName(DohProvider.Tencent), ServerIndex = (int)DohProvider.Tencent });
-
-        SelectedDohProvider = DohProviders.FirstOrDefault(x => x.ServerIndex == savedProvider) ?? DohProviders[0];
-        _ = UpdateDohLatenciesAsync();
-    }
-
-
-    private static string GetDohProviderName(DohProvider provider)
-    {
-        return provider switch
-        {
-            DohProvider.Aliyun => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
-            DohProvider.Tencent => Lang.HoYoShadeDownloadView_Server_TencentCloud,
-            DohProvider.OpenDns => "OpenDNS",
-            _ => provider.ToString(),
-        };
-    }
-
-
-    private void RefreshDohProviderNames()
-    {
-        foreach (var provider in DohProviders)
-        {
-            provider.Name = GetDohProviderName((DohProvider)provider.ServerIndex);
-        }
-    }
-
-
-    private async Task UpdateDohLatenciesAsync()
-    {
-        foreach (var provider in DohProviders)
-        {
-            provider.LatencyText = "Tcping...";
-            provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
-        }
-
-        var tasks = DohProviders.Select(async provider =>
-        {
-            long latency = await DohService.TcpPingAsync((DohProvider)provider.ServerIndex);
-            if (latency >= 0)
-            {
-                provider.LatencyText = $"{latency}ms";
-                if (latency <= 600)
-                {
-                    provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.LimeGreen);
-                }
-                else
-                {
-                    provider.LatencyColor = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0xC5, 0x7F, 0x0A));
-                }
-            }
-            else
-            {
-                provider.LatencyText = "Timeout";
-                provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
-            }
-        });
-
-        await Task.WhenAll(tasks);
-    }
 
 
 
@@ -517,17 +390,40 @@ public sealed partial class WelcomeView : UserControl
             }
             AppConfig.UserDataFolder = UserDataFolder;
             DatabaseService.SetDatabase(UserDataFolder);
-            AppConfig.EnableDoh = EnableDoh;
-            if (SelectedDohProvider is not null)
-            {
-                AppConfig.DohProvider = (DohProvider)SelectedDohProvider.ServerIndex;
-            }
+
+            // Persist the cached welcome network settings to the database now that UserDataFolder is set
+            AppConfig.EnableDoh = _welcomeEnableDoh;
+            AppConfig.DohProvider = _welcomeDohProvider;
+            AppConfig.EnableEch = _welcomeEnableEch;
+
             AppConfig.SaveConfiguration();
             WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex);
+        }
+    }
+
+    private async void Hyperlink_NetworkSettings_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+    {
+        var dialog = new NetworkSettingDialog
+        {
+            XamlRoot = this.XamlRoot,
+            IsWelcomeMode = true,
+            InitialEnableDoh = _welcomeEnableDoh,
+            InitialDohProvider = _welcomeDohProvider,
+            InitialEnableEch = _welcomeEnableEch
+        };
+        var result = await dialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            _welcomeEnableDoh = dialog.ConfirmedEnableDoh;
+            _welcomeDohProvider = dialog.ConfirmedDohProvider;
+            _welcomeEnableEch = dialog.ConfirmedEnableEch;
+
+            TestSpeedCommand.Execute(null);
         }
     }
 
