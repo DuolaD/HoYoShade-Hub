@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Web.WebView2.Core;
@@ -88,6 +89,21 @@ public sealed partial class WelcomeView : UserControl
         return Lang.ResourceManager.GetString(key, Lang.Culture)
             ?? Lang.ResourceManager.GetString(key, CultureInfo.InvariantCulture)
             ?? key;
+    }
+
+
+    public Thickness GetMargin(double top)
+    {
+        bool isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+        double factor = isEnglish ? 0.8 : 1.0;
+        return new Thickness(0, top * factor, 0, 0);
+    }
+
+
+    public Thickness GetScrollViewerMargin()
+    {
+        bool isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+        return isEnglish ? new Thickness(48, 36, 48, 28) : new Thickness(48, 44, 48, 28);
     }
 
 
