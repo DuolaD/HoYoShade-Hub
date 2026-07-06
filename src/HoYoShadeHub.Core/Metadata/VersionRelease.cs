@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace HoYoShadeHub.Core.Metadata;
 
@@ -53,9 +53,9 @@ public class ReleaseVersion : IJsonOnDeserialized
             if (string.IsNullOrWhiteSpace(SeparatePrefix))
             {
 #if DEV
-                prefix = $"https://starward.scighost.com/release/separate_files/dev/";
+                prefix = $"https://cdn.cf.storage.hub.hoyosha.de/release/separate_files/dev/";
 #else
-                prefix = $"https://starward.scighost.com/release/separate_files/";
+                prefix = $"https://cdn.cf.storage.hub.hoyosha.de/release/separate_files/";
 #endif
             }
             else
