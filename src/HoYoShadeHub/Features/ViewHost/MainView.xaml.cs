@@ -333,7 +333,7 @@ public sealed partial class MainView : UserControl
         try
         {
             await Task.Delay(1500);
-            Uri? proxy = HttpClient.DefaultProxy.GetProxy(new Uri("https://starward.scighost.com"));
+            Uri? proxy = HttpClient.DefaultProxy.GetProxy(new Uri("https://hoyosha.de/"));
             if (proxy is not null)
             {
                 InAppToast.MainWindow?.Information(Lang.MainView_CheckSystemProxy_SystemProxyIsEnabled, proxy.ToString(), 5000);

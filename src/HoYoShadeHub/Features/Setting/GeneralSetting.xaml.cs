@@ -189,7 +189,7 @@ public sealed partial class GeneralSetting : PageBase
     {
         try
         {
-            Uri targetUri = new Uri("https://starward.scighost.com");
+            Uri targetUri = new Uri("https://hoyosha.de/");
             Uri? proxy = HttpClient.DefaultProxy.GetProxy(targetUri);
             if (proxy is not null && proxy != targetUri)
             {
