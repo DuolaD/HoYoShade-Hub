@@ -109,47 +109,156 @@ public class EchFallbackHttpMessageHandler : DelegatingHandler
             RedirectStandardError = true
         };
 
+        Process? process = null;
         try
         {
-            using var process = new Process { StartInfo = startInfo };
+            process = new Process { StartInfo = startInfo };
 
             if (!process.Start())
             {
+                process.Dispose();
                 return null;
             }
 
-            var stdoutTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
-            var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
-
-            using (var registration = cancellationToken.Register(() => { try { process.Kill(); } catch { } }))
+            // Consume stderr asynchronously in background to prevent blocking
+            _ = Task.Run(async () =>
             {
-                await process.WaitForExitAsync(cancellationToken);
-            }
+                try
+                {
+                    using var reader = process.StandardError;
+                    var buffer = new char[1024];
+                    while (await reader.ReadAsync(buffer, 0, buffer.Length) > 0) {}
+                }
+                catch {}
+            });
 
-            var stdout = await stdoutTask;
-            var stderr = await stderrTask;
-
-            if (process.ExitCode != 0)
+            // Wait briefly to see if it fails/exits immediately
+            await Task.Delay(50, cancellationToken);
+            if (process.HasExited && process.ExitCode != 0)
             {
+                process.Dispose();
                 return null;
             }
 
             var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(stdout, Encoding.UTF8)
+                Content = new StreamContent(new ProcessStream(process.StandardOutput.BaseStream, process, tempFile, cancellationToken))
             };
             return responseMessage;
         }
         catch
         {
-            return null;
-        }
-        finally
-        {
+            if (process != null)
+            {
+                try { if (!process.HasExited) process.Kill(); } catch {}
+                process.Dispose();
+            }
             if (tempFile != null && File.Exists(tempFile))
             {
                 try { File.Delete(tempFile); } catch { }
             }
+            return null;
         }
+    }
+}
+
+public class ProcessStream : Stream
+{
+    private readonly Stream _innerStream;
+    private readonly Process _process;
+    private readonly string? _tempFile;
+    private readonly CancellationTokenRegistration _cancellationRegistration;
+    private bool _disposed;
+
+    public ProcessStream(Stream innerStream, Process process, string? tempFile, CancellationToken cancellationToken)
+    {
+        _innerStream = innerStream;
+        _process = process;
+        _tempFile = tempFile;
+
+        if (cancellationToken.CanBeCanceled)
+        {
+            _cancellationRegistration = cancellationToken.Register(() =>
+            {
+                try
+                {
+                    if (!_process.HasExited)
+                    {
+                        _process.Kill();
+                    }
+                }
+                catch { }
+            });
+        }
+    }
+
+    public override bool CanRead => _innerStream.CanRead;
+    public override bool CanSeek => _innerStream.CanSeek;
+    public override bool CanWrite => _innerStream.CanWrite;
+    public override long Length => _innerStream.Length;
+    public override long Position
+    {
+        get => _innerStream.Position;
+        set => _innerStream.Position = value;
+    }
+
+    public override void Flush() => _innerStream.Flush();
+    public override int Read(byte[] buffer, int offset, int count) => _innerStream.Read(buffer, offset, count);
+    public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) => _innerStream.ReadAsync(buffer, offset, count, cancellationToken);
+    public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) => _innerStream.ReadAsync(buffer, cancellationToken);
+    
+    public override long Seek(long offset, SeekOrigin origin) => _innerStream.Seek(offset, origin);
+    public override void SetLength(long value) => _innerStream.SetLength(value);
+    public override void Write(byte[] buffer, int offset, int count) => _innerStream.Write(buffer, offset, count);
+
+    protected override void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _cancellationRegistration.Dispose();
+                _innerStream.Dispose();
+                try
+                {
+                    if (!_process.HasExited)
+                    {
+                        _process.Kill();
+                    }
+                }
+                catch { }
+                _process.Dispose();
+                if (_tempFile != null && File.Exists(_tempFile))
+                {
+                    try { File.Delete(_tempFile); } catch { }
+                }
+            }
+            _disposed = true;
+        }
+        base.Dispose(disposing);
+    }
+
+    public override async ValueTask DisposeAsync()
+    {
+        if (!_disposed)
+        {
+            _cancellationRegistration.Dispose();
+            await _innerStream.DisposeAsync();
+            try
+            {
+                if (!_process.HasExited)
+                {
+                    _process.Kill();
+                }
+            }
+            catch { }
+            _process.Dispose();
+            if (_tempFile != null && File.Exists(_tempFile))
+            {
+                try { File.Delete(_tempFile); } catch { }
+            }
+            _disposed = true;
+        }
+        await base.DisposeAsync();
     }
 }
