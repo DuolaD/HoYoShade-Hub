@@ -63,7 +63,7 @@ public class EchFallbackHttpMessageHandler : DelegatingHandler
         var url = request.RequestUri!.ToString();
         var dohUrl = DohService.GetCurrentDohUrl();
         var argsBuilder = new StringBuilder();
-        argsBuilder.Append("--ech true ");
+        argsBuilder.Append("--ech true --ca-native ");
         if (!string.IsNullOrWhiteSpace(dohUrl))
         {
             argsBuilder.Append($"--doh-url \"{dohUrl}\" ");
