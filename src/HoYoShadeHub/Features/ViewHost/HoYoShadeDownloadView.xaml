@@ -19,7 +19,8 @@
                    Fill="{ThemeResource ControlOnImageFillColorDefaultBrush}" />
 
         <!-- Installation Status Panel (Top Right) -->
-        <StackPanel Margin="0,48,48,0"
+        <StackPanel Canvas.ZIndex="10"
+                    Margin="0,48,48,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Spacing="8">

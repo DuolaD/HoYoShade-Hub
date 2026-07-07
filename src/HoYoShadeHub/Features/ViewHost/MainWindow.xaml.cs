@@ -54,10 +54,11 @@ public sealed partial class MainWindow : WindowEx
         AppWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
         AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
         AppWindow.Closing += AppWindow_Closing;
+        AppWindow.Changed += AppWindow_Changed;
         Content.KeyDown += Content_KeyDown;
         CenterInScreen(1200, 676);
         AdaptTitleBarButtonColorToActuallTheme();
-        SetDragRectangles(new RectInt32(0, 0, 100000, (int)(48 * UIScale)));
+        UpdateDragRectangles();
         SetIcon();
         WTSRegisterSessionNotification(WindowHandle, 0);
         if (AppWindow.Presenter is OverlappedPresenter presenter)
@@ -335,4 +336,27 @@ public sealed partial class MainWindow : WindowEx
     private static partial bool WTSRegisterSessionNotification(IntPtr hWnd, int dwFlags);
 
 
+    private void UpdateDragRectangles()
+    {
+        if (AppWindowTitleBar.IsCustomizationSupported() && AppWindow.TitleBar.ExtendsContentIntoTitleBar == true)
+        {
+            double scale = UIScale;
+            int titleBarHeight = (int)(48 * scale);
+            int leftInset = AppWindow.TitleBar.LeftInset;
+            int rightInset = AppWindow.TitleBar.RightInset;
+            int dragWidth = AppWindow.Size.Width - leftInset - rightInset;
+            if (dragWidth > 0)
+            {
+                SetDragRectangles(new RectInt32(leftInset, 0, dragWidth, titleBarHeight));
+            }
+        }
+    }
+
+    private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args)
+    {
+        if (args.DidSizeChange || args.DidPresenterChange)
+        {
+            UpdateDragRectangles();
+        }
+    }
 }
