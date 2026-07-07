@@ -18,10 +18,16 @@
                        FontWeight="Bold"
                        Text="{x:Bind lang:Lang.SettingPage_BlenderPlugin}" />
 
-            <TextBlock Text="{x:Bind lang:Lang.SettingPage_BlenderPluginRegionRestriction}"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                TextWrapping="Wrap"
-                FontSize="12" />
+            <StackPanel Spacing="8">
+                <TextBlock Text="{x:Bind lang:Lang.SettingPage_BlenderPluginRegionRestriction}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           TextWrapping="Wrap"
+                           FontSize="12" />
+                <TextBlock Text="{x:Bind LocationText, Mode=OneWay}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           TextWrapping="Wrap"
+                           FontSize="12" />
+            </StackPanel>
             
             <!--  原神Blender/留影机插件  -->
             <StackPanel Spacing="12">
