@@ -63,7 +63,13 @@ public static class AppConfig
             if (Directory.Exists(parentFolder) && File.Exists(launcherExe))
             {
                 IsPortable = true;
+                InstallType = HoYoShadeHub.RPC.Update.Metadata.InstallType.Portable;
                 HoYoShadeHubLauncherExecutePath = launcherExe;
+            }
+            else
+            {
+                IsPortable = false;
+                InstallType = HoYoShadeHub.RPC.Update.Metadata.InstallType.Setup;
             }
 
             if (IsAppInRemovableStorage && IsPortable)
@@ -153,6 +159,8 @@ public static class AppConfig
 
 
     public static bool IsPortable { get; private set; }
+
+    public static HoYoShadeHub.RPC.Update.Metadata.InstallType InstallType { get; set; } = HoYoShadeHub.RPC.Update.Metadata.InstallType.Setup;
 
 
     public static bool IsAppInRemovableStorage { get; private set; }
@@ -279,6 +287,7 @@ public static class AppConfig
 
             sc.AddTransient<MetadataClient>();
             sc.AddTransient<UpdateService>();
+            sc.AddTransient<SetupService>();
 
             sc.AddSingleton<RpcService>();
 

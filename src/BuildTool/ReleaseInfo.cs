@@ -46,9 +46,28 @@ public class ReleaseInfoDetail
     [JsonPropertyName("manifest_url")]
     public string ManifestUrl { get; set; }
 
+    [JsonPropertyName("setup")]
+    public ReleaseSetup? Setup { get; set; }
+
     [JsonPropertyName("diffs")]
     public Dictionary<string, ReleaseInfoDiff> Diffs { get; set; }
 
+}
+
+
+public class ReleaseSetup
+{
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
+
+    [JsonPropertyName("file_name")]
+    public string FileName { get; set; }
+
+    [JsonPropertyName("size")]
+    public long Size { get; set; }
+
+    [JsonPropertyName("hash")]
+    public string Hash { get; set; }
 }
 
 

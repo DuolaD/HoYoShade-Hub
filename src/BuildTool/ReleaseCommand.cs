@@ -38,6 +38,8 @@ public class ReleaseCommand
 
     private Option<List<string>> _inputFilesOption = new Option<List<string>>("--input", "-i") { Description = "Input release info files to combine.", AllowMultipleArgumentsPerToken = true, Required = true };
 
+    private Option<string> _setupPackageOption = new Option<string>("--setup-package", "-sp") { Description = "Setup package file." };
+
 
     private string outputFile;
     private string version;
@@ -45,6 +47,7 @@ public class ReleaseCommand
     private InstallType type;
     private DateTimeOffset buildTime;
     private string package;
+    private string setupPackage;
     private List<string> diffVersions;
     private List<string> inputFiles;
 
@@ -57,6 +60,7 @@ public class ReleaseCommand
         _createCommand.Options.Add(_typeOption);
         _createCommand.Options.Add(_timeOption);
         _createCommand.Options.Add(_packageOption);
+        _createCommand.Options.Add(_setupPackageOption);
         _createCommand.Options.Add(_diffVersionsOption);
         _createCommand.SetAction(Release);
         _combineCommand.Arguments.Add(_outputFileArgument);
@@ -84,6 +88,7 @@ public class ReleaseCommand
         type = parseResult.GetValue(_typeOption);
         buildTime = parseResult.GetValue(_timeOption);
         package = parseResult.GetValue(_packageOption)!;
+        setupPackage = parseResult.GetValue(_setupPackageOption)!;
         diffVersions = parseResult.GetValue(_diffVersionsOption)!;
         inputFiles = parseResult.GetValue(_inputFilesOption)!;
     }
@@ -116,6 +121,18 @@ public class ReleaseCommand
             detail.PackageUrl = $"https://cdn.cf.storage.hub.hoyosha.de/release/package/{Path.GetFileName(package)}";
             detail.PackageSize = bytes.Length;
             detail.PackageHash = Convert.ToHexStringLower(SHA256.HashData(bytes));
+        }
+
+        if (File.Exists(setupPackage))
+        {
+            byte[] bytes = await File.ReadAllBytesAsync(setupPackage);
+            detail.Setup = new ReleaseSetup
+            {
+                Url = $"https://cdn.cf.storage.hub.hoyosha.de/release/package/{Path.GetFileName(setupPackage)}",
+                FileName = Path.GetFileName(setupPackage),
+                Size = bytes.Length,
+                Hash = Convert.ToHexStringLower(SHA256.HashData(bytes)),
+            };
         }
 
         if (diffVersions != null && diffVersions.Count > 0)

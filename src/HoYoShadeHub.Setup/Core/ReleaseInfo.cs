@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 
-namespace HoYoShadeHub.RPC.Update.Metadata;
+namespace HoYoShadeHub.Setup.Core;
 
 public class ReleaseInfo
 {
@@ -97,4 +97,6 @@ public class ReleaseInfoDiff
 
     [JsonPropertyName("manifest_url")]
     public string ManifestUrl { get; set; }
+
 }
+

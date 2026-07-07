@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PublishAot>true</PublishAot>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<CETCompat>false</CETCompat>
+		<OptimizationPreference>Size</OptimizationPreference>
+		<IlcGenerateMstatFile>true</IlcGenerateMstatFile>
+		<IlcGenerateDgmlFile>true</IlcGenerateDgmlFile>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<ApplicationIcon>../HoYoShadeHub/logo.ico</ApplicationIcon>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aprillz.MewUI" Version="0.15.2" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="10.0.9" />
+		<PackageReference Include="SharpCompress" Version="0.49.1" />
+		<PackageReference Include="Vanara.PInvoke.ComCtl32" Version="5.0.5" />
+		<PackageReference Include="WindowsShortcutFactory" Version="1.2.0" />
+		<PackageReference Include="Starward.NativeLib" Version="0.3.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\*" />
+		<EmbeddedResource Include="logo.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<DirectPInvoke Include="Snap.HPatch" />
+		<NativeLibrary Include="runtimes\$(RuntimeIdentifier)\Snap.HPatch.lib" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Locale\Lang.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Lang.resx</DependentUpon>
+		</Compile>
+		<EmbeddedResource Update="Locale\Lang.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Lang.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+</Project>

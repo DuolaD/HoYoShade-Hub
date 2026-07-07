@@ -248,7 +248,7 @@ public sealed partial class WelcomeView : UserControl
             }
             else if (AppConfig.IsAppInRemovableStorage)
             {
-                UserDataFolder = Path.Combine(Path.GetPathRoot(AppContext.BaseDirectory)!, ".HoYoShadeLauncherData");
+                UserDataFolder = Path.Combine(Path.GetPathRoot(AppContext.BaseDirectory)!, ".HoYoShadeHubData");
             }
             else if (AppConfig.IsPortable)
             {
@@ -257,9 +257,9 @@ public sealed partial class WelcomeView : UserControl
             else
             {
 #if DEBUG || DEV
-                UserDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HoYoShadeLauncher");
+                UserDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HoYoShadeHub");
 #else
-                UserDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HoYoShadeLauncher");
+                UserDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HoYoShadeHub");
 #endif
             }
         }
@@ -277,10 +277,14 @@ public sealed partial class WelcomeView : UserControl
         {
             UserDataFolderErrorMessage = null;
             CanStartHoYoShadeHub = false;
-            if (!Directory.Exists(UserDataFolder) || !Path.IsPathFullyQualified(UserDataFolder))
+            if (!Path.IsPathFullyQualified(UserDataFolder))
             {
                 UserDataFolderErrorMessage = Lang.DownloadGamePage_TheFolderDoesNotExist;
                 return;
+            }
+            if (!Directory.Exists(UserDataFolder))
+            {
+                Directory.CreateDirectory(UserDataFolder);
             }
             string folder = Path.GetFullPath(UserDataFolder);
             if (folder == Path.GetPathRoot(folder))

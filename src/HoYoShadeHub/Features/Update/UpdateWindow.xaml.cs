@@ -47,6 +47,8 @@ public sealed partial class UpdateWindow : WindowEx
 
     private readonly UpdateService _updateService = AppConfig.GetService<UpdateService>();
 
+    private readonly SetupService _setupService = AppConfig.GetService<SetupService>();
+
 
     private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _timer;
 
@@ -508,60 +510,89 @@ public sealed partial class UpdateWindow : WindowEx
 
             if (NewVersion != null)
             {
-                _timer.Start();
-
-                int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
-                int[] serverSequence;
-                if (serverIndex == -1) {
-                    serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(true);
-                } else {
-                    serverSequence = new[] { serverIndex };
-                }
-
-                bool success = false;
-                var httpClient = AppConfig.GetService<System.Net.Http.HttpClient>();
-
-                foreach (var currentServerIndex in serverSequence)
+                if (AppConfig.InstallType is HoYoShadeHub.RPC.Update.Metadata.InstallType.Setup && NewVersion.Setup is not null)
                 {
-                    // Ping check for Auto Select
-                    if (serverIndex == -1)
+                    Button_Restart.IsEnabled = false;
+                    IsProgressTextVisible = true;
+                    IsProgressBarVisible = true;
+                    ProgressBar_Update.IsIndeterminate = false;
+
+                    var task = _setupService.UpdateAsync(NewVersion);
+
+                    const double MB = 1 << 20;
+                    while (!task.IsCompleted)
                     {
-                        long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
-                        if (ping < 0)
+                        if (_setupService.SetupTotalBytes > 0)
                         {
-                            _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
-                            continue;
+                            ProgressBytesText = $"{_setupService.SetupDownloadBytes / MB:F2}/{_setupService.SetupTotalBytes / MB:F2} MB";
+                            ProgressPercentText = $"{(_setupService.SetupDownloadBytes * 100.0 / _setupService.SetupTotalBytes):F1}%";
+                            ProgressBar_Update.Value = _setupService.SetupDownloadBytes * 100.0 / _setupService.SetupTotalBytes;
                         }
+                        await Task.Delay(100);
+                    }
+                    await task;
+                    Button_Restart.IsEnabled = true;
+                    IsProgressTextVisible = false;
+                    IsProgressBarVisible = false;
+                    Finish();
+                }
+                else
+                {
+                    _timer.Start();
+
+                    int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
+                    int[] serverSequence;
+                    if (serverIndex == -1) {
+                        serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(true);
+                    } else {
+                        serverSequence = new[] { serverIndex };
                     }
 
-                    string[] proxies = currentServerIndex == 1 ? new string[] { null } : LauncherUpdateProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+                    bool success = false;
+                    var httpClient = AppConfig.GetService<System.Net.Http.HttpClient>();
 
-                    foreach (var proxyUrl in proxies)
+                    foreach (var currentServerIndex in serverSequence)
                     {
-                        try
+                        // Ping check for Auto Select
+                        if (serverIndex == -1)
                         {
-                            if (!_timer.IsRunning) _timer.Start();
-                            await _updateService.StartUpdateAsync(NewVersion, proxyUrl);
-                            
-                            if (_updateService.State is UpdateState.Finish)
+                            long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
+                            if (ping < 0)
                             {
-                                success = true;
-                                break;
+                                _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
+                                continue;
                             }
                         }
-                        catch (Exception ex)
+
+                        string[] proxies = currentServerIndex == 1 ? new string[] { null } : LauncherUpdateProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+                        foreach (var proxyUrl in proxies)
                         {
-                            _logger.LogWarning(ex, "Update failed with proxy {ProxyUrl}", proxyUrl);
+                            try
+                            {
+                                if (!_timer.IsRunning) _timer.Start();
+                                await _updateService.StartUpdateAsync(NewVersion, proxyUrl);
+                                
+                                if (_updateService.State is UpdateState.Finish)
+                                {
+                                    success = true;
+                                    break;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogWarning(ex, "Update failed with proxy {ProxyUrl}", proxyUrl);
+                            }
                         }
+
+                        if (success) break;
                     }
 
-                    if (success) break;
-                }
-
-                if (!success)
-                {
-                    _logger.LogError("All servers failed for update");
-                    ErrorMessage = Lang.DownloadGamePage_UnknownError;
+                    if (!success)
+                    {
+                        _logger.LogError("All servers failed for update");
+                        ErrorMessage = Lang.DownloadGamePage_UnknownError;
+                    }
                 }
             }
         }
