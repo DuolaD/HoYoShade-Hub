@@ -172,6 +172,7 @@ public sealed partial class NetworkSettingDialog : ContentDialog
             AppConfig.DohProvider = ConfirmedDohProvider;
             AppConfig.EnableEch = ConfirmedEnableEch;
             AppConfig.SaveConfiguration();
+            WeakReferenceMessenger.Default.Send(new EchSettingChangedMessage());
         }
     }
 
