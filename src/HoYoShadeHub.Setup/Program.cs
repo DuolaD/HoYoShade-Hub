@@ -1,4 +1,4 @@
-﻿using Aprillz.MewUI;
+using Aprillz.MewUI;
 using HoYoShadeHub.Setup.Locale;
 using HoYoShadeHub.Setup.Views;
 using System.Diagnostics;
@@ -35,21 +35,21 @@ if (args.Length > 0 && args[0] is "uninstall-clear")
 else if (args.Length > 0 && args[0] == "uninstall")
 {
     CheckMutex();
-    Application.Create().UseAccent(Accent.Orange).Run(new UninstallWindow());
+    Application.Create().UseAccent(Color.FromRgb(0, 181, 236)).Run(new UninstallWindow());
 }
 else if (Environment.OSVersion.Version < new Version("10.0.17763"))
 {
-    Application.Create().UseAccent(Accent.Orange).Run(new TextWindow(Lang.OSVersionLessThan17763));
+    Application.Create().UseAccent(Color.FromRgb(0, 181, 236)).Run(new TextWindow(Lang.OSVersionLessThan17763));
 }
 else if (args.Length > 0 && args[0] == "update")
 {
     CheckMutex();
-    Application.Create().UseAccent(Accent.Orange).Run(new UpdateWindow());
+    Application.Create().UseAccent(Color.FromRgb(0, 181, 236)).Run(new UpdateWindow());
 }
 else
 {
     CheckMutex();
-    Application.Create().UseAccent(Accent.Orange).Run(new InstallWindow());
+    Application.Create().UseAccent(Color.FromRgb(0, 181, 236)).Run(new InstallWindow());
 }
 
 
@@ -60,7 +60,7 @@ void CheckMutex()
     mutex = new Mutex(true, "HoYoShadeHub.Setup", out bool createdNew);
     if (!createdNew)
     {
-        Application.Create().UseAccent(Accent.Orange).Run(new TextWindow(Lang.ASetupIsAlreadyRunning));
+        Application.Create().UseAccent(Color.FromRgb(0, 181, 236)).Run(new TextWindow(Lang.ASetupIsAlreadyRunning));
         Environment.Exit(0);
     }
 }
