@@ -1524,6 +1524,18 @@
   <data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
     <value>该插件仅在中国大陆/香港/澳门/台湾/新加坡等国家及地区可用。如果你并不位于上述国家及地区，该插件开发者/贡献者及 HoYoShade Hub 的开发者/贡献者有权拒绝提供支持。</value>
   </data>
+  <data name="SettingPage_CurrentRegion" xml:space="preserve">
+    <value>你当前的国家/地区为：{0}</value>
+  </data>
+  <data name="SettingPage_RegionFetching" xml:space="preserve">
+    <value>获取中...</value>
+  </data>
+  <data name="SettingPage_RegionFetchFailed" xml:space="preserve">
+    <value>获取失败</value>
+  </data>
+  <data name="SettingPage_RegionUnknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
   <data name="SettingPage_StarwardLauncher" xml:space="preserve">
     <value>Starward启动器</value>
   </data>

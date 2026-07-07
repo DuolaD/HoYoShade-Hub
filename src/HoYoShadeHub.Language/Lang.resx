@@ -1538,6 +1538,18 @@ Do you want to continue with the reset operation?</value>
 	<data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
     <value>This plugin is only available in Mainland China/Hong Kong/Macau/Taiwan/Singapore. If you are not in the above countries and regions, the plugin developers/contributors and HoYoShade Hub developers/contributors reserve the right to refuse support.</value>
   </data>
+  <data name="SettingPage_CurrentRegion" xml:space="preserve">
+    <value>Your current country/region is: {0}</value>
+  </data>
+  <data name="SettingPage_RegionFetching" xml:space="preserve">
+    <value>Fetching...</value>
+  </data>
+  <data name="SettingPage_RegionFetchFailed" xml:space="preserve">
+    <value>Failed to fetch</value>
+  </data>
+  <data name="SettingPage_RegionUnknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
 	<data name="SettingPage_StarwardLauncher" xml:space="preserve">
     <value>Starward Launcher</value>
   </data>

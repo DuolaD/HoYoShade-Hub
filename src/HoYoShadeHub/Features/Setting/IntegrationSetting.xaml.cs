@@ -35,7 +35,7 @@ public sealed partial class IntegrationSetting : PageBase
     public IntegrationSetting()
     {
         this.InitializeComponent();
-        LocationText = "你当前的国家/地区为：获取中...";
+        LocationText = string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionFetching);
     }
 
 
@@ -58,7 +58,7 @@ public sealed partial class IntegrationSetting : PageBase
             httpClient.Timeout = TimeSpan.FromSeconds(5);
             var content = await httpClient.GetStringAsync("https://www.cloudflare.com/cdn-cgi/trace");
             
-            var loc = "未知";
+            var loc = Lang.SettingPage_RegionUnknown;
             var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines)
             {
@@ -68,12 +68,12 @@ public sealed partial class IntegrationSetting : PageBase
                     break;
                 }
             }
-            LocationText = $"你当前的国家/地区为：{loc}";
+            LocationText = string.Format(Lang.SettingPage_CurrentRegion, loc);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to fetch location from cloudflare trace API");
-            LocationText = "你当前的国家/地区为：获取失败";
+            LocationText = string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionFetchFailed);
         }
     }
 

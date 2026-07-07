@@ -3845,6 +3845,42 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Your current country/region is: {0} 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_CurrentRegion {
+            get {
+                return ResourceManager.GetString("SettingPage_CurrentRegion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Fetching... 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_RegionFetching {
+            get {
+                return ResourceManager.GetString("SettingPage_RegionFetching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to fetch 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_RegionFetchFailed {
+            get {
+                return ResourceManager.GetString("SettingPage_RegionFetchFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Unknown 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_RegionUnknown {
+            get {
+                return ResourceManager.GetString("SettingPage_RegionUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Cannot Connect RPC Service 的本地化字符串。
         /// </summary>
         public static string SettingPage_CannotConnectRPCService {
