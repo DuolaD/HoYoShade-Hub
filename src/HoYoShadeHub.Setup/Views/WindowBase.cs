@@ -1,4 +1,4 @@
-﻿using Aprillz.MewUI;
+using Aprillz.MewUI;
 using Aprillz.MewUI.Controls;
 using HoYoShadeHub.Setup.Locale;
 using System.Diagnostics;
@@ -182,7 +182,7 @@ public class WindowBase : Window
         {
             baseFolder = Path.GetFullPath(baseFolder)?.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         }
-        var ps = Process.GetProcessesByName("HoYoShade Hub").Where(p => p.Id != Environment.ProcessId).Where(x => x.MainModule?.FileName.StartsWith(baseFolder ?? "") ?? true);
+        var ps = Process.GetProcessesByName("HoYoShadeHub").Where(p => p.Id != Environment.ProcessId).Where(x => x.MainModule?.FileName.StartsWith(baseFolder ?? "") ?? true);
         if (ps.Any())
         {
             bool close = await MessageBox.AskYesNoAsync(string.Format(Lang.HoYoShadeHubIsRunningForceClose, string.Join(",", ps.Select(x => x.Id))), PromptIconKind.Warning, owner: this);

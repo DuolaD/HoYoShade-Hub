@@ -201,4 +201,7 @@
   <data name="CannotGuaranteeSafetyOfUninstallation" xml:space="preserve">
     <value>检查出错，无法保证卸载操作的安全性。</value>
   </data>
+  <data name="UninstallHoYoShadeCaution" xml:space="preserve">
+    <value>● 文件夹中检测到已安装的 HoYoShade / OpenHoYoShade。卸载将清除所有着色器、插件和预设。一旦执行操作，这些数据将永远无法恢复。请在卸载前先进行备份。</value>
+  </data>
 </root>

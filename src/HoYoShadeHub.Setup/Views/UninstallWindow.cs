@@ -210,6 +210,25 @@ public class UninstallWindow : WindowBase
                 }
             }
 
+            string userDataFolder = GetUserDataFolder(currentFolder!);
+            string hoyoshadePath = Path.Combine(userDataFolder, "HoYoShade");
+            string openHoyoshadePath = Path.Combine(userDataFolder, "OpenHoYoShade");
+            bool hasShaders = false;
+            if (Directory.Exists(hoyoshadePath) && Directory.GetFileSystemEntries(hoyoshadePath).Length > 0)
+            {
+                hasShaders = true;
+            }
+            else if (Directory.Exists(openHoyoshadePath) && Directory.GetFileSystemEntries(openHoyoshadePath).Length > 0)
+            {
+                hasShaders = true;
+            }
+
+            if (hasShaders)
+            {
+                caution = true;
+                textList.Add(Lang.UninstallHoYoShadeCaution);
+            }
+
             await Task.Delay(1000);
 
             if (caution)
@@ -288,10 +307,19 @@ public class UninstallWindow : WindowBase
                     {
                         Directory.Delete(cacheFolder, true);
                     }
-                    string roamingFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HoYoShadeHub");
-                    if (Directory.Exists(roamingFolder))
+                    string defaultRoaming = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HoYoShadeHub");
+                    string userDataFolder = GetUserDataFolder(currentFolder!);
+                    if (!string.Equals(userDataFolder, defaultRoaming, StringComparison.OrdinalIgnoreCase))
                     {
-                        Directory.Delete(roamingFolder, true);
+                        if (Directory.Exists(userDataFolder))
+                        {
+                            Directory.Delete(userDataFolder, true);
+                        }
+                    }
+                    // Delete default roaming directory (which contains config.ini)
+                    if (Directory.Exists(defaultRoaming))
+                    {
+                        Directory.Delete(defaultRoaming, true);
                     }
                 }
 
@@ -357,10 +385,41 @@ public class UninstallWindow : WindowBase
     }
 
 
-
-
-
-
+    private static string GetUserDataFolder(string installFolder)
+    {
+        string defaultFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HoYoShadeHub");
+        string configPath = Path.Combine(defaultFolder, "config.ini");
+        if (File.Exists(configPath))
+        {
+            try
+            {
+                string[] lines = File.ReadAllLines(configPath);
+                foreach (string line in lines)
+                {
+                    if (line.StartsWith("UserDataFolder=", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string path = line.Substring("UserDataFolder=".Length).Trim();
+                        if (!string.IsNullOrWhiteSpace(path))
+                        {
+                            if (Path.IsPathFullyQualified(path))
+                            {
+                                return Path.GetFullPath(path);
+                            }
+                            else
+                            {
+                                return Path.GetFullPath(Path.Combine(installFolder, path));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+        return defaultFolder;
+    }
 
 
 }

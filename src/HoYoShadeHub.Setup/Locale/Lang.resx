@@ -201,4 +201,7 @@
   <data name="CannotGuaranteeSafetyOfUninstallation" xml:space="preserve">
     <value>Check failed. Unable to guarantee the safety of the uninstallation operation.</value>
   </data>
+  <data name="UninstallHoYoShadeCaution" xml:space="preserve">
+    <value>● The folder contains HoYoShade/OpenHoYoShade files. Uninstalling will delete all shaders, plug-ins, and presets. Once deleted, they cannot be recovered. Please backup before uninstalling.</value>
+  </data>
 </root>

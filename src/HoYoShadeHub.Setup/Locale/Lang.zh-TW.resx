@@ -201,4 +201,7 @@
   <data name="CannotGuaranteeSafetyOfUninstallation" xml:space="preserve">
     <value>檢查失敗，無法保證解除安裝作業的安全性。</value>
   </data>
+  <data name="UninstallHoYoShadeCaution" xml:space="preserve">
+    <value>● 資料夾中偵測到已安裝的 HoYoShade / OpenHoYoShade。解除安裝將清除所有著色器、插件和預設。一旦執行操作，這些資料將永遠無法恢復。請在解除安裝前先進行備份。</value>
+  </data>
 </root>
