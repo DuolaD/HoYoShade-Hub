@@ -22,20 +22,36 @@ public sealed partial class IntegrationSetting : PageBase
     private readonly ILogger<IntegrationSetting> _logger = AppConfig.GetLogger<IntegrationSetting>();
 
 
+    private string _regionCode = string.Empty;
+    private enum RegionFetchStatus { Fetching, Success, Failed, Unknown }
+    private RegionFetchStatus _fetchStatus = RegionFetchStatus.Fetching;
+
     /// <summary>
     /// 地区显示文本
     /// </summary>
     public string LocationText
     {
-        get => field;
-        set => SetProperty(ref field, value);
+        get
+        {
+            return _fetchStatus switch
+            {
+                RegionFetchStatus.Fetching => string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionFetching),
+                RegionFetchStatus.Failed => string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionFetchFailed),
+                RegionFetchStatus.Unknown => string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionUnknown),
+                _ => string.Format(Lang.SettingPage_CurrentRegion, _regionCode)
+            };
+        }
     }
 
 
     public IntegrationSetting()
     {
         this.InitializeComponent();
-        LocationText = string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionFetching);
+        
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
+        {
+            OnPropertyChanged(nameof(LocationText));
+        });
     }
 
 
@@ -44,6 +60,12 @@ public sealed partial class IntegrationSetting : PageBase
         InitializeBlenderPluginPaths();
         InitializeStarwardLauncherSettings();
         _ = FetchLocationAsync();
+    }
+
+
+    protected override void OnUnloaded()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
 
@@ -68,12 +90,24 @@ public sealed partial class IntegrationSetting : PageBase
                     break;
                 }
             }
-            LocationText = string.Format(Lang.SettingPage_CurrentRegion, loc);
+            if (loc == Lang.SettingPage_RegionUnknown)
+            {
+                _fetchStatus = RegionFetchStatus.Unknown;
+            }
+            else
+            {
+                _fetchStatus = RegionFetchStatus.Success;
+                _regionCode = loc;
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to fetch location from cloudflare trace API");
-            LocationText = string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionFetchFailed);
+            _fetchStatus = RegionFetchStatus.Failed;
+        }
+        finally
+        {
+            OnPropertyChanged(nameof(LocationText));
         }
     }
 

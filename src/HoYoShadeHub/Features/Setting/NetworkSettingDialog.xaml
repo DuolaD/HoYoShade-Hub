@@ -29,6 +29,20 @@
             </Grid.RowDefinitions>
 
             <StackPanel Spacing="16">
+                <!--  当前国家/地区  -->
+                <StackPanel Height="32"
+                            Orientation="Horizontal"
+                            Spacing="12">
+                    <FontIcon Margin="0,0,-4,0"
+                              FontSize="16"
+                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                              Glyph="&#xE707;"
+                              IsTextScaleFactorEnabled="False" />
+                    <TextBlock VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               IsTextScaleFactorEnabled="False"
+                               Text="{x:Bind LocationText, Mode=OneWay}" />
+                </StackPanel>
                 <!--  网络状态  -->
                 <StackPanel Height="32"
                             Orientation="Horizontal"

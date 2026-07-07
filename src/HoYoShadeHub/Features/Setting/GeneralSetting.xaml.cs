@@ -28,10 +28,37 @@ public sealed partial class GeneralSetting : PageBase
     private readonly ILogger<GeneralSetting> _logger = AppConfig.GetLogger<GeneralSetting>();
 
 
+    private string _regionCode = string.Empty;
+    private enum RegionFetchStatus { Fetching, Success, Failed, Unknown }
+    private RegionFetchStatus _fetchStatus = RegionFetchStatus.Fetching;
+
+    /// <summary>
+    /// 地区显示文本
+    /// </summary>
+    public string LocationText
+    {
+        get
+        {
+            return _fetchStatus switch
+            {
+                RegionFetchStatus.Fetching => string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionFetching),
+                RegionFetchStatus.Failed => string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionFetchFailed),
+                RegionFetchStatus.Unknown => string.Format(Lang.SettingPage_CurrentRegion, Lang.SettingPage_RegionUnknown),
+                _ => string.Format(Lang.SettingPage_CurrentRegion, _regionCode)
+            };
+        }
+    }
+
+
     public GeneralSetting()
     {
         this.InitializeComponent();
         DohProviders = new ObservableCollection<DownloadServerItem>();
+        
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
+        {
+            OnPropertyChanged(nameof(LocationText));
+        });
     }
 
 
@@ -42,6 +69,7 @@ public sealed partial class GeneralSetting : PageBase
         InitializeCloseWindowOption();
         InitializeDohProviders();
         RefreshSystemProxyStatus();
+        _ = FetchLocationAsync();
     }
 
 
@@ -50,6 +78,7 @@ public sealed partial class GeneralSetting : PageBase
         _networkStatusCancellationTokenSource?.Cancel();
         _networkStatusCancellationTokenSource?.Dispose();
         _networkStatusCancellationTokenSource = null;
+        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
 
@@ -531,6 +560,48 @@ public sealed partial class GeneralSetting : PageBase
 
     #endregion
 
+
+    /// <summary>
+    /// 获取当前的国家/地区信息
+    /// </summary>
+    private async Task FetchLocationAsync()
+    {
+        try
+        {
+            using var httpClient = new HttpClient(DohService.CreateSocketsHttpHandler());
+            httpClient.Timeout = TimeSpan.FromSeconds(5);
+            var content = await httpClient.GetStringAsync("https://www.cloudflare.com/cdn-cgi/trace");
+            
+            var loc = Lang.SettingPage_RegionUnknown;
+            var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
+            {
+                if (line.StartsWith("loc=", StringComparison.OrdinalIgnoreCase))
+                {
+                    loc = line[4..].Trim();
+                    break;
+                }
+            }
+            if (loc == Lang.SettingPage_RegionUnknown)
+            {
+                _fetchStatus = RegionFetchStatus.Unknown;
+            }
+            else
+            {
+                _fetchStatus = RegionFetchStatus.Success;
+                _regionCode = loc;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to fetch location from cloudflare trace API");
+            _fetchStatus = RegionFetchStatus.Failed;
+        }
+        finally
+        {
+            OnPropertyChanged(nameof(LocationText));
+        }
+    }
 
 
 }
