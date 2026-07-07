@@ -1,4 +1,4 @@
-﻿using Aprillz.MewUI;
+using Aprillz.MewUI;
 using Aprillz.MewUI.Controls;
 using HoYoShadeHub.Setup.Locale;
 using HoYoShadeHub.Setup.Services;
@@ -283,10 +283,15 @@ public class UninstallWindow : WindowBase
 
                 if (CheckBox_CacheData.IsChecked is null or false)
                 {
-                    string cacheFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HoYoShade Hub");
+                    string cacheFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HoYoShadeHub");
                     if (Directory.Exists(cacheFolder))
                     {
                         Directory.Delete(cacheFolder, true);
+                    }
+                    string roamingFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HoYoShadeHub");
+                    if (Directory.Exists(roamingFolder))
+                    {
+                        Directory.Delete(roamingFolder, true);
                     }
                 }
 

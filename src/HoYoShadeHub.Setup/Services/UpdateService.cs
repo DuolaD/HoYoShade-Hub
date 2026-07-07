@@ -1,4 +1,4 @@
-﻿using SharpCompress.Compressors.ZStandard;
+using SharpCompress.Compressors.ZStandard;
 using HoYoShadeHub.Setup.Core;
 using HoYoShadeHub.Setup.Snap.HPatch;
 using System.Net;
@@ -56,7 +56,7 @@ public class UpdateService : DownloadService
 
         CopySetupFile(installFolder);
 
-        string updateFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"HoYoShade Hub\update");
+        string updateFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"HoYoShadeHub\update");
         if (Directory.Exists(updateFolder))
         {
             Directory.Delete(updateFolder, true);
@@ -99,7 +99,7 @@ public class UpdateService : DownloadService
 
     private async Task DownloadDiffFilesAsync(string installFolder, CancellationToken cancellation = default)
     {
-        string updateFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"HoYoShade Hub\update");
+        string updateFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"HoYoShadeHub\update");
         Directory.CreateDirectory(updateFolder);
 
         TotalBytes = ReleaseManifest.DiffSize;
