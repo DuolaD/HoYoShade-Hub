@@ -1147,6 +1147,23 @@ public static class AppConfig
     }
 
 
+    /// <summary>
+    /// 获取是否启用 DX12 开关
+    /// </summary>
+    public static bool GetEnableDX12(GameBiz biz)
+    {
+        return GetValue<bool>(default, $"enable_dx12_{biz}");
+    }
+
+    /// <summary>
+    /// 设置是否启用 DX12 开关
+    /// </summary>
+    public static void SetEnableDX12(GameBiz biz, bool value)
+    {
+        SetValue(value, $"enable_dx12_{biz}");
+    }
+
+
     #endregion
 
 

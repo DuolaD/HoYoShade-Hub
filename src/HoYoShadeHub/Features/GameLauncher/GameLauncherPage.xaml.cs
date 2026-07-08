@@ -860,6 +860,39 @@ public sealed partial class GameLauncherPage : PageBase
     }
 
     /// <summary>
+    /// 是否显示 DX12 选项
+    /// </summary>
+    private bool _isDX12OptionVisible;
+    public bool IsDX12OptionVisible
+    {
+        get => _isDX12OptionVisible;
+        set => SetProperty(ref _isDX12OptionVisible, value);
+    }
+
+
+    /// <summary>
+    /// DX12 配置
+    /// </summary>
+    private GameDXConfig? _dxConfig;
+
+
+    /// <summary>
+    /// 启用 DX12
+    /// </summary>
+    private bool _enableDX12;
+    public bool EnableDX12
+    {
+        get => _enableDX12;
+        set
+        {
+            if (SetProperty(ref _enableDX12, value))
+            {
+                AppConfig.SetEnableDX12(CurrentGameBiz, value);
+            }
+        }
+    }
+
+    /// <summary>
     /// 已安装？定位游戏
     /// </summary>
     public bool InstalledLocateGameEnabled => GameState is GameState.InstallGame && !IsInstallPathRemovableTipEnabled;
@@ -924,6 +957,7 @@ public sealed partial class GameLauncherPage : PageBase
                 GameState = GameState.InstallGame;
                 return;
             }
+            _ = CheckDX12ConfigAsync();
             await CheckGameRunningAsync();
         }
         catch (Exception ex)
@@ -933,6 +967,61 @@ public sealed partial class GameLauncherPage : PageBase
     }
 
 
+
+    /// <summary>
+    /// 检查 DX12 配置
+    /// </summary>
+    /// <returns></returns>
+    private async Task CheckDX12ConfigAsync()
+    {
+        try
+        {
+            IsDX12OptionVisible = false;
+            EnableDX12 = AppConfig.GetEnableDX12(CurrentGameBiz);
+            if (EnableDX12)
+            {
+                IsDX12OptionVisible = true;
+            }
+
+            List<GameDXConfig> dxConfigs = await _hoYoPlayService.GetGameDXConfigsAsync([CurrentGameId]);
+            _dxConfig = dxConfigs?.FirstOrDefault(x => x.GameId == CurrentGameId);
+
+            if (_dxConfig?.EnableDXSwitch is true)
+            {
+                IsDX12OptionVisible = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Check DX12 config");
+        }
+    }
+
+
+    /// <summary>
+    /// 获取 DX12 启动参数
+    /// </summary>
+    /// <returns></returns>
+    public string? GetDX12LaunchArgument()
+    {
+        if (EnableDX12 && _dxConfig is not null)
+        {
+            return _dxConfig.CmdArgs;
+        }
+        return null;
+    }
+
+
+    /// <summary>
+    /// 显示 DX12 说明对话框
+    /// </summary>
+    private async void Hyperlink_DX12Intro_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+    {
+        if (_dxConfig is not null)
+        {
+            await new DX12IntroDialog { GameDXConfig = _dxConfig, XamlRoot = this.XamlRoot }.ShowAsync();
+        }
+    }
 
 
 
