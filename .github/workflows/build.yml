@@ -11,7 +11,7 @@ on:
 jobs:
 
   build:
-    runs-on: windows-2022
+    runs-on: windows-2025-vs2026
     strategy:
       matrix:
         configuration: [Debug, Release]
@@ -57,11 +57,7 @@ jobs:
         Remove-Item -Path "curl_temp" -Recurse -Force
 
     - name: Build
-      shell: pwsh
       run: |
-        $env:VSINSTALLDIR = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
-        if (-not $env:VSINSTALLDIR.EndsWith('\')) { $env:VSINSTALLDIR += '\' }
-        Write-Host "Forced VSINSTALLDIR to: $env:VSINSTALLDIR"
         $sha = "${{ steps.sha.outputs.sha }}"
         New-Item -Path "build/HoYoShadeHub/" -Type Directory
         msbuild src/HoYoShadeHub.Launcher "-property:Configuration=$env:Configuration;Platform=$env:Platform;OutDir=$(Resolve-Path "build/HoYoShadeHub/")"

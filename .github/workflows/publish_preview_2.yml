@@ -12,7 +12,7 @@ permissions:
 jobs:
 
   version:
-    runs-on: windows-2022
+    runs-on: windows-2025-vs2026
     outputs: 
       version: ${{ github.ref_name }}
     steps:
@@ -21,7 +21,7 @@ jobs:
 
 
   build:
-    runs-on: windows-2022
+    runs-on: windows-2025-vs2026
     needs: version
     outputs:
       version: ${{ needs.version.outputs.version }}
@@ -74,12 +74,7 @@ jobs:
       run: Install-Module -Name 7Zip4Powershell -Force -Scope CurrentUser
 
     - name: Build and Pack
-      shell: pwsh
-      run: |
-        $env:VSINSTALLDIR = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
-        if (-not $env:VSINSTALLDIR.EndsWith('\')) { $env:VSINSTALLDIR += '\' }
-        Write-Host "Forced VSINSTALLDIR to: $env:VSINSTALLDIR"
-        ./publish.ps1 -Architecture $env:Platform -Version $env:Version
+      run: ./publish.ps1 -Architecture $env:Platform -Version $env:Version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -115,7 +110,7 @@ jobs:
 
 
   static:
-    runs-on: windows-2022
+    runs-on: windows-2025-vs2026
     needs: build
     env:
       Version: ${{ needs.build.outputs.version }}
