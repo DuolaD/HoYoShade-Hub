@@ -12,7 +12,7 @@ permissions:
 jobs:
 
   version:
-    runs-on: windows-latest
+    runs-on: windows-2022
     outputs: 
       version: ${{ github.ref_name }}
     steps:
@@ -21,7 +21,7 @@ jobs:
 
 
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: version
     outputs:
       version: ${{ needs.version.outputs.version }}
@@ -109,7 +109,7 @@ jobs:
 
 
   static:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: build
     env:
       Version: ${{ needs.build.outputs.version }}
