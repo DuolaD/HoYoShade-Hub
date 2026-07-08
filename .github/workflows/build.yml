@@ -39,11 +39,12 @@ jobs:
 
     - name: Download curl
       run: |
+        $ProgressPreference = 'SilentlyContinue'
         $curlUrl = if ($env:Platform -eq "arm64") { "https://github.com/stunnel/static-curl/releases/download/8.20.0/curl-windows-aarch64-8.20.0.tar.xz" } else { "https://github.com/stunnel/static-curl/releases/download/8.20.0/curl-windows-x86_64-8.20.0.tar.xz" }
         New-Item -ItemType Directory -Force -Path "curl_temp"
         Invoke-WebRequest -Uri $curlUrl -OutFile "curl_temp/curl.tar.xz"
         New-Item -ItemType Directory -Force -Path "curl_temp/extracted"
-        tar -xf "curl_temp/curl.tar.xz" -C "curl_temp/extracted"
+        & "C:\Program Files\Git\usr\bin\tar.exe" -xf "curl_temp/curl.tar.xz" -C "curl_temp/extracted"
         $curlExe = Get-ChildItem -Path "curl_temp/extracted" -Filter "curl.exe" -Recurse | Select-Object -First 1
         $curlCrt = Get-ChildItem -Path "curl_temp/extracted" -Filter "curl-ca-bundle.crt" -Recurse | Select-Object -First 1
         if ($null -eq $curlExe -or $null -eq $curlCrt) {
