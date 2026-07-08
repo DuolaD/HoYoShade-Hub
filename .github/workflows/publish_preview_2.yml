@@ -42,7 +42,7 @@ jobs:
         global-json-file: global.json
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v3
 
     - name: Download curl
       run: |
@@ -95,7 +95,9 @@ jobs:
       with:
         draft: true
         prerelease: true
-        files: build/release/package/*
+        files: |
+          build/release/package/HoYoShadeHub_Portable_*.7z
+          build/release/package/HoYoShadeHub_Setup_*.exe
 
     - name: Setup AWS CLI for R2
       run: |

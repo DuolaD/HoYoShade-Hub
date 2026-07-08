@@ -1,5 +1,3 @@
-using Polly;
-using Polly.Retry;
 using System.CommandLine;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -10,10 +8,6 @@ namespace BuildTool;
 
 public class ReleaseCommand
 {
-
-    private readonly HttpClient _httpClient;
-
-    private readonly ResiliencePipeline _polly;
 
 
     public Command Command { get; set; } = new Command("release", "Create release info file.");
@@ -68,14 +62,6 @@ public class ReleaseCommand
         _combineCommand.SetAction(Combine);
         Command.Subcommands.Add(_createCommand);
         Command.Subcommands.Add(_combineCommand);
-
-        _httpClient = new(new SocketsHttpHandler { AutomaticDecompression = DecompressionMethods.All });
-        _httpClient.DefaultRequestHeaders.Add("User-Agent", "HoYoShadeHub Build Tool");
-        _polly = new ResiliencePipelineBuilder().AddRetry(new RetryStrategyOptions
-        {
-            MaxRetryAttempts = 3,
-            BackoffType = DelayBackoffType.Linear
-        }).Build();
     }
 
 
@@ -193,31 +179,6 @@ public class ReleaseCommand
             }
         }
 
-        foreach (var item in combined.Releases.ToList())
-        {
-            if (!await IsUrlValidAsync(item.Value.ManifestUrl))
-            {
-                combined.Releases.Remove(item.Key);
-                continue;
-            }
-            if (!await IsUrlValidAsync(item.Value.PackageUrl))
-            {
-                item.Value.PackageUrl = null;
-                item.Value.PackageHash = null;
-                item.Value.PackageSize = 0;
-            }
-            if (item.Value.Diffs is not null)
-            {
-                foreach (var diff in item.Value.Diffs.ToList())
-                {
-                    if (!await IsUrlValidAsync(diff.Value.ManifestUrl))
-                    {
-                        item.Value.Diffs.Remove(diff.Key);
-                    }
-                }
-            }
-        }
-
         byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(combined, new JsonSerializerOptions { WriteIndented = true });
         Directory.CreateDirectory(Path.GetDirectoryName(outputFile)!);
         await File.WriteAllBytesAsync(outputFile, jsonBytes);
@@ -225,29 +186,6 @@ public class ReleaseCommand
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"Combined release info file created: {outputFile} ({combined.Releases.Count} releases).");
         Console.ResetColor();
-    }
-
-
-    private async Task<bool> IsUrlValidAsync(string? url)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-        {
-            return false;
-        }
-        try
-        {
-            return await _polly.ExecuteAsync(async _ =>
-            {
-                using var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                response.EnsureSuccessStatusCode();
-                return true;
-            });
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"URL validation failed for {url}: {ex.Message}");
-            return false;
-        }
     }
 
 
