@@ -74,7 +74,12 @@ jobs:
       run: Install-Module -Name 7Zip4Powershell -Force -Scope CurrentUser
 
     - name: Build and Pack
-      run: ./publish.ps1 -Architecture $env:Platform -Version $env:Version
+      shell: pwsh
+      run: |
+        $env:VSINSTALLDIR = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+        if (-not $env:VSINSTALLDIR.EndsWith('\')) { $env:VSINSTALLDIR += '\' }
+        Write-Host "Forced VSINSTALLDIR to: $env:VSINSTALLDIR"
+        ./publish.ps1 -Architecture $env:Platform -Version $env:Version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
