@@ -265,6 +265,63 @@
   <data name="GameServer_OSBeta" xml:space="preserve">
     <value>国际服 内测/创作者体验服</value>
   </data>
+  <data name="GameServer_EuropeAmericas" xml:space="preserve">
+    <value>Europe &amp; Americas</value>
+  </data>
+  <data name="GameServer_Japan" xml:space="preserve">
+    <value>Japan</value>
+  </data>
+  <data name="GameServer_Korea" xml:space="preserve">
+    <value>Korea</value>
+  </data>
+  <data name="GameServer_SoutheastAsia" xml:space="preserve">
+    <value>Southeast Asia</value>
+  </data>
+  <data name="GameServer_TraditionalChinese" xml:space="preserve">
+    <value>Traditional Chinese</value>
+  </data>
+  <data name="GachaType_StandardChannel" xml:space="preserve">
+    <value>Standard Channel</value>
+  </data>
+  <data name="GachaType_ExclusiveChannel" xml:space="preserve">
+    <value>Exclusive Channel</value>
+  </data>
+  <data name="GachaType_WEngineChannel" xml:space="preserve">
+    <value>W-Engine Channel</value>
+  </data>
+  <data name="GachaType_BangbooChannel" xml:space="preserve">
+    <value>Bangboo Channel</value>
+  </data>
+  <data name="ZZZQueryType_Monochrome" xml:space="preserve">
+    <value>Monochrome</value>
+  </data>
+  <data name="ZZZQueryType_Ploychrome" xml:space="preserve">
+    <value>Ploychrome</value>
+  </data>
+  <data name="ZZZQueryType_Bundle" xml:space="preserve">
+    <value>Bundle</value>
+  </data>
+  <data name="ZZZQueryType_BatteryCharge" xml:space="preserve">
+    <value>Battery Charge</value>
+  </data>
+  <data name="ZZZQueryType_WEngine" xml:space="preserve">
+    <value>W-Engine</value>
+  </data>
+  <data name="ZZZQueryType_DriveDisc" xml:space="preserve">
+    <value>Drive Disc</value>
+  </data>
+  <data name="GachaType_CharacterCollaborationWarp" xml:space="preserve">
+    <value>Character Collaboration Warp</value>
+  </data>
+  <data name="GachaType_LightConeCollaborationWarp" xml:space="preserve">
+    <value>Light Cone Collaboration Warp</value>
+  </data>
+  <data name="GachaType_StandardOde" xml:space="preserve">
+    <value>Standard Ode</value>
+  </data>
+  <data name="GachaType_EventOde" xml:space="preserve">
+    <value>Event Ode</value>
+  </data>
   <data name="GameServer_Beta" xml:space="preserve">
     <value>内测/创作者体验服</value>
   </data>
