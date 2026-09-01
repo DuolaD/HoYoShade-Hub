@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -184,26 +184,26 @@
     <value>复制失败：{0}</value>
   </data>
   <data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
-    <value>当前已是最新版本</value>
-  </data>
+        <value>当前已是最新版本</value>
+    </data>
   <data name="FileSettingPage_FrameworkUpToDateToastFormat" xml:space="preserve">
-    <value>{0} 已是最新版本！</value>
-  </data>
+        <value>{0} 已是最新版本！</value>
+    </data>
   <data name="FileSettingPage_CheckingForUpdates" xml:space="preserve">
-    <value>正在检查更新...</value>
-  </data>
+        <value>正在检查更新...</value>
+    </data>
   <data name="FileSettingPage_NewVersionAvailableFormat" xml:space="preserve">
-    <value>发现新版本：{0}</value>
-  </data>
+        <value>发现新版本：{0}</value>
+    </data>
   <data name="FileSettingPage_CheckForUpdatesFailedFormat" xml:space="preserve">
-    <value>检查更新失败：{0}</value>
-  </data>
+        <value>检查更新失败：{0}</value>
+    </data>
   <data name="FileSettingPage_ServerLatencyChecking" xml:space="preserve">
-    <value>延迟检测中...</value>
-  </data>
+        <value>延迟检测中...</value>
+    </data>
   <data name="FileSettingPage_ServerLatencyTimeout" xml:space="preserve">
-    <value>超时</value>
-  </data>
+        <value>超时</value>
+    </data>
   <data name="SettingPage_AutoCheckUpdates" xml:space="preserve">
     <value>自动检查更新</value>
   </data>
@@ -618,8 +618,8 @@
   <data name="GameLauncherPage_RemovableStorageDeviceNotConnected" xml:space="preserve">
     <value>可移除存储设备未连接。</value>
   </data>
-  <data name="StartGameButton_Resume" xml:space="preserve">
-    <value>继续下载</value>
+  <data name="StartGameButton_ResumeDownload" xml:space="preserve">
+    <value>Resume Download</value>
   </data>
   <data name="StartGameButton_Waiting" xml:space="preserve">
     <value>等待中</value>
@@ -1199,6 +1199,9 @@
   <data name="ReShadeDownloadView_Title" xml:space="preserve">
     <value>接下来，让我们下载并安装 ReShade 着色器和插件</value>
   </data>
+  <data name="ReShadeDownloadView_UpdateHint" xml:space="preserve">
+    <value>If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons.</value>
+  </data>
   <data name="ReShadeDownloadView_Description" xml:space="preserve">
     <value>你需要下载并安装 ReShade 着色器和插件，才能让 HoYoShade 正常工作。
 但对于 OpenHoYoShade 来说，这一步是非必要的，因为它是作为开发用途而使用的。如果你安装的是OpenHoYoShade，我们建议你跳过这一步。
@@ -1548,17 +1551,17 @@
   <data name="SettingPage_UseStarwardLauncherToStartGame" xml:space="preserve">
     <value>使用Starward启动器启动公开客户端游戏</value>
   </data>
-  <data name="GameLauncherPage_LaunchWithStarward" xml:space="preserve">
-    <value>使用Starward启动器启动游戏</value>
-  </data>
   <data name="SettingPage_UseStarwardLauncherDescription" xml:space="preserve">
     <value>启用后，启动公开客户端游戏时将使用Starward启动器进行启动。你需要确保对应的客户端已在Starward中定位/安装。</value>
   </data>
-	<data name="SettingPage_ProtocolStatusAvailable" xml:space="preserve">
+  <data name="SettingPage_ProtocolStatusAvailable" xml:space="preserve">
     <value>可用</value>
   </data>
-	<data name="SettingPage_ProtocolStatusUnavailable" xml:space="preserve">
+  <data name="SettingPage_ProtocolStatusUnavailable" xml:space="preserve">
     <value>不可用</value>
+  </data>
+  <data name="GameLauncherPage_LaunchWithStarward" xml:space="preserve">
+    <value>使用Starward启动器启动游戏</value>
   </data>
   <data name="GameLauncher_StarwardLaunchSuccess" xml:space="preserve">
     <value>已通过 Starward 启动器启动游戏</value>
@@ -1571,6 +1574,9 @@
   </data>
   <data name="BlenderRepairTool_WindowTitle" xml:space="preserve">
     <value>Blender/留影机插件 修复工具</value>
+  </data>
+  <data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
+    <value>修复 Blender/留影机插件 的功能问题</value>
   </data>
   <data name="BlenderRepairTool_TimeSyncSection" xml:space="preserve">
     <value>时间同步</value>
@@ -1667,9 +1673,6 @@
   </data>
   <data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
     <value>绝区零 (cookies.json)</value>
-  </data>
-  <data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
-    <value>修复 Blender/留影机插件 的功能问题</value>
   </data>
   <data name="ToolboxSetting_BlenderRepairTool" xml:space="preserve">
     <value>Blender/留影机插件 修复工具</value>
