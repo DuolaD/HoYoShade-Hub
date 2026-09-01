@@ -1,8 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Composition;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Hosting;
 using Microsoft.Windows.AppLifecycle;
 using HoYoShadeHub.Features.Background;
 using HoYoShadeHub.Features.Database;
@@ -12,6 +14,7 @@ using HoYoShadeHub.Features.Screenshot;
 using HoYoShadeHub.Frameworks;
 using System;
 using System.ComponentModel;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Vanara.PInvoke;
@@ -19,6 +22,13 @@ using Windows.Graphics;
 
 
 namespace HoYoShadeHub.Features.ViewHost;
+
+public enum ViewTransitionType
+{
+    None,
+    SlideFromRight,
+    DrillIn,
+}
 
 [INotifyPropertyChanged]
 public sealed partial class MainWindow : WindowEx
@@ -29,6 +39,9 @@ public sealed partial class MainWindow : WindowEx
 
 
     private bool _mainViewLoaded;
+    private ContentControl _currentPresenter = null!;
+    private ContentControl _nextPresenter = null!;
+    private CompositionScopedBatch? _activeTransitionBatch;
 
 
     public MainWindow()
@@ -36,6 +49,8 @@ public sealed partial class MainWindow : WindowEx
         Current = this;
         MainWindowId = AppWindow.Id;
         this.InitializeComponent();
+        _currentPresenter = CurrentContentPresenter;
+        _nextPresenter = NextContentPresenter;
         InitializeMainWindow();
         LoadContentView();
         WeakReferenceMessenger.Default.Register<AccentColorChangedMessage>(this, OnAccentColorChanged);
@@ -107,15 +122,163 @@ public sealed partial class MainWindow : WindowEx
 
 
 
+    private static bool AreAnimationsEnabled()
+    {
+        try
+        {
+            return new Windows.UI.ViewManagement.UISettings().AnimationsEnabled;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
+
+
+    private void NavigateToView(UIElement newContent, ViewTransitionType transitionType)
+    {
+        bool isTargetMainView = newContent is MainView;
+
+        if (transitionType == ViewTransitionType.None || !AreAnimationsEnabled() || _currentPresenter.Content == null)
+        {
+            _activeTransitionBatch = null;
+            _currentPresenter.Content = newContent;
+            _currentPresenter.Opacity = 1;
+            _currentPresenter.Visibility = Visibility.Visible;
+            _nextPresenter.Visibility = Visibility.Collapsed;
+            _nextPresenter.Content = null;
+
+            var currentVisual = ElementCompositionPreview.GetElementVisual(_currentPresenter);
+            currentVisual.Offset = Vector3.Zero;
+            currentVisual.Opacity = 1.0f;
+            currentVisual.Scale = Vector3.One;
+
+            WizardBackgroundImage.Visibility = isTargetMainView ? Visibility.Collapsed : Visibility.Visible;
+            WizardBackgroundMask.Visibility = isTargetMainView ? Visibility.Collapsed : Visibility.Visible;
+            return;
+        }
+
+        if (!isTargetMainView)
+        {
+            WizardBackgroundImage.Visibility = Visibility.Visible;
+            WizardBackgroundMask.Visibility = Visibility.Visible;
+        }
+
+        var outgoingPresenter = _currentPresenter;
+        var incomingPresenter = _nextPresenter;
+
+        incomingPresenter.Content = newContent;
+        incomingPresenter.Visibility = Visibility.Visible;
+
+        var compositor = ElementCompositionPreview.GetElementVisual(this.Content).Compositor;
+        var outgoingVisual = ElementCompositionPreview.GetElementVisual(outgoingPresenter);
+        var incomingVisual = ElementCompositionPreview.GetElementVisual(incomingPresenter);
+
+        // Reset visual properties before starting animation
+        incomingVisual.Offset = Vector3.Zero;
+        incomingVisual.Opacity = 0f;
+        incomingVisual.Scale = Vector3.One;
+
+        var batch = compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+        _activeTransitionBatch = batch;
+
+        var cubicEasing = compositor.CreateCubicBezierEasingFunction(new Vector2(0.1f, 0.9f), new Vector2(0.2f, 1.0f));
+
+        if (transitionType == ViewTransitionType.SlideFromRight)
+        {
+            // Incoming: start offset X = 60px, opacity = 0 -> offset X = 0, opacity = 1
+            incomingVisual.Offset = new Vector3(60f, 0f, 0f);
+
+            var inOffsetAnim = compositor.CreateVector3KeyFrameAnimation();
+            inOffsetAnim.Duration = TimeSpan.FromMilliseconds(350);
+            inOffsetAnim.InsertKeyFrame(1.0f, Vector3.Zero, cubicEasing);
+
+            var inOpacityAnim = compositor.CreateScalarKeyFrameAnimation();
+            inOpacityAnim.Duration = TimeSpan.FromMilliseconds(300);
+            inOpacityAnim.InsertKeyFrame(1.0f, 1.0f, cubicEasing);
+
+            // Outgoing: offset X = 0 -> -50px, opacity = 1 -> 0
+            var outOffsetAnim = compositor.CreateVector3KeyFrameAnimation();
+            outOffsetAnim.Duration = TimeSpan.FromMilliseconds(300);
+            outOffsetAnim.InsertKeyFrame(1.0f, new Vector3(-50f, 0f, 0f), cubicEasing);
+
+            var outOpacityAnim = compositor.CreateScalarKeyFrameAnimation();
+            outOpacityAnim.Duration = TimeSpan.FromMilliseconds(250);
+            outOpacityAnim.InsertKeyFrame(1.0f, 0f, cubicEasing);
+
+            incomingVisual.StartAnimation(nameof(Visual.Offset), inOffsetAnim);
+            incomingVisual.StartAnimation(nameof(Visual.Opacity), inOpacityAnim);
+            outgoingVisual.StartAnimation(nameof(Visual.Offset), outOffsetAnim);
+            outgoingVisual.StartAnimation(nameof(Visual.Opacity), outOpacityAnim);
+        }
+        else if (transitionType == ViewTransitionType.DrillIn)
+        {
+            // Incoming: scale 1.03 -> 1.0, opacity 0 -> 1
+            float width = (float)(AppWindow.Size.Width / UIScale);
+            float height = (float)(AppWindow.Size.Height / UIScale);
+            incomingVisual.CenterPoint = new Vector3(width / 2f, height / 2f, 0f);
+            incomingVisual.Scale = new Vector3(1.03f, 1.03f, 1.0f);
+
+            var inScaleAnim = compositor.CreateVector3KeyFrameAnimation();
+            inScaleAnim.Duration = TimeSpan.FromMilliseconds(450);
+            inScaleAnim.InsertKeyFrame(1.0f, Vector3.One, cubicEasing);
+
+            var inOpacityAnim = compositor.CreateScalarKeyFrameAnimation();
+            inOpacityAnim.Duration = TimeSpan.FromMilliseconds(400);
+            inOpacityAnim.InsertKeyFrame(1.0f, 1.0f, cubicEasing);
+
+            // Outgoing: opacity 1 -> 0
+            var outOpacityAnim = compositor.CreateScalarKeyFrameAnimation();
+            outOpacityAnim.Duration = TimeSpan.FromMilliseconds(250);
+            outOpacityAnim.InsertKeyFrame(1.0f, 0f, cubicEasing);
+
+            incomingVisual.StartAnimation(nameof(Visual.Scale), inScaleAnim);
+            incomingVisual.StartAnimation(nameof(Visual.Opacity), inOpacityAnim);
+            outgoingVisual.StartAnimation(nameof(Visual.Opacity), outOpacityAnim);
+        }
+
+        batch.Completed += (s, e) =>
+        {
+            if (_activeTransitionBatch == batch)
+            {
+                _activeTransitionBatch = null;
+            }
+
+            outgoingPresenter.Visibility = Visibility.Collapsed;
+            outgoingPresenter.Content = null;
+            outgoingVisual.Offset = Vector3.Zero;
+            outgoingVisual.Opacity = 1.0f;
+            outgoingVisual.Scale = Vector3.One;
+
+            incomingVisual.Offset = Vector3.Zero;
+            incomingVisual.Opacity = 1.0f;
+            incomingVisual.Scale = Vector3.One;
+
+            if (isTargetMainView)
+            {
+                WizardBackgroundImage.Visibility = Visibility.Collapsed;
+                WizardBackgroundMask.Visibility = Visibility.Collapsed;
+            }
+
+            // Swap current and next presenters
+            (_currentPresenter, _nextPresenter) = (_nextPresenter, _currentPresenter);
+        };
+
+        batch.End();
+    }
+
+
+
     private void LoadContentView()
     {
         if (string.IsNullOrWhiteSpace(AppConfig.UserDataFolder))
         {
-            MainContentHost.Content = new WelcomeView();
+            NavigateToView(new WelcomeView(), ViewTransitionType.None);
         }
         else
         {
-            MainContentHost.Content = new MainView();
+            NavigateToView(new MainView(), ViewTransitionType.None);
             App.Current.EnsureSystemTray();
             _mainViewLoaded = true;
         }
@@ -125,7 +288,7 @@ public sealed partial class MainWindow : WindowEx
 
     private void OnWelcomePageFinished(object _, WelcomePageFinishedMessage __)
     {
-        MainContentHost.Content = new MainView();
+        NavigateToView(new MainView(), ViewTransitionType.DrillIn);
         App.Current.EnsureSystemTray();
         _mainViewLoaded = true;
     }
@@ -133,19 +296,19 @@ public sealed partial class MainWindow : WindowEx
 
     private void OnNavigateToDownloadPage(object _, NavigateToDownloadPageMessage m)
     {
-        MainContentHost.Content = new HoYoShadeDownloadView
+        NavigateToView(new HoYoShadeDownloadView
         {
             IsUpdateMode = m.IsUpdateMode
-        };
+        }, ViewTransitionType.SlideFromRight);
     }
 
 
     private void OnNavigateToReShadeDownloadPage(object _, NavigateToReShadeDownloadPageMessage m)
     {
-        MainContentHost.Content = new ReShadeDownloadView
+        NavigateToView(new ReShadeDownloadView
         {
             IsUpdateMode = m.IsUpdateMode
-        };
+        }, ViewTransitionType.SlideFromRight);
     }
 
 

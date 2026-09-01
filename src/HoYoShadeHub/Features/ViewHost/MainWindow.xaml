@@ -13,9 +13,27 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <ContentControl x:Name="MainContentHost"
-                        HorizontalContentAlignment="Stretch"
-                        VerticalContentAlignment="Stretch" />
+        <!-- Wizard Static Background (persists seamlessly across WelcomeView -> HoYoShadeDownloadView -> ReShadeDownloadView) -->
+        <Image x:Name="WizardBackgroundImage"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Source="ms-appx:///Assets/Image/UI_CutScene_1130320101A.png"
+               Stretch="UniformToFill" />
+        <Rectangle x:Name="WizardBackgroundMask"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   Fill="{ThemeResource ControlOnImageFillColorDefaultBrush}" />
+
+        <Grid x:Name="ContentHostGrid">
+            <ContentControl x:Name="CurrentContentPresenter"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch" />
+            <ContentControl x:Name="NextContentPresenter"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Opacity="0"
+                            Visibility="Collapsed" />
+        </Grid>
 
         <StackPanel MaxWidth="600"
                     Margin="24,72,24,72"

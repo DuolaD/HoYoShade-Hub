@@ -11,13 +11,7 @@
              mc:Ignorable="d">
 
     <Grid Loaded="Grid_Loaded">
-        <Image HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               Source="ms-appx:///Assets/Image/UI_CutScene_1130320101A.png"
-               Stretch="UniformToFill" />
-        <Rectangle HorizontalAlignment="Stretch"
-                   VerticalAlignment="Stretch"
-                   Fill="{ThemeResource ControlOnImageFillColorDefaultBrush}" />
+
 
 
 
