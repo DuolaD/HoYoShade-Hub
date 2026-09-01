@@ -68,6 +68,10 @@ dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- pack "$Output
 
 
 # 9. Generate diffs and release info
+$portableDiffTags = @()
+$setupDiffTags = @()
+
+$targetDiffTags = @()
 if ($DiffTags.Count -eq 0 -and $DiffCount -gt 0) {
     if ($env:GITHUB_TOKEN) {
         $json = Invoke-WebRequest 'https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases' -Headers @{ Authorization = "Bearer $env:GITHUB_TOKEN" } | ConvertFrom-Json;
@@ -83,22 +87,12 @@ if ($DiffTags.Count -eq 0 -and $DiffCount -gt 0) {
             continue;
         }
         if ($pre -and $r.tag_name -like '*-*') {
-            $DiffTags += $r.tag_name;
-            Write-Host "Creating diff for $($r.tag_name) (portable)..." -ForegroundColor Green;
-            dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- diff -np $Output -nv $Version -ov $r.tag_name -a $Architecture -t portable;
-            
-            Write-Host "Creating diff for $($r.tag_name) (setup)..." -ForegroundColor Green;
-            dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- diff -np "$Output/app-$Version" -nv $Version -ov $r.tag_name -a $Architecture -t setup;
+            $targetDiffTags += $r.tag_name;
         }
         if ($r.tag_name -notlike '*-*') {
             $pre = $false;
             $stableCount += 1;
-            $DiffTags += $r.tag_name;
-            Write-Host "Creating diff for $($r.tag_name) (portable)..." -ForegroundColor Green;
-            dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- diff -np $Output -nv $Version -ov $r.tag_name -a $Architecture -t portable;
-
-            Write-Host "Creating diff for $($r.tag_name) (setup)..." -ForegroundColor Green;
-            dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- diff -np "$Output/app-$Version" -nv $Version -ov $r.tag_name -a $Architecture -t setup;
+            $targetDiffTags += $r.tag_name;
         }
         if ($stableCount -ge $DiffCount) {
             break;
@@ -106,24 +100,37 @@ if ($DiffTags.Count -eq 0 -and $DiffCount -gt 0) {
     }
 }
 elseif ($DiffTags.Count -gt 0) {
-    foreach ($tag in $DiffTags) {
-        Write-Host "Creating diff for $tag (portable)..." -ForegroundColor Green;
-        dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- diff -np $Output -nv $Version -ov $tag -a $Architecture -t portable;
+    $targetDiffTags = $DiffTags;
+}
 
-        Write-Host "Creating diff for $tag (setup)..." -ForegroundColor Green;
-        dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- diff -np "$Output/app-$Version" -nv $Version -ov $tag -a $Architecture -t setup;
+foreach ($tag in $targetDiffTags) {
+    Write-Host "Creating diff for $tag (portable)..." -ForegroundColor Green;
+    dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- diff -np $Output -nv $Version -ov $tag -a $Architecture -t portable;
+    $portableManifestDiff = "build/release/manifest/manifest_$($Version.ToLower())_$($Architecture.ToLower())_portable_diff_$($tag.ToLower()).json";
+    if (Test-Path $portableManifestDiff) {
+        $portableDiffTags += $tag;
+        Write-Host "✅ Portable diff manifest verified for $tag" -ForegroundColor Green;
+    }
+
+    Write-Host "Creating diff for $tag (setup)..." -ForegroundColor Green;
+    dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- diff -np "$Output/app-$Version" -nv $Version -ov $tag -a $Architecture -t setup;
+    $setupManifestDiff = "build/release/manifest/manifest_$($Version.ToLower())_$($Architecture.ToLower())_setup_diff_$($tag.ToLower()).json";
+    if (Test-Path $setupManifestDiff) {
+        $setupDiffTags += $tag;
+        Write-Host "✅ Setup diff manifest verified for $tag" -ForegroundColor Green;
     }
 }
 
 
 # 10. Generate release info for portable and setup, then combine them
-$diffArgs = if ($DiffTags.Count -gt 0) { @("-d", ($DiffTags -join " ")) } else { @() }
+$portableDiffArgs = if ($portableDiffTags.Count -gt 0) { @("-d", ($portableDiffTags -join " ")) } else { @() }
+$setupDiffArgs = if ($setupDiffTags.Count -gt 0) { @("-d", ($setupDiffTags -join " ")) } else { @() }
 
 Write-Host "Creating portable release info..." -ForegroundColor Green;
-dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- release create "build/release_info_$($Version)_$($Architecture)_portable.json" -v $Version -a $Architecture -t portable -p $portablePackagePath @diffArgs;
+dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- release create "build/release_info_$($Version)_$($Architecture)_portable.json" -v $Version -a $Architecture -t portable -p $portablePackagePath @portableDiffArgs;
 
 Write-Host "Creating setup release info..." -ForegroundColor Green;
-dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- release create "build/release_info_$($Version)_$($Architecture)_setup.json" -v $Version -a $Architecture -t setup -p $setupFilesPackagePath -sp $setupInstallerPath @diffArgs;
+dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- release create "build/release_info_$($Version)_$($Architecture)_setup.json" -v $Version -a $Architecture -t setup -p $setupFilesPackagePath -sp $setupInstallerPath @setupDiffArgs;
 
 Write-Host "Combining release info files..." -ForegroundColor Green;
 dotnet run --project 'src/BuildTool' -c Release -p:Platform=x64 -- release combine "build/release_info_$($Version)_$($Architecture).json" -i "build/release_info_$($Version)_$($Architecture)_portable.json" "build/release_info_$($Version)_$($Architecture)_setup.json";

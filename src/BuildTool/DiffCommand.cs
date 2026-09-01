@@ -118,9 +118,9 @@ public class DiffCommand
 
         Console.WriteLine($"Creating diff files for version {oldVersion} -> {newVersion} ({arch}, {type})");
 
-        ReleaseManifest oldManifest, newManifest;
-        string oldVersionManifestPath = Path.Join(outputPath, "manifest", $"manifest_{oldVersion}_{arch}_{type}.json");
-        string newVersionManifestPath = Path.Join(outputPath, "manifest", $"manifest_{newVersion}_{arch}_{type}.json");
+        ReleaseManifest? oldManifest = null, newManifest = null;
+        string oldVersionManifestPath = Path.Join(outputPath, "manifest", $"manifest_{oldVersion}_{arch}_{type}.json".ToLower());
+        string newVersionManifestPath = Path.Join(outputPath, "manifest", $"manifest_{newVersion}_{arch}_{type}.json".ToLower());
         if (Directory.Exists(oldPath) && File.Exists(oldVersionManifestPath))
         {
             oldManifest = JsonSerializer.Deserialize<ReleaseManifest>(File.ReadAllText(oldVersionManifestPath)) ?? throw new NullReferenceException("Manifest is null.");
@@ -129,6 +129,15 @@ public class DiffCommand
         {
             oldManifest = await GetManifestAsync(oldVersion, arch, type);
         }
+
+        if (oldManifest is null)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"[Warning] No manifest found for diff version {oldVersion} ({arch}, {type}), skipping diff.");
+            Console.ResetColor();
+            return;
+        }
+
         if (Directory.Exists(newPath) && File.Exists(newVersionManifestPath))
         {
             newManifest = JsonSerializer.Deserialize<ReleaseManifest>(File.ReadAllText(newVersionManifestPath)) ?? throw new NullReferenceException("Manifest is null.");
@@ -136,6 +145,14 @@ public class DiffCommand
         else
         {
             newManifest = await GetManifestAsync(newVersion, arch, type);
+        }
+
+        if (newManifest is null)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"[Warning] No manifest found for new version {newVersion} ({arch}, {type}), cannot create diff.");
+            Console.ResetColor();
+            return;
         }
 
         newManifest.DiffVersion = oldVersion;
@@ -224,12 +241,35 @@ public class DiffCommand
 
 
 
-    private async Task<ReleaseManifest> GetManifestAsync(string version, Architecture arch, InstallType type)
+    private async Task<ReleaseManifest?> GetManifestAsync(string version, Architecture arch, InstallType type)
     {
         string name = $"manifest_{version}_{arch}_{type}".ToLower();
-        string url = $"https://github.com/DuolaD/HoYoShade-Hub/releases/download/{version}/{name}.json";
-        var manifest = await _polly.ExecuteAsync(async _ => await _httpClient.GetFromJsonAsync<ReleaseManifest>(url));
-        return manifest ?? throw new NullReferenceException($"Manifest {name} not exists.");
+        string url = $"https://cdn.cf.storage.hub.hoyosha.de/release/manifest/{name}.json";
+        try
+        {
+            var manifest = await _polly.ExecuteAsync(async _ =>
+            {
+                using var response = await _httpClient.GetAsync(url);
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadFromJsonAsync<ReleaseManifest>();
+            });
+            return manifest;
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"[Warning] Failed to fetch manifest for {version} from {url}: {ex.Message}");
+            Console.ResetColor();
+            return null;
+        }
     }
 
 
