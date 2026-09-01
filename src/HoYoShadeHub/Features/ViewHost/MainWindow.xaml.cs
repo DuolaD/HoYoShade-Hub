@@ -55,6 +55,7 @@ public sealed partial class MainWindow : WindowEx
         LoadContentView();
         WeakReferenceMessenger.Default.Register<AccentColorChangedMessage>(this, OnAccentColorChanged);
         WeakReferenceMessenger.Default.Register<WelcomePageFinishedMessage>(this, OnWelcomePageFinished);
+        WeakReferenceMessenger.Default.Register<NavigateToQuickSetupPageMessage>(this, OnNavigateToQuickSetupPage);
         WeakReferenceMessenger.Default.Register<NavigateToDownloadPageMessage>(this, OnNavigateToDownloadPage);
         WeakReferenceMessenger.Default.Register<NavigateToReShadeDownloadPageMessage>(this, OnNavigateToReShadeDownloadPage);
         WeakReferenceMessenger.Default.Register<GameStartedMessage>(this, OnGameStarted);
@@ -291,6 +292,12 @@ public sealed partial class MainWindow : WindowEx
         NavigateToView(new MainView(), ViewTransitionType.DrillIn);
         App.Current.EnsureSystemTray();
         _mainViewLoaded = true;
+    }
+
+
+    private void OnNavigateToQuickSetupPage(object _, NavigateToQuickSetupPageMessage __)
+    {
+        NavigateToView(new QuickSetupView(), ViewTransitionType.SlideFromRight);
     }
 
 

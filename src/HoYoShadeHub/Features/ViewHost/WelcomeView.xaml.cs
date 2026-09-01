@@ -450,7 +450,7 @@ public sealed partial class WelcomeView : UserControl
             AppConfig.EnableEch = _welcomeEnableEch;
 
             AppConfig.SaveConfiguration();
-            WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
+            WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage());
         }
         catch (Exception ex)
         {
