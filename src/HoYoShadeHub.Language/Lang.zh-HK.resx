@@ -1863,4 +1863,16 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="DX12IntroDialog_DX12EnhancedGraphics" xml:space="preserve">
     <value>DX12 增強畫質</value>
   </data>
+  <data name="WelcomeOOBE_Greeting1" xml:space="preserve">
+    <value>嗨，別來無恙啊！</value>
+  </data>
+  <data name="WelcomeOOBE_Greeting2" xml:space="preserve">
+    <value>正在為您準備好一切...</value>
+  </data>
+  <data name="WelcomeOOBE_Greeting3" xml:space="preserve">
+    <value>一切就緒，祝您遊戲愉快！</value>
+  </data>
+  <data name="WelcomeOOBE_SkipHint" xml:space="preserve">
+    <value>按任意鍵或點擊以跳過</value>
+  </data>
 </root>

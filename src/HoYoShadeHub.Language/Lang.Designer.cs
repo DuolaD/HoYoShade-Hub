@@ -5232,5 +5232,41 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("DX12IntroDialog_DX12EnhancedGraphics", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Hi there! 的本地化字符串。
+        /// </summary>
+        public static string WelcomeOOBE_Greeting1 {
+            get {
+                return ResourceManager.GetString("WelcomeOOBE_Greeting1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 We're getting everything ready for you... 的本地化字符串。
+        /// </summary>
+        public static string WelcomeOOBE_Greeting2 {
+            get {
+                return ResourceManager.GetString("WelcomeOOBE_Greeting2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 All set! Enjoy your gaming journey! 的本地化字符串。
+        /// </summary>
+        public static string WelcomeOOBE_Greeting3 {
+            get {
+                return ResourceManager.GetString("WelcomeOOBE_Greeting3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Press any key or click to skip 的本地化字符串。
+        /// </summary>
+        public static string WelcomeOOBE_SkipHint {
+            get {
+                return ResourceManager.GetString("WelcomeOOBE_SkipHint", resourceCulture);
+            }
+        }
     }
 }

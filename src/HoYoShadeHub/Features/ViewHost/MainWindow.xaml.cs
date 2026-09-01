@@ -139,7 +139,7 @@ public sealed partial class MainWindow : WindowEx
 
     private void NavigateToView(UIElement newContent, ViewTransitionType transitionType)
     {
-        bool isTargetMainView = newContent is MainView;
+        bool isWizardView = newContent is WelcomeView or HoYoShadeDownloadView or ReShadeDownloadView or QuickSetupView;
 
         if (transitionType == ViewTransitionType.None || !AreAnimationsEnabled() || _currentPresenter.Content == null)
         {
@@ -155,12 +155,12 @@ public sealed partial class MainWindow : WindowEx
             currentVisual.Opacity = 1.0f;
             currentVisual.Scale = Vector3.One;
 
-            WizardBackgroundImage.Visibility = isTargetMainView ? Visibility.Collapsed : Visibility.Visible;
-            WizardBackgroundMask.Visibility = isTargetMainView ? Visibility.Collapsed : Visibility.Visible;
+            WizardBackgroundImage.Visibility = isWizardView ? Visibility.Visible : Visibility.Collapsed;
+            WizardBackgroundMask.Visibility = isWizardView ? Visibility.Visible : Visibility.Collapsed;
             return;
         }
 
-        if (!isTargetMainView)
+        if (isWizardView)
         {
             WizardBackgroundImage.Visibility = Visibility.Visible;
             WizardBackgroundMask.Visibility = Visibility.Visible;
@@ -256,7 +256,7 @@ public sealed partial class MainWindow : WindowEx
             incomingVisual.Opacity = 1.0f;
             incomingVisual.Scale = Vector3.One;
 
-            if (isTargetMainView)
+            if (!isWizardView)
             {
                 WizardBackgroundImage.Visibility = Visibility.Collapsed;
                 WizardBackgroundMask.Visibility = Visibility.Collapsed;
@@ -289,9 +289,14 @@ public sealed partial class MainWindow : WindowEx
 
     private void OnWelcomePageFinished(object _, WelcomePageFinishedMessage __)
     {
-        NavigateToView(new MainView(), ViewTransitionType.DrillIn);
-        App.Current.EnsureSystemTray();
-        _mainViewLoaded = true;
+        var oobeView = new WelcomeOOBEView();
+        oobeView.Completed += () =>
+        {
+            NavigateToView(new MainView(), ViewTransitionType.DrillIn);
+            App.Current.EnsureSystemTray();
+            _mainViewLoaded = true;
+        };
+        NavigateToView(oobeView, ViewTransitionType.DrillIn);
     }
 
 
