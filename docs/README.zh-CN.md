@@ -1,4 +1,4 @@
-﻿[English](.Readme.md) | **简体中文** | [繁體中文](./docs/README.zh-TW.md)
+[English](../README.md) | **简体中文** | [繁體中文](./README.zh-TW.md)
 
 # HoYoShade Hub
 
@@ -35,6 +35,12 @@ HoYoShade Hub 是一个为了解决 HoYoShade 当前 Bat 启动器的缺点而�
 
 > [!NOTE]
 > 继续使用即代表你同意 [我们的用户协议及隐私策略](https://hoyosha.de/zh_cn/user-agreement.html) 。
+
+## 本地化
+
+HoYoShade Hub 使用 **[Crowdin](https://crowdin.com/project/hoyoshade-hub)** 进行应用内文本本地化。你可以帮助我们翻译和校对文本，非常欢迎大家的加入！
+
+👉 [本地化指南](./Localization.zh-CN.md)
 
 ## 开发
 
