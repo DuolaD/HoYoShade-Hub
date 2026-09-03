@@ -279,6 +279,7 @@ public sealed partial class MainWindow : WindowEx
         }
         else
         {
+            AppConfig.WelcomeOOBECompleted = true;
             NavigateToView(new MainView(), ViewTransitionType.None);
             App.Current.EnsureSystemTray();
             _mainViewLoaded = true;
@@ -289,14 +290,24 @@ public sealed partial class MainWindow : WindowEx
 
     private void OnWelcomePageFinished(object _, WelcomePageFinishedMessage __)
     {
-        var oobeView = new WelcomeOOBEView();
-        oobeView.Completed += () =>
+        if (!_mainViewLoaded && !AppConfig.WelcomeOOBECompleted)
+        {
+            AppConfig.WelcomeOOBECompleted = true;
+            var oobeView = new WelcomeOOBEView();
+            oobeView.Completed += () =>
+            {
+                NavigateToView(new MainView(), ViewTransitionType.DrillIn);
+                App.Current.EnsureSystemTray();
+                _mainViewLoaded = true;
+            };
+            NavigateToView(oobeView, ViewTransitionType.DrillIn);
+        }
+        else
         {
             NavigateToView(new MainView(), ViewTransitionType.DrillIn);
             App.Current.EnsureSystemTray();
             _mainViewLoaded = true;
-        };
-        NavigateToView(oobeView, ViewTransitionType.DrillIn);
+        }
     }
 
 

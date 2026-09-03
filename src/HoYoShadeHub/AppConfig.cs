@@ -336,6 +336,16 @@ public static class AppConfig
 
 
     /// <summary>
+    /// 是否已完成首次启动欢迎/OOBE动画
+    /// </summary>
+    public static bool WelcomeOOBECompleted
+    {
+        get => GetValue<bool>();
+        set => SetValue(value);
+    }
+
+
+    /// <summary>
     /// 启动时自动检测启动器更新
     /// </summary>
     public static bool AutoCheckLauncherUpdateOnStartup
