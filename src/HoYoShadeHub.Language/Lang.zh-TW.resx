@@ -1864,7 +1864,7 @@
     <value>正在為您準備好一切...</value>
   </data>
   <data name="WelcomeOOBE_Greeting3" xml:space="preserve">
-    <value>一切就緒，祝您遊戲愉快！</value>
+    <value>一切就緒，歡迎使用HoYoShade Hub！</value>
   </data>
   <data name="WelcomeOOBE_SkipHint" xml:space="preserve">
     <value>按任意鍵或點擊以跳過</value>
