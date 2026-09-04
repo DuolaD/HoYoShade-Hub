@@ -1853,15 +1853,15 @@
     <value>DX12 增强画质</value>
   </data>
   <data name="WelcomeOOBE_Greeting1" xml:space="preserve">
-    <value>Hi there!</value>
+    <value>嗨，别来无恙啊！</value>
   </data>
   <data name="WelcomeOOBE_Greeting2" xml:space="preserve">
-    <value>We're getting everything ready for you...</value>
+    <value>正在为您准备好一切...</value>
   </data>
   <data name="WelcomeOOBE_Greeting3" xml:space="preserve">
-    <value>一切就绪，欢迎使用HoYoShade Hub！</value>
+    <value>一切就绪，祝您游戏愉快！</value>
   </data>
   <data name="WelcomeOOBE_SkipHint" xml:space="preserve">
-    <value>Press any key or click to skip</value>
+    <value>按任意键或点击以跳过</value>
   </data>
 </root>
