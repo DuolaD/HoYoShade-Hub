@@ -80,232 +80,305 @@
                     Click="Button_NetworkSettings_Click" />
         </StackPanel>
 
-        <StackPanel x:Name="MainContentPanel" 
-                    VerticalAlignment="Top" 
-                    Spacing="8"
-                    Margin="{x:Bind ContentMargin, Mode=OneWay}">
-            
-            <TextBlock FontSize="18" 
-                       Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                       Text="{x:Bind Title, Mode=OneWay}" />
+        <!-- Main Content Area with ScrollViewer for DPI/Resolution adaptation -->
+        <ScrollViewer x:Name="MainContentPanel"
+                      Margin="48,36,48,88"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      MaxWidth="760"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+                <!-- Title -->
+                <TextBlock FontSize="22" 
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                           Text="{x:Bind Title, Mode=OneWay}" />
 
-            <!-- Update Hint -->
-            <TextBlock Text="{x:Bind UpdateHintText}"
-                       TextWrapping="Wrap"
-                       Foreground="{ThemeResource SystemFillColorCautionBrush}"
-                       FontSize="13"
-                       MaxWidth="800"
-                       HorizontalAlignment="Left"
-                       Visibility="{x:Bind IsUpdateMode, Mode=OneWay}" />
-
-            <!-- Description -->
-            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_Description}"
-                       TextWrapping="Wrap"
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       FontSize="11"
-                       MaxWidth="800"
-                       HorizontalAlignment="Left" />
-
-            <!-- Install Target and Type Selection (Side by Side) -->
-            <Grid ColumnSpacing="24">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                
-                <!-- Install Target Selection -->
-                <StackPanel Grid.Column="0" Spacing="4">
-                    <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_SelectInstallTarget}" 
-                               FontSize="12"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <StackPanel Spacing="4">
-                        <RadioButton IsChecked="{x:Bind IsInstallToHoYoShadeOnly, Mode=TwoWay}"
-                                     IsEnabled="{x:Bind CanInstallToHoYoShadeOnly, Mode=OneWay}"
-                                     GroupName="InstallTarget"
-                                     MaxWidth="9999">
-                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallToHoYoShadeOnly}"
-                                       TextWrapping="Wrap"
-                                       FontSize="13"
-                                       MaxWidth="350" />
-                        </RadioButton>
-                        
-                        <StackPanel Spacing="3">
-                            <RadioButton IsChecked="{x:Bind IsInstallToOpenHoYoShadeOnly, Mode=TwoWay}"
-                                         IsEnabled="{x:Bind CanInstallToOpenHoYoShadeOnly, Mode=OneWay}"
-                                         GroupName="InstallTarget"
-                                         MaxWidth="9999">
-                                <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallToOpenHoYoShadeOnly}"
-                                           TextWrapping="Wrap"
-                                           FontSize="13"
-                                           MaxWidth="350" />
-                            </RadioButton>
-                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_OpenHoYoShadeWarning}"
-                                       TextWrapping="Wrap"
-                                       Foreground="{ThemeResource SystemFillColorAttentionBrush}"
-                                       FontSize="11"
-                                       Margin="28,0,0,0"
-                                       Visibility="{x:Bind IsInstallToOpenHoYoShadeOnly, Mode=OneWay}" />
-                        </StackPanel>
-                        
-                        <StackPanel Spacing="3">
-                            <RadioButton IsChecked="{x:Bind IsInstallToBoth, Mode=TwoWay}"
-                                         IsEnabled="{x:Bind CanInstallToBoth, Mode=OneWay}"
-                                         GroupName="InstallTarget"
-                                         MaxWidth="9999">
-                                <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallToBoth}"
-                                           TextWrapping="Wrap"
-                                           FontSize="13"
-                                           MaxWidth="350" />
-                            </RadioButton>
-                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_BothTargetsWarning}"
-                                       TextWrapping="Wrap"
-                                       Foreground="{ThemeResource SystemFillColorAttentionBrush}"
-                                       FontSize="11"
-                                       Margin="28,0,0,0"
-                                       Visibility="{x:Bind IsInstallToBoth, Mode=OneWay}" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-
-                <!-- Install Type Selection -->
-                <StackPanel Grid.Column="1" Spacing="4">
-                    <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_SelectInstallType}" 
-                               FontSize="12"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <StackPanel Spacing="4">
-                        <RadioButton IsChecked="{x:Bind IsInstallAll, Mode=TwoWay}"
-                                     GroupName="InstallType"
-                                     MaxWidth="9999">
-                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallAll}"
-                                       TextWrapping="Wrap"
-                                       FontSize="13"
-                                       MaxWidth="350" />
-                        </RadioButton>
-                        <RadioButton IsChecked="{x:Bind IsInstallEssentialOnly, Mode=TwoWay}"
-                                     GroupName="InstallType"
-                                     MaxWidth="9999">
-                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallEssentialOnly}"
-                                       TextWrapping="Wrap"
-                                       FontSize="13"
-                                       MaxWidth="350" />
-                        </RadioButton>
-                        <RadioButton IsChecked="{x:Bind IsCustomizeInstall, Mode=TwoWay}"
-                                     GroupName="InstallType"
-                                     MaxWidth="9999">
-                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_CustomizeInstall}"
-                                       TextWrapping="Wrap"
-                                       FontSize="13"
-                                       MaxWidth="350" />
-                        </RadioButton>
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
-
-            <!-- Server Selection -->
-            <StackPanel Spacing="4">
-                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}" 
+                <!-- Update Hint (if in update mode) -->
+                <TextBlock Text="{x:Bind UpdateHintText}"
+                           TextWrapping="Wrap"
+                           Foreground="{ThemeResource SystemFillColorCautionBrush}"
                            FontSize="12"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                <ComboBox ItemsSource="{x:Bind DownloadServers}" 
-                          SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}" 
-                          MinWidth="240">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="models:DownloadServerItem">
+                           Visibility="{x:Bind IsUpdateMode, Mode=OneWay}" />
+
+                <!-- Description Card (Naturally responsive without scrollbar) -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="14,10">
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Grid.Column="0"
+                                  Glyph="&#xE946;"
+                                  FontSize="15"
+                                  Margin="0,2,0,0"
+                                  VerticalAlignment="Top"
+                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{x:Bind lang:Lang.ReShadeDownloadView_Description}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   FontSize="11.5"
+                                   LineHeight="17" />
+                    </Grid>
+                </Border>
+
+                <!-- Install Target and Type Selection (Side by Side Cards) -->
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Card A: Install Target Selection -->
+                    <Border Grid.Column="0"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="14,12">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_SelectInstallTarget}" 
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <StackPanel Spacing="6">
+                                <RadioButton IsChecked="{x:Bind IsInstallToHoYoShadeOnly, Mode=TwoWay}"
+                                             IsEnabled="{x:Bind CanInstallToHoYoShadeOnly, Mode=OneWay}"
+                                             GroupName="InstallTarget"
+                                             MaxWidth="9999">
+                                    <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallToHoYoShadeOnly}"
+                                               TextWrapping="Wrap"
+                                               FontSize="12.5" />
+                                </RadioButton>
+                                
+                                <StackPanel Spacing="2">
+                                    <RadioButton IsChecked="{x:Bind IsInstallToOpenHoYoShadeOnly, Mode=TwoWay}"
+                                                 IsEnabled="{x:Bind CanInstallToOpenHoYoShadeOnly, Mode=OneWay}"
+                                                 GroupName="InstallTarget"
+                                                 MaxWidth="9999">
+                                        <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallToOpenHoYoShadeOnly}"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="12.5" />
+                                    </RadioButton>
+                                    <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_OpenHoYoShadeWarning}"
+                                               TextWrapping="Wrap"
+                                               Foreground="{ThemeResource SystemFillColorAttentionBrush}"
+                                               FontSize="11"
+                                               Margin="26,0,0,0"
+                                               Visibility="{x:Bind IsInstallToOpenHoYoShadeOnly, Mode=OneWay}" />
+                                </StackPanel>
+                                
+                                <StackPanel Spacing="2">
+                                    <RadioButton IsChecked="{x:Bind IsInstallToBoth, Mode=TwoWay}"
+                                                 IsEnabled="{x:Bind CanInstallToBoth, Mode=OneWay}"
+                                                 GroupName="InstallTarget"
+                                                 MaxWidth="9999">
+                                        <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallToBoth}"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="12.5" />
+                                    </RadioButton>
+                                    <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_BothTargetsWarning}"
+                                               TextWrapping="Wrap"
+                                               Foreground="{ThemeResource SystemFillColorAttentionBrush}"
+                                               FontSize="11"
+                                               Margin="26,0,0,0"
+                                               Visibility="{x:Bind IsInstallToBoth, Mode=OneWay}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Card B: Install Type Selection -->
+                    <Border Grid.Column="1"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="14,12">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_SelectInstallType}" 
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <StackPanel Spacing="6">
+                                <RadioButton IsChecked="{x:Bind IsInstallAll, Mode=TwoWay}"
+                                             GroupName="InstallType"
+                                             MaxWidth="9999">
+                                    <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallAll}"
+                                               TextWrapping="Wrap"
+                                               FontSize="12.5" />
+                                </RadioButton>
+                                <RadioButton IsChecked="{x:Bind IsInstallEssentialOnly, Mode=TwoWay}"
+                                             GroupName="InstallType"
+                                             MaxWidth="9999">
+                                    <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_InstallEssentialOnly}"
+                                               TextWrapping="Wrap"
+                                               FontSize="12.5" />
+                                </RadioButton>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <RadioButton Grid.Column="0"
+                                                 IsChecked="{x:Bind IsCustomizeInstall, Mode=TwoWay}"
+                                                 GroupName="InstallType"
+                                                 MaxWidth="9999">
+                                        <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_CustomizeInstall}"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="12.5" />
+                                    </RadioButton>
+                                    <!-- Customize Button aligned directly with custom option -->
+                                    <Button Grid.Column="1"
+                                            Command="{x:Bind CustomizeCommand}"
+                                            IsEnabled="{x:Bind CanRefresh, Mode=OneWay}"
+                                            Visibility="{x:Bind ShowCustomizeButton, Mode=OneWay}"
+                                            Padding="8,3"
+                                            VerticalAlignment="Center"
+                                            CornerRadius="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <FontIcon FontSize="12" Glyph="&#xE712;" />
+                                            <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_CustomizeInstall}" FontSize="11" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Card C: Download Control & Server Panel -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16,12">
+                    <StackPanel Spacing="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Download and Control Buttons -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                <Button Content="{x:Bind lang:Lang.ReShadeDownloadView_DownloadAndInstall}" 
+                                        Command="{x:Bind DownloadCommand}" 
+                                        Style="{ThemeResource AccentButtonStyle}" 
+                                        IsEnabled="{x:Bind CanDownload, Mode=OneWay}"
+                                        CornerRadius="6" />
+                                
+                                <Button Command="{x:Bind RefreshCommand}"
+                                        IsEnabled="{x:Bind CanRefresh, Mode=OneWay}"
+                                        Visibility="{x:Bind ShowRefreshButton, Mode=OneWay}"
+                                        ToolTipService.ToolTip="{x:Bind lang:Lang.Common_Refresh}"
+                                        CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xE72C;" />
+                                        <TextBlock Text="{x:Bind lang:Lang.Common_Refresh}" />
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Pause Button -->
+                                <Button Command="{x:Bind PauseCommand}"
+                                        Visibility="{x:Bind ShowPauseButton, Mode=OneWay}"
+                                        CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xE769;" />
+                                        <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Pause}" />
+                                    </StackPanel>
+                                </Button>
+                                
+                                <!-- Stop Button -->
+                                <Button Command="{x:Bind StopCommand}"
+                                        Visibility="{x:Bind ShowStopButton, Mode=OneWay}"
+                                        CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xE71A;" />
+                                        <TextBlock Text="{x:Bind lang:Lang.DownloadGamePage_Stop}" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+
+                            <!-- Server Selection (Aligned on the right of the control card) -->
+                            <StackPanel Grid.Column="2" 
+                                        Orientation="Horizontal" 
+                                        Spacing="8" 
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}" 
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <ComboBox ItemsSource="{x:Bind DownloadServers}" 
+                                          SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}" 
+                                          MinWidth="180"
+                                          VerticalAlignment="Center">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DownloadServerItem">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                                <Border Grid.Column="1" 
+                                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="4" 
+                                                        Padding="6,2" 
+                                                        VerticalAlignment="Center"
+                                                        Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
+                                                    <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="11" VerticalAlignment="Center" UseLayoutRounding="True" />
+                                                </Border>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Progress and Status -->
+                        <StackPanel Spacing="4">
+                            <ProgressBar Value="{x:Bind DownloadProgress, Mode=OneWay}" 
+                                         Maximum="100"
+                                         Height="4"
+                                         CornerRadius="2" />
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="0,0,16,0" VerticalAlignment="Center" />
-                                 <Border Grid.Column="1" 
-                                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
-                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                         BorderThickness="1"
-                                         CornerRadius="4" 
-                                         Padding="6,2" 
-                                         VerticalAlignment="Center"
-                                         Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
-                                     <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" UseLayoutRounding="True" />
-                                 </Border>
+                                
+                                <TextBlock Grid.Column="0"
+                                           Text="{x:Bind StatusMessage, Mode=OneWay}"
+                                           FontSize="12"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                
+                                <TextBlock Grid.Column="1"
+                                           Text="{x:Bind SpeedAndProgress, Mode=OneWay}"
+                                           FontSize="12"
+                                           FontFamily="Consolas"
+                                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                           HorizontalAlignment="Right" />
                             </Grid>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
             </StackPanel>
-
-            <!-- Download and Control buttons -->
-            <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,12,0,0">
-                <Button Content="{x:Bind lang:Lang.ReShadeDownloadView_DownloadAndInstall}" 
-                        Command="{x:Bind DownloadCommand}" 
-                        Style="{ThemeResource AccentButtonStyle}" 
-                        IsEnabled="{x:Bind CanDownload, Mode=OneWay}" />
-                
-                <Button Command="{x:Bind RefreshCommand}"
-                        IsEnabled="{x:Bind CanRefresh, Mode=OneWay}"
-                        Visibility="{x:Bind ShowRefreshButton, Mode=OneWay}"
-                        ToolTipService.ToolTip="{x:Bind lang:Lang.Common_Refresh}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon FontSize="14" Glyph="&#xE72C;" />
-                        <TextBlock Text="{x:Bind lang:Lang.Common_Refresh}" />
-                    </StackPanel>
-                </Button>
-                
-                <!-- Customize Button -->
-                <Button Command="{x:Bind CustomizeCommand}"
-                        IsEnabled="{x:Bind CanRefresh, Mode=OneWay}"
-                        Visibility="{x:Bind ShowCustomizeButton, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon FontSize="14" Glyph="&#xE712;" />
-                        <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_CustomizeInstall}" />
-                    </StackPanel>
-                </Button>
-
-                <!-- Pause Button -->
-                <Button Command="{x:Bind PauseCommand}"
-                        Visibility="{x:Bind ShowPauseButton, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon FontSize="14" Glyph="&#xE769;" />
-                        <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Pause}" />
-                    </StackPanel>
-                </Button>
-                
-                <!-- Stop Button -->
-                <Button Command="{x:Bind StopCommand}"
-                        Visibility="{x:Bind ShowStopButton, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon FontSize="14" Glyph="&#xE71A;" />
-                        <TextBlock Text="{x:Bind lang:Lang.DownloadGamePage_Stop}" />
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-
-            <StackPanel Spacing="4">
-                <ProgressBar Value="{x:Bind DownloadProgress, Mode=OneWay}" Maximum="100" />
-                <!-- Status and progress info -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    
-                    <!-- Left: Status message -->
-                    <TextBlock Grid.Column="0"
-                               Text="{x:Bind StatusMessage, Mode=OneWay}"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    
-                    <!-- Right: Speed and percentage -->
-                    <TextBlock Grid.Column="1"
-                               Text="{x:Bind SpeedAndProgress, Mode=OneWay}"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               HorizontalAlignment="Right" />
-                </Grid>
-            </StackPanel>
-
-        </StackPanel>
+        </ScrollViewer>
 
         <!-- Bottom buttons container -->
         <Grid Canvas.ZIndex="10"
-              Margin="48,0,80,48"
+              Margin="48,0,80,36"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
@@ -315,24 +388,30 @@
             </Grid.ColumnDefinitions>
 
             <!-- Import from Local Button (Left) -->
-            <StackPanel Grid.Column="0" Spacing="8">
+            <StackPanel Grid.Column="0" 
+                        Orientation="Horizontal" 
+                        Spacing="10" 
+                        VerticalAlignment="Center">
                 <TextBlock Text="{x:Bind lang:Lang.ReShadeDownloadView_ImportHint}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           FontSize="12" />
+                           FontSize="12"
+                           VerticalAlignment="Center" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button Command="{x:Bind ImportFromLocalCommand}"
-                            IsEnabled="{x:Bind CanImport, Mode=OneWay}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon FontSize="14" Glyph="&#xE8E5;" />
-                            <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectPackage}" />
+                            IsEnabled="{x:Bind CanImport, Mode=OneWay}"
+                            CornerRadius="6">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon FontSize="13" Glyph="&#xE8E5;" />
+                            <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectPackage}" FontSize="12" />
                         </StackPanel>
                     </Button>
                     
                     <Button Command="{x:Bind ImportFromFolderCommand}"
-                            IsEnabled="{x:Bind CanImport, Mode=OneWay}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon FontSize="14" Glyph="&#xE8B7;" />
-                            <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectFolder}" />
+                            IsEnabled="{x:Bind CanImport, Mode=OneWay}"
+                            CornerRadius="6">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon FontSize="13" Glyph="&#xE8B7;" />
+                            <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectFolder}" FontSize="12" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -345,7 +424,7 @@
                         Command="{x:Bind SkipCommand}"
                         IsEnabled="{x:Bind CanSkip, Mode=OneWay}"
                         CornerRadius="20,8,8,20">
-                    <TextBlock Margin="8,0,4,0" FontSize="14" Text="{x:Bind lang:Lang.ReShadeDownloadView_SkipThisStep}" />
+                    <TextBlock Margin="8,0,8,0" FontSize="14" Text="{x:Bind lang:Lang.ReShadeDownloadView_SkipThisStep}" />
                 </Button>
 
                 <!-- Next Button -->
@@ -355,7 +434,10 @@
                         IsEnabled="{x:Bind CanNext, Mode=OneWay}"
                         Style="{ThemeResource AccentButtonStyle}"
                         CornerRadius="8,20,20,8">
-                    <TextBlock Margin="4,0,8,0" FontSize="14" Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Next}" />
+                    <StackPanel Orientation="Horizontal" Spacing="6" Margin="6,0,6,0">
+                        <TextBlock FontSize="14" Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Next}" />
+                        <FontIcon FontSize="12" Glyph="&#xE76C;" />
+                    </StackPanel>
                 </Button>
             </StackPanel>
         </Grid>

@@ -77,202 +77,358 @@
                     Click="Button_NetworkSettings_Click" />
         </StackPanel>
 
-        <StackPanel Margin="48,40,48,80" VerticalAlignment="Center" Spacing="8">
-            <TextBlock FontSize="24" 
-                       Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                       Text="{x:Bind Title, Mode=OneWay}" />
+        <!-- Main Content Area with ScrollViewer for DPI/Resolution adaptation -->
+        <ScrollViewer Margin="48,36,48,88"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      MaxWidth="760"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+                <!-- Title -->
+                <TextBlock FontSize="22" 
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                           Text="{x:Bind Title, Mode=OneWay}" />
 
-            <!-- Version Selection -->
-            <StackPanel Spacing="4">
-                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectVersion}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                <ComboBox ItemsSource="{x:Bind Versions}" 
-                          SelectedItem="{x:Bind SelectedVersion, Mode=TwoWay}"
-                          MinWidth="240">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="github:GithubRelease">
-                            <TextBlock>
-                                <Run Text="{x:Bind Name}" />
-                                <Run Text="{x:Bind LatestVersionTag, Mode=OneWay}" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
-                            </TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_LatestVersionTip}"
-                           TextWrapping="Wrap"
-                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                           FontSize="11" />
-                
-                <!-- Preview Channel Toggle -->
-                <StackPanel Margin="0,2,0,0"
-                            Orientation="Horizontal"
-                            Spacing="8">
-                    <ToggleSwitch IsOn="{x:Bind EnablePreviewChannel, Mode=TwoWay}"
-                                  OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
-                                  OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
-                    <Button Margin="0,2,0,0"
-                            Padding="4"
-                            VerticalAlignment="Center"
-                            Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
-                        <FontIcon FontSize="16"
-                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                  Glyph="&#xE9CE;" />
-                        <Button.Flyout>
-                            <Flyout>
-                                <TextBlock MaxWidth="380"
-                                           Text="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannelTip}"
-                                           TextWrapping="Wrap" />
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                </StackPanel>
-            </StackPanel>
+                <!-- Card 1: Version and Channel Configuration -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16,12">
+                    <StackPanel Spacing="8">
+                        <!-- Version Selection Row -->
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectVersion}"
+                                           FontSize="13"
+                                           FontWeight="Medium"
+                                           Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_LatestVersionTip}"
+                                           FontSize="11"
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{x:Bind Versions}" 
+                                      SelectedItem="{x:Bind SelectedVersion, Mode=TwoWay}"
+                                      MinWidth="220"
+                                      VerticalAlignment="Center">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="github:GithubRelease">
+                                        <TextBlock>
+                                            <Run Text="{x:Bind Name}" />
+                                            <Run Text="{x:Bind LatestVersionTag, Mode=OneWay}" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
 
-            <!-- Flavor Selection -->
-            <StackPanel Spacing="4">
-                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectType}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                <StackPanel Spacing="8">
-                    <StackPanel Spacing="3">
-                        <CheckBox Content="{x:Bind lang:Lang.HoYoShadeDownloadView_Option_HoYoShade}" 
-                                  IsChecked="{x:Bind IsHoYoShadeSelected, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind IsHoYoShadeSelectionEnabled, Mode=OneWay}" />
-                        <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_HoYoShade_Description}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                   FontSize="11"
-                                   Margin="28,0,0,0" />
+                        <!-- Preview Channel Toggle -->
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="8">
+                            <ToggleSwitch IsOn="{x:Bind EnablePreviewChannel, Mode=TwoWay}"
+                                          OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
+                                          OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
+                            <Button Padding="4"
+                                    VerticalAlignment="Center"
+                                    Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
+                                <FontIcon FontSize="15"
+                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                          Glyph="&#xE9CE;" />
+                                <Button.Flyout>
+                                    <Flyout>
+                                        <TextBlock MaxWidth="360"
+                                                   Text="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannelTip}"
+                                                   TextWrapping="Wrap" />
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
-                    <StackPanel Spacing="3">
-                        <CheckBox Content="{x:Bind lang:Lang.HoYoShadeDownloadView_Option_OpenHoYoShade}" 
-                                  IsChecked="{x:Bind IsOpenHoYoShadeSelected, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind IsOpenHoYoShadeSelectionEnabled, Mode=OneWay}" />
-                        <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_OpenHoYoShade_Description}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                   FontSize="11"
-                                   Margin="28,0,0,0" />
-                    </StackPanel>
-                </StackPanel>
-            </StackPanel>
+                </Border>
 
-            <!-- Server Selection -->
-            <StackPanel Spacing="4">
-                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                <ComboBox ItemsSource="{x:Bind DownloadServers}" 
-                          SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}" 
-                          MinWidth="240">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="models:DownloadServerItem">
+                <!-- Card 2: Flavor Selection (Visual Comparison Cards) -->
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectType}" 
+                               FontSize="12"
+                               FontWeight="Medium"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Flavor 1: HoYoShade (Standard) -->
+                        <Border Grid.Column="0"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="14,12">
+                            <Grid RowSpacing="6">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Grid.Column="0"
+                                              Glyph="&#xE790;"
+                                              FontSize="16"
+                                              Margin="0,0,8,0"
+                                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Option_HoYoShade}"
+                                               FontWeight="SemiBold"
+                                               FontSize="13"
+                                               VerticalAlignment="Center" />
+                                    <CheckBox Grid.Column="2"
+                                              IsChecked="{x:Bind IsHoYoShadeSelected, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind IsHoYoShadeSelectionEnabled, Mode=OneWay}"
+                                              MinWidth="0"
+                                              Padding="0"
+                                              Margin="0"
+                                              VerticalAlignment="Center" />
+                                </Grid>
+
+                                <TextBlock Grid.Row="1"
+                                           Text="{x:Bind lang:Lang.HoYoShadeDownloadView_HoYoShade_Description}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           FontSize="11"
+                                           LineHeight="16" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Flavor 2: OpenHoYoShade (Dev Minimal) -->
+                        <Border Grid.Column="1"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="14,12">
+                            <Grid RowSpacing="6">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Grid.Column="0"
+                                              Glyph="&#xE943;"
+                                              FontSize="16"
+                                              Margin="0,0,8,0"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Option_OpenHoYoShade}"
+                                               FontWeight="SemiBold"
+                                               FontSize="13"
+                                               VerticalAlignment="Center" />
+                                    <CheckBox Grid.Column="2"
+                                              IsChecked="{x:Bind IsOpenHoYoShadeSelected, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind IsOpenHoYoShadeSelectionEnabled, Mode=OneWay}"
+                                              MinWidth="0"
+                                              Padding="0"
+                                              Margin="0"
+                                              VerticalAlignment="Center" />
+                                </Grid>
+
+                                <TextBlock Grid.Row="1"
+                                           Text="{x:Bind lang:Lang.HoYoShadeDownloadView_OpenHoYoShade_Description}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           FontSize="11"
+                                           LineHeight="16" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Card 3: Download Action & Progress Control Card -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16,12">
+                    <StackPanel Spacing="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Control Buttons -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                <Button Content="{x:Bind DownloadButtonText, Mode=OneWay}" 
+                                        Command="{x:Bind DownloadCommand}" 
+                                        Style="{ThemeResource AccentButtonStyle}" 
+                                        IsEnabled="{x:Bind CanDownload, Mode=OneWay}"
+                                        CornerRadius="6" />
+                                
+                                <Button Command="{x:Bind RefreshVersionsCommand}"
+                                        IsEnabled="{x:Bind CanRefresh, Mode=OneWay}"
+                                        Visibility="{x:Bind ShowRefreshButton, Mode=OneWay}"
+                                        ToolTipService.ToolTip="{x:Bind lang:Lang.Common_Refresh}"
+                                        CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xE72C;" />
+                                        <TextBlock Text="{x:Bind lang:Lang.Common_Refresh}" />
+                                    </StackPanel>
+                                </Button>
+                                
+                                <Button Command="{x:Bind PauseResumeCommand}"
+                                        Visibility="{x:Bind ShowPauseResumeButton, Mode=OneWay}"
+                                        CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xE769;" />
+                                        <TextBlock Text="{x:Bind PauseResumeButtonText, Mode=OneWay}" />
+                                    </StackPanel>
+                                </Button>
+                                
+                                <Button Command="{x:Bind StopCommand}"
+                                        Visibility="{x:Bind IsControlButtonsVisible, Mode=OneWay}"
+                                        IsEnabled="{x:Bind CanStop, Mode=OneWay}"
+                                        CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xE71A;" />
+                                        <TextBlock Text="{x:Bind lang:Lang.DownloadGamePage_Stop}" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+
+                            <!-- Server Selection (Aligned on the right of the control card) -->
+                            <StackPanel Grid.Column="2" 
+                                        Orientation="Horizontal" 
+                                        Spacing="8" 
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}" 
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <ComboBox ItemsSource="{x:Bind DownloadServers}" 
+                                          SelectedItem="{x:Bind SelectedDownloadServer, Mode=TwoWay}" 
+                                          MinWidth="180"
+                                          VerticalAlignment="Center">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DownloadServerItem">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                                <Border Grid.Column="1" 
+                                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="4" 
+                                                        Padding="6,2" 
+                                                        VerticalAlignment="Center"
+                                                        Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
+                                                    <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="11" VerticalAlignment="Center" UseLayoutRounding="True" />
+                                                </Border>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Progress and Status -->
+                        <StackPanel Spacing="4">
+                            <ProgressBar Value="{x:Bind DownloadProgress, Mode=OneWay}" 
+                                         Maximum="100" 
+                                         Height="4"
+                                         CornerRadius="2" />
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="0,0,16,0" VerticalAlignment="Center" />
-                                 <Border Grid.Column="1" 
-                                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
-                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                         BorderThickness="1"
-                                         CornerRadius="4" 
-                                         Padding="6,2" 
-                                         VerticalAlignment="Center"
-                                         Visibility="{x:Bind LatencyText, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}">
-                                     <TextBlock Text="{x:Bind LatencyText, Mode=OneWay}" Foreground="{x:Bind LatencyColor, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" UseLayoutRounding="True" />
-                                 </Border>
+                                
+                                <TextBlock Grid.Column="0"
+                                           Text="{x:Bind StatusMessage, Mode=OneWay}"
+                                           FontSize="12"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                
+                                <TextBlock Grid.Column="1"
+                                           Text="{x:Bind SpeedAndProgress, Mode=OneWay}"
+                                           FontSize="12"
+                                           FontFamily="Consolas"
+                                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                           HorizontalAlignment="Right" />
                             </Grid>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
 
-            <!-- Download and Refresh buttons -->
-            <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,12,0,0">
-                <Button Content="{x:Bind DownloadButtonText, Mode=OneWay}" 
-                        Command="{x:Bind DownloadCommand}" 
-                        Style="{ThemeResource AccentButtonStyle}" 
-                        IsEnabled="{x:Bind CanDownload, Mode=OneWay}" />
-                
-                <Button Command="{x:Bind RefreshVersionsCommand}"
-                        IsEnabled="{x:Bind CanRefresh, Mode=OneWay}"
-                        Visibility="{x:Bind ShowRefreshButton, Mode=OneWay}"
-                        ToolTipService.ToolTip="{x:Bind lang:Lang.Common_Refresh}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon FontSize="14" Glyph="&#xE72C;" />
-                        <TextBlock Text="{x:Bind lang:Lang.Common_Refresh}" />
-                    </StackPanel>
-                </Button>
-                
-                <!-- Pause/Resume Button - Hidden when paused to avoid duplicate Continue button -->
-                <Button Command="{x:Bind PauseResumeCommand}"
-                        Visibility="{x:Bind ShowPauseResumeButton, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon FontSize="14" Glyph="&#xE769;" />
-                        <TextBlock Text="{x:Bind PauseResumeButtonText, Mode=OneWay}" />
-                    </StackPanel>
-                </Button>
-                
-                <!-- Stop Button - Available during both downloading and paused states -->
-                <Button Command="{x:Bind StopCommand}"
-                        Visibility="{x:Bind IsControlButtonsVisible, Mode=OneWay}"
-                        IsEnabled="{x:Bind CanStop, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon FontSize="14" Glyph="&#xE71A;" />
-                        <TextBlock Text="{x:Bind lang:Lang.DownloadGamePage_Stop}" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Unified Bottom Navigation Bar -->
+        <Grid Canvas.ZIndex="10"
+              Margin="48,0,80,36"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Import from Local Button (Left) -->
+            <StackPanel Grid.Column="0"
+                        Orientation="Horizontal"
+                        Spacing="10"
+                        VerticalAlignment="Center">
+                <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_ImportFromLocal}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="12"
+                           VerticalAlignment="Center" />
+                <Button Command="{x:Bind ImportFromLocalCommand}"
+                        IsEnabled="{x:Bind CanImport, Mode=OneWay}"
+                        CornerRadius="6">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon FontSize="13" Glyph="&#xE8E5;" />
+                        <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectPackage}" FontSize="12" />
                     </StackPanel>
                 </Button>
             </StackPanel>
 
-            <StackPanel Spacing="4">
-                <ProgressBar Value="{x:Bind DownloadProgress, Mode=OneWay}" Maximum="100" />
-                <!-- Status and progress info -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    
-                    <!-- Left: Status message -->
-                    <TextBlock Grid.Column="0"
-                               Text="{x:Bind StatusMessage, Mode=OneWay}"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    
-                    <!-- Right: Speed and percentage -->
-                    <TextBlock Grid.Column="1"
-                               Text="{x:Bind SpeedAndProgress, Mode=OneWay}"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               HorizontalAlignment="Right" />
-                </Grid>
-            </StackPanel>
-
-        </StackPanel>
-
-        <!-- Start Button -->
-        <Button Height="40"
-                Margin="0,0,80,48"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                BorderThickness="0"
-                Command="{x:Bind StartCommand}"
-                IsEnabled="{x:Bind CanStart, Mode=OneWay}"
-                Style="{ThemeResource AccentButtonStyle}"
-                CornerRadius="8,20,20,8">
-             <TextBlock Margin="4,0,8,0" FontSize="14" Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Next}" />
-        </Button>
-        
-        <!-- Import from Local Button -->
-        <StackPanel Margin="48,0,0,48"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    Spacing="8">
-            <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_ImportFromLocal}"
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       FontSize="12" />
-            <Button Command="{x:Bind ImportFromLocalCommand}"
-                    IsEnabled="{x:Bind CanImport, Mode=OneWay}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon FontSize="14" Glyph="&#xE8E5;" />
-                    <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_SelectPackage}" />
+            <!-- Next Step Button (Right) -->
+            <Button Grid.Column="2"
+                    Height="40"
+                    BorderThickness="0"
+                    Command="{x:Bind StartCommand}"
+                    IsEnabled="{x:Bind CanStart, Mode=OneWay}"
+                    Style="{ThemeResource AccentButtonStyle}"
+                    CornerRadius="8,20,20,8">
+                <StackPanel Orientation="Horizontal" Spacing="6" Margin="6,0,6,0">
+                    <TextBlock FontSize="14" Text="{x:Bind lang:Lang.HoYoShadeDownloadView_Next}" />
+                    <FontIcon FontSize="12" Glyph="&#xE76C;" />
                 </StackPanel>
             </Button>
-        </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

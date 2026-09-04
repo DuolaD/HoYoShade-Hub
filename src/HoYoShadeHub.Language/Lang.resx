@@ -1203,14 +1203,8 @@
     <value>If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons.</value>
   </data>
 	<data name="ReShadeDownloadView_Description" xml:space="preserve">
-    <value>You need to download and install ReShade shaders and addons for HoYoShade to work properly.
-However, for OpenHoYoShade, this step is optional because it is intended for development purposes. If you installed OpenHoYoShade, we recommend skipping this step.
-The list of available shaders and addons is synchronized with the official ReShade installer and controlled by ReShade.
-
-Due to ReShade version updates, previously available shaders/addons may not appear in this list and cannot be downloaded or installed. We cannot do anything about this.
-If you need to install shaders/addons that are not in the list, we recommend manually adding them after installation.
-
-If you are unsure what to choose, we recommend downloading and installing all shaders/addons.</value>
+    <value>Shaders and addons are required for HoYoShade to work properly, but can be skipped if you only installed OpenHoYoShade.
+The list is synchronized with official ReShade; missing effects can be manually imported after setup. If unsure, installing all is recommended.</value>
   </data>
 	<data name="ReShadeDownloadView_SelectInstallTarget" xml:space="preserve">
     <value>Select Install Target</value>
