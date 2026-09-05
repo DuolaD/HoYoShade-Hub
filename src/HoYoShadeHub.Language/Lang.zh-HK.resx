@@ -1203,14 +1203,8 @@
     <value>If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons.</value>
   </data>
   <data name="ReShadeDownloadView_Description" xml:space="preserve">
-    <value>你需要下載並安裝 ReShade 着色器同埋插件，先至可以令 HoYoShade 正常運作。
-但係對於 OpenHoYoShade 嚟講，呢一步係唔需要嘅，因為佢係用嚟開發嘅。如果你裝咗 OpenHoYoShade，我哋建議你跳過呢一步。
-可供安裝嘅着色器同埋插件列表同 ReShade 官方安裝器同步，由 ReShade 官方控制。
-
-由於 ReShade 版本更新迭代嘅原因，之前可以安裝嘅着色器/插件可能唔會喺呢個列表入面出現，亦都無辦法被下載同埋安裝。我哋對此無能為力。
-如果你需要安裝唔喺列表入面嘅着色器/插件，我哋建議你可以安裝好之後手動補返佢哂。
-
-如果你唔知點揀，我哋建議你下載並安裝全部着色器/插件。</value>
+    <value>著色器同埋插件係 HoYoShade 正常運作嘅必要元件；但如果你淨係裝咗 OpenHoYoShade，建議直接跳過呢一步。
+安裝清單同 ReShade 官方同步；如果遇到部分著色器同插件缺失，可以喺安裝後手動匯入補返。如果唔知點揀，推薦直接勾選「安裝全部」。</value>
   </data>
   <data name="ReShadeDownloadView_SelectInstallTarget" xml:space="preserve">
     <value>選擇安裝目標</value>
@@ -1870,7 +1864,7 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
     <value>正在為您準備好一切...</value>
   </data>
   <data name="WelcomeOOBE_Greeting3" xml:space="preserve">
-    <value>一切就緒，祝您遊戲愉快！</value>
+    <value>一切就緒，歡迎使用HoYoShade Hub！</value>
   </data>
   <data name="WelcomeOOBE_SkipHint" xml:space="preserve">
     <value>按任意鍵或點擊以跳過</value>
