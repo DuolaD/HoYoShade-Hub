@@ -1203,14 +1203,8 @@
     <value>If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons.</value>
   </data>
   <data name="ReShadeDownloadView_Description" xml:space="preserve">
-    <value>你需要下载并安装 ReShade 着色器和插件，才能让 HoYoShade 正常工作。
-但对于 OpenHoYoShade 来说，这一步是非必要的，因为它是作为开发用途而使用的。如果你安装的是OpenHoYoShade，我们建议你跳过这一步。
-可供安装的着色器和插件列表和 ReShade 官方安装器同步，受 ReShade 官方控制。
-
-由于 ReShade 版本更新迭代的原因，此前可供安装的着色器/插件可能并不会在此列表中出现，也无法被下载并安装。我们对此无能为力。
-如果你需要安装并不位于列表中的着色器/插件，我们建议你可以在安装好之后手动补全它们。
-
-如果你并不知道如何选择，我们建议你下载并安装全部着色器/插件。</value>
+    <value>着色器与插件是 HoYoShade 正常工作的必要组件；但若您仅安装了 OpenHoYoShade，建议直接跳过此步。
+安装列表与 ReShade 官方同步；如遇部分着色器与插件缺失，可在安装后手动导入补全。若不确定如何选择，推荐直接勾选「安装全部」。</value>
   </data>
   <data name="ReShadeDownloadView_SelectInstallTarget" xml:space="preserve">
     <value>选择安装目标</value>
