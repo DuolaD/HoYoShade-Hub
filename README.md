@@ -1,4 +1,4 @@
-﻿**English** | [简体中文](./docs/README.zh-CN.md) | [繁体中文](./docs/README.zh-TW.md)
+**English** | [简体中文](./docs/README.zh-CN.md) | [繁体中文](./docs/README.zh-TW.md)
 
 # HoYoShade Hub
 
@@ -36,6 +36,12 @@ Next, download the compressed package for your CPU architecture from [GitHub Rel
 
 > [!NOTE]
 > Continuing to use this software indicates your agreement to [our User Agreement and Privacy Policy](https://hoyosha.de/zh_cn/user-agreement.html).
+
+## Localization
+
+HoYoShade Hub uses **[Crowdin](https://crowdin.com/project/hoyoshade-hub)** for in-app text localization. You can contribute by helping us translate and proofread content in your native language. We warmly welcome anyone who wants to join!
+
+👉 [Localization Guide](./docs/Localization.md)
 
 ## Development
 

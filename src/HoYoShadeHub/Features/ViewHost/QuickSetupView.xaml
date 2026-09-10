@@ -1,0 +1,199 @@
+<UserControl x:Class="HoYoShadeHub.Features.ViewHost.QuickSetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="using:HoYoShadeHub.Language"
+             xmlns:models="using:HoYoShadeHub.Models"
+             x:DefaultBindMode="OneWay"
+             mc:Ignorable="d">
+
+    <Grid Loaded="Grid_Loaded">
+
+        <!-- Top Right Controls (Language & Network Settings) -->
+        <StackPanel Canvas.ZIndex="10"
+                    Margin="0,48,48,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Spacing="8">
+            <ComboBox Name="ComboBox_Language"
+                      MinWidth="200"
+                      HorizontalAlignment="Stretch"
+                      SelectionChanged="ComboBox_Language_SelectionChanged" />
+
+            <Button HorizontalAlignment="Stretch"
+                    Content="{x:Bind lang:Lang.WelcomeView_NetworkSettingsButton}"
+                    Click="Button_NetworkSettings_Click" />
+        </StackPanel>
+
+        <!-- Main Content Area -->
+        <StackPanel Margin="48,0,48,0"
+                    VerticalAlignment="Center"
+                    Spacing="16"
+                    MaxWidth="760"
+                    HorizontalAlignment="Left">
+
+            <!-- Title & Subtitle -->
+            <StackPanel Spacing="6">
+                <TextBlock FontSize="24"
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                           Text="推荐开始引导" />
+                <TextBlock Text="一键为您自动下载并配置最新稳定版 HoYoShade 框架，以及全部 ReShade 着色器与插件，省去繁琐配置。"
+                           TextWrapping="Wrap"
+                           FontSize="13"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- Feature / Preset Info Card -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20,16">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="预设安装配置清单"
+                               FontSize="13"
+                               FontWeight="Medium"
+                               Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+
+                    <!-- Item 1: Framework -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Grid.Column="0"
+                                  FontSize="16"
+                                  Margin="0,0,12,0"
+                                  Glyph="&#xE896;"
+                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <TextBlock Text="HoYoShade 官方标准框架" FontSize="13" FontWeight="Normal" />
+                            <TextBlock Text="自动匹配并下载最新的正式稳定版（不加入预览版渠道），包含所有内置预设。"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Item 2: Shaders & Plugins -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Grid.Column="0"
+                                  FontSize="16"
+                                  Margin="0,0,12,0"
+                                  Glyph="&#xE790;"
+                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <TextBlock Text="全量 ReShade 着色器与插件" FontSize="13" FontWeight="Normal" />
+                            <TextBlock Text="自动安装所有效果包（Shaders）、纹理（Textures）以及常用 Addons 插件。"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Item 3: Auto Mirror Download -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Grid.Column="0"
+                                  FontSize="16"
+                                  Margin="0,0,12,0"
+                                  Glyph="&#xE753;"
+                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <TextBlock Text="智能加速源" FontSize="13" FontWeight="Normal" />
+                            <TextBlock Text="自动测速并优选低延迟云代理镜像节点，支持限流自动容灾回退。"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Buttons Area -->
+            <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,4,0,0">
+                <!-- Start Button (Hidden when finished) -->
+                <Button Command="{x:Bind StartInstallCommand}"
+                        Style="{ThemeResource AccentButtonStyle}"
+                        Height="38"
+                        Padding="24,6"
+                        IsEnabled="{x:Bind CanStartInstall, Mode=OneWay}"
+                        Visibility="{x:Bind IsNotCompleted, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon FontSize="14" Glyph="&#xE896;" />
+                        <TextBlock Text="{x:Bind StartButtonText, Mode=OneWay}" FontWeight="Medium" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Stop Button (Visible when downloading) -->
+                <Button Command="{x:Bind StopCommand}"
+                        Height="38"
+                        Padding="18,6"
+                        Visibility="{x:Bind IsDownloading, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon FontSize="14" Glyph="&#xE71A;" />
+                        <TextBlock Text="{x:Bind lang:Lang.DownloadGamePage_Stop}" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Custom / Advanced Setup Button (Hidden when downloading or completed) -->
+                <Button Command="{x:Bind NavigateToCustomCommand}"
+                        Height="38"
+                        Padding="16,6"
+                        Visibility="{x:Bind CanNavigateToCustom, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon FontSize="14" Glyph="&#xE713;" />
+                        <TextBlock Text="自定义 / 高级安装" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <!-- Progress & Status Info -->
+            <StackPanel Spacing="6" Visibility="{x:Bind IsProgressVisible, Mode=OneWay}">
+                <ProgressBar Value="{x:Bind OverallProgress, Mode=OneWay}" Maximum="100" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{x:Bind StatusMessage, Mode=OneWay}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               FontSize="12" />
+                    <TextBlock Grid.Column="1"
+                               Text="{x:Bind SpeedAndProgress, Mode=OneWay}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               FontSize="12"
+                               HorizontalAlignment="Right" />
+                </Grid>
+            </StackPanel>
+
+        </StackPanel>
+
+        <!-- Enter Main View Button (Bottom Right, enabled when finished) -->
+        <Button Height="40"
+                Margin="0,0,80,48"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                BorderThickness="0"
+                Command="{x:Bind FinishCommand}"
+                Visibility="{x:Bind IsCompleted, Mode=OneWay}"
+                Style="{ThemeResource AccentButtonStyle}"
+                CornerRadius="8,20,20,8">
+            <StackPanel Orientation="Horizontal" Spacing="6" Margin="4,0,8,0">
+                <TextBlock FontSize="14" Text="进入主界面" />
+                <FontIcon FontSize="14" Glyph="&#xE76C;" />
+            </StackPanel>
+        </Button>
+
+    </Grid>
+</UserControl>

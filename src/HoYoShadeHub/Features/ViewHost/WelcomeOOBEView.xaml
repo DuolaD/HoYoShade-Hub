@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserControl x:Class="HoYoShadeHub.Features.ViewHost.WelcomeOOBEView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:lang="using:HoYoShadeHub.Language"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:DefaultBindMode="OneWay"
+             mc:Ignorable="d">
+
+    <Grid Background="#000000"
+          Loaded="Grid_Loaded"
+          PointerPressed="Grid_PointerPressed"
+          KeyDown="Grid_KeyDown"
+          IsHitTestVisible="True">
+
+        <!-- Centered Welcome Greeting Text Area -->
+        <Grid HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            
+            <TextBlock x:Name="GreetingTextBlock"
+                       FontSize="32"
+                       FontWeight="Normal"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="#F3F3F3"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       MaxWidth="800"
+                       IsTextScaleFactorEnabled="False" />
+        </Grid>
+
+        <!-- Subtle Skip Hint (bottom right) -->
+        <TextBlock HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Margin="0,0,32,24"
+                   FontSize="12"
+                   Foreground="#808080"
+                   Opacity="0.5"
+                   Text="{x:Bind lang:Lang.WelcomeOOBE_SkipHint}"
+                   IsHitTestVisible="False" />
+
+    </Grid>
+</UserControl>

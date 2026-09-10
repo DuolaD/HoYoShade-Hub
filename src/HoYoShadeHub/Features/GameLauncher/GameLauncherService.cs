@@ -440,6 +440,11 @@ internal partial class GameLauncherService
                 Verb = verb,
                 WorkingDirectory = Path.GetDirectoryName(exe),
             };
+            if (!thirdPartyTool && AppConfig.StartGameWithCMD)
+            {
+                info.CreateNoWindow = true;
+                info.WindowStyle = ProcessWindowStyle.Hidden;
+            }
             Process? process = Process.Start(info);
             if (process != null)
             {
