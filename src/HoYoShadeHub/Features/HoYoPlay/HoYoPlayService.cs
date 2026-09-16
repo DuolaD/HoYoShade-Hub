@@ -296,7 +296,83 @@ public class HoYoPlayService
         string lang = CultureInfo.CurrentUICulture.Name;
         var launcherId = LauncherId.FromGameId(gameIds.First())!;
         var gpuInfos = GetGPUInfos();
-        return await _client.GetDXConfigsAsync(launcherId, lang, gameIds, gpuInfos, cancellationToken);
+        var configs = await _client.GetDXConfigsAsync(launcherId, lang, gameIds, gpuInfos, cancellationToken);
+        if (configs is not null)
+        {
+            foreach (var cfg in configs)
+            {
+                if (cfg.EnableDXSwitch && cfg.GameId is not null)
+                {
+                    _memoryCache.Set($"GameDX12ReferenceConfig_{cfg.GameId.Id}", cfg, TimeSpan.FromHours(24));
+                }
+            }
+        }
+        return configs;
+    }
+
+
+    /// <summary>
+    /// 获取指定游戏的官方 DX12 参考配置（使用支持 DX12 的旗舰显卡参数查询）
+    /// </summary>
+    public async Task<GameDXConfig?> GetGameDX12ReferenceConfigAsync(GameId gameId, CancellationToken cancellationToken = default)
+    {
+        if (gameId is null)
+        {
+            return null;
+        }
+        string cacheKey = $"GameDX12ReferenceConfig_{gameId.Id}";
+        if (!_memoryCache.TryGetValue(cacheKey, out GameDXConfig? config))
+        {
+            try
+            {
+                string lang = CultureInfo.CurrentUICulture.Name;
+                var launcherId = LauncherId.FromGameId(gameId);
+                if (launcherId is not null)
+                {
+                    var referenceGpu = new List<GPUInfo>
+                    {
+                        new GPUInfo { Name = "NVIDIA GeForce RTX 4090", DriverVersion = "560.94" }
+                    };
+                    var configs = await _client.GetDXConfigsAsync(launcherId, lang, [gameId], referenceGpu, cancellationToken);
+                    config = configs?.FirstOrDefault(x => x.GameId == gameId);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "GetGameDX12ReferenceConfigAsync failed for {gameId}", gameId);
+            }
+            if (config is not null)
+            {
+                _memoryCache.Set(cacheKey, config, TimeSpan.FromHours(24));
+            }
+        }
+        return config;
+    }
+
+
+    /// <summary>
+    /// 判断指定游戏是否在官方实装并开放了 DX12 支持
+    /// </summary>
+    public async Task<bool> IsGameSupportDX12Async(GameId gameId, CancellationToken cancellationToken = default)
+    {
+        if (gameId is null)
+        {
+            return false;
+        }
+        try
+        {
+            var config = await GetGameDX12ReferenceConfigAsync(gameId, cancellationToken);
+            if (config?.EnableDXSwitch is true)
+            {
+                return true;
+            }
+        }
+        catch { }
+
+        // 离线或备选兼容保底：如果是绝区零或本地已开启过该游戏的 DX12 开关，则判定为支持
+        return gameId.GameBiz.Game is GameBiz.nap
+            || AppConfig.GetEnableDX12(gameId.GameBiz)
+            || AppConfig.GetIgnoreDX12Check(gameId.GameBiz);
     }
 
 

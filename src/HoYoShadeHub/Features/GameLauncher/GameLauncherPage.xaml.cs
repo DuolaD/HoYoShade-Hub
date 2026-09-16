@@ -971,24 +971,67 @@ public sealed partial class GameLauncherPage : PageBase
     /// <summary>
     /// 检查 DX12 配置
     /// </summary>
-    /// <returns></returns>
     private async Task CheckDX12ConfigAsync()
     {
         try
         {
             IsDX12OptionVisible = false;
             EnableDX12 = AppConfig.GetEnableDX12(CurrentGameBiz);
-            if (EnableDX12)
-            {
-                IsDX12OptionVisible = true;
-            }
 
             List<GameDXConfig> dxConfigs = await _hoYoPlayService.GetGameDXConfigsAsync([CurrentGameId]);
             _dxConfig = dxConfigs?.FirstOrDefault(x => x.GameId == CurrentGameId);
 
-            if (_dxConfig?.EnableDXSwitch is true)
+            bool gameSupportsDX12 = _dxConfig?.EnableDXSwitch is true || await _hoYoPlayService.IsGameSupportDX12Async(CurrentGameId);
+            bool ignoreCheck = gameSupportsDX12 && AppConfig.GetIgnoreDX12Check(CurrentGameBiz);
+
+            if (EnableDX12 && (_dxConfig?.EnableDXSwitch is true || ignoreCheck))
             {
                 IsDX12OptionVisible = true;
+            }
+
+            if (_dxConfig?.EnableDXSwitch is true || ignoreCheck)
+            {
+                IsDX12OptionVisible = true;
+                if (_dxConfig is null || !_dxConfig.EnableDXSwitch)
+                {
+                    var refConfig = await _hoYoPlayService.GetGameDX12ReferenceConfigAsync(CurrentGameId);
+                    if (_dxConfig is null)
+                    {
+                        _dxConfig = new GameDXConfig
+                        {
+                            GameId = CurrentGameId,
+                            EnableDXSwitch = true,
+                            CmdArgs = !string.IsNullOrWhiteSpace(refConfig?.CmdArgs) ? refConfig.CmdArgs : "-use-d3d12",
+                            DX11PreviewImage = refConfig?.DX11PreviewImage ?? "",
+                            DX12PreviewImage = refConfig?.DX12PreviewImage ?? "",
+                            I18nIntro = !string.IsNullOrWhiteSpace(refConfig?.I18nIntro) ? refConfig.I18nIntro : Lang.GameLauncherPage_ForcedDX12Intro,
+                        };
+                    }
+                    else
+                    {
+                        _dxConfig.EnableDXSwitch = true;
+                        if (string.IsNullOrWhiteSpace(_dxConfig.CmdArgs))
+                        {
+                            _dxConfig.CmdArgs = !string.IsNullOrWhiteSpace(refConfig?.CmdArgs) ? refConfig.CmdArgs : "-use-d3d12";
+                        }
+                        if (string.IsNullOrWhiteSpace(_dxConfig.DX11PreviewImage) && !string.IsNullOrWhiteSpace(refConfig?.DX11PreviewImage))
+                        {
+                            _dxConfig.DX11PreviewImage = refConfig.DX11PreviewImage;
+                        }
+                        if (string.IsNullOrWhiteSpace(_dxConfig.DX12PreviewImage) && !string.IsNullOrWhiteSpace(refConfig?.DX12PreviewImage))
+                        {
+                            _dxConfig.DX12PreviewImage = refConfig.DX12PreviewImage;
+                        }
+                        if (string.IsNullOrWhiteSpace(_dxConfig.I18nIntro))
+                        {
+                            _dxConfig.I18nIntro = !string.IsNullOrWhiteSpace(refConfig?.I18nIntro) ? refConfig.I18nIntro : Lang.GameLauncherPage_ForcedDX12Intro;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                IsDX12OptionVisible = false;
             }
         }
         catch (Exception ex)
@@ -1960,6 +2003,7 @@ public sealed partial class GameLauncherPage : PageBase
     private async Task OpenGameLauncherSettingDialogAsync()
     {
         await new GameLauncherSettingDialog { CurrentGameId = this.CurrentGameId, XamlRoot = this.XamlRoot }.ShowAsync();
+        _ = CheckDX12ConfigAsync();
     }
 
 

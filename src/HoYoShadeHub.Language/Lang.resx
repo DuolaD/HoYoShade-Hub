@@ -1061,6 +1061,15 @@
 	<data name="GameLauncherSettingDialog_AvoidShowingAlertsAboutDetectingIllegalToolInTheGame" xml:space="preserve">
     <value>Avoid showing alerts about detecting illegal tool in the game.</value>
   </data>
+	<data name="GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck" xml:space="preserve">
+    <value>Ignore DX12 Compatibility Check</value>
+  </data>
+	<data name="GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck_Description" xml:space="preserve">
+    <value>Force show the DX12 switch, but unknown issues may occur.</value>
+  </data>
+	<data name="GameLauncherPage_ForcedDX12Intro" xml:space="preserve">
+    <value>The current device is not on the official DX12 support list, and DX12 has been force-enabled. Launching with DX12 allows you to try graphics enhancements, but if you encounter issues or crashes, please disable this option.</value>
+  </data>
 	<data name="UpdateWindow_FullPackage" xml:space="preserve">
     <value>Full Package</value>
   </data>

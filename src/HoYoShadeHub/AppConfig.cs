@@ -1174,6 +1174,23 @@ public static class AppConfig
     }
 
 
+    /// <summary>
+    /// 获取是否忽略 DX12 兼容性检测
+    /// </summary>
+    public static bool GetIgnoreDX12Check(GameBiz biz)
+    {
+        return GetValue<bool>(default, $"ignore_dx12_check_{biz}");
+    }
+
+    /// <summary>
+    /// 设置是否忽略 DX12 兼容性检测
+    /// </summary>
+    public static void SetIgnoreDX12Check(GameBiz biz, bool value)
+    {
+        SetValue(value, $"ignore_dx12_check_{biz}");
+    }
+
+
     #endregion
 
 

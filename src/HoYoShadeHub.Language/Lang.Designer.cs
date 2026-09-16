@@ -1525,6 +1525,33 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Ignore DX12 Compatibility Check 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Force show the DX12 switch, but unknown issues may occur. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck_Description {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The current device is not on the official DX12 support list, and DX12 has been force-enabled. Launching with DX12 allows you to try graphics enhancements, but if you encounter issues or crashes, please disable this option. 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherPage_ForcedDX12Intro {
+            get {
+                return ResourceManager.GetString("GameLauncherPage_ForcedDX12Intro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 You can use the command shown here to set the third-party program to run this command before launching the game client, enabling seamless launch of HoYoShade/OpenHoYoShade framework. 的本地化字符串。
         /// </summary>
         public static string GameLauncherSettingDialog_LinkDescription {

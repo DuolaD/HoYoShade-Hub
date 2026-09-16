@@ -62,7 +62,24 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     public GameId CurrentGameId { get; set; }
 
 
-    public GameBiz CurrentGameBiz { get { return field; } set { SetProperty(ref field, value); } }
+    public GameBiz CurrentGameBiz
+    {
+        get { return field; }
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                OnPropertyChanged(nameof(IsIgnoreDX12CheckVisible));
+            }
+        }
+    }
+
+    private bool _isIgnoreDX12CheckVisible;
+    public bool IsIgnoreDX12CheckVisible
+    {
+        get => _isIgnoreDX12CheckVisible;
+        set => SetProperty(ref _isIgnoreDX12CheckVisible, value);
+    }
 
     private ObservableCollection<GameInstallPathItemDialog> _gameInstallPaths = new();
     public ObservableCollection<GameInstallPathItemDialog> GameInstallPaths
@@ -241,12 +258,32 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     } = AppConfig.StartGameWithCMD;
 
 
+    /// <summary>
+    /// 忽略 DX12 兼容性检测
+    /// </summary>
+    private bool _ignoreDX12Check;
+    public bool IgnoreDX12Check
+    {
+        get => _ignoreDX12Check;
+        set
+        {
+            if (SetProperty(ref _ignoreDX12Check, value))
+            {
+                AppConfig.SetIgnoreDX12Check(CurrentGameBiz, value);
+            }
+        }
+    }
+
+
 
 
     private async Task InitializeBasicInfoAsync()
     {
         try
         {
+            _ignoreDX12Check = AppConfig.GetIgnoreDX12Check(CurrentGameBiz);
+            OnPropertyChanged(nameof(IgnoreDX12Check));
+            IsIgnoreDX12CheckVisible = await _hoyoPlayService.IsGameSupportDX12Async(CurrentGameId);
             ShowUninstallReShadeCompletedMessage = false;
             IsUninstallReShadeDialogOpen = false;
             IsUninstallReShadeFirstConfirmation = true;

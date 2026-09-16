@@ -1061,6 +1061,15 @@
   <data name="GameLauncherSettingDialog_AvoidShowingAlertsAboutDetectingIllegalToolInTheGame" xml:space="preserve">
     <value>避免在游戏中弹窗提醒检测到非法工具</value>
   </data>
+  <data name="GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck" xml:space="preserve">
+    <value>忽略 DX12 兼容性检测</value>
+  </data>
+  <data name="GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck_Description" xml:space="preserve">
+    <value>强制显示DX12开关，但可能会发生未知问题</value>
+  </data>
+  <data name="GameLauncherPage_ForcedDX12Intro" xml:space="preserve">
+    <value>当前设备未在官方 DX12 支持列表中，已由“忽略DX12兼容性检测”强制启用。以 DX12 启动可体验画质增强特性，若游戏运行出现异常或闪退，请关闭此选项。</value>
+  </data>
   <data name="UpdateWindow_FullPackage" xml:space="preserve">
     <value>完整包</value>
   </data>
