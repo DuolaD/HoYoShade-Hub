@@ -24,7 +24,6 @@ public class CloudProxyManager
     // Tencent Cloud proxy URLs
     private static readonly string[] TencentCloudProxies = new[]
     {
-        "https://hoyoshadehub-glasses-edgeone.edgeone.app",
         "https://cdn.green.sea.12ae.tx.storage.hub.hoyosha.de",
         "https://cdn.jolly.snowflake.cd46.tx.storage.hub.hoyosha.de",
         "https://cdn.bold.wood.c623.tx.storage.hub.hoyosha.de"

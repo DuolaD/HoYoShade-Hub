@@ -9,10 +9,9 @@ namespace HoYoShadeHub.Helpers;
 public class LauncherUpdateProxyManager
 {
     // Tencent Cloud proxy URLs  
-    // ��Ѷ�ƴ������������ڴ��� https://cdn.cf.storage.hub.hoyosha.de/release
+    // 腾讯云代理下载直链，后端代理由 https://cdn.cf.storage.hub.hoyosha.de/release 托管
     private static readonly string[] TencentCloudProxies = new[]
     {
-        "https://hoyoshadehub-glasses-edgeone.edgeone.app",
         "https://cdn.green.sea.12ae.tx.storage.hub.hoyosha.de",
         "https://cdn.jolly.snowflake.cd46.tx.storage.hub.hoyosha.de",
         "https://cdn.bold.wood.c623.tx.storage.hub.hoyosha.de"
