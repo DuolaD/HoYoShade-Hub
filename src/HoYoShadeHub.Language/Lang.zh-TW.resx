@@ -1056,10 +1056,19 @@
     <value>已復製到剪貼簿</value>
   </data>
   <data name="GameLauncherSettingDialog_LaunchGameUsingCMD" xml:space="preserve">
-    <value>Launch Game using CMD</value>
+    <value>使用 CMD 啟動遊戲</value>
   </data>
   <data name="GameLauncherSettingDialog_AvoidShowingAlertsAboutDetectingIllegalToolInTheGame" xml:space="preserve">
-    <value>Avoid showing alerts about detecting illegal tool in the game.</value>
+    <value>避免在遊戲中彈出提醒檢測到非法工具</value>
+  </data>
+  <data name="GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck" xml:space="preserve">
+    <value>忽略 DX12 相容性檢測</value>
+  </data>
+  <data name="GameLauncherSettingDialog_IgnoreDX12CompatibilityCheck_Description" xml:space="preserve">
+    <value>強制顯示DX12開關，但可能會發生未知問題</value>
+  </data>
+  <data name="GameLauncherPage_ForcedDX12Intro" xml:space="preserve">
+    <value>目前裝置未在官方 DX12 支援列表中，已由「忽略DX12相容性檢測」強制啟用。以 DX12 啟動可體驗畫質增強特性，若遊戲執行出現異常或閃退，請關閉此選項。</value>
   </data>
   <data name="UpdateWindow_FullPackage" xml:space="preserve">
     <value>Full Package</value>
