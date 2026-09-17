@@ -213,7 +213,8 @@ public sealed partial class GameSettingPage : PageBase
         try
         {
             var localVersion = await _gameLauncherService.GetLocalGameVersionAsync(CurrentGameId);
-            if (localVersion is null)
+            bool isInstalled = localVersion != null || (CurrentGameBiz.IsBetaServer() && await _gameLauncherService.IsGameExeExistsAsync(CurrentGameId));
+            if (!isInstalled)
             {
                 StackPanel_Emoji.Visibility = Visibility.Visible;
                 return;
