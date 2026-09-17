@@ -65,15 +65,37 @@ public sealed partial class PlayTimeButton : UserControl
     {
         try
         {
-            PlayTimeTotal = DatabaseService.GetValue<TimeSpan>($"playtime_total_{CurrentGameBiz}", out _);
-            PlayTimeMonth = DatabaseService.GetValue<TimeSpan>($"playtime_month_{CurrentGameBiz}", out _);
-            PlayTimeWeek = DatabaseService.GetValue<TimeSpan>($"playtime_week_{CurrentGameBiz}", out _);
-            PlayTimeDay = DatabaseService.GetValue<TimeSpan>($"playtime_day_{CurrentGameBiz}", out _);
-            StartUpCount = DatabaseService.GetValue<int>($"startup_count_{CurrentGameBiz}", out _);
-            (var time, PlayTimeLast) = _playTimeService.GetLastPlayTime(CurrentGameBiz);
-            if (time > DateTimeOffset.MinValue)
+            PlayTimeTotal = DatabaseService.GetValue<TimeSpan>($"playtime_total_{CurrentGameBiz}", out DateTime time);
+            if (time == DateTime.MinValue)
             {
-                LastPlayTimeText = time.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                if (CurrentGameBiz == GameBiz.hyg_cbt1)
+                {
+                    PlayTimeTotal = DatabaseService.GetValue<TimeSpan>($"playtime_total_{GameBiz.pp_cbt1}", out _);
+                    PlayTimeMonth = DatabaseService.GetValue<TimeSpan>($"playtime_month_{GameBiz.pp_cbt1}", out _);
+                    PlayTimeWeek = DatabaseService.GetValue<TimeSpan>($"playtime_week_{GameBiz.pp_cbt1}", out _);
+                    PlayTimeDay = DatabaseService.GetValue<TimeSpan>($"playtime_day_{GameBiz.pp_cbt1}", out _);
+                    StartUpCount = DatabaseService.GetValue<int>($"startup_count_{GameBiz.pp_cbt1}", out _);
+                }
+                else if (CurrentGameBiz == GameBiz.abc_cbt1)
+                {
+                    PlayTimeTotal = DatabaseService.GetValue<TimeSpan>($"playtime_total_{GameBiz.hna_cbt1}", out _);
+                    PlayTimeMonth = DatabaseService.GetValue<TimeSpan>($"playtime_month_{GameBiz.hna_cbt1}", out _);
+                    PlayTimeWeek = DatabaseService.GetValue<TimeSpan>($"playtime_week_{GameBiz.hna_cbt1}", out _);
+                    PlayTimeDay = DatabaseService.GetValue<TimeSpan>($"playtime_day_{GameBiz.hna_cbt1}", out _);
+                    StartUpCount = DatabaseService.GetValue<int>($"startup_count_{GameBiz.hna_cbt1}", out _);
+                }
+            }
+            else
+            {
+                PlayTimeMonth = DatabaseService.GetValue<TimeSpan>($"playtime_month_{CurrentGameBiz}", out _);
+                PlayTimeWeek = DatabaseService.GetValue<TimeSpan>($"playtime_week_{CurrentGameBiz}", out _);
+                PlayTimeDay = DatabaseService.GetValue<TimeSpan>($"playtime_day_{CurrentGameBiz}", out _);
+                StartUpCount = DatabaseService.GetValue<int>($"startup_count_{CurrentGameBiz}", out _);
+            }
+            (var lastTime, PlayTimeLast) = _playTimeService.GetLastPlayTime(CurrentGameBiz);
+            if (lastTime > DateTimeOffset.MinValue)
+            {
+                LastPlayTimeText = lastTime.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
             }
         }
         catch (Exception ex)

@@ -234,7 +234,7 @@ internal static class DatabaseService
     #region Database Structure
 
 
-    private static readonly List<string> DatabaseSqls = [Sql_v1, Sql_v2, Sql_v3, Sql_v4, Sql_v5, Sql_v6, Sql_v7, Sql_v8, Sql_v9, Sql_v10, Sql_v11, Sql_v12, Sql_v13, Sql_v14, Sql_v15, Sql_v16, Sql_v17];
+    private static readonly List<string> DatabaseSqls = [Sql_v1, Sql_v2, Sql_v3, Sql_v4, Sql_v5, Sql_v6, Sql_v7, Sql_v8, Sql_v9, Sql_v10, Sql_v11, Sql_v12, Sql_v13, Sql_v14, Sql_v15, Sql_v16, Sql_v17, Sql_v18];
 
 
     private const string Sql_v1 = """
@@ -923,6 +923,20 @@ internal static class DatabaseService
         CREATE INDEX IF NOT EXISTS IX_GenshinBeyondGachaInfo_Name ON GenshinBeyondGachaInfo (Name);
 
         PRAGMA USER_VERSION = 17;
+        COMMIT TRANSACTION;
+        """;
+
+    private const string Sql_v18 = """
+        BEGIN TRANSACTION;
+
+        UPDATE GameAccount SET GameBiz = 'hyg_cbt1' WHERE GameBiz = 'pp_cbt1';
+        UPDATE GameAccount SET GameBiz = 'abc_cbt1' WHERE GameBiz = 'hna_cbt1';
+        UPDATE PlayTimeItem SET GameBiz = 'hyg_cbt1' WHERE GameBiz = 'pp_cbt1';
+        UPDATE PlayTimeItem SET GameBiz = 'abc_cbt1' WHERE GameBiz = 'hna_cbt1';
+        UPDATE KVT SET Key = REPLACE(Key, 'pp_cbt1', 'hyg_cbt1') WHERE Key LIKE '%pp_cbt1%';
+        UPDATE KVT SET Key = REPLACE(Key, 'hna_cbt1', 'abc_cbt1') WHERE Key LIKE '%hna_cbt1%';
+
+        PRAGMA USER_VERSION = 18;
         COMMIT TRANSACTION;
         """;
 

@@ -138,6 +138,7 @@ public static class AppConfig
                     {
                         UserDataFolder = Path.GetFullPath(userDataFolder);
                         DatabaseService.SetDatabase(userDataFolder);
+                        MigrateLegacyGameBiz();
                     }
                 }
             }
@@ -936,7 +937,15 @@ public static class AppConfig
 
     public static string? GetGameInstallPath(GameBiz biz)
     {
-        return GetValue<string>(default, $"install_path_{biz}");
+        var path = GetValue<string>(default, $"install_path_{biz}");
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            if (biz == GameBiz.hyg_cbt1) path = GetValue<string>(default, $"install_path_{GameBiz.pp_cbt1}");
+            else if (biz == GameBiz.abc_cbt1) path = GetValue<string>(default, $"install_path_{GameBiz.hna_cbt1}");
+            else if (biz == GameBiz.pp_cbt1) path = GetValue<string>(default, $"install_path_{GameBiz.hyg_cbt1}");
+            else if (biz == GameBiz.hna_cbt1) path = GetValue<string>(default, $"install_path_{GameBiz.abc_cbt1}");
+        }
+        return path;
     }
 
     public static void SetGameInstallPath(GameBiz biz, string? value)
@@ -1129,7 +1138,15 @@ public static class AppConfig
     /// </summary>
     public static string? GetGameInstallPaths(GameBiz biz)
     {
-        return GetValue<string>(default, $"install_paths_{biz}");
+        var paths = GetValue<string>(default, $"install_paths_{biz}");
+        if (string.IsNullOrWhiteSpace(paths))
+        {
+            if (biz == GameBiz.hyg_cbt1) paths = GetValue<string>(default, $"install_paths_{GameBiz.pp_cbt1}");
+            else if (biz == GameBiz.abc_cbt1) paths = GetValue<string>(default, $"install_paths_{GameBiz.hna_cbt1}");
+            else if (biz == GameBiz.pp_cbt1) paths = GetValue<string>(default, $"install_paths_{GameBiz.hyg_cbt1}");
+            else if (biz == GameBiz.hna_cbt1) paths = GetValue<string>(default, $"install_paths_{GameBiz.abc_cbt1}");
+        }
+        return paths;
     }
 
     /// <summary>
@@ -1320,6 +1337,140 @@ public static class AppConfig
     #endregion
 
 
+
+
+
+    #region Legacy Migration
+
+    /// <summary>
+    /// 兼容迁移早期 Release 发行中的纯本地化实现（pp_cbt1 -> hyg_cbt1, hna_cbt1 -> abc_cbt1）
+    /// </summary>
+    public static void MigrateLegacyGameBiz()
+    {
+        try
+        {
+            // 1. CurrentGameBiz 迁移
+            if (CurrentGameBiz == GameBiz.pp_cbt1)
+            {
+                CurrentGameBiz = GameBiz.hyg_cbt1;
+            }
+            else if (CurrentGameBiz == GameBiz.hna_cbt1)
+            {
+                CurrentGameBiz = GameBiz.abc_cbt1;
+            }
+
+            // 2. SelectedGameBizs 迁移
+            string? selected = SelectedGameBizs;
+            if (!string.IsNullOrWhiteSpace(selected))
+            {
+                bool changed = false;
+                var list = selected.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i] == GameBiz.pp_cbt1)
+                    {
+                        list[i] = GameBiz.hyg_cbt1;
+                        changed = true;
+                    }
+                    else if (list[i] == GameBiz.hna_cbt1)
+                    {
+                        list[i] = GameBiz.abc_cbt1;
+                        changed = true;
+                    }
+                }
+                if (changed)
+                {
+                    SelectedGameBizs = string.Join(',', list.Distinct());
+                }
+            }
+
+            // 3. 配置项迁移
+            MigrateBizSettings(GameBiz.pp_cbt1, GameBiz.hyg_cbt1);
+            MigrateBizSettings(GameBiz.hna_cbt1, GameBiz.abc_cbt1);
+        }
+        catch { }
+    }
+
+    private static void MigrateBizSettings(GameBiz oldBiz, GameBiz newBiz)
+    {
+        try
+        {
+            string? path = GetValue<string>(default, $"install_path_{oldBiz}");
+            if (!string.IsNullOrWhiteSpace(path) && string.IsNullOrWhiteSpace(GetValue<string>(default, $"install_path_{newBiz}")))
+            {
+                SetValue(path, $"install_path_{newBiz}");
+            }
+
+            string? paths = GetValue<string>(default, $"install_paths_{oldBiz}");
+            if (!string.IsNullOrWhiteSpace(paths) && string.IsNullOrWhiteSpace(GetValue<string>(default, $"install_paths_{newBiz}")))
+            {
+                SetValue(paths, $"install_paths_{newBiz}");
+            }
+
+            bool removable = GetValue<bool>(default, $"install_path_removable_{oldBiz}");
+            if (removable && !GetValue<bool>(default, $"install_path_removable_{newBiz}"))
+            {
+                SetValue(true, $"install_path_removable_{newBiz}");
+            }
+
+            int pathIndex = GetValue(0, $"selected_install_path_index_{oldBiz}");
+            if (pathIndex != 0 && GetValue(0, $"selected_install_path_index_{newBiz}") == 0)
+            {
+                SetValue(pathIndex, $"selected_install_path_index_{newBiz}");
+            }
+
+            string? bg = GetValue<string>(default, $"bg_{oldBiz}");
+            if (!string.IsNullOrWhiteSpace(bg) && string.IsNullOrWhiteSpace(GetValue<string>(default, $"bg_{newBiz}")))
+            {
+                SetValue(bg, $"bg_{newBiz}");
+            }
+
+            string? customBg = GetValue<string>(default, $"custom_bg_{oldBiz}");
+            if (!string.IsNullOrWhiteSpace(customBg) && string.IsNullOrWhiteSpace(GetValue<string>(default, $"custom_bg_{newBiz}")))
+            {
+                SetValue(customBg, $"custom_bg_{newBiz}");
+            }
+
+            bool enableCustomBg = GetValue<bool>(default, $"enable_custom_bg_{oldBiz}");
+            if (enableCustomBg && !GetValue<bool>(default, $"enable_custom_bg_{newBiz}"))
+            {
+                SetValue(true, $"enable_custom_bg_{newBiz}");
+            }
+
+            string? startArg = GetValue<string>(default, $"start_argument_{oldBiz}");
+            if (!string.IsNullOrWhiteSpace(startArg) && string.IsNullOrWhiteSpace(GetValue<string>(default, $"start_argument_{newBiz}")))
+            {
+                SetValue(startArg, $"start_argument_{newBiz}");
+            }
+
+            bool popup = GetValue<bool>(default, $"use_popup_window_{oldBiz}");
+            if (popup && !GetValue<bool>(default, $"use_popup_window_{newBiz}"))
+            {
+                SetValue(true, $"use_popup_window_{newBiz}");
+            }
+
+            bool dx12 = GetValue<bool>(default, $"enable_dx12_{oldBiz}");
+            if (dx12 && !GetValue<bool>(default, $"enable_dx12_{newBiz}"))
+            {
+                SetValue(true, $"enable_dx12_{newBiz}");
+            }
+
+            bool thirdParty = GetValue<bool>(default, $"enable_third_party_tool_{oldBiz}");
+            if (thirdParty && !GetValue<bool>(default, $"enable_third_party_tool_{newBiz}"))
+            {
+                SetValue(true, $"enable_third_party_tool_{newBiz}");
+            }
+
+            string? tool = GetValue<string>(default, $"third_party_tool_path_{oldBiz}");
+            if (!string.IsNullOrWhiteSpace(tool) && string.IsNullOrWhiteSpace(GetValue<string>(default, $"third_party_tool_path_{newBiz}")))
+            {
+                SetValue(tool, $"third_party_tool_path_{newBiz}");
+            }
+        }
+        catch { }
+    }
+
+    #endregion
 
 
 

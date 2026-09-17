@@ -1,4 +1,4 @@
-﻿namespace HoYoShadeHub.Core;
+namespace HoYoShadeHub.Core;
 
 public class GameRegistry
 {
@@ -50,6 +50,14 @@ public class GameRegistry
     public const string GamePath_nap_global = @"HKEY_CURRENT_USER\Software\miHoYo\ZenlessZoneZero";
     public const string GamePath_nap_beta_prebeta = @"HKEY_CURRENT_USER\Software\miHoYo\绝区零测试服";
     public const string GamePath_nap_beta_postbeta = @"HKEY_CURRENT_USER\Software\miHoYo\绝区零测试服";
+
+    public const string GamePath_hyg_cn = @"HKEY_CURRENT_USER\Software\miHoYo\星布谷地";
+    public const string GamePath_hyg_global = @"HKEY_CURRENT_USER\Software\Cognosphere\Petit Planet";
+    public const string GamePath_hyg_cbt1 = @"HKEY_CURRENT_USER\Software\miHoYo\星布谷地";
+
+    public const string GamePath_abc_cn = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏：因缘精灵";
+    public const string GamePath_abc_global = @"HKEY_CURRENT_USER\Software\Cognosphere\Nexus Anima";
+    public const string GamePath_abc_cbt1 = @"HKEY_CURRENT_USER\Software\miHoYo\崩坏：因缘精灵";
 
     public const string GamePath_pp_cbt1 = @"HKEY_CURRENT_USER\Software\miHoYo\星布谷地";
 

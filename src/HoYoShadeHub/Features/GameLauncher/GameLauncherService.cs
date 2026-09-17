@@ -280,13 +280,15 @@ internal partial class GameLauncherService
             GameBiz.nap_beta_postbeta => "ZenlessZoneZeroBeta.exe",
             GameBiz.pp_cbt1 => "PetitPlanet.exe",
             GameBiz.hna_cbt1 => "NexusAnima.exe",
+            GameBiz.hyg_cbt1 => "PetitPlanet.exe",
+            GameBiz.abc_cbt1 => "NexusAnima.exe",
             _ => gameBiz.Game switch
             {
                 GameBiz.hkrpg => "StarRail.exe",
                 GameBiz.bh3 => "BH3.exe",
                 GameBiz.nap => "ZenlessZoneZero.exe",
-                GameBiz.pp => "PetitPlanet.exe",
-                GameBiz.hna => "NexusAnima.exe",
+                GameBiz.pp or GameBiz.hyg => "PetitPlanet.exe",
+                GameBiz.hna or GameBiz.abc => "NexusAnima.exe",
                 _ => null,
             },
         };

@@ -230,7 +230,7 @@ internal class PlayTimeService
     public int GetStartUpCount(GameBiz biz)
     {
         using var dapper = DatabaseService.CreateConnection();
-        return dapper.QuerySingleOrDefault<int>("SELECT COUNT(*) FROM PlayTimeItem WHERE GameBiz = @biz AND State = @state;", new { biz, state = PlayTimeState.Start });
+        return dapper.QuerySingleOrDefault<int>("SELECT COUNT(*) FROM PlayTimeItem WHERE (GameBiz = @biz OR (@biz = 'hyg_cbt1' AND GameBiz = 'pp_cbt1') OR (@biz = 'abc_cbt1' AND GameBiz = 'hna_cbt1')) AND State = @state;", new { biz, state = PlayTimeState.Start });
     }
 
 
@@ -243,10 +243,10 @@ internal class PlayTimeService
     public (DateTimeOffset Time, TimeSpan Span) GetLastPlayTime(GameBiz biz)
     {
         using var dapper = DatabaseService.CreateConnection();
-        var start_item = dapper.QueryFirstOrDefault<PlayTimeItem>("SELECT * FROM PlayTimeItem WHERE GameBiz = @biz AND State = 1 ORDER BY TimeStamp DESC LIMIT 1;", new { biz });
+        var start_item = dapper.QueryFirstOrDefault<PlayTimeItem>("SELECT * FROM PlayTimeItem WHERE (GameBiz = @biz OR (@biz = 'hyg_cbt1' AND GameBiz = 'pp_cbt1') OR (@biz = 'abc_cbt1' AND GameBiz = 'hna_cbt1')) AND State = 1 ORDER BY TimeStamp DESC LIMIT 1;", new { biz });
         if (start_item != null)
         {
-            var last_item = dapper.QueryFirstOrDefault<PlayTimeItem>("SELECT * FROM PlayTimeItem WHERE GameBiz = @biz AND Pid = @Pid ORDER BY TimeStamp DESC LIMIT 1;", new { biz, start_item.Pid });
+            var last_item = dapper.QueryFirstOrDefault<PlayTimeItem>("SELECT * FROM PlayTimeItem WHERE (GameBiz = @biz OR (@biz = 'hyg_cbt1' AND GameBiz = 'pp_cbt1') OR (@biz = 'abc_cbt1' AND GameBiz = 'hna_cbt1')) AND Pid = @Pid ORDER BY TimeStamp DESC LIMIT 1;", new { biz, start_item.Pid });
             if (last_item != null)
             {
                 return (DateTimeOffset.FromUnixTimeMilliseconds(start_item.TimeStamp), TimeSpan.FromMilliseconds(last_item.TimeStamp - start_item.TimeStamp));
@@ -258,7 +258,7 @@ internal class PlayTimeService
 
 
     /// <summary>
-    /// 计算游戏时间
+    /// 计算指定时间范围内的游戏时间
     /// </summary>
     /// <param name="biz"></param>
     /// <param name="start"></param>
@@ -269,7 +269,7 @@ internal class PlayTimeService
         long ts_start = start?.ToUnixTimeMilliseconds() ?? 0;
         long ts_end = end?.ToUnixTimeMilliseconds() ?? long.MaxValue;
         using var dapper = DatabaseService.CreateConnection();
-        var items = dapper.Query<PlayTimeItemStruct>("SELECT * FROM PlayTimeItem WHERE GameBiz = @biz AND TimeStamp >= @ts_start AND TimeStamp <= @ts_end ORDER BY TimeStamp;", new { biz, ts_start, ts_end }).ToList();
+        var items = dapper.Query<PlayTimeItemStruct>("SELECT * FROM PlayTimeItem WHERE (GameBiz = @biz OR (@biz = 'hyg_cbt1' AND GameBiz = 'pp_cbt1') OR (@biz = 'abc_cbt1' AND GameBiz = 'hna_cbt1')) AND TimeStamp >= @ts_start AND TimeStamp <= @ts_end ORDER BY TimeStamp;", new { biz, ts_start, ts_end }).ToList();
         return CalculatePlayTime(items, start, end);
     }
 

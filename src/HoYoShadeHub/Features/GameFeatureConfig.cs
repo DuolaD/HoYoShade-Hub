@@ -60,6 +60,12 @@ internal partial class GameFeatureConfig
             GameBiz.nap_bilibili => nap_bilibili,
             GameBiz.nap_beta_prebeta => nap_beta,
             GameBiz.nap_beta_postbeta => nap_beta,
+            GameBiz.hyg_cn => hyg_cn,
+            GameBiz.hyg_global => hyg_global,
+            GameBiz.hyg_cbt1 => hyg_cbt1,
+            GameBiz.abc_cn => abc_cn,
+            GameBiz.abc_global => abc_global,
+            GameBiz.abc_cbt1 => abc_cbt1,
             GameBiz.pp_cbt1 => pp_cbt1,
             GameBiz.hna_cbt1 => hna_cbt1,
             _ => Default,
@@ -265,6 +271,70 @@ internal partial class GameFeatureConfig
             nameof(ScreenshotPage),
         ],
         SupportHardLink = true,
+    };
+
+    private static readonly GameFeatureConfig hyg_cn = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
+        ],
+        SupportHardLink = true,
+    };
+
+    private static readonly GameFeatureConfig hyg_global = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
+        ],
+        SupportHardLink = true,
+    };
+
+    private static readonly GameFeatureConfig hyg_cbt1 = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
+        ],
+    };
+
+    private static readonly GameFeatureConfig abc_cn = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
+        ],
+        SupportHardLink = true,
+    };
+
+    private static readonly GameFeatureConfig abc_global = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
+        ],
+        SupportHardLink = true,
+    };
+
+    private static readonly GameFeatureConfig abc_cbt1 = new()
+    {
+        SupportedPages =
+        [
+            nameof(GameLauncherPage),
+            nameof(GameSettingPage),
+            nameof(ScreenshotPage),
+        ],
     };
 
     private static readonly GameFeatureConfig pp_cbt1 = new()
