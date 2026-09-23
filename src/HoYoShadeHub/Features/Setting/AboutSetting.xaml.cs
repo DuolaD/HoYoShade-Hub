@@ -11,6 +11,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
+using NuGet.Versioning;
 
 
 namespace HoYoShadeHub.Features.Setting;
@@ -27,18 +28,33 @@ public sealed partial class AboutSetting : PageBase
         this.InitializeComponent();
         DownloadServers = new ObservableCollection<DownloadServerItem>();
         UpdateDownloadServers();
+        UpdateLauncherVersionHint();
         
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) =>
         {
-            UpdateDownloadServers();
-            OnPropertyChanged(nameof(AutoCheckUpdatesText));
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateDownloadServers();
+                OnPropertyChanged(nameof(AutoCheckUpdatesText));
+                UpdateLauncherVersionHint();
+                this.Bindings.Update();
+            });
         });
 
         // Register for ECH settings change messages
         WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) =>
         {
             UpdateDownloadServers();
+        });
+
+        // Register for launcher update detected messages
+        WeakReferenceMessenger.Default.Register<LauncherUpdateDetectedMessage>(this, (r, m) =>
+        {
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateLauncherVersionHint();
+            });
         });
     }
     
@@ -162,6 +178,37 @@ public sealed partial class AboutSetting : PageBase
 
 
     /// <summary>
+    /// 更新提示文本（例如：发现新版本：0.0.0-Beta.6）
+    /// </summary>
+    public string? UpdateInfoText { get; set => SetProperty(ref field, value); }
+
+
+    /// <summary>
+    /// 更新启动器版本提示
+    /// </summary>
+    private void UpdateLauncherVersionHint()
+    {
+        if (!string.IsNullOrWhiteSpace(AppConfig.LatestLauncherVersion))
+        {
+            string latestStr = AppConfig.LatestLauncherVersion.TrimStart('v', 'V').Trim();
+            string currentStr = AppConfig.AppVersion.TrimStart('v', 'V').Trim();
+            if (NuGetVersion.TryParse(latestStr, out var latest)
+                && NuGetVersion.TryParse(currentStr, out var current)
+                && latest > current)
+            {
+                UpdateInfoText = string.Format(
+                    GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
+                    AppConfig.LatestLauncherVersion);
+                IsUpdated = false;
+                return;
+            }
+        }
+
+        UpdateInfoText = null;
+    }
+
+
+    /// <summary>
     /// 检查更新
     /// </summary>
     /// <returns></returns>
@@ -172,6 +219,7 @@ public sealed partial class AboutSetting : PageBase
         {
             IsUpdated = false;
             UpdateErrorText = null;
+            UpdateInfoText = null;
             
             // Get proxy URL from selected server
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
@@ -189,10 +237,14 @@ public sealed partial class AboutSetting : PageBase
             var release = await AppConfig.GetService<UpdateService>().CheckUpdateAsync(true, proxyUrl);
             if (release != null)
             {
+                AppConfig.LatestLauncherVersion = release.Version;
+                UpdateLauncherVersionHint();
                 new UpdateWindow { NewVersion = release }.Activate();
             }
             else
             {
+                AppConfig.LatestLauncherVersion = null;
+                UpdateInfoText = null;
                 IsUpdated = true;
             }
         }

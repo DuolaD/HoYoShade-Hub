@@ -106,7 +106,7 @@ public sealed partial class MainView : UserControl
                 return;
             }
 
-#if CI || DEBUG
+#if CI
             return;
 #endif
 #pragma warning disable CS0162
@@ -126,13 +126,25 @@ public sealed partial class MainView : UserControl
             var hoYoShadeRelease = await updateService.CheckHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
             if (hoYoShadeRelease != null)
             {
+                AppConfig.LatestHoYoShadeVersion = hoYoShadeRelease.TagName;
+                WeakReferenceMessenger.Default.Send(new FrameworkUpdateDetectedMessage("HoYoShade", hoYoShadeRelease.TagName));
                 InAppToast.MainWindow?.Information("HoYoShade", string.Format(GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"), hoYoShadeRelease.TagName), 8000);
+            }
+            else
+            {
+                AppConfig.LatestHoYoShadeVersion = null;
             }
 
             var openHoYoShadeRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
             if (openHoYoShadeRelease != null)
             {
+                AppConfig.LatestOpenHoYoShadeVersion = openHoYoShadeRelease.TagName;
+                WeakReferenceMessenger.Default.Send(new FrameworkUpdateDetectedMessage("OpenHoYoShade", openHoYoShadeRelease.TagName));
                 InAppToast.MainWindow?.Information("OpenHoYoShade", string.Format(GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"), openHoYoShadeRelease.TagName), 8000);
+            }
+            else
+            {
+                AppConfig.LatestOpenHoYoShadeVersion = null;
             }
         }
         catch (Exception ex)
@@ -316,7 +328,13 @@ public sealed partial class MainView : UserControl
             var release = await AppConfig.GetService<UpdateService>().CheckUpdateAsync(false);
             if (release != null)
             {
+                AppConfig.LatestLauncherVersion = release.Version;
+                WeakReferenceMessenger.Default.Send(new LauncherUpdateDetectedMessage(release.Version));
                 new UpdateWindow { NewVersion = release }.Activate();
+            }
+            else
+            {
+                AppConfig.LatestLauncherVersion = null;
             }
         }
         catch (Exception ex)

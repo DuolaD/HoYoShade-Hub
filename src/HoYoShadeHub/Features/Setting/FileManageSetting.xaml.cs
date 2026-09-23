@@ -51,14 +51,28 @@ public sealed partial class FileManageSetting : PageBase
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) =>
         {
-            UpdateDownloadServers();
-            OnPropertyChanged(nameof(AutoCheckUpdatesText));
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateDownloadServers();
+                OnPropertyChanged(nameof(AutoCheckUpdatesText));
+                UpdateFrameworkVersionHints();
+                this.Bindings.Update();
+            });
         });
 
         // Register for ECH settings change messages
         WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) =>
         {
             UpdateDownloadServers();
+        });
+
+        // Register for framework update detected messages
+        WeakReferenceMessenger.Default.Register<FrameworkUpdateDetectedMessage>(this, (r, m) =>
+        {
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateFrameworkVersionHints();
+            });
         });
     }
     
@@ -666,10 +680,13 @@ public sealed partial class FileManageSetting : PageBase
                 OpenHoYoShadeOtherSize = "0.00 KB";
                 OpenHoYoShadeReShadeVersion = "";
             }
+
+            UpdateFrameworkVersionHints();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Update HoYoShade size");
+            UpdateFrameworkVersionHints();
         }
     }
 
@@ -1114,6 +1131,7 @@ public sealed partial class FileManageSetting : PageBase
             if (hoYoShadeInfo != null)
             {
                 HoYoShadeVersion = hoYoShadeInfo.Version;
+                HoYoShadeInstalled = true;
                 _logger.LogInformation("Loaded HoYoShade version: {Version}", hoYoShadeInfo.Version);
             }
             else
@@ -1125,18 +1143,94 @@ public sealed partial class FileManageSetting : PageBase
             if (openHoYoShadeInfo != null)
             {
                 OpenHoYoShadeVersion = openHoYoShadeInfo.Version;
+                OpenHoYoShadeInstalled = true;
                 _logger.LogInformation("Loaded OpenHoYoShade version: {Version}", openHoYoShadeInfo.Version);
             }
             else
             {
                 OpenHoYoShadeVersion = "";
             }
+
+            UpdateFrameworkVersionHints();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Load version info");
             HoYoShadeVersion = "";
             OpenHoYoShadeVersion = "";
+            UpdateFrameworkVersionHints();
+        }
+    }
+
+    /// <summary>
+    /// 更新框架版本更新提示
+    /// </summary>
+    private void UpdateFrameworkVersionHints()
+    {
+        // HoYoShade
+        string? latestHys = AppConfig.LatestHoYoShadeVersion;
+        if (!string.IsNullOrWhiteSpace(latestHys))
+        {
+            if (!string.IsNullOrWhiteSpace(HoYoShadeVersion))
+            {
+                if (HoYoShadeUpdateService.CompareVersions(latestHys, HoYoShadeVersion) > 0)
+                {
+                    HoYoShadeUpdateInfo = string.Format(
+                        GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
+                        latestHys);
+                }
+                else
+                {
+                    HoYoShadeUpdateInfo = null;
+                }
+            }
+            else if (HoYoShadeInstalled)
+            {
+                HoYoShadeUpdateInfo = string.Format(
+                    GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
+                    latestHys);
+            }
+            else
+            {
+                HoYoShadeUpdateInfo = null;
+            }
+        }
+        else
+        {
+            HoYoShadeUpdateInfo = null;
+        }
+
+        // OpenHoYoShade
+        string? latestOpenHys = AppConfig.LatestOpenHoYoShadeVersion;
+        if (!string.IsNullOrWhiteSpace(latestOpenHys))
+        {
+            if (!string.IsNullOrWhiteSpace(OpenHoYoShadeVersion))
+            {
+                if (HoYoShadeUpdateService.CompareVersions(latestOpenHys, OpenHoYoShadeVersion) > 0)
+                {
+                    OpenHoYoShadeUpdateInfo = string.Format(
+                        GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
+                        latestOpenHys);
+                }
+                else
+                {
+                    OpenHoYoShadeUpdateInfo = null;
+                }
+            }
+            else if (OpenHoYoShadeInstalled)
+            {
+                OpenHoYoShadeUpdateInfo = string.Format(
+                    GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
+                    latestOpenHys);
+            }
+            else
+            {
+                OpenHoYoShadeUpdateInfo = null;
+            }
+        }
+        else
+        {
+            OpenHoYoShadeUpdateInfo = null;
         }
     }
     
@@ -1165,6 +1259,7 @@ public sealed partial class FileManageSetting : PageBase
             
             if (latestRelease != null)
             {
+                AppConfig.LatestHoYoShadeVersion = latestRelease.TagName;
                 HoYoShadeUpdateInfo = string.Format(
                     GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
                     latestRelease.TagName);
@@ -1175,6 +1270,7 @@ public sealed partial class FileManageSetting : PageBase
             }
             else
             {
+                AppConfig.LatestHoYoShadeVersion = null;
                 HoYoShadeUpdateInfo = GetLangString("FileSettingPage_FrameworkRunningLatestVersion", "You are running the latest version");
                 _logger.LogInformation("HoYoShade is up to date");
                 InAppToast.MainWindow?.Success(string.Format(
@@ -1218,6 +1314,7 @@ public sealed partial class FileManageSetting : PageBase
             
             if (latestRelease != null)
             {
+                AppConfig.LatestOpenHoYoShadeVersion = latestRelease.TagName;
                 OpenHoYoShadeUpdateInfo = string.Format(
                     GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"),
                     latestRelease.TagName);
@@ -1228,6 +1325,7 @@ public sealed partial class FileManageSetting : PageBase
             }
             else
             {
+                AppConfig.LatestOpenHoYoShadeVersion = null;
                 OpenHoYoShadeUpdateInfo = GetLangString("FileSettingPage_FrameworkRunningLatestVersion", "You are running the latest version");
                 _logger.LogInformation("OpenHoYoShade is up to date");
                 InAppToast.MainWindow?.Success(string.Format(

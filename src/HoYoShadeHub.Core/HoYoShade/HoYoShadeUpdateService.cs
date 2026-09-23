@@ -192,10 +192,23 @@ public class HoYoShadeUpdateService
     /// <param name="version1">版本1，例如 "V3.0.1" 或 "V3.0.0-Beta.1"）</param>
     /// <param name="version2">版本2，例如 "V3.0.0" 或 "V3.0.0-Beta.2"）</param>
     /// <returns>如果 version1 > version2 返回正数；相等返回 0；小于返回负数</returns>
-    private int CompareVersions(string version1, string version2)
+    public static int CompareVersions(string? version1, string? version2)
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(version1) && string.IsNullOrWhiteSpace(version2))
+            {
+                return 0;
+            }
+            if (string.IsNullOrWhiteSpace(version1))
+            {
+                return -1;
+            }
+            if (string.IsNullOrWhiteSpace(version2))
+            {
+                return 1;
+            }
+
             // 移除 'v' 或 'V' 前缀
             string v1 = version1.TrimStart('v', 'V').Trim();
             string v2 = version2.TrimStart('v', 'V').Trim();

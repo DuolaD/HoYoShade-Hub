@@ -865,6 +865,33 @@ public static class AppConfig
         set => SetValue(value, "HoYoShadeFrameworkDownloadServer_V2");
     }
 
+    /// <summary>
+    /// 最近检测到的 HoYoShade 框架最新版本
+    /// </summary>
+    public static string? LatestHoYoShadeVersion
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// 最近检测到的 OpenHoYoShade 框架最新版本
+    /// </summary>
+    public static string? LatestOpenHoYoShadeVersion
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// 最近检测到的 HoYoShade Hub 启动器最新版本
+    /// </summary>
+    public static string? LatestLauncherVersion
+    {
+        get => GetValue<string>();
+        set => SetValue(value);
+    }
+
 
     #endregion
 

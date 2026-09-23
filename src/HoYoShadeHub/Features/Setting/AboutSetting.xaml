@@ -130,23 +130,30 @@
                         <TextBlock Text="{x:Bind lang:Lang.SettingPage_CheckForUpdate}" />
                     </StackPanel>
                 </Button>
-                <FontIcon Grid.Column="1"
-                          HorizontalAlignment="Left"
-                          FontSize="20"
-                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                          Glyph="&#xF78C;"
-                          Visibility="{x:Bind IsUpdated}" />
-                <ProgressRing Grid.Column="1"
-                              Width="20"
-                              Height="20"
-                              HorizontalAlignment="Left"
-                              IsIndeterminate="{x:Bind CheckUpdateCommand.IsRunning}"
-                              Visibility="{x:Bind CheckUpdateCommand.IsRunning}" />
-                <TextBlock Grid.Column="1"
-                           VerticalAlignment="Center"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="{x:Bind UpdateErrorText}"
-                           TextWrapping="Wrap" />
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            Spacing="8"
+                            VerticalAlignment="Center">
+                    <FontIcon HorizontalAlignment="Left"
+                              FontSize="20"
+                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                              Glyph="&#xF78C;"
+                              Visibility="{x:Bind IsUpdated}" />
+                    <ProgressRing Width="20"
+                                  Height="20"
+                                  HorizontalAlignment="Left"
+                                  IsIndeterminate="{x:Bind CheckUpdateCommand.IsRunning}"
+                                  Visibility="{x:Bind CheckUpdateCommand.IsRunning}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="12"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="{x:Bind UpdateInfoText, Mode=OneWay}"
+                               Visibility="{x:Bind UpdateInfoText, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
+                    <TextBlock VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="{x:Bind UpdateErrorText}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
             </Grid>
 
 
