@@ -416,19 +416,30 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             
             string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
+            int[] serverSequence = serverIndex == -1
+                ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
+                : new[] { serverIndex };
+
             GithubRelease[]? releases = null;
+            Exception? lastFallbackException = null;
 
-            if (serverIndex == -1)
+            foreach (var currentServerIndex in serverSequence)
             {
-                // Auto Select: GitHub -> Tencent -> (Cloudflare/Alibaba).
-                // If GitHub is rate-limited (403), fall back to subsequent servers.
-                var serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(false);
-                bool githubRateLimited = false;
-                Exception? lastFallbackException = null;
+                _loadVersionsCts.Token.ThrowIfCancellationRequested();
 
-                foreach (var currentServerIndex in serverSequence)
+                string?[] proxies = currentServerIndex == 0
+                    ? new string?[] { null }
+                    : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+                if (proxies.Length == 0)
                 {
-                    string? proxyUrl = CloudProxyManager.GetProxyUrl(currentServerIndex);
+                    proxies = new string?[] { null };
+                }
+
+                foreach (var proxyUrl in proxies)
+                {
+                    _loadVersionsCts.Token.ThrowIfCancellationRequested();
+
                     string currentApiUrl = string.IsNullOrWhiteSpace(proxyUrl)
                         ? apiUrl
                         : CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
@@ -436,38 +447,38 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                     try
                     {
                         releases = await client.GetFromJsonAsync<GithubRelease[]>(currentApiUrl, _loadVersionsCts.Token);
-                        if (releases != null)
+                        if (releases != null && releases.Length > 0)
                         {
                             break;
                         }
                     }
-                    catch (HttpRequestException ex) when (currentServerIndex == 0 && IsGitHubRateLimitExceeded(ex))
+                    catch (OperationCanceledException)
                     {
-                        githubRateLimited = true;
-                        lastFallbackException = ex;
-                        _logger.LogWarning(ex, "GitHub API rate limit hit in auto-select mode, switching to next download server.");
+                        throw;
                     }
-                    catch (Exception ex) when (githubRateLimited)
+                    catch (Exception ex)
                     {
                         lastFallbackException = ex;
-                        _logger.LogWarning(ex, "Failed to fetch releases from fallback server {ServerIndex} after GitHub rate limit.", currentServerIndex);
+                        if (IsGitHubRateLimitExceeded(ex))
+                        {
+                            _logger.LogWarning(ex, "GitHub API rate limit / 403 Forbidden hit on server {ServerIndex} (proxy: {ProxyUrl}), switching to next available option.", currentServerIndex, proxyUrl ?? "Direct");
+                        }
+                        else
+                        {
+                            _logger.LogWarning(ex, "Failed to fetch releases from server {ServerIndex} (proxy: {ProxyUrl}), switching to next available option.", currentServerIndex, proxyUrl ?? "Direct");
+                        }
                     }
                 }
 
-                if (releases == null)
+                if (releases != null && releases.Length > 0)
                 {
-                    throw lastFallbackException ?? new HttpRequestException("Failed to fetch release list from all fallback servers.");
+                    break;
                 }
             }
-            else
-            {
-                string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-                if (!string.IsNullOrWhiteSpace(proxyUrl))
-                {
-                    apiUrl = CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
-                }
 
-                releases = await client.GetFromJsonAsync<GithubRelease[]>(apiUrl, _loadVersionsCts.Token);
+            if (releases == null || releases.Length == 0)
+            {
+                throw lastFallbackException ?? new HttpRequestException("Failed to fetch release list from all fallback servers.");
             }
             
             if (releases != null)
@@ -522,10 +533,18 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         }
     }
 
-    private static bool IsGitHubRateLimitExceeded(HttpRequestException ex)
+    private static bool IsGitHubRateLimitExceeded(Exception ex)
     {
-        return ex.StatusCode == HttpStatusCode.Forbidden &&
-            ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase);
+        if (ex is HttpRequestException httpEx)
+        {
+            if (httpEx.StatusCode == HttpStatusCode.Forbidden || httpEx.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                return true;
+            }
+        }
+
+        return ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase) ||
+            ex.Message.Contains("403", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
