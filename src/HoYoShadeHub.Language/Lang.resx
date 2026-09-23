@@ -1878,4 +1878,82 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="WelcomeOOBE_SkipHint" xml:space="preserve">
     <value>Press any key or click to skip</value>
   </data>
+  <data name="QuickSetupView_Title" xml:space="preserve">
+    <value>Ready to Begin?</value>
+  </data>
+  <data name="QuickSetupView_Subtitle" xml:space="preserve">
+    <value>Everything you need for setup, all in one go.</value>
+  </data>
+  <data name="QuickSetupView_Description" xml:space="preserve">
+    <value>In most cases, regular users only need to click "Download and Install" here to complete all setup steps.</value>
+  </data>
+  <data name="QuickSetupView_NetworkCensoredPrefix" xml:space="preserve">
+    <value>Experiencing network censorship? Click "</value>
+  </data>
+  <data name="QuickSetupView_NetworkCensoredSuffix" xml:space="preserve">
+    <value>" in the upper right corner to adjust settings.</value>
+  </data>
+  <data name="QuickSetupView_CardTitle" xml:space="preserve">
+    <value>This will perform the following actions:</value>
+  </data>
+  <data name="QuickSetupView_Action1" xml:space="preserve">
+    <value>Download and install the latest stable HoYoShade framework (excluding preview channel)</value>
+  </data>
+  <data name="QuickSetupView_Action2" xml:space="preserve">
+    <value>Install all ReShade shaders and addons for HoYoShade framework</value>
+  </data>
+  <data name="QuickSetupView_Action1Desc" xml:space="preserve">
+    <value>Automatically matches and downloads the latest stable release with all built-in presets.</value>
+  </data>
+  <data name="QuickSetupView_Action2Desc" xml:space="preserve">
+    <value>Automatically installs all shader packs, textures, and popular Addon extensions.</value>
+  </data>
+  <data name="QuickSetupView_OrCustomHint" xml:space="preserve">
+    <value>Or, perform custom setup</value>
+  </data>
+  <data name="QuickSetupView_CustomInstall" xml:space="preserve">
+    <value>Custom / Advanced Setup</value>
+  </data>
+  <data name="QuickSetupView_EnterMainView" xml:space="preserve">
+    <value>Enter Main View</value>
+  </data>
+  <data name="QuickSetupView_StatusPreparing" xml:space="preserve">
+    <value>[1/2] Preparing install service and fetching version...</value>
+  </data>
+  <data name="QuickSetupView_StatusFetchingRelease" xml:space="preserve">
+    <value>[1/2] Checking for latest stable HoYoShade framework...</value>
+  </data>
+  <data name="QuickSetupView_StatusDownloadingFramework" xml:space="preserve">
+    <value>[1/2] Downloading and extracting HoYoShade framework ({0})...</value>
+  </data>
+  <data name="QuickSetupView_StatusExtractingFramework" xml:space="preserve">
+    <value>[1/2] Extracting HoYoShade framework core...</value>
+  </data>
+  <data name="QuickSetupView_StatusBuildingIni" xml:space="preserve">
+    <value>[1/2] Building INI configurations...</value>
+  </data>
+  <data name="QuickSetupView_StatusDownloadingShaders" xml:space="preserve">
+    <value>[2/2] Downloading and installing all ReShade shaders and addons...</value>
+  </data>
+  <data name="QuickSetupView_StatusDownloadingItem" xml:space="preserve">
+    <value>[2/2] Downloading [{0}]: {1}</value>
+  </data>
+  <data name="QuickSetupView_TypeShaders" xml:space="preserve">
+    <value>Shaders</value>
+  </data>
+  <data name="QuickSetupView_TypeAddons" xml:space="preserve">
+    <value>Addons</value>
+  </data>
+  <data name="QuickSetupView_StatusFinished" xml:space="preserve">
+    <value>🎉 HoYoShade framework and all ReShade effects have been installed and configured!</value>
+  </data>
+  <data name="QuickSetupView_StatusCancelled" xml:space="preserve">
+    <value>Installation cancelled. You can click to retry or use custom setup.</value>
+  </data>
+  <data name="QuickSetupView_Installing" xml:space="preserve">
+    <value>Installing...</value>
+  </data>
+  <data name="QuickSetupView_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
 </root>

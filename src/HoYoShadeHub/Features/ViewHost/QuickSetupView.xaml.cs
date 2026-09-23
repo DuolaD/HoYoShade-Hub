@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Core.Metadata.Github;
 using HoYoShadeHub.Core.Networking;
@@ -11,10 +12,12 @@ using HoYoShadeHub.Features.RPC;
 using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
+using HoYoShadeHub.Models;
 using HoYoShadeHub.RPC;
 using HoYoShadeHub.RPC.HoYoShadeInstall;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -35,6 +38,19 @@ public sealed partial class QuickSetupView : UserControl
     private CancellationTokenSource? _cancellationTokenSource;
     private bool _languageInitialized;
 
+    public ObservableCollection<DownloadServerItem> DownloadServers { get; } = new();
+
+    [ObservableProperty]
+    private DownloadServerItem? selectedDownloadServer;
+
+    partial void OnSelectedDownloadServerChanged(DownloadServerItem? value)
+    {
+        if (value != null)
+        {
+            AppConfig.HoYoShadeFrameworkDownloadServer = value.ServerIndex;
+        }
+    }
+
     private static readonly HashSet<string> HiddenIncompatibleVersionTags = new(StringComparer.OrdinalIgnoreCase)
     {
         "3.0.0-beta.1",
@@ -45,12 +61,13 @@ public sealed partial class QuickSetupView : UserControl
     {
         this.InitializeComponent();
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
+        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
     }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanStartInstall))]
     [NotifyPropertyChangedFor(nameof(CanNavigateToCustom))]
-    [NotifyPropertyChangedFor(nameof(IsProgressVisible))]
     [NotifyPropertyChangedFor(nameof(StartButtonText))]
     private bool isDownloading;
 
@@ -58,21 +75,20 @@ public sealed partial class QuickSetupView : UserControl
     [NotifyPropertyChangedFor(nameof(IsNotCompleted))]
     [NotifyPropertyChangedFor(nameof(CanStartInstall))]
     [NotifyPropertyChangedFor(nameof(CanNavigateToCustom))]
-    [NotifyPropertyChangedFor(nameof(IsProgressVisible))]
     [NotifyPropertyChangedFor(nameof(StartButtonText))]
     private bool isCompleted;
 
     public bool IsNotCompleted => !IsCompleted;
     public bool CanStartInstall => !IsDownloading && !IsCompleted;
-    public bool CanNavigateToCustom => !IsDownloading && !IsCompleted;
-    public bool IsProgressVisible => IsDownloading || IsCompleted || !string.IsNullOrWhiteSpace(StatusMessage);
-    public string StartButtonText => IsDownloading ? "安装中..." : (IsCompleted ? "已完成" : "一键开始安装");
+    public bool CanNavigateToCustom => !IsDownloading;
+    public string StartButtonText => IsDownloading
+        ? Lang.QuickSetupView_Installing
+        : (IsCompleted ? Lang.QuickSetupView_Completed : Lang.HoYoShadeDownloadView_DownloadAndInstall);
 
     [ObservableProperty]
     private double overallProgress;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsProgressVisible))]
     private string statusMessage = "";
 
     [ObservableProperty]
@@ -82,6 +98,15 @@ public sealed partial class QuickSetupView : UserControl
     {
         HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
         InitializeLanguageSelector();
+        UpdateDownloadServers();
+    }
+
+    private void OnLanguageChanged()
+    {
+        Lang.Culture = CultureInfo.CurrentUICulture;
+        this.Bindings.Update();
+        OnPropertyChanged(nameof(StartButtonText));
+        UpdateDownloadServers();
     }
 
     private void InitializeLanguageSelector()
@@ -144,10 +169,61 @@ public sealed partial class QuickSetupView : UserControl
         }
     }
 
+    private void UpdateDownloadServers()
+    {
+        var selectedIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
+        DownloadServers.Clear();
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AutoSelect, ServerIndex = -1 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_GithubDirect, ServerIndex = 0 });
+        DownloadServers.Add(new DownloadServerItem { Name = AppConfig.EnableEch ? "Cloudflare ECH" : Lang.HoYoShadeDownloadView_Server_Cloudflare, ServerIndex = 1 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_TencentCloud, ServerIndex = 2 });
+        DownloadServers.Add(new DownloadServerItem { Name = Lang.HoYoShadeDownloadView_Server_AlibabaCloud, ServerIndex = 3 });
+
+        var toSelect = DownloadServers.FirstOrDefault(x => x.ServerIndex == selectedIndex);
+        SelectedDownloadServer = toSelect ?? DownloadServers[0];
+
+        _ = UpdateLatenciesAsync();
+    }
+
+    private async Task UpdateLatenciesAsync()
+    {
+        var httpClient = AppConfig.GetService<HttpClient>();
+        if (httpClient == null) return;
+
+        var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
+        foreach (var server in serversToUpdate)
+        {
+            server.LatencyText = "Ping...";
+            server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
+        }
+
+        var tasks = serversToUpdate.Select(async server =>
+        {
+            long latency = await CloudProxyManager.PingServerAsync(server.ServerIndex, httpClient);
+            if (latency >= 0)
+            {
+                server.LatencyText = $"{latency}ms";
+                if (latency <= 600) server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.LimeGreen);
+                else server.LatencyColor = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0xC5, 0x7F, 0x0A));
+            }
+            else
+            {
+                server.LatencyText = "Timeout";
+                server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+            }
+        });
+        await Task.WhenAll(tasks);
+    }
+
     private async void Button_NetworkSettings_Click(object sender, RoutedEventArgs e)
     {
         var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
         await dialog.ShowAsync();
+    }
+
+    private void Hyperlink_NetworkSettings_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
+    {
+        Button_NetworkSettings_Click(sender, null!);
     }
 
     [RelayCommand]
@@ -169,7 +245,7 @@ public sealed partial class QuickSetupView : UserControl
         {
             _cancellationTokenSource?.Cancel();
             IsDownloading = false;
-            StatusMessage = "安装已取消。";
+            StatusMessage = Lang.QuickSetupView_StatusCancelled;
             SpeedAndProgress = "";
         }
         catch (Exception ex)
@@ -189,14 +265,14 @@ public sealed partial class QuickSetupView : UserControl
 
             IsDownloading = true;
             OverallProgress = 0;
-            StatusMessage = "[1/2] 正在准备安装服务与获取版本...";
+            StatusMessage = Lang.QuickSetupView_StatusPreparing;
             SpeedAndProgress = "";
 
             // Step 1: Ensure RPC server is running
             await EnsureFreshRpcServerAsync(ct);
 
             // Step 2: Fetch latest stable HoYoShade release
-            StatusMessage = "[1/2] 正在检索最新稳定版 HoYoShade 框架...";
+            StatusMessage = Lang.QuickSetupView_StatusFetchingRelease;
             var (release, asset) = await FetchLatestStableReleaseAsync(ct);
             if (release == null || asset == null || string.IsNullOrWhiteSpace(asset.BrowserDownloadUrl))
             {
@@ -206,16 +282,16 @@ public sealed partial class QuickSetupView : UserControl
             _logger.LogInformation("Selected release: {TagName}, Asset: {AssetName}", release.TagName, asset.Name);
 
             // Step 3: Install HoYoShade framework
-            StatusMessage = $"[1/2] 正在下载并解压 HoYoShade 框架 ({release.TagName})...";
+            StatusMessage = string.Format(Lang.QuickSetupView_StatusDownloadingFramework, release.TagName);
             await InstallFrameworkAsync(release, asset, ct);
 
             // Step 4: Install all ReShade Shaders & Addons
-            StatusMessage = "[2/2] 正在下载并安装全部 ReShade 着色器与插件...";
+            StatusMessage = Lang.QuickSetupView_StatusDownloadingShaders;
             await InstallReShadeShadersAsync(ct);
 
             // Completed
             OverallProgress = 100;
-            StatusMessage = "🎉 HoYoShade 框架与全部 ReShade 特效已安装配置完成！";
+            StatusMessage = Lang.QuickSetupView_StatusFinished;
             SpeedAndProgress = "100%";
             IsCompleted = true;
             IsDownloading = false;
@@ -226,16 +302,28 @@ public sealed partial class QuickSetupView : UserControl
         catch (OperationCanceledException)
         {
             IsDownloading = false;
-            StatusMessage = "安装已取消。您可以点击重新开始或使用自定义安装。";
+            StatusMessage = Lang.QuickSetupView_StatusCancelled;
             SpeedAndProgress = "";
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "QuickSetup failed");
             IsDownloading = false;
-            StatusMessage = $"安装出错: {ex.Message}";
+            StatusMessage = $"{ex.Message}";
             SpeedAndProgress = "";
         }
+    }
+
+    private IEnumerable<int> GetServerSequence()
+    {
+        var selected = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
+        if (selected != -1)
+        {
+            // First try selected, then fallback to others
+            var fallback = CloudProxyManager.GetAutoSelectFallbackSequence(false);
+            return new[] { selected }.Concat(fallback.Where(s => s != selected));
+        }
+        return CloudProxyManager.GetAutoSelectFallbackSequence(false);
     }
 
     private async Task<(GithubRelease? release, GithubAsset? asset)> FetchLatestStableReleaseAsync(CancellationToken cancellationToken)
@@ -247,7 +335,7 @@ public sealed partial class QuickSetupView : UserControl
         client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
 
         string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
-        var serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(false);
+        var serverSequence = GetServerSequence();
         GithubRelease[]? releases = null;
 
         foreach (var currentServerIndex in serverSequence)
@@ -316,7 +404,7 @@ public sealed partial class QuickSetupView : UserControl
     private async Task InstallFrameworkAsync(GithubRelease release, GithubAsset asset, CancellationToken cancellationToken)
     {
         var targetPath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
-        var serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(false);
+        var serverSequence = GetServerSequence();
         var httpClient = AppConfig.GetService<HttpClient>();
         bool success = false;
         Exception? lastException = null;
@@ -380,13 +468,13 @@ public sealed partial class QuickSetupView : UserControl
 
                         if (progress.State == 2) // Extracting
                         {
-                            StatusMessage = "[1/2] 正在解压 HoYoShade 框架核心...";
+                            StatusMessage = Lang.QuickSetupView_StatusExtractingFramework;
                             OverallProgress = 48;
                         }
                         else if (progress.State == 3) // Finished
                         {
                             OverallProgress = 50;
-                            StatusMessage = "[1/2] 正在构建 INI 资源配置...";
+                            StatusMessage = Lang.QuickSetupView_StatusBuildingIni;
                             await RunIniBuildAsync("HoYoShade", targetPath, cancellationToken);
                             await _versionService.UpdateHoYoShadeVersionAsync(release.TagName, "quick_setup", null);
                             success = true;
@@ -419,7 +507,7 @@ public sealed partial class QuickSetupView : UserControl
     private async Task InstallReShadeShadersAsync(CancellationToken cancellationToken)
     {
         var basePath = AppConfig.UserDataFolder;
-        var serverSequence = CloudProxyManager.GetAutoSelectFallbackSequence(false);
+        var serverSequence = GetServerSequence();
         var httpClient = AppConfig.GetService<HttpClient>();
         bool success = false;
         Exception? lastException = null;
@@ -458,8 +546,8 @@ public sealed partial class QuickSetupView : UserControl
 
                         if (progress.State == 1) // Downloading
                         {
-                            string typeLabel = progress.CurrentFileType == 0 ? "着色器" : "插件";
-                            StatusMessage = $"[2/2] 正在下载 [{typeLabel}]: {progress.CurrentFile ?? ""}";
+                            string typeLabel = progress.CurrentFileType == 0 ? Lang.QuickSetupView_TypeShaders : Lang.QuickSetupView_TypeAddons;
+                            StatusMessage = string.Format(Lang.QuickSetupView_StatusDownloadingItem, typeLabel, progress.CurrentFile ?? "");
 
                             double currentPct = progress.TotalFiles > 0 ? ((double)progress.DownloadedFiles / progress.TotalFiles * 100) : 0;
                             OverallProgress = 50 + (currentPct * 0.5); // 50% ~ 100% of overall
@@ -539,7 +627,7 @@ public sealed partial class QuickSetupView : UserControl
             return;
         }
 
-        StatusMessage = "[1/2] 正在启动后台安装服务...";
+        StatusMessage = Lang.QuickSetupView_StatusPreparing;
         Process.Start(new ProcessStartInfo
         {
             FileName = AppConfig.HoYoShadeHubExecutePath,

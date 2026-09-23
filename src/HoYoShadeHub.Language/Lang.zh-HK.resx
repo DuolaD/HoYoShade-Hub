@@ -1878,4 +1878,82 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="WelcomeOOBE_SkipHint" xml:space="preserve">
     <value>按任意鍵或點擊以跳過</value>
   </data>
+  <data name="QuickSetupView_Title" xml:space="preserve">
+    <value>初露鋒芒？</value>
+  </data>
+  <data name="QuickSetupView_Subtitle" xml:space="preserve">
+    <value>初始化所需的一切，就這麼一氣呵成。</value>
+  </data>
+  <data name="QuickSetupView_Description" xml:space="preserve">
+    <value>一般情況下，普通用戶只需要點擊此處的「下載並安裝」，即可完成所有初始化步驟。</value>
+  </data>
+  <data name="QuickSetupView_NetworkCensoredPrefix" xml:space="preserve">
+    <value>網路受到審查？點擊右上角的「</value>
+  </data>
+  <data name="QuickSetupView_NetworkCensoredSuffix" xml:space="preserve">
+    <value>」並更改部分設定。</value>
+  </data>
+  <data name="QuickSetupView_CardTitle" xml:space="preserve">
+    <value>這將會執行以下操作：</value>
+  </data>
+  <data name="QuickSetupView_Action1" xml:space="preserve">
+    <value>下載並安裝最新穩定版 HoYoShade 框架（不加入預覽版管道）</value>
+  </data>
+  <data name="QuickSetupView_Action2" xml:space="preserve">
+    <value>為 HoYoShade 框架安裝全量 ReShade 著色器與外掛程式</value>
+  </data>
+  <data name="QuickSetupView_Action1Desc" xml:space="preserve">
+    <value>自動匹配並下載最新的正式穩定版，包含所有內置預設。</value>
+  </data>
+  <data name="QuickSetupView_Action2Desc" xml:space="preserve">
+    <value>自動安裝所有效果包（Shaders）、紋理（Textures）以及常用 Addons 外掛程式。</value>
+  </data>
+  <data name="QuickSetupView_OrCustomHint" xml:space="preserve">
+    <value>或者，進行自訂安裝</value>
+  </data>
+  <data name="QuickSetupView_CustomInstall" xml:space="preserve">
+    <value>自訂 / 進階安裝</value>
+  </data>
+  <data name="QuickSetupView_EnterMainView" xml:space="preserve">
+    <value>進入主畫面</value>
+  </data>
+  <data name="QuickSetupView_StatusPreparing" xml:space="preserve">
+    <value>[1/2] 正在準備安裝服務與獲取版本...</value>
+  </data>
+  <data name="QuickSetupView_StatusFetchingRelease" xml:space="preserve">
+    <value>[1/2] 正在檢索最新穩定版 HoYoShade 框架...</value>
+  </data>
+  <data name="QuickSetupView_StatusDownloadingFramework" xml:space="preserve">
+    <value>[1/2] 正在下載並解壓 HoYoShade 框架 ({0})...</value>
+  </data>
+  <data name="QuickSetupView_StatusExtractingFramework" xml:space="preserve">
+    <value>[1/2] 正在解壓 HoYoShade 框架核心...</value>
+  </data>
+  <data name="QuickSetupView_StatusBuildingIni" xml:space="preserve">
+    <value>[1/2] 正在構建 INI 資源配置...</value>
+  </data>
+  <data name="QuickSetupView_StatusDownloadingShaders" xml:space="preserve">
+    <value>[2/2] 正在下載並安裝全量 ReShade 著色器與外掛程式...</value>
+  </data>
+  <data name="QuickSetupView_StatusDownloadingItem" xml:space="preserve">
+    <value>[2/2] 正在下載 [{0}]: {1}</value>
+  </data>
+  <data name="QuickSetupView_TypeShaders" xml:space="preserve">
+    <value>著色器</value>
+  </data>
+  <data name="QuickSetupView_TypeAddons" xml:space="preserve">
+    <value>外掛程式</value>
+  </data>
+  <data name="QuickSetupView_StatusFinished" xml:space="preserve">
+    <value>🎉 HoYoShade 框架與全量 ReShade 特效已安裝配置完成！</value>
+  </data>
+  <data name="QuickSetupView_StatusCancelled" xml:space="preserve">
+    <value>安裝已取消。您可以點擊重新開始或使用自訂安裝。</value>
+  </data>
+  <data name="QuickSetupView_Installing" xml:space="preserve">
+    <value>安裝中...</value>
+  </data>
+  <data name="QuickSetupView_Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
 </root>

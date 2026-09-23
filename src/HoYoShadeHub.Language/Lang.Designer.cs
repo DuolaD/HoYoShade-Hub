@@ -5295,5 +5295,239 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("WelcomeOOBE_SkipHint", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Ready to Begin? 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Title {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Everything you need for setup, all in one go. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Subtitle {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 In most cases, regular users only need to click "Download and Install" here to complete all setup steps. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Description {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Experiencing network censorship? Click " 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_NetworkCensoredPrefix {
+            get {
+                return ResourceManager.GetString("QuickSetupView_NetworkCensoredPrefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 " in the upper right corner to adjust settings. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_NetworkCensoredSuffix {
+            get {
+                return ResourceManager.GetString("QuickSetupView_NetworkCensoredSuffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This will perform the following actions: 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_CardTitle {
+            get {
+                return ResourceManager.GetString("QuickSetupView_CardTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Download and install the latest stable HoYoShade framework (excluding preview channel) 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Action1 {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Action1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Install all ReShade shaders and addons for HoYoShade framework 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Action2 {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Action2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Automatically matches and downloads the latest stable release with all built-in presets. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Action1Desc {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Action1Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Automatically installs all shader packs, textures, and popular Addon extensions. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Action2Desc {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Action2Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Or, perform custom setup 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_OrCustomHint {
+            get {
+                return ResourceManager.GetString("QuickSetupView_OrCustomHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Custom / Advanced Setup 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_CustomInstall {
+            get {
+                return ResourceManager.GetString("QuickSetupView_CustomInstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Enter Main View 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_EnterMainView {
+            get {
+                return ResourceManager.GetString("QuickSetupView_EnterMainView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [1/2] Preparing install service and fetching version... 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusPreparing {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusPreparing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [1/2] Checking for latest stable HoYoShade framework... 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusFetchingRelease {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusFetchingRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [1/2] Downloading and extracting HoYoShade framework ({0})... 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusDownloadingFramework {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusDownloadingFramework", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [1/2] Extracting HoYoShade framework core... 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusExtractingFramework {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusExtractingFramework", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [1/2] Building INI configurations... 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusBuildingIni {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusBuildingIni", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [2/2] Downloading and installing all ReShade shaders and addons... 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusDownloadingShaders {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusDownloadingShaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [2/2] Downloading [{0}]: {1} 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusDownloadingItem {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusDownloadingItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Shaders 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_TypeShaders {
+            get {
+                return ResourceManager.GetString("QuickSetupView_TypeShaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Addons 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_TypeAddons {
+            get {
+                return ResourceManager.GetString("QuickSetupView_TypeAddons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 HoYoShade framework and all ReShade effects have been installed and configured! 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusFinished {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Installation cancelled. You can click to retry or use custom setup. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_StatusCancelled {
+            get {
+                return ResourceManager.GetString("QuickSetupView_StatusCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Installing... 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Installing {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Installing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Completed 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Completed {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Completed", resourceCulture);
+            }
+        }
     }
 }
