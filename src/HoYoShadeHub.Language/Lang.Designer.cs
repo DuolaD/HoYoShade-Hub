@@ -5529,5 +5529,32 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("QuickSetupView_Completed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Move left 的本地化字符串。
+        /// </summary>
+        public static string GameSelector_MoveLeft {
+            get {
+                return ResourceManager.GetString("GameSelector_MoveLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Move right 的本地化字符串。
+        /// </summary>
+        public static string GameSelector_MoveRight {
+            get {
+                return ResourceManager.GetString("GameSelector_MoveRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Unpin 的本地化字符串。
+        /// </summary>
+        public static string GameSelector_Unpin {
+            get {
+                return ResourceManager.GetString("GameSelector_Unpin", resourceCulture);
+            }
+        }
     }
 }

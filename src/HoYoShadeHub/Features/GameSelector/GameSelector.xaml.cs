@@ -78,6 +78,10 @@ public sealed partial class GameSelector : UserControl
 
     private double lastScale = 1;
 
+    private bool _isContextMenuOpen;
+
+    private GameBizIcon? _contextMenuTargetIcon;
+
     /// <summary>
     /// 根据当前语言获取因缘精灵的Logo路径
     /// </summary>
@@ -330,9 +334,9 @@ public sealed partial class GameSelector : UserControl
     /// <param name="e"></param>
     private void Border_CurrentGameIcon_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
-        if (FullBackgroundVisible || IsPinned)
+        if (FullBackgroundVisible || IsPinned || _isContextMenuOpen)
         {
-            // 当前游戏图标被固定或者全屏显示时，不隐藏所有游戏图标
+            // 当前游戏图标被固定、全屏显示或菜单打开时，不隐藏所有游戏图标
             return;
         }
         if (sender is UIElement ele)
@@ -357,7 +361,7 @@ public sealed partial class GameSelector : UserControl
     /// <param name="e"></param>
     private void Grid_GameIconsArea_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
     {
-        if (FullBackgroundVisible || IsPinned)
+        if (FullBackgroundVisible || IsPinned || _isContextMenuOpen)
         {
             return;
         }
@@ -448,6 +452,113 @@ public sealed partial class GameSelector : UserControl
             if (!icon.IsSelected)
             {
                 icon.MaskOpacity = 1;
+            }
+        }
+    }
+
+
+
+    private void GameIconMenuFlyout_Opening(object? sender, object e)
+    {
+        _isContextMenuOpen = true;
+        if (sender is MenuFlyout flyout)
+        {
+            GameBizIcon? icon = (flyout.Target as FrameworkElement)?.DataContext as GameBizIcon;
+            _contextMenuTargetIcon = icon;
+            if (icon is not null)
+            {
+                if (!icon.IsSelected)
+                {
+                    icon.MaskOpacity = 0;
+                }
+                int index = GameBizIcons.IndexOf(icon);
+                foreach (var item in flyout.Items)
+                {
+                    item.DataContext = icon;
+                    if (item is MenuFlyoutItem menuItem)
+                    {
+                        if (menuItem.Tag as string == "MoveLeft")
+                        {
+                            menuItem.IsEnabled = index > 0;
+                        }
+                        else if (menuItem.Tag as string == "MoveRight")
+                        {
+                            menuItem.IsEnabled = index >= 0 && index < GameBizIcons.Count - 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    private void GameIconMenuFlyout_Closed(object? sender, object e)
+    {
+        _isContextMenuOpen = false;
+        if (sender is MenuFlyout flyout)
+        {
+            GameBizIcon? icon = (flyout.Target as FrameworkElement)?.DataContext as GameBizIcon ?? _contextMenuTargetIcon;
+            if (icon is not null && !icon.IsSelected)
+            {
+                icon.MaskOpacity = 1;
+            }
+        }
+        _contextMenuTargetIcon = null;
+    }
+
+
+
+    private void MenuFlyoutItem_MoveLeft_Click(object sender, RoutedEventArgs e)
+    {
+        GameBizIcon? icon = (sender as FrameworkElement)?.DataContext as GameBizIcon ?? _contextMenuTargetIcon;
+        if (icon is not null)
+        {
+            int index = GameBizIcons.IndexOf(icon);
+            if (index > 0)
+            {
+                GameBizIcons.Move(index, index - 1);
+            }
+        }
+    }
+
+
+
+    private void MenuFlyoutItem_MoveRight_Click(object sender, RoutedEventArgs e)
+    {
+        GameBizIcon? icon = (sender as FrameworkElement)?.DataContext as GameBizIcon ?? _contextMenuTargetIcon;
+        if (icon is not null)
+        {
+            int index = GameBizIcons.IndexOf(icon);
+            if (index >= 0 && index < GameBizIcons.Count - 1)
+            {
+                GameBizIcons.Move(index, index + 1);
+            }
+        }
+    }
+
+
+
+    private void MenuFlyoutItem_Unpin_Click(object sender, RoutedEventArgs e)
+    {
+        GameBizIcon? icon = (sender as FrameworkElement)?.DataContext as GameBizIcon ?? _contextMenuTargetIcon;
+        if (icon is not null)
+        {
+            UnpinGameBiz(icon);
+        }
+    }
+
+
+
+    private void UnpinGameBiz(GameBizIcon icon)
+    {
+        GameBizIcons.Remove(icon);
+        icon.IsPinned = false;
+        foreach (var display in GameBizDisplays)
+        {
+            if (display.Servers?.FirstOrDefault(x => x.GameBiz == icon.GameBiz) is GameBizIcon server)
+            {
+                server.IsPinned = false;
             }
         }
     }

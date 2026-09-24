@@ -496,6 +496,7 @@
                               CornerRadius="8"
                               DoubleTapped="Grid_GameIcon_DoubleTapped"
                               IsDoubleTapEnabled="True"
+                              IsRightTapEnabled="True"
                               IsTapEnabled="True"
                               PointerEntered="Grid_GameIcon_PointerEntered"
                               PointerExited="Grid_GameIcon_PointerExited"
@@ -503,6 +504,32 @@
                               Tag="{x:Bind GameId}"
                               Tapped="Grid_GameIcon_Tapped"
                               Translation="0,0,16">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout Closed="GameIconMenuFlyout_Closed" Opening="GameIconMenuFlyout_Opening">
+                                    <MenuFlyoutItem Click="MenuFlyoutItem_MoveLeft_Click"
+                                                    Tag="MoveLeft"
+                                                    Text="{x:Bind lang:Lang.GameSelector_MoveLeft}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE72B;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Click="MenuFlyoutItem_MoveRight_Click"
+                                                    Tag="MoveRight"
+                                                    Text="{x:Bind lang:Lang.GameSelector_MoveRight}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE72A;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Click="MenuFlyoutItem_Unpin_Click"
+                                                    Tag="Unpin"
+                                                    Text="{x:Bind lang:Lang.GameSelector_Unpin}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE77A;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
                             <sc:CachedImage Width="40"
                                             Height="40"
                                             Source="{x:Bind GameIcon}" />

@@ -1956,4 +1956,13 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="QuickSetupView_Completed" xml:space="preserve">
     <value>Completed</value>
   </data>
+  <data name="GameSelector_MoveLeft" xml:space="preserve">
+    <value>Move left</value>
+  </data>
+  <data name="GameSelector_MoveRight" xml:space="preserve">
+    <value>Move right</value>
+  </data>
+  <data name="GameSelector_Unpin" xml:space="preserve">
+    <value>Unpin</value>
+  </data>
 </root>

@@ -1956,4 +1956,13 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="QuickSetupView_Completed" xml:space="preserve">
     <value>已完成</value>
   </data>
+  <data name="GameSelector_MoveLeft" xml:space="preserve">
+    <value>向左移動</value>
+  </data>
+  <data name="GameSelector_MoveRight" xml:space="preserve">
+    <value>向右移動</value>
+  </data>
+  <data name="GameSelector_Unpin" xml:space="preserve">
+    <value>取消釘選</value>
+  </data>
 </root>
