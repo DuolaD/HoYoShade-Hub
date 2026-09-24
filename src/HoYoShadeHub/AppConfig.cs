@@ -839,11 +839,29 @@ public static class AppConfig
     }
 
     /// <summary>
-    /// 启动时自动检测 HoYoShade 框架更新
+    /// 启动时自动检测框架更新（兼容旧设置）
     /// </summary>
     public static bool AutoCheckFrameworkUpdateOnStartup
     {
         get => GetValue(true);
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// 启动时自动检测 HoYoShade 框架更新
+    /// </summary>
+    public static bool AutoCheckHoYoShadeUpdateOnStartup
+    {
+        get => GetValue(AutoCheckFrameworkUpdateOnStartup);
+        set => SetValue(value);
+    }
+
+    /// <summary>
+    /// 启动时自动检测 OpenHoYoShade 框架更新
+    /// </summary>
+    public static bool AutoCheckOpenHoYoShadeUpdateOnStartup
+    {
+        get => GetValue(AutoCheckFrameworkUpdateOnStartup);
         set => SetValue(value);
     }
 

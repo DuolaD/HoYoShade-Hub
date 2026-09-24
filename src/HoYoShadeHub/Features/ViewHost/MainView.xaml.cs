@@ -101,7 +101,7 @@ public sealed partial class MainView : UserControl
     {
         try
         {
-            if (!AppConfig.AutoCheckFrameworkUpdateOnStartup)
+            if (!AppConfig.AutoCheckHoYoShadeUpdateOnStartup && !AppConfig.AutoCheckOpenHoYoShadeUpdateOnStartup)
             {
                 return;
             }
@@ -123,28 +123,34 @@ public sealed partial class MainView : UserControl
                 proxyUrl = CloudProxyManager.GetProxyUrl(0);
             }
 
-            var hoYoShadeRelease = await updateService.CheckHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
-            if (hoYoShadeRelease != null)
+            if (AppConfig.AutoCheckHoYoShadeUpdateOnStartup)
             {
-                AppConfig.LatestHoYoShadeVersion = hoYoShadeRelease.TagName;
-                WeakReferenceMessenger.Default.Send(new FrameworkUpdateDetectedMessage("HoYoShade", hoYoShadeRelease.TagName));
-                InAppToast.MainWindow?.Information("HoYoShade", string.Format(GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"), hoYoShadeRelease.TagName), 8000);
-            }
-            else
-            {
-                AppConfig.LatestHoYoShadeVersion = null;
+                var hoYoShadeRelease = await updateService.CheckHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
+                if (hoYoShadeRelease != null)
+                {
+                    AppConfig.LatestHoYoShadeVersion = hoYoShadeRelease.TagName;
+                    WeakReferenceMessenger.Default.Send(new FrameworkUpdateDetectedMessage("HoYoShade", hoYoShadeRelease.TagName));
+                    InAppToast.MainWindow?.Information("HoYoShade", string.Format(GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"), hoYoShadeRelease.TagName), 8000);
+                }
+                else
+                {
+                    AppConfig.LatestHoYoShadeVersion = null;
+                }
             }
 
-            var openHoYoShadeRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
-            if (openHoYoShadeRelease != null)
+            if (AppConfig.AutoCheckOpenHoYoShadeUpdateOnStartup)
             {
-                AppConfig.LatestOpenHoYoShadeVersion = openHoYoShadeRelease.TagName;
-                WeakReferenceMessenger.Default.Send(new FrameworkUpdateDetectedMessage("OpenHoYoShade", openHoYoShadeRelease.TagName));
-                InAppToast.MainWindow?.Information("OpenHoYoShade", string.Format(GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"), openHoYoShadeRelease.TagName), 8000);
-            }
-            else
-            {
-                AppConfig.LatestOpenHoYoShadeVersion = null;
+                var openHoYoShadeRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
+                if (openHoYoShadeRelease != null)
+                {
+                    AppConfig.LatestOpenHoYoShadeVersion = openHoYoShadeRelease.TagName;
+                    WeakReferenceMessenger.Default.Send(new FrameworkUpdateDetectedMessage("OpenHoYoShade", openHoYoShadeRelease.TagName));
+                    InAppToast.MainWindow?.Information("OpenHoYoShade", string.Format(GetLangString("FileSettingPage_NewVersionAvailableFormat", "New version available: {0}"), openHoYoShadeRelease.TagName), 8000);
+                }
+                else
+                {
+                    AppConfig.LatestOpenHoYoShadeVersion = null;
+                }
             }
         }
         catch (Exception ex)

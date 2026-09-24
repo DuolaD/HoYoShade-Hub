@@ -1,7 +1,9 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Windows.AppLifecycle;
 using SharpSevenZip;
 using HoYoShadeHub.Core;
@@ -172,6 +174,28 @@ public sealed partial class FileManageSetting : PageBase
         }
     } = AppConfig.AutoCheckFrameworkUpdateOnStartup;
 
+    public bool AutoCheckHoYoShadeUpdateOnStartup
+    {
+        get; set
+        {
+            if (SetProperty(ref field, value))
+            {
+                AppConfig.AutoCheckHoYoShadeUpdateOnStartup = value;
+            }
+        }
+    } = AppConfig.AutoCheckHoYoShadeUpdateOnStartup;
+
+    public bool AutoCheckOpenHoYoShadeUpdateOnStartup
+    {
+        get; set
+        {
+            if (SetProperty(ref field, value))
+            {
+                AppConfig.AutoCheckOpenHoYoShadeUpdateOnStartup = value;
+            }
+        }
+    } = AppConfig.AutoCheckOpenHoYoShadeUpdateOnStartup;
+
     public string AutoCheckUpdatesText => GetLangString("SettingPage_AutoCheckUpdates", "Check for updates automatically");
     
     /// <summary>
@@ -183,6 +207,45 @@ public sealed partial class FileManageSetting : PageBase
     /// OpenHoYoShade 更新检测结果
     /// </summary>
     public string? OpenHoYoShadeUpdateInfo { get => field; set => SetProperty(ref field, value); }
+
+    private bool _isAdjustingFlyoutPlacement;
+
+    private void FrameworkFlyout_Opening(object? sender, object e)
+    {
+        if (_isAdjustingFlyoutPlacement)
+        {
+            return;
+        }
+
+        if (sender is Flyout flyout)
+        {
+            FrameworkElement? target = flyout.Target;
+            if (target == null)
+            {
+                if (flyout == HoYoShadeFlyout) target = HoYoShadeSplitButton;
+                else if (flyout == OpenHoYoShadeFlyout) target = OpenHoYoShadeSplitButton;
+            }
+
+            if (target != null)
+            {
+                _isAdjustingFlyoutPlacement = true;
+                flyout.ShowAt(target, new FlyoutShowOptions
+                {
+                    Placement = FlyoutPlacementMode.BottomEdgeAlignedRight
+                });
+            }
+        }
+    }
+
+    private void FrameworkFlyout_Opened(object? sender, object e)
+    {
+        _isAdjustingFlyoutPlacement = false;
+    }
+
+    private void FrameworkFlyout_Closed(object? sender, object e)
+    {
+        _isAdjustingFlyoutPlacement = false;
+    }
 
 
 

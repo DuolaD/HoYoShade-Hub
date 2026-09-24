@@ -184,39 +184,27 @@
 
                     <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" />
 
-                    <!-- 更新选项行 -->
-                    <Grid ColumnSpacing="24">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        
-                        <ToggleSwitch Grid.Column="0"
-                                      IsOn="{x:Bind AutoCheckFrameworkUpdateOnStartup, Mode=TwoWay}"
-                                      OffContent="{x:Bind AutoCheckUpdatesText, Mode=OneWay}"
-                                      OnContent="{x:Bind AutoCheckUpdatesText, Mode=OneWay}" />
-
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                            <ToggleSwitch IsOn="{x:Bind EnableHoYoShadePreviewChannel, Mode=TwoWay}"
-                                          OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
-                                          OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
-                            <Button Margin="0,-4,0,0"
-                                    Padding="4"
-                                    VerticalAlignment="Center"
-                                    Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
-                                <FontIcon FontSize="14"
-                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                          Glyph="&#xE9CE;" />
-                                <Button.Flyout>
-                                    <Flyout>
-                                        <TextBlock MaxWidth="380"
-                                                   Text="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannelTip}"
-                                                   TextWrapping="Wrap" />
-                                    </Flyout>
-                                </Button.Flyout>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
+                    <!-- 预览体验计划 -->
+                    <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                        <ToggleSwitch IsOn="{x:Bind EnableHoYoShadePreviewChannel, Mode=TwoWay}"
+                                      OffContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}"
+                                      OnContent="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
+                        <Button Margin="0,-4,0,0"
+                                Padding="4"
+                                VerticalAlignment="Center"
+                                Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
+                            <FontIcon FontSize="14"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      Glyph="&#xE9CE;" />
+                            <Button.Flyout>
+                                <Flyout>
+                                    <TextBlock MaxWidth="380"
+                                               Text="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannelTip}"
+                                               TextWrapping="Wrap" />
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 
@@ -347,16 +335,42 @@
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        Text="{x:Bind HoYoShadeUpdateInfo, Mode=OneWay}"
                                        Visibility="{x:Bind HoYoShadeUpdateInfo, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
-                            <Button Height="36"
-                                    Padding="12,0"
-                                    Command="{x:Bind CheckHoYoShadeUpdateCommand}"
-                                    CornerRadius="6"
-                                    Style="{ThemeResource AccentButtonStyle}">
+                            <SplitButton x:Name="HoYoShadeSplitButton"
+                                         Height="36"
+                                         Padding="12,0"
+                                         Command="{x:Bind CheckHoYoShadeUpdateCommand}"
+                                         CornerRadius="6">
+                                <SplitButton.Resources>
+                                    <StaticResource x:Key="SplitButtonBackground" ResourceKey="AccentFillColorDefaultBrush" />
+                                    <StaticResource x:Key="SplitButtonBackgroundPointerOver" ResourceKey="AccentFillColorSecondaryBrush" />
+                                    <StaticResource x:Key="SplitButtonBackgroundPressed" ResourceKey="AccentFillColorTertiaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForeground" ResourceKey="TextOnAccentFillColorPrimaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundPointerOver" ResourceKey="TextOnAccentFillColorPrimaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundPressed" ResourceKey="TextOnAccentFillColorSecondaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundSecondary" ResourceKey="TextOnAccentFillColorPrimaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundSecondaryPointerOver" ResourceKey="TextOnAccentFillColorPrimaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundSecondaryPressed" ResourceKey="TextOnAccentFillColorSecondaryBrush" />
+                                    <StaticResource x:Key="SplitButtonBorderBrush" ResourceKey="AccentControlElevationBorderBrush" />
+                                    <StaticResource x:Key="SplitButtonBorderBrushPointerOver" ResourceKey="AccentControlElevationBorderBrush" />
+                                    <StaticResource x:Key="SplitButtonBorderBrushPressed" ResourceKey="AccentControlElevationBorderBrush" />
+                                    <StaticResource x:Key="SplitButtonBorderBrushDivider" ResourceKey="CircleElevationBorderBrush" />
+                                </SplitButton.Resources>
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon FontSize="14" Glyph="&#xE752;" />
                                     <TextBlock Text="{x:Bind lang:Lang.SettingPage_CheckForUpdate}" />
                                 </StackPanel>
-                            </Button>
+                                <SplitButton.Flyout>
+                                    <Flyout x:Name="HoYoShadeFlyout"
+                                            Placement="BottomEdgeAlignedRight"
+                                            Opening="FrameworkFlyout_Opening"
+                                            Opened="FrameworkFlyout_Opened"
+                                            Closed="FrameworkFlyout_Closed">
+                                        <ToggleSwitch IsOn="{x:Bind AutoCheckHoYoShadeUpdateOnStartup, Mode=TwoWay}"
+                                                      OffContent="{x:Bind AutoCheckUpdatesText, Mode=OneWay}"
+                                                      OnContent="{x:Bind AutoCheckUpdatesText, Mode=OneWay}" />
+                                    </Flyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
                         </StackPanel>
                     </Grid>
 
@@ -614,16 +628,42 @@
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        Text="{x:Bind OpenHoYoShadeUpdateInfo, Mode=OneWay}"
                                        Visibility="{x:Bind OpenHoYoShadeUpdateInfo, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}" />
-                            <Button Height="36"
-                                    Padding="12,0"
-                                    Command="{x:Bind CheckOpenHoYoShadeUpdateCommand}"
-                                    CornerRadius="6"
-                                    Style="{ThemeResource AccentButtonStyle}">
+                            <SplitButton x:Name="OpenHoYoShadeSplitButton"
+                                         Height="36"
+                                         Padding="12,0"
+                                         Command="{x:Bind CheckOpenHoYoShadeUpdateCommand}"
+                                         CornerRadius="6">
+                                <SplitButton.Resources>
+                                    <StaticResource x:Key="SplitButtonBackground" ResourceKey="AccentFillColorDefaultBrush" />
+                                    <StaticResource x:Key="SplitButtonBackgroundPointerOver" ResourceKey="AccentFillColorSecondaryBrush" />
+                                    <StaticResource x:Key="SplitButtonBackgroundPressed" ResourceKey="AccentFillColorTertiaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForeground" ResourceKey="TextOnAccentFillColorPrimaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundPointerOver" ResourceKey="TextOnAccentFillColorPrimaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundPressed" ResourceKey="TextOnAccentFillColorSecondaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundSecondary" ResourceKey="TextOnAccentFillColorPrimaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundSecondaryPointerOver" ResourceKey="TextOnAccentFillColorPrimaryBrush" />
+                                    <StaticResource x:Key="SplitButtonForegroundSecondaryPressed" ResourceKey="TextOnAccentFillColorSecondaryBrush" />
+                                    <StaticResource x:Key="SplitButtonBorderBrush" ResourceKey="AccentControlElevationBorderBrush" />
+                                    <StaticResource x:Key="SplitButtonBorderBrushPointerOver" ResourceKey="AccentControlElevationBorderBrush" />
+                                    <StaticResource x:Key="SplitButtonBorderBrushPressed" ResourceKey="AccentControlElevationBorderBrush" />
+                                    <StaticResource x:Key="SplitButtonBorderBrushDivider" ResourceKey="CircleElevationBorderBrush" />
+                                </SplitButton.Resources>
                                 <StackPanel Orientation="Horizontal" Spacing="6">
                                     <FontIcon FontSize="14" Glyph="&#xE752;" />
                                     <TextBlock Text="{x:Bind lang:Lang.SettingPage_CheckForUpdate}" />
                                 </StackPanel>
-                            </Button>
+                                <SplitButton.Flyout>
+                                    <Flyout x:Name="OpenHoYoShadeFlyout"
+                                            Placement="BottomEdgeAlignedRight"
+                                            Opening="FrameworkFlyout_Opening"
+                                            Opened="FrameworkFlyout_Opened"
+                                            Closed="FrameworkFlyout_Closed">
+                                        <ToggleSwitch IsOn="{x:Bind AutoCheckOpenHoYoShadeUpdateOnStartup, Mode=TwoWay}"
+                                                      OffContent="{x:Bind AutoCheckUpdatesText, Mode=OneWay}"
+                                                      OnContent="{x:Bind AutoCheckUpdatesText, Mode=OneWay}" />
+                                    </Flyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
                         </StackPanel>
                     </Grid>
 
