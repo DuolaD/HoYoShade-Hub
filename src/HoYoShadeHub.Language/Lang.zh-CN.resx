@@ -1945,4 +1945,13 @@
   <data name="QuickSetupView_Completed" xml:space="preserve">
     <value>已完成</value>
   </data>
+  <data name="GameSelector_MoveLeft" xml:space="preserve">
+    <value>向左移动</value>
+  </data>
+  <data name="GameSelector_MoveRight" xml:space="preserve">
+    <value>向右移动</value>
+  </data>
+  <data name="GameSelector_Unpin" xml:space="preserve">
+    <value>取消固定</value>
+  </data>
 </root>
