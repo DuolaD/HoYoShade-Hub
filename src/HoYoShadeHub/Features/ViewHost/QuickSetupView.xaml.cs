@@ -432,12 +432,29 @@ public sealed partial class QuickSetupView : UserControl
         bool success = false;
         Exception? lastException = null;
 
+        int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
+
         foreach (var currentServerIndex in serverSequence)
         {
             if (cancellationToken.IsCancellationRequested) break;
 
             long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
-            if (ping < 0) continue;
+            if (ping < 0)
+            {
+                _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
+                continue;
+            }
+
+            string baseStatus = string.Format(Lang.QuickSetupView_StatusDownloadingFramework, release.TagName);
+            if (serverIndex == -1 || currentServerIndex != serverIndex)
+            {
+                string serverName = GetServerName(currentServerIndex);
+                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
+            }
+            else
+            {
+                StatusMessage = baseStatus;
+            }
 
             string[] proxies = currentServerIndex == 0 ? new string[] { null! } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
 
@@ -460,6 +477,9 @@ public sealed partial class QuickSetupView : UserControl
                         TargetPath = targetPath,
                         PresetsHandling = 0, // Overwrite
                         VersionTag = release.TagName,
+                        EnableEch = AppConfig.EnableEch,
+                        DohUrl = AppConfig.EnableEch ? DohService.GetCurrentDohUrl() : "",
+                        TotalBytes = asset.Size,
                     };
 
                     using var call = client.InstallHoYoShade(request, cancellationToken: cancellationToken);
@@ -489,7 +509,20 @@ public sealed partial class QuickSetupView : UserControl
                             }
                         }
 
-                        if (progress.State == 2) // Extracting
+                        if (progress.State == 1) // Downloading
+                        {
+                            string dlStatus = string.Format(Lang.QuickSetupView_StatusDownloadingFramework, release.TagName);
+                            if (serverIndex == -1 || currentServerIndex != serverIndex)
+                            {
+                                string serverName = GetServerName(currentServerIndex);
+                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, dlStatus, serverName);
+                            }
+                            else
+                            {
+                                StatusMessage = dlStatus;
+                            }
+                        }
+                        else if (progress.State == 2) // Extracting
                         {
                             StatusMessage = Lang.QuickSetupView_StatusExtractingFramework;
                             OverallProgress = 48;
@@ -535,12 +568,28 @@ public sealed partial class QuickSetupView : UserControl
         bool success = false;
         Exception? lastException = null;
 
+        int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
+
         foreach (var currentServerIndex in serverSequence)
         {
             if (cancellationToken.IsCancellationRequested) break;
 
             long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
-            if (ping < 0) continue;
+            if (ping < 0)
+            {
+                _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
+                continue;
+            }
+
+            if (serverIndex == -1 || currentServerIndex != serverIndex)
+            {
+                string serverName = GetServerName(currentServerIndex);
+                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, Lang.QuickSetupView_StatusDownloadingShaders, serverName);
+            }
+            else
+            {
+                StatusMessage = Lang.QuickSetupView_StatusDownloadingShaders;
+            }
 
             string[] proxies = currentServerIndex == 0 ? new string[] { "" } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
 
@@ -570,7 +619,17 @@ public sealed partial class QuickSetupView : UserControl
                         if (progress.State == 1) // Downloading
                         {
                             string typeLabel = progress.CurrentFileType == 0 ? Lang.QuickSetupView_TypeShaders : Lang.QuickSetupView_TypeAddons;
-                            StatusMessage = string.Format(Lang.QuickSetupView_StatusDownloadingItem, typeLabel, progress.CurrentFile ?? "");
+                            string baseStatus = string.Format(Lang.QuickSetupView_StatusDownloadingItem, typeLabel, progress.CurrentFile ?? "");
+
+                            if (serverIndex == -1 || currentServerIndex != serverIndex)
+                            {
+                                string serverName = GetServerName(currentServerIndex);
+                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
+                            }
+                            else
+                            {
+                                StatusMessage = baseStatus;
+                            }
 
                             double currentPct = progress.TotalFiles > 0 ? ((double)progress.DownloadedFiles / progress.TotalFiles * 100) : 0;
                             OverallProgress = 50 + (currentPct * 0.5); // 50% ~ 100% of overall
@@ -674,9 +733,18 @@ public sealed partial class QuickSetupView : UserControl
         }
     }
 
+    private static string GetServerName(int serverIndex) => serverIndex switch
+    {
+        0 => "GitHub",
+        1 => "Cloudflare",
+        2 => Lang.HoYoShadeDownloadView_Server_TencentCloud,
+        3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
+        _ => "Unknown"
+    };
+
     private static string FormatSpeed(long bytesPerSec)
     {
-        if (bytesPerSec <= 0) return "";
+        if (bytesPerSec <= 0) return "0 B/s";
         double kb = bytesPerSec / 1024.0;
         if (kb < 1024) return $"{kb:F1} KB/s";
         double mb = kb / 1024.0;
