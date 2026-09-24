@@ -63,7 +63,25 @@ public sealed partial class QuickSetupView : UserControl
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
         WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
+        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
     }
+
+    [ObservableProperty]
+    private bool isHoYoShadeInstalled;
+
+    [ObservableProperty]
+    private bool isOpenHoYoShadeInstalled;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HoYoShadeVersionDisplay))]
+    private string? installedHoYoShadeVersion;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(OpenHoYoShadeVersionDisplay))]
+    private string? installedOpenHoYoShadeVersion;
+
+    public string HoYoShadeVersionDisplay => string.IsNullOrEmpty(InstalledHoYoShadeVersion) ? "" : " " + InstalledHoYoShadeVersion;
+    public string OpenHoYoShadeVersionDisplay => string.IsNullOrEmpty(InstalledOpenHoYoShadeVersion) ? "" : " " + InstalledOpenHoYoShadeVersion;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanStartInstall))]
@@ -94,11 +112,13 @@ public sealed partial class QuickSetupView : UserControl
     [ObservableProperty]
     private string speedAndProgress = "";
 
-    private void Grid_Loaded(object sender, RoutedEventArgs e)
+    private async void Grid_Loaded(object sender, RoutedEventArgs e)
     {
         HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
         InitializeLanguageSelector();
         UpdateDownloadServers();
+        await LoadInstalledVersionsAsync();
+        CheckInstallationStatus();
     }
 
     private void OnLanguageChanged()
@@ -295,6 +315,9 @@ public sealed partial class QuickSetupView : UserControl
             SpeedAndProgress = "100%";
             IsCompleted = true;
             IsDownloading = false;
+
+            await LoadInstalledVersionsAsync();
+            CheckInstallationStatus();
 
             // Notify whole application about installation state update
             WeakReferenceMessenger.Default.Send(new HoYoShadeInstallationChangedMessage());
@@ -677,5 +700,70 @@ public sealed partial class QuickSetupView : UserControl
             normalizedTag = normalizedTag[1..];
         }
         return HiddenIncompatibleVersionTags.Contains(normalizedTag);
+    }
+
+    /// <summary>
+    /// Handle installation changed message from other views
+    /// </summary>
+    private async void OnInstallationChanged()
+    {
+        try
+        {
+            await LoadInstalledVersionsAsync();
+            CheckInstallationStatus();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"OnInstallationChanged error: {ex}");
+        }
+    }
+
+    private void CheckInstallationStatus()
+    {
+        try
+        {
+            var hoYoShadeFolder = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+            var openHoYoShadeFolder = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+
+            // Installation detection: folder exists and has any content
+            bool HasContent(string path)
+            {
+                try
+                {
+                    return Directory.Exists(path) && Directory.EnumerateFileSystemEntries(path).Any();
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            IsHoYoShadeInstalled = HasContent(hoYoShadeFolder);
+            IsOpenHoYoShadeInstalled = HasContent(openHoYoShadeFolder);
+
+            Debug.WriteLine($"QuickSetupView: Installation status check: HoYoShade={IsHoYoShadeInstalled}, OpenHoYoShade={IsOpenHoYoShadeInstalled}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"QuickSetupView: CheckInstallationStatus error: {ex}");
+        }
+    }
+
+    private async Task LoadInstalledVersionsAsync()
+    {
+        try
+        {
+            var manifest = await _versionService.LoadManifestAsync();
+            InstalledHoYoShadeVersion = manifest.HoYoShade?.Version;
+            InstalledOpenHoYoShadeVersion = manifest.OpenHoYoShade?.Version;
+
+            Debug.WriteLine($"QuickSetupView: Loaded installed versions: HoYoShade={InstalledHoYoShadeVersion}, OpenHoYoShade={InstalledOpenHoYoShadeVersion}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"QuickSetupView: Failed to load installed versions: {ex.Message}");
+            InstalledHoYoShadeVersion = null;
+            InstalledOpenHoYoShadeVersion = null;
+        }
     }
 }

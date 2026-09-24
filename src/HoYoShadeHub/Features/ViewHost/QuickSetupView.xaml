@@ -10,12 +10,61 @@
 
     <Grid Loaded="Grid_Loaded">
 
-        <!-- Top Right Controls (Language & Network Settings) -->
+        <!-- Installation Status Panel (Top Right) -->
         <StackPanel Canvas.ZIndex="10"
                     Margin="0,48,48,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Spacing="8">
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,8">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_InstallStatus}"
+                               FontSize="12"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    
+                    <!-- HoYoShade Status -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Grid.Column="0" 
+                                  FontSize="14" 
+                                  Margin="0,0,8,0"
+                                  Glyph="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallGlyphConverter}}" 
+                                  Foreground="{x:Bind IsHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallColorConverter}}" />
+                        <TextBlock Grid.Column="1" FontSize="13">
+                            <Run Text="HoYoShade"/>
+                            <Run Text="{x:Bind HoYoShadeVersionDisplay, Mode=OneWay}" 
+                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        </TextBlock>
+                    </Grid>
+                    
+                    <!-- OpenHoYoShade Status -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Grid.Column="0" 
+                                  FontSize="14" 
+                                  Margin="0,0,8,0"
+                                  Glyph="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallGlyphConverter}}" 
+                                  Foreground="{x:Bind IsOpenHoYoShadeInstalled, Mode=OneWay, Converter={StaticResource BoolToInstallColorConverter}}" />
+                        <TextBlock Grid.Column="1" FontSize="13">
+                            <Run Text="OpenHoYoShade"/>
+                            <Run Text="{x:Bind OpenHoYoShadeVersionDisplay, Mode=OneWay}" 
+                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Language Selector moved below installation status -->
             <ComboBox Name="ComboBox_Language"
                       MinWidth="200"
                       HorizontalAlignment="Stretch"
