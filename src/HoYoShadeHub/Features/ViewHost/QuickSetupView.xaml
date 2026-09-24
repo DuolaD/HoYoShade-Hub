@@ -247,11 +247,21 @@
                     </Grid>
 
                     <!-- Progress and Status -->
-                    <StackPanel Spacing="4">
+                    <StackPanel Spacing="6">
+                        <!-- Top status text (Task / Item info) -->
+                        <TextBlock Text="{x:Bind StatusMessage, Mode=OneWay}"
+                                   FontSize="12"
+                                   TextTrimming="CharacterEllipsis"
+                                   ToolTipService.ToolTip="{x:Bind StatusMessage, Mode=OneWay}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Visibility="{x:Bind StatusMessage, Mode=OneWay, Converter={StaticResource WhiteSpaceStringToVisibilityConverter}}" />
+
                         <ProgressBar Value="{x:Bind OverallProgress, Mode=OneWay}" 
                                      Maximum="100" 
                                      Height="4"
                                      CornerRadius="2" />
+
+                        <!-- Bottom details (Server on left, Speed & Progress on right) -->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -259,9 +269,11 @@
                             </Grid.ColumnDefinitions>
                             
                             <TextBlock Grid.Column="0"
-                                       Text="{x:Bind StatusMessage, Mode=OneWay}"
+                                       Text="{x:Bind ServerStatusMessage, Mode=OneWay}"
                                        FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                       TextTrimming="CharacterEllipsis"
+                                       Margin="0,0,16,0"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                             
                             <TextBlock Grid.Column="1"
                                        Text="{x:Bind SpeedAndProgress, Mode=OneWay}"

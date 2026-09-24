@@ -287,6 +287,9 @@ public sealed partial class ReShadeDownloadView : UserControl
     private string statusMessage;
 
     [ObservableProperty]
+    private string serverStatusMessage = "";
+
+    [ObservableProperty]
     private string speedAndProgress;
 
     private bool _languageInitialized;
@@ -608,6 +611,7 @@ public sealed partial class ReShadeDownloadView : UserControl
             IsDownloading = true;
             DownloadProgress = 0;
             StatusMessage = Lang.ReShadeDownloadView_StatusDownloading;
+            ServerStatusMessage = "";
             SpeedAndProgress = "";
 
             // Track which target we're installing to
@@ -661,6 +665,14 @@ public sealed partial class ReShadeDownloadView : UserControl
             {
                 if (_cancellationTokenSource.IsCancellationRequested) break;
 
+                string serverName = currentServerIndex switch {
+                    0 => "GitHub",
+                    1 => "Cloudflare",
+                    2 => Lang.HoYoShadeDownloadView_Server_TencentCloud,
+                    3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
+                    _ => "Unknown"
+                };
+
                 // Ping check for Auto Select
                 if (serverIndex == -1)
                 {
@@ -670,16 +682,10 @@ public sealed partial class ReShadeDownloadView : UserControl
                         _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
                         continue;
                     }
-
-                    string serverName = currentServerIndex switch {
-                        0 => "GitHub",
-                        1 => "Cloudflare",
-                        2 => Lang.HoYoShadeDownloadView_Server_TencentCloud,
-                        3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
-                        _ => "Unknown"
-                    };
-                    StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, Lang.ReShadeDownloadView_StatusDownloading, serverName);
                 }
+
+                ServerStatusMessage = $"{Lang.HoYoShadeDownloadView_DownloadServer}: {serverName}";
+                StatusMessage = Lang.ReShadeDownloadView_StatusDownloading;
 
                 string[] proxies = currentServerIndex == 0 ? new string[] { "" } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
 
@@ -728,16 +734,8 @@ public sealed partial class ReShadeDownloadView : UserControl
                                     ? Lang.ReShadeDownloadView_TypeShaders
                                     : Lang.ReShadeDownloadView_TypeAddons;
 
-                                if (serverIndex == -1)
-                                {
-                                    string serverName = currentServerIndex switch { 0 => "GitHub", 1 => "Cloudflare", 2 => Lang.HoYoShadeDownloadView_Server_TencentCloud, 3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud, _ => "Unknown" };
-                                    string baseStatus = $"{Lang.ReShadeDownloadView_StatusDownloading}: [{typeLabel}] {progress.CurrentFile ?? ""}";
-                                    StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
-                                }
-                                else
-                                {
-                                    StatusMessage = $"{Lang.ReShadeDownloadView_StatusDownloading}: [{typeLabel}] {progress.CurrentFile ?? ""}";
-                                }
+                                StatusMessage = $"{Lang.ReShadeDownloadView_StatusDownloading}: [{typeLabel}] {progress.CurrentFile ?? ""}";
+                                ServerStatusMessage = $"{Lang.HoYoShadeDownloadView_DownloadServer}: {serverName}";
 
                                 // Format progress: [speed] - [percentage] - [count]
                                 double currentProgress = progress.TotalFiles > 0 ? ((double)progress.DownloadedFiles / progress.TotalFiles * 100) : 0;
@@ -749,6 +747,7 @@ public sealed partial class ReShadeDownloadView : UserControl
                             else if (progress.State == 3) // Finished
                             {
                                 StatusMessage = Lang.ReShadeDownloadView_StatusFinished;
+                                ServerStatusMessage = "";
                                 DownloadProgress = 100;
 
                                 if (progress.TotalFiles > 0)
@@ -848,6 +847,7 @@ public sealed partial class ReShadeDownloadView : UserControl
             if (!success && !_cancellationTokenSource.IsCancellationRequested)
             {
                 StatusMessage = string.Format(Lang.ReShadeDownloadView_StatusError, lastErrorMessage ?? lastException?.Message ?? "All servers failed");
+                ServerStatusMessage = "";
             }
 
             IsDownloading = false;
@@ -855,12 +855,14 @@ public sealed partial class ReShadeDownloadView : UserControl
         catch (OperationCanceledException)
         {
             StatusMessage = Lang.ReShadeDownloadView_StatusReady;
+            ServerStatusMessage = "";
             IsDownloading = false;
             _logger.LogInformation("ReShade pack download canceled by user");
         }
         catch (Exception ex)
         {
             StatusMessage = string.Format(Lang.ReShadeDownloadView_StatusError, ex.Message);
+            ServerStatusMessage = "";
             IsDownloading = false;
             _logger.LogError(ex, "ReShade pack download failed");
         }
@@ -895,6 +897,7 @@ public sealed partial class ReShadeDownloadView : UserControl
     {
         CheckInstallationStatus();
         StatusMessage = Lang.ReShadeDownloadView_StatusReady;
+        ServerStatusMessage = "";
         DownloadProgress = 0;
         SpeedAndProgress = "";
     }
@@ -915,6 +918,7 @@ public sealed partial class ReShadeDownloadView : UserControl
             IsDownloading = false;
             DownloadProgress = 0;
             StatusMessage = Lang.ReShadeDownloadView_StatusReady;
+            ServerStatusMessage = "";
             SpeedAndProgress = "";
         }
         catch (Exception ex)

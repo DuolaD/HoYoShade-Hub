@@ -110,6 +110,9 @@ public sealed partial class QuickSetupView : UserControl
     private string statusMessage = "";
 
     [ObservableProperty]
+    private string serverStatusMessage = "";
+
+    [ObservableProperty]
     private string speedAndProgress = "";
 
     private async void Grid_Loaded(object sender, RoutedEventArgs e)
@@ -266,6 +269,7 @@ public sealed partial class QuickSetupView : UserControl
             _cancellationTokenSource?.Cancel();
             IsDownloading = false;
             StatusMessage = Lang.QuickSetupView_StatusCancelled;
+            ServerStatusMessage = "";
             SpeedAndProgress = "";
         }
         catch (Exception ex)
@@ -286,6 +290,7 @@ public sealed partial class QuickSetupView : UserControl
             IsDownloading = true;
             OverallProgress = 0;
             StatusMessage = Lang.QuickSetupView_StatusPreparing;
+            ServerStatusMessage = "";
             SpeedAndProgress = "";
 
             // Step 1: Ensure RPC server is running
@@ -312,6 +317,7 @@ public sealed partial class QuickSetupView : UserControl
             // Completed
             OverallProgress = 100;
             StatusMessage = Lang.QuickSetupView_StatusFinished;
+            ServerStatusMessage = "";
             SpeedAndProgress = "100%";
             IsCompleted = true;
             IsDownloading = false;
@@ -326,6 +332,7 @@ public sealed partial class QuickSetupView : UserControl
         {
             IsDownloading = false;
             StatusMessage = Lang.QuickSetupView_StatusCancelled;
+            ServerStatusMessage = "";
             SpeedAndProgress = "";
         }
         catch (Exception ex)
@@ -333,6 +340,7 @@ public sealed partial class QuickSetupView : UserControl
             _logger.LogError(ex, "QuickSetup failed");
             IsDownloading = false;
             StatusMessage = $"{ex.Message}";
+            ServerStatusMessage = "";
             SpeedAndProgress = "";
         }
     }
@@ -445,16 +453,9 @@ public sealed partial class QuickSetupView : UserControl
                 continue;
             }
 
-            string baseStatus = string.Format(Lang.QuickSetupView_StatusDownloadingFramework, release.TagName);
-            if (serverIndex == -1 || currentServerIndex != serverIndex)
-            {
-                string serverName = GetServerName(currentServerIndex);
-                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
-            }
-            else
-            {
-                StatusMessage = baseStatus;
-            }
+            string serverName = GetServerName(currentServerIndex);
+            ServerStatusMessage = $"{Lang.HoYoShadeDownloadView_DownloadServer}: {serverName}";
+            StatusMessage = string.Format(Lang.QuickSetupView_StatusDownloadingFramework, release.TagName);
 
             string[] proxies = currentServerIndex == 0 ? new string[] { null! } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
 
@@ -511,26 +512,20 @@ public sealed partial class QuickSetupView : UserControl
 
                         if (progress.State == 1) // Downloading
                         {
-                            string dlStatus = string.Format(Lang.QuickSetupView_StatusDownloadingFramework, release.TagName);
-                            if (serverIndex == -1 || currentServerIndex != serverIndex)
-                            {
-                                string serverName = GetServerName(currentServerIndex);
-                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, dlStatus, serverName);
-                            }
-                            else
-                            {
-                                StatusMessage = dlStatus;
-                            }
+                            StatusMessage = string.Format(Lang.QuickSetupView_StatusDownloadingFramework, release.TagName);
+                            ServerStatusMessage = $"{Lang.HoYoShadeDownloadView_DownloadServer}: {serverName}";
                         }
                         else if (progress.State == 2) // Extracting
                         {
                             StatusMessage = Lang.QuickSetupView_StatusExtractingFramework;
+                            ServerStatusMessage = "";
                             OverallProgress = 48;
                         }
                         else if (progress.State == 3) // Finished
                         {
                             OverallProgress = 50;
                             StatusMessage = Lang.QuickSetupView_StatusBuildingIni;
+                            ServerStatusMessage = "";
                             await RunIniBuildAsync("HoYoShade", targetPath, cancellationToken);
                             await _versionService.UpdateHoYoShadeVersionAsync(release.TagName, "quick_setup", null);
                             success = true;
@@ -581,15 +576,9 @@ public sealed partial class QuickSetupView : UserControl
                 continue;
             }
 
-            if (serverIndex == -1 || currentServerIndex != serverIndex)
-            {
-                string serverName = GetServerName(currentServerIndex);
-                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, Lang.QuickSetupView_StatusDownloadingShaders, serverName);
-            }
-            else
-            {
-                StatusMessage = Lang.QuickSetupView_StatusDownloadingShaders;
-            }
+            string serverName = GetServerName(currentServerIndex);
+            ServerStatusMessage = $"{Lang.HoYoShadeDownloadView_DownloadServer}: {serverName}";
+            StatusMessage = Lang.QuickSetupView_StatusDownloadingShaders;
 
             string[] proxies = currentServerIndex == 0 ? new string[] { "" } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
 
@@ -619,17 +608,8 @@ public sealed partial class QuickSetupView : UserControl
                         if (progress.State == 1) // Downloading
                         {
                             string typeLabel = progress.CurrentFileType == 0 ? Lang.QuickSetupView_TypeShaders : Lang.QuickSetupView_TypeAddons;
-                            string baseStatus = string.Format(Lang.QuickSetupView_StatusDownloadingItem, typeLabel, progress.CurrentFile ?? "");
-
-                            if (serverIndex == -1 || currentServerIndex != serverIndex)
-                            {
-                                string serverName = GetServerName(currentServerIndex);
-                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
-                            }
-                            else
-                            {
-                                StatusMessage = baseStatus;
-                            }
+                            StatusMessage = string.Format(Lang.QuickSetupView_StatusDownloadingItem, typeLabel, progress.CurrentFile ?? "");
+                            ServerStatusMessage = $"{Lang.HoYoShadeDownloadView_DownloadServer}: {serverName}";
 
                             double currentPct = progress.TotalFiles > 0 ? ((double)progress.DownloadedFiles / progress.TotalFiles * 100) : 0;
                             OverallProgress = 50 + (currentPct * 0.5); // 50% ~ 100% of overall
@@ -639,6 +619,7 @@ public sealed partial class QuickSetupView : UserControl
                         }
                         else if (progress.State == 3) // Finished
                         {
+                            ServerStatusMessage = "";
                             success = true;
                             break;
                         }

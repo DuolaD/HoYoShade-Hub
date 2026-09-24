@@ -222,6 +222,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private string statusMessage;
 
     [ObservableProperty]
+    private string serverStatusMessage = "";
+
+    [ObservableProperty]
     private string speedAndProgress;
 
     [ObservableProperty]
@@ -603,6 +606,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             IsControlButtonsVisible = true;
             PauseResumeButtonText = Lang.HoYoShadeDownloadView_Pause;
             OnPropertyChanged(nameof(ShowPauseResumeButton));
+            ServerStatusMessage = "";
 
             // Download HoYoShade if selected and can install
             if (IsHoYoShadeSelected && (!IsHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledHoYoShadeVersion)))
@@ -620,6 +624,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
             // All downloads completed successfully
             StatusMessage = Lang.HoYoShadeDownloadView_StatusFinished;
+            ServerStatusMessage = "";
             
             // Reload installed versions after successful installation
             await LoadInstalledVersionsAsync();
@@ -635,6 +640,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         catch (OperationCanceledException)
         {
             IsDownloading = false;
+            ServerStatusMessage = "";
             if (_isPaused)
             {
                 StatusMessage = Lang.DownloadGamePage_Paused;
@@ -659,6 +665,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
         {
             IsDownloading = false;
+            ServerStatusMessage = "";
             if (_isPaused)
             {
                 StatusMessage = Lang.DownloadGamePage_Paused;
@@ -683,6 +690,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         catch (Exception ex)
         {
             StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusError, ex.Message);
+            ServerStatusMessage = "";
             IsDownloading = false;
             IsControlButtonsVisible = false;
         }
@@ -787,17 +795,17 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                     _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
                     continue;
                 }
-
-                string serverName = currentServerIndex switch {
-                    0 => "GitHub",
-                    1 => "Cloudflare",
-                    2 => Lang.HoYoShadeDownloadView_Server_TencentCloud,
-                    3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
-                    _ => "Unknown"
-                };
-                string baseStatus = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
-                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
             }
+
+            string serverName = currentServerIndex switch {
+                0 => "GitHub",
+                1 => "Cloudflare",
+                2 => Lang.HoYoShadeDownloadView_Server_TencentCloud,
+                3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
+                _ => "Unknown"
+            };
+            ServerStatusMessage = $"{Lang.HoYoShadeDownloadView_DownloadServer}: {serverName}";
+            StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
 
             string[] proxies = currentServerIndex == 0 ? new string[] { null! } : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
 
@@ -858,20 +866,17 @@ public sealed partial class HoYoShadeDownloadView : UserControl
                         
                         if (progress.State == 1)
                         {
-                            if (serverIndex == -1)
-                            {
-                                string serverName = currentServerIndex switch { 0 => "GitHub", 1 => "Cloudflare", 2 => Lang.HoYoShadeDownloadView_Server_TencentCloud, 3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud, _ => "Unknown" };
-                                string baseStatus = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
-                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloadingFromServer, baseStatus, serverName);
-                            }
-                            else
-                            {
-                                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
-                            }
+                            StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusDownloading + " ({0})", keyword);
+                            ServerStatusMessage = $"{Lang.HoYoShadeDownloadView_DownloadServer}: {serverName}";
                         }
-                        else if (progress.State == 2) StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusExtracting + " ({0})", keyword);
+                        else if (progress.State == 2)
+                        {
+                            StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusExtracting + " ({0})", keyword);
+                            ServerStatusMessage = "";
+                        }
                         else if (progress.State == 3) 
                         {
+                            ServerStatusMessage = "";
                             // Download of this variant completed successfully
                             await RunIniBuildAsync(keyword, targetPath, _downloadCts.Token);
                             await SaveVersionInfoAfterInstallAsync(keyword, SelectedVersion.TagName, "github_release");
@@ -956,6 +961,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         if (!IsDownloading)
         {
             StatusMessage = Lang.HoYoShadeDownloadView_StatusReady;
+            ServerStatusMessage = "";
             DownloadProgress = 0;
             SpeedAndProgress = "";
             IsControlButtonsVisible = false;
