@@ -125,4 +125,14 @@ public partial class GameBizIcon : ObservableObject, IEquatable<GameBizIcon>
         return ReferenceEquals(this, other) || GameBiz == other?.GameBiz;
     }
 
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as GameBizIcon);
+    }
+
+    public override int GetHashCode()
+    {
+        return GameBiz.GetHashCode();
+    }
+
 }

@@ -271,6 +271,7 @@
                                   MinWidth="820"
                                   HorizontalContentAlignment="Stretch"
                                   Background="Transparent"
+                                  Expanding="Expander_InstalledGamesActualSize_Expanding"
                                   Tapped="Expander_InstalledGamesActualSize_Tapped">
                             <Expander.Resources>
                                 <StaticResource x:Key="ExpanderHeaderBackground" ResourceKey="ControlFillColorTransparentBrush" />
