@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
@@ -32,12 +33,48 @@ public class DiagnosticReport
 public class HardwareDiagnosticInfo
 {
     public string CpuName { get; set; } = string.Empty;
+    public int PhysicalCores { get; set; }
     public int LogicalCores { get; set; }
+    public string Motherboard { get; set; } = string.Empty;
+    public string MemorySummary { get; set; } = string.Empty;
     public string TotalPhysicalMemory { get; set; } = string.Empty;
     public string AvailablePhysicalMemory { get; set; } = string.Empty;
+    public List<MemoryStickInfo> MemorySticks { get; set; } = [];
     public List<GpuDiagnosticInfo> Gpus { get; set; } = [];
+    public List<DiskDiagnosticInfo> Disks { get; set; } = [];
+    public List<MonitorDiagnosticInfo> Monitors { get; set; } = [];
+    public List<string> AudioDevices { get; set; } = [];
+    public List<string> NetworkAdapters { get; set; } = [];
     public string PrimaryResolution { get; set; } = string.Empty;
     public string DisplayDpiScale { get; set; } = string.Empty;
+}
+
+public class MemoryStickInfo
+{
+    public string Capacity { get; set; } = string.Empty;
+    public string Speed { get; set; } = string.Empty;
+    public string MemoryType { get; set; } = string.Empty;
+    public string PartNumber { get; set; } = string.Empty;
+}
+
+public class DiskDiagnosticInfo
+{
+    public int Index { get; set; }
+    public string Model { get; set; } = string.Empty;
+    public string SizeString { get; set; } = string.Empty;
+    public ulong TotalSizeBytes { get; set; }
+    public string MediaType { get; set; } = string.Empty;
+    public string InterfaceType { get; set; } = string.Empty;
+    public List<string> DriveLetters { get; set; } = [];
+}
+
+public class MonitorDiagnosticInfo
+{
+    public string Name { get; set; } = string.Empty;
+    public string ModelCode { get; set; } = string.Empty;
+    public string Manufacturer { get; set; } = string.Empty;
+    public string DiagonalSize { get; set; } = string.Empty;
+    public string SerialNumber { get; set; } = string.Empty;
 }
 
 public class GpuDiagnosticInfo
@@ -131,9 +168,16 @@ public static class DiagnosticService
             try
             {
                 var (totalMem, availMem) = GetMemoryInfo();
+                var (cpuName, physCores, logCores) = GetCpuDetails();
+                string motherboard = GetMotherboardInfo();
+                var (memSummary, memSticks) = GetDetailedMemoryInfo(totalMem, availMem);
                 var gpus = GetGpuInfo();
+                var disks = GetDiskInfo();
+                var monitors = GetMonitorInfo();
+                var audio = GetAudioDevices();
+                var network = GetNetworkAdapters();
+
                 string resolution = $"{User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN)} x {User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN)}";
-                
                 string dpiScale = "100%";
                 if (windowHandle != 0)
                 {
@@ -143,11 +187,19 @@ public static class DiagnosticService
 
                 report.Hardware = new HardwareDiagnosticInfo
                 {
-                    CpuName = GetCpuName(),
-                    LogicalCores = Environment.ProcessorCount,
+                    CpuName = cpuName,
+                    PhysicalCores = physCores,
+                    LogicalCores = logCores,
+                    Motherboard = motherboard,
+                    MemorySummary = memSummary,
                     TotalPhysicalMemory = totalMem,
                     AvailablePhysicalMemory = availMem,
+                    MemorySticks = memSticks,
                     Gpus = gpus,
+                    Disks = disks,
+                    Monitors = monitors,
+                    AudioDevices = audio,
+                    NetworkAdapters = network,
                     PrimaryResolution = resolution,
                     DisplayDpiScale = dpiScale
                 };
@@ -242,29 +294,89 @@ public static class DiagnosticService
         sb.AppendLine("================================================================================");
         sb.AppendLine();
 
-        // 硬件与显示
-        sb.AppendLine("【1. 硬件与显示配置 (Hardware & Displays)】");
-        sb.AppendLine($"  - 处理器 (CPU): {report.Hardware.CpuName} ({report.Hardware.LogicalCores} 逻辑核心)");
-        sb.AppendLine($"  - 物理内存 (RAM): 总计 {report.Hardware.TotalPhysicalMemory} (可用: {report.Hardware.AvailablePhysicalMemory})");
+        // 1. 本机硬件配置单
+        sb.AppendLine("【1. 本机硬件配置单 (Hardware Configuration)】");
+        string coreText = report.Hardware.PhysicalCores > 0
+            ? $"{report.Hardware.PhysicalCores} Cores / {report.Hardware.LogicalCores} Threads"
+            : $"{report.Hardware.LogicalCores} Cores";
+        sb.AppendLine($"  - 处理器 (CPU): {report.Hardware.CpuName} ({coreText})");
+        sb.AppendLine($"  - 主板型号 (Motherboard): {(string.IsNullOrWhiteSpace(report.Hardware.Motherboard) ? "-" : report.Hardware.Motherboard)}");
+        sb.AppendLine($"  - 物理内存 (RAM): {report.Hardware.MemorySummary} [Total: {report.Hardware.TotalPhysicalMemory} / Avail: {report.Hardware.AvailablePhysicalMemory}]");
+
         if (report.Hardware.Gpus.Count > 0)
         {
+            sb.AppendLine("  - 显卡与驱动 (GPU):");
             for (int i = 0; i < report.Hardware.Gpus.Count; i++)
             {
                 var gpu = report.Hardware.Gpus[i];
-                var vramInfo = string.IsNullOrWhiteSpace(gpu.VramSize) ? "" : $", 显存: {gpu.VramSize}";
-                var verInfo = string.IsNullOrWhiteSpace(gpu.DriverVersion) ? "" : $", 驱动: {gpu.DriverVersion}";
-                var dateInfo = string.IsNullOrWhiteSpace(gpu.DriverDate) ? "" : $" ({gpu.DriverDate})";
-                sb.AppendLine($"  - 显卡 {i + 1} (GPU): {gpu.Name}{vramInfo}{verInfo}{dateInfo}");
+                var parts = new List<string>();
+                if (!string.IsNullOrWhiteSpace(gpu.VramSize)) parts.Add(gpu.VramSize);
+                if (!string.IsNullOrWhiteSpace(gpu.DriverVersion)) parts.Add($"Driver: {gpu.DriverVersion}");
+                if (!string.IsNullOrWhiteSpace(gpu.Provider)) parts.Add(gpu.Provider);
+                string extra = parts.Count > 0 ? $" ({string.Join(" / ", parts)})" : "";
+                sb.AppendLine($"      * {gpu.Name}{extra}");
             }
         }
         else
         {
-            sb.AppendLine("  - 显卡 (GPU): 未能从注册表获取显卡详细信息");
+            sb.AppendLine("  - 显卡与驱动 (GPU): -");
         }
-        sb.AppendLine($"  - 主屏幕分辨率: {report.Hardware.PrimaryResolution} (缩放: {report.Hardware.DisplayDpiScale})");
+
+        if (report.Hardware.Monitors.Count > 0)
+        {
+            sb.AppendLine("  - 显示器设备 (Monitors):");
+            foreach (var mon in report.Hardware.Monitors)
+            {
+                var parts = new List<string>();
+                if (!string.IsNullOrWhiteSpace(mon.Manufacturer) || !string.IsNullOrWhiteSpace(mon.ModelCode))
+                {
+                    parts.Add($"{mon.Manufacturer} {mon.ModelCode}".Trim());
+                }
+                string extraBracket = parts.Count > 0 ? $" [{string.Join(" ", parts)}]" : "";
+                string sizeStr = string.IsNullOrWhiteSpace(mon.DiagonalSize) ? "" : $" ({mon.DiagonalSize})";
+                sb.AppendLine($"      * {mon.Name}{extraBracket}{sizeStr}");
+            }
+            sb.AppendLine($"      * Primary: {report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})");
+        }
+        else
+        {
+            sb.AppendLine($"  - 屏幕分辨率 (Display): {report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})");
+        }
+
+        if (report.Hardware.Disks.Count > 0)
+        {
+            sb.AppendLine("  - 存储磁盘与对应盘符 (Disks & Drive Letters):");
+            foreach (var disk in report.Hardware.Disks)
+            {
+                string drives = disk.DriveLetters.Count > 0 ? string.Join(", ", disk.DriveLetters) : "-";
+                sb.AppendLine($"      * {disk.Model} ( {disk.SizeString} ) -> [ {drives} ]");
+            }
+        }
+        else
+        {
+            sb.AppendLine("  - 存储磁盘与对应盘符: -");
+        }
+
+        if (report.Hardware.AudioDevices.Count > 0)
+        {
+            sb.AppendLine("  - 声卡设备 (Audio):");
+            foreach (var audio in report.Hardware.AudioDevices)
+            {
+                sb.AppendLine($"      * {audio}");
+            }
+        }
+
+        if (report.Hardware.NetworkAdapters.Count > 0)
+        {
+            sb.AppendLine("  - 网卡设备 (Network):");
+            foreach (var net in report.Hardware.NetworkAdapters)
+            {
+                sb.AppendLine($"      * {net}");
+            }
+        }
         sb.AppendLine();
 
-        // 操作系统与运行环境
+        // 2. 操作系统与运行环境
         sb.AppendLine("【2. 操作系统与运行环境 (OS & Runtime)】");
         sb.AppendLine($"  - 操作系统: {report.System.OsName} {report.System.OsVersion} (Build {report.System.OsBuild})");
         sb.AppendLine($"  - 架构规格: 系统 {report.System.OsArchitecture} / 进程 {report.System.ProcessArchitecture}");
@@ -273,7 +385,7 @@ public static class DiagnosticService
         sb.AppendLine($"  - 系统开机运行时间: {report.System.SystemUptime}");
         sb.AppendLine();
 
-        // 启动器与框架状态
+        // 3. 启动器与组件状态
         sb.AppendLine("【3. 启动器与组件状态 (Launcher & Framework)】");
         sb.AppendLine($"  - 启动器版本: {report.Launcher.Version} (PID: {report.Launcher.ProcessId})");
         sb.AppendLine($"  - 运行权限: {(report.Launcher.IsAdmin ? "管理员权限 (Administrator)" : "普通用户权限 (Standard User)")}");
@@ -289,7 +401,7 @@ public static class DiagnosticService
         sb.AppendLine($"  - 缓存文件目录: {report.Launcher.CacheFolder}");
         sb.AppendLine();
 
-        // 游戏与注入状态
+        // 4. 游戏与注入状态
         sb.AppendLine("【4. 已安装游戏与注入配置 (Configured Games & Injections)】");
         if (report.Games.Count > 0)
         {
@@ -313,7 +425,7 @@ public static class DiagnosticService
         }
         sb.AppendLine();
 
-        // 最近日志
+        // 5. 最近日志
         sb.AppendLine("【5. 最近本地运行日志摘要 (Recent Launcher Logs)】");
         sb.AppendLine("--------------------------------------------------------------------------------");
         if (report.RecentLogSnippets.Count > 0)
@@ -456,6 +568,362 @@ public static class DiagnosticService
         return ("Unknown", "Unknown");
     }
 
+    private static (string name, int physicalCores, int logicalCores) GetCpuDetails()
+    {
+        string name = GetCpuName();
+        int physicalCores = 0;
+        int logicalCores = Environment.ProcessorCount;
+
+        try
+        {
+            using var searcher = new ManagementObjectSearcher("SELECT Name, NumberOfCores, NumberOfLogicalProcessors FROM Win32_Processor");
+            foreach (var obj in searcher.Get())
+            {
+                string? wmiName = obj["Name"]?.ToString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(wmiName))
+                {
+                    name = wmiName;
+                }
+                if (obj["NumberOfCores"] != null)
+                {
+                    physicalCores += Convert.ToInt32(obj["NumberOfCores"]);
+                }
+            }
+        }
+        catch { }
+
+        if (physicalCores == 0) physicalCores = logicalCores;
+        return (name, physicalCores, logicalCores);
+    }
+
+    private static string GetMotherboardInfo()
+    {
+        try
+        {
+            using var searcher = new ManagementObjectSearcher("SELECT Manufacturer, Product FROM Win32_BaseBoard");
+            foreach (var obj in searcher.Get())
+            {
+                string mfg = obj["Manufacturer"]?.ToString()?.Trim() ?? "";
+                string prod = obj["Product"]?.ToString()?.Trim() ?? "";
+                if (string.IsNullOrWhiteSpace(mfg)) return prod;
+                if (string.IsNullOrWhiteSpace(prod)) return mfg;
+                if (prod.Contains(mfg, StringComparison.OrdinalIgnoreCase)) return prod;
+                return $"{mfg} {prod}".Trim();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to query Win32_BaseBoard");
+        }
+        return "Unknown Motherboard";
+    }
+
+    private static (string summary, List<MemoryStickInfo> sticks) GetDetailedMemoryInfo(string totalPhys, string availPhys)
+    {
+        var sticks = new List<MemoryStickInfo>();
+        string memType = "DDR4";
+        uint maxSpeed = 0;
+        ulong totalCapacityBytes = 0;
+
+        try
+        {
+            using var searcher = new ManagementObjectSearcher("SELECT Capacity, Speed, ConfiguredClockSpeed, SMBIOSMemoryType, PartNumber FROM Win32_PhysicalMemory");
+            foreach (var obj in searcher.Get())
+            {
+                ulong cap = 0;
+                if (obj["Capacity"] != null)
+                {
+                    cap = Convert.ToUInt64(obj["Capacity"]);
+                    totalCapacityBytes += cap;
+                }
+
+                uint speed = 0;
+                if (obj["ConfiguredClockSpeed"] != null && Convert.ToUInt32(obj["ConfiguredClockSpeed"]) > 0)
+                {
+                    speed = Convert.ToUInt32(obj["ConfiguredClockSpeed"]);
+                }
+                else if (obj["Speed"] != null)
+                {
+                    speed = Convert.ToUInt32(obj["Speed"]);
+                }
+                if (speed > maxSpeed) maxSpeed = speed;
+
+                if (obj["SMBIOSMemoryType"] != null)
+                {
+                    uint typeNum = Convert.ToUInt32(obj["SMBIOSMemoryType"]);
+                    if (typeNum > 0)
+                    {
+                        memType = GetSmbiosMemoryType(typeNum);
+                    }
+                }
+
+                double stickGb = cap / (1024.0 * 1024.0 * 1024.0);
+                string capStr = stickGb >= 1.0 ? $"{Math.Round(stickGb):F0}GB" : $"{cap / (1024 * 1024)}MB";
+                string part = obj["PartNumber"]?.ToString()?.Trim() ?? "";
+
+                sticks.Add(new MemoryStickInfo
+                {
+                    Capacity = capStr,
+                    Speed = speed > 0 ? $"{speed}MHz" : "",
+                    MemoryType = memType,
+                    PartNumber = part
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to query Win32_PhysicalMemory");
+        }
+
+        if (sticks.Count > 0)
+        {
+            double totalGb = totalCapacityBytes / (1024.0 * 1024.0 * 1024.0);
+            string totalGbStr = $"{Math.Round(totalGb):F0}GB";
+            string speedStr = maxSpeed > 0 ? $" {maxSpeed}MHz" : "";
+            string breakdown = string.Join(" + ", sticks.Select(s => s.Capacity));
+            string summary = $"{totalGbStr} {memType}{speedStr} ( {breakdown} )";
+            return (summary, sticks);
+        }
+
+        return ($"{totalPhys} (Available: {availPhys})", sticks);
+    }
+
+    private static string GetSmbiosMemoryType(uint type)
+    {
+        return type switch
+        {
+            20 => "DDR",
+            21 => "DDR2",
+            22 => "DDR2 FB-DIMM",
+            24 => "DDR3",
+            26 => "DDR4",
+            27 => "LPDDR",
+            28 => "LPDDR2",
+            29 => "LPDDR3",
+            30 => "DDR4",
+            31 => "LPDDR4",
+            32 => "HBM",
+            33 => "HBM2",
+            34 => "DDR5",
+            35 => "LPDDR5",
+            _ => "DDR"
+        };
+    }
+
+    private static List<DiskDiagnosticInfo> GetDiskInfo()
+    {
+        var list = new List<DiskDiagnosticInfo>();
+        try
+        {
+            // 1. Map Disk Index to Drive Letters via Win32_LogicalDiskToPartition
+            var diskDrives = new Dictionary<int, List<string>>();
+            try
+            {
+                using var assocSearcher = new ManagementObjectSearcher("SELECT Antecedent, Dependent FROM Win32_LogicalDiskToPartition");
+                foreach (var item in assocSearcher.Get())
+                {
+                    string? ant = item["Antecedent"]?.ToString();
+                    string? dep = item["Dependent"]?.ToString();
+                    if (string.IsNullOrEmpty(ant) || string.IsNullOrEmpty(dep)) continue;
+
+                    var antMatch = Regex.Match(ant, @"Disk\s*#(?<disk>\d+)", RegexOptions.IgnoreCase);
+                    var depMatch = Regex.Match(dep, @"DeviceID\s*=\s*""(?<drive>[A-Za-z]:)""", RegexOptions.IgnoreCase);
+
+                    if (antMatch.Success && depMatch.Success && int.TryParse(antMatch.Groups["disk"].Value, out int diskIdx))
+                    {
+                        string drive = depMatch.Groups["drive"].Value.ToUpperInvariant();
+                        if (!diskDrives.TryGetValue(diskIdx, out var drives))
+                        {
+                            drives = [];
+                            diskDrives[diskIdx] = drives;
+                        }
+                        if (!drives.Contains(drive))
+                        {
+                            drives.Add(drive);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to query Win32_LogicalDiskToPartition");
+            }
+
+            // 2. Query Win32_DiskDrive
+            using var diskSearcher = new ManagementObjectSearcher("SELECT Index, Model, Size, MediaType, InterfaceType FROM Win32_DiskDrive");
+            foreach (var obj in diskSearcher.Get())
+            {
+                int index = obj["Index"] != null ? Convert.ToInt32(obj["Index"]) : -1;
+                string model = obj["Model"]?.ToString()?.Trim() ?? "Unknown Disk";
+                ulong sizeBytes = obj["Size"] != null ? Convert.ToUInt64(obj["Size"]) : 0;
+                string mediaType = obj["MediaType"]?.ToString()?.Trim() ?? "";
+                string iface = obj["InterfaceType"]?.ToString()?.Trim() ?? "";
+
+                // TBToolbox uses decimal GB (Size / 1,000,000,000)
+                ulong decimalGb = (ulong)Math.Round(sizeBytes / 1_000_000_000.0);
+                string sizeStr = sizeBytes > 0 ? $"{decimalGb}GB" : "Unknown Size";
+
+                List<string> drives = [];
+                if (index >= 0 && diskDrives.TryGetValue(index, out var foundDrives))
+                {
+                    drives = foundDrives.OrderBy(d => d).ToList();
+                }
+
+                list.Add(new DiskDiagnosticInfo
+                {
+                    Index = index,
+                    Model = model,
+                    SizeString = sizeStr,
+                    TotalSizeBytes = sizeBytes,
+                    MediaType = mediaType,
+                    InterfaceType = iface,
+                    DriveLetters = drives
+                });
+            }
+
+            list = list.OrderBy(d => d.Index).ToList();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to query Win32_DiskDrive");
+        }
+
+        return list;
+    }
+
+    private static List<MonitorDiagnosticInfo> GetMonitorInfo()
+    {
+        var list = new List<MonitorDiagnosticInfo>();
+        try
+        {
+            // 1. Get sizes from WmiMonitorBasicDisplayParams
+            var monitorSizes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                using var paramSearcher = new ManagementObjectSearcher(@"root\wmi", "SELECT InstanceName, MaxHorizontalImageSize, MaxVerticalImageSize FROM WmiMonitorBasicDisplayParams");
+                foreach (var p in paramSearcher.Get())
+                {
+                    string? inst = p["InstanceName"]?.ToString()?.Trim();
+                    if (string.IsNullOrEmpty(inst)) continue;
+
+                    int w = p["MaxHorizontalImageSize"] != null ? Convert.ToInt32(p["MaxHorizontalImageSize"]) : 0;
+                    int h = p["MaxVerticalImageSize"] != null ? Convert.ToInt32(p["MaxVerticalImageSize"]) : 0;
+                    if (w > 0 && h > 0)
+                    {
+                        double diagInches = Math.Sqrt(w * w + h * h) / 2.54;
+                        string diagStr = diagInches % 1.0 < 0.1 || diagInches % 1.0 > 0.9 ? $"{Math.Round(diagInches):F0}\"" : $"{diagInches:F1}\"";
+                        monitorSizes[inst] = diagStr;
+                    }
+                }
+            }
+            catch { }
+
+            // 2. Get Monitor ID info
+            using var idSearcher = new ManagementObjectSearcher(@"root\wmi", "SELECT InstanceName, UserFriendlyName, ProductCodeID, ManufacturerName, SerialNumberID FROM WmiMonitorID");
+            foreach (var m in idSearcher.Get())
+            {
+                string inst = m["InstanceName"]?.ToString()?.Trim() ?? "";
+
+                string name = DecodeWmiUShortArray(m["UserFriendlyName"] as ushort[]);
+                string code = DecodeWmiUShortArray(m["ProductCodeID"] as ushort[]);
+                string mfg = DecodeWmiUShortArray(m["ManufacturerName"] as ushort[]);
+                string serial = DecodeWmiUShortArray(m["SerialNumberID"] as ushort[]);
+
+                string diagSize = "";
+                if (!string.IsNullOrEmpty(inst))
+                {
+                    foreach (var kvp in monitorSizes)
+                    {
+                        if (inst.StartsWith(kvp.Key, StringComparison.OrdinalIgnoreCase) || kvp.Key.StartsWith(inst, StringComparison.OrdinalIgnoreCase))
+                        {
+                            diagSize = kvp.Value;
+                            break;
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(name) || !string.IsNullOrWhiteSpace(code))
+                {
+                    list.Add(new MonitorDiagnosticInfo
+                    {
+                        Name = string.IsNullOrWhiteSpace(name) ? "Generic Monitor" : name,
+                        ModelCode = code,
+                        Manufacturer = mfg,
+                        DiagonalSize = diagSize,
+                        SerialNumber = serial
+                    });
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to query WmiMonitorID");
+        }
+
+        return list;
+    }
+
+    private static string DecodeWmiUShortArray(ushort[]? array)
+    {
+        if (array == null || array.Length == 0) return string.Empty;
+        var chars = array.Where(c => c != 0).Select(c => (char)c).ToArray();
+        return new string(chars).Trim();
+    }
+
+    private static List<string> GetAudioDevices()
+    {
+        var list = new List<string>();
+        try
+        {
+            using var searcher = new ManagementObjectSearcher("SELECT Name, Status FROM Win32_SoundDevice");
+            foreach (var obj in searcher.Get())
+            {
+                string? status = obj["Status"]?.ToString();
+                string? name = obj["Name"]?.ToString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(name) && (status == null || status.Equals("OK", StringComparison.OrdinalIgnoreCase)))
+                {
+                    if (!list.Contains(name, StringComparer.OrdinalIgnoreCase))
+                    {
+                        list.Add(name);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to query Win32_SoundDevice");
+        }
+        return list;
+    }
+
+    private static List<string> GetNetworkAdapters()
+    {
+        var list = new List<string>();
+        try
+        {
+            using var searcher = new ManagementObjectSearcher("SELECT Name, PhysicalAdapter FROM Win32_NetworkAdapter");
+            foreach (var obj in searcher.Get())
+            {
+                bool isPhysical = obj["PhysicalAdapter"] != null && Convert.ToBoolean(obj["PhysicalAdapter"]);
+                string? name = obj["Name"]?.ToString()?.Trim();
+                if (string.IsNullOrWhiteSpace(name)) continue;
+
+                if (isPhysical && !Regex.IsMatch(name, @"Virtual|WAN|Miniport|Bluetooth|Tunnel|TAP|Pcap|Pseudo", RegexOptions.IgnoreCase))
+                {
+                    if (!list.Contains(name, StringComparer.OrdinalIgnoreCase))
+                    {
+                        list.Add(name);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to query Win32_NetworkAdapter");
+        }
+        return list;
+    }
+
     private static List<GpuDiagnosticInfo> GetGpuInfo()
     {
         var list = new List<GpuDiagnosticInfo>();
@@ -492,12 +960,20 @@ public static class DiagnosticService
                         vramStr = gb >= 1.0 ? $"{gb:F1} GB" : $"{((uint)memInt / (1024.0 * 1024.0)):F0} MB";
                     }
 
+                    // Check for board vendor from MatchingDeviceId or subkey
+                    string matchingId = subKey.GetValue("MatchingDeviceId")?.ToString() ?? "";
+                    string boardVendor = GetVendorFromSubsystem(matchingId);
+                    if (string.IsNullOrEmpty(boardVendor))
+                    {
+                        boardVendor = provider;
+                    }
+
                     list.Add(new GpuDiagnosticInfo
                     {
                         Name = desc,
                         DriverVersion = version,
                         DriverDate = date,
-                        Provider = provider,
+                        Provider = boardVendor,
                         VramSize = vramStr
                     });
                 }
@@ -505,6 +981,39 @@ public static class DiagnosticService
         }
         catch { }
         return list;
+    }
+
+    private static string GetVendorFromSubsystem(string? deviceId)
+    {
+        if (string.IsNullOrEmpty(deviceId)) return string.Empty;
+        var match = Regex.Match(deviceId, @"SUBSYS_[0-9A-Fa-f]{4}(?<vendor>[0-9A-Fa-f]{4})", RegexOptions.IgnoreCase);
+        if (match.Success)
+        {
+            string subVendor = match.Groups["vendor"].Value.ToUpperInvariant();
+            return subVendor switch
+            {
+                "1043" => "ASUS",
+                "1462" => "MSI",
+                "1458" => "GIGABYTE",
+                "3842" => "EVGA",
+                "10DE" => "NVIDIA",
+                "8086" => "Intel",
+                "1002" => "AMD",
+                "1569" => "Palit / Colorful",
+                "1DA2" => "Sapphire",
+                "1EAE" => "Colorful",
+                "7377" => "Colorful",
+                "1849" => "ASRock",
+                "19DA" => "Zotac",
+                "1B4C" => "GALAX",
+                "1025" => "Acer",
+                "1028" => "Dell",
+                "103C" => "HP",
+                "17AA" => "Lenovo",
+                _ => string.Empty
+            };
+        }
+        return string.Empty;
     }
 
     private static string GetCpuName()

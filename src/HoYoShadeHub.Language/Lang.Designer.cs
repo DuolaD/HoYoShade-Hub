@@ -5844,5 +5844,59 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("DiagnosticTool_NoGamesFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Motherboard 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Motherboard {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Motherboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Memory Slots 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_MemorySticks {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_MemorySticks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Disks &amp; Volumes 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Disks {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Disks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Monitors 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Monitors {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Monitors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Audio Devices 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Audio {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Audio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Network Adapters 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Network {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Network", resourceCulture);
+            }
+        }
     }
 }

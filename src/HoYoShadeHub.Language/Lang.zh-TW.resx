@@ -2061,4 +2061,22 @@
   <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
     <value>尚未設定遊戲安裝路徑。</value>
   </data>
+  <data name="DiagnosticTool_Motherboard" xml:space="preserve">
+    <value>主機板型號</value>
+  </data>
+  <data name="DiagnosticTool_MemorySticks" xml:space="preserve">
+    <value>記憶體插槽</value>
+  </data>
+  <data name="DiagnosticTool_Disks" xml:space="preserve">
+    <value>磁碟與對應磁碟機代號</value>
+  </data>
+  <data name="DiagnosticTool_Monitors" xml:space="preserve">
+    <value>顯示器裝置</value>
+  </data>
+  <data name="DiagnosticTool_Audio" xml:space="preserve">
+    <value>音效裝置</value>
+  </data>
+  <data name="DiagnosticTool_Network" xml:space="preserve">
+    <value>網路卡裝置</value>
+  </data>
 </root>

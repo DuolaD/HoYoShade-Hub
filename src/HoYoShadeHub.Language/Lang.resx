@@ -2061,4 +2061,22 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
     <value>No game installation paths configured yet.</value>
   </data>
+  <data name="DiagnosticTool_Motherboard" xml:space="preserve">
+    <value>Motherboard</value>
+  </data>
+  <data name="DiagnosticTool_MemorySticks" xml:space="preserve">
+    <value>Memory Slots</value>
+  </data>
+  <data name="DiagnosticTool_Disks" xml:space="preserve">
+    <value>Disks &amp; Volumes</value>
+  </data>
+  <data name="DiagnosticTool_Monitors" xml:space="preserve">
+    <value>Monitors</value>
+  </data>
+  <data name="DiagnosticTool_Audio" xml:space="preserve">
+    <value>Audio Devices</value>
+  </data>
+  <data name="DiagnosticTool_Network" xml:space="preserve">
+    <value>Network Adapters</value>
+  </data>
 </root>

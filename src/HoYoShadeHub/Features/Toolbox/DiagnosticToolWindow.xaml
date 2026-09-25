@@ -130,12 +130,16 @@
                                        Text="{x:Bind lang:Lang.DiagnosticTool_SectionHardware}" />
                         </StackPanel>
 
-                        <Grid ColumnSpacing="24" RowSpacing="8">
+                        <Grid ColumnSpacing="24" RowSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -148,32 +152,71 @@
                             <TextBlock Grid.Row="0" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"
-                                       Text="{x:Bind CpuText}" />
+                                       Text="{x:Bind CpuText}"
+                                       TextWrapping="Wrap" />
 
                             <TextBlock Grid.Row="1" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.DiagnosticTool_Memory}" />
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Motherboard}" />
                             <TextBlock Grid.Row="1" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"
-                                       Text="{x:Bind MemoryText}" />
+                                       Text="{x:Bind MotherboardText}"
+                                       TextWrapping="Wrap" />
 
                             <TextBlock Grid.Row="2" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.DiagnosticTool_Gpu}" />
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Memory}" />
                             <TextBlock Grid.Row="2" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind MemoryText}"
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Grid.Row="3" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Gpu}" />
+                            <TextBlock Grid.Row="3" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"
                                        Text="{x:Bind GpuText}"
                                        TextWrapping="Wrap" />
 
-                            <TextBlock Grid.Row="3" Grid.Column="0"
+                            <TextBlock Grid.Row="4" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.DiagnosticTool_Display}" />
-                            <TextBlock Grid.Row="3" Grid.Column="1"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Monitors}" />
+                            <TextBlock Grid.Row="4" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"
-                                       Text="{x:Bind DisplayText}" />
+                                       Text="{x:Bind MonitorsText}"
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Grid.Row="5" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Disks}" />
+                            <TextBlock Grid.Row="5" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind DisksText}"
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Grid.Row="6" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Audio}" />
+                            <TextBlock Grid.Row="6" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind AudioText}"
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Grid.Row="7" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Network}" />
+                            <TextBlock Grid.Row="7" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkText}"
+                                       TextWrapping="Wrap" />
                         </Grid>
                     </StackPanel>
                 </Border>

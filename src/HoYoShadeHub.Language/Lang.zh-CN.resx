@@ -2050,4 +2050,22 @@
   <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
     <value>暂未配置游戏安装路径。</value>
   </data>
+  <data name="DiagnosticTool_Motherboard" xml:space="preserve">
+    <value>主板型号</value>
+  </data>
+  <data name="DiagnosticTool_MemorySticks" xml:space="preserve">
+    <value>内存槽位</value>
+  </data>
+  <data name="DiagnosticTool_Disks" xml:space="preserve">
+    <value>磁盘与对应盘符</value>
+  </data>
+  <data name="DiagnosticTool_Monitors" xml:space="preserve">
+    <value>显示器设备</value>
+  </data>
+  <data name="DiagnosticTool_Audio" xml:space="preserve">
+    <value>声卡设备</value>
+  </data>
+  <data name="DiagnosticTool_Network" xml:space="preserve">
+    <value>网卡设备</value>
+  </data>
 </root>

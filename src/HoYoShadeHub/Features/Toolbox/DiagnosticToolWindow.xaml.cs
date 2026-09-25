@@ -59,6 +59,41 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         set => SetProperty(ref _gpuText, value);
     }
 
+    private string _motherboardText = "-";
+    public string MotherboardText
+    {
+        get => _motherboardText;
+        set => SetProperty(ref _motherboardText, value);
+    }
+
+    private string _monitorsText = "-";
+    public string MonitorsText
+    {
+        get => _monitorsText;
+        set => SetProperty(ref _monitorsText, value);
+    }
+
+    private string _disksText = "-";
+    public string DisksText
+    {
+        get => _disksText;
+        set => SetProperty(ref _disksText, value);
+    }
+
+    private string _audioText = "-";
+    public string AudioText
+    {
+        get => _audioText;
+        set => SetProperty(ref _audioText, value);
+    }
+
+    private string _networkText = "-";
+    public string NetworkText
+    {
+        get => _networkText;
+        set => SetProperty(ref _networkText, value);
+    }
+
     private string _displayText = "-";
     public string DisplayText
     {
@@ -146,14 +181,14 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         AdaptTitleBarButtonColorToActuallTheme();
         SetIcon();
 
-        AppWindow.Resize(new Windows.Graphics.SizeInt32(880, 680));
+        AppWindow.Resize(new Windows.Graphics.SizeInt32(920, 720));
     }
 
     public void ShowWindow(Microsoft.UI.WindowId windowId)
     {
         try
         {
-            CenterInScreen(880, 680);
+            CenterInScreen(920, 720);
             Show();
             _ = LoadReportAsync();
         }
@@ -200,34 +235,84 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             var report = await DiagnosticService.CollectReportAsync(WindowHandle);
             _currentReport = report;
 
-            // Update UI card summaries
-            CpuText = $"{report.Hardware.CpuName} ({report.Hardware.LogicalCores} Cores)";
-            MemoryText = $"{report.Hardware.TotalPhysicalMemory} (Available: {report.Hardware.AvailablePhysicalMemory})";
-            
+            // 1. Hardware card summaries
+            string coreInfo = report.Hardware.PhysicalCores > 0
+                ? $"{report.Hardware.PhysicalCores} Cores / {report.Hardware.LogicalCores} Threads"
+                : $"{report.Hardware.LogicalCores} Cores";
+            CpuText = $"{report.Hardware.CpuName} ({coreInfo})";
+            MotherboardText = string.IsNullOrWhiteSpace(report.Hardware.Motherboard) ? "-" : report.Hardware.Motherboard;
+            MemoryText = $"{report.Hardware.MemorySummary} [Total: {report.Hardware.TotalPhysicalMemory} / Avail: {report.Hardware.AvailablePhysicalMemory}]";
+
             if (report.Hardware.Gpus.Count > 0)
             {
                 GpuText = string.Join("\n", report.Hardware.Gpus.Select(g =>
                 {
-                    var extra = new[] { g.VramSize, g.DriverVersion }.Where(s => !string.IsNullOrWhiteSpace(s));
-                    string extraStr = extra.Any() ? $" [{string.Join(", ", extra)}]" : "";
-                    return $"{g.Name}{extraStr}";
+                    var extra = new[] { g.VramSize, string.IsNullOrWhiteSpace(g.DriverVersion) ? "" : $"Driver: {g.DriverVersion}", g.Provider }
+                        .Where(s => !string.IsNullOrWhiteSpace(s));
+                    string extraStr = extra.Any() ? $" ({string.Join(" / ", extra)})" : "";
+                    return $"• {g.Name}{extraStr}";
                 }));
             }
             else
             {
-                GpuText = "Unknown GPU";
+                GpuText = "-";
             }
 
+            if (report.Hardware.Monitors.Count > 0)
+            {
+                var monLines = report.Hardware.Monitors.Select(m =>
+                {
+                    var parts = new System.Collections.Generic.List<string>();
+                    if (!string.IsNullOrWhiteSpace(m.Manufacturer) || !string.IsNullOrWhiteSpace(m.ModelCode))
+                    {
+                        parts.Add($"{m.Manufacturer} {m.ModelCode}".Trim());
+                    }
+                    string extraBracket = parts.Count > 0 ? $" [{string.Join(" ", parts)}]" : "";
+                    string sizeStr = string.IsNullOrWhiteSpace(m.DiagonalSize) ? "" : $" ({m.DiagonalSize})";
+                    return $"• {m.Name}{extraBracket}{sizeStr}";
+                }).ToList();
+                monLines.Add($"• Primary: {report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})");
+                MonitorsText = string.Join("\n", monLines);
+            }
+            else
+            {
+                MonitorsText = $"{report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})";
+            }
+
+            if (report.Hardware.Disks.Count > 0)
+            {
+                DisksText = string.Join("\n", report.Hardware.Disks.Select(d =>
+                {
+                    string drives = d.DriveLetters.Count > 0 ? string.Join(", ", d.DriveLetters) : "-";
+                    return $"• {d.Model} ( {d.SizeString} ) -> [ {drives} ]";
+                }));
+            }
+            else
+            {
+                DisksText = "-";
+            }
+
+            AudioText = report.Hardware.AudioDevices.Count > 0
+                ? string.Join("\n", report.Hardware.AudioDevices.Select(a => $"• {a}"))
+                : "-";
+
+            NetworkText = report.Hardware.NetworkAdapters.Count > 0
+                ? string.Join("\n", report.Hardware.NetworkAdapters.Select(n => $"• {n}"))
+                : "-";
+
+            // 2. System info
             DisplayText = $"{report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})";
             OsText = $"{report.System.OsName} {report.System.OsVersion} (Build {report.System.OsBuild}) [{report.System.OsArchitecture}]";
             RuntimeText = $"{report.System.DotNetRuntime} | WebView2: {report.System.WebView2Version}";
             UptimeText = report.System.SystemUptime;
 
+            // 3. Launcher info
             LauncherVerText = $"{report.Launcher.Version} (PID: {report.Launcher.ProcessId})";
             FrameworkVerText = $"HoYoShade: {report.Launcher.HoYoShadeFrameworkVersion} | OpenHoYoShade: {report.Launcher.OpenHoYoShadeVersion}";
             RpcStateText = report.Launcher.RpcRunning ? "Running" : "Not Running";
             PermissionsText = report.Launcher.IsAdmin ? "Administrator" : "Standard User";
 
+            // 4. Games info
             if (report.Games.Count > 0)
             {
                 GamesSummaryText = string.Join("\n", report.Games.Select(g =>
