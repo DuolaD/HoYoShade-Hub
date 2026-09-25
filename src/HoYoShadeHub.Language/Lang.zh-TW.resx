@@ -1965,4 +1965,118 @@
   <data name="GameSelector_Unpin" xml:space="preserve">
     <value>取消釘選</value>
   </data>
+  <data name="ToolboxSetting_DiagnosticTool" xml:space="preserve">
+    <value>系統與環境診斷</value>
+  </data>
+  <data name="ToolboxSetting_DiagnosticToolDescription" xml:space="preserve">
+    <value>一鍵採集軟硬體規格、啟動器運行狀態與本地日誌，便於排查與反饋問題。</value>
+  </data>
+  <data name="AboutSetting_ExportDiagnosticInfo" xml:space="preserve">
+    <value>環境與日誌診斷</value>
+  </data>
+  <data name="AboutSetting_ExportDiagnosticInfoTip" xml:space="preserve">
+    <value>遇到異常問題？開啟診斷工具一鍵檢視並匯出軟硬體資訊與運作日誌。</value>
+  </data>
+  <data name="AboutSetting_OpenDiagnosticTool" xml:space="preserve">
+    <value>開啟診斷工具</value>
+  </data>
+  <data name="DiagnosticTool_Title" xml:space="preserve">
+    <value>系統與環境診斷</value>
+  </data>
+  <data name="DiagnosticTool_Subtitle" xml:space="preserve">
+    <value>查看系統與硬體配置、啟動器與遊戲運行環境，並支援一鍵匯出日誌發送給開發者。</value>
+  </data>
+  <data name="DiagnosticTool_CopyReport" xml:space="preserve">
+    <value>複製診斷文字</value>
+  </data>
+  <data name="DiagnosticTool_ExportZip" xml:space="preserve">
+    <value>匯出診斷壓縮檔 (.zip)</value>
+  </data>
+  <data name="DiagnosticTool_OpenLogFolder" xml:space="preserve">
+    <value>開啟日誌資料夾</value>
+  </data>
+  <data name="DiagnosticTool_Refresh" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="DiagnosticTool_SectionHardware" xml:space="preserve">
+    <value>硬體與顯示配置</value>
+  </data>
+  <data name="DiagnosticTool_SectionSystem" xml:space="preserve">
+    <value>作業系統與執行環境</value>
+  </data>
+  <data name="DiagnosticTool_SectionLauncher" xml:space="preserve">
+    <value>啟動器與框架狀態</value>
+  </data>
+  <data name="DiagnosticTool_SectionGames" xml:space="preserve">
+    <value>已安裝遊戲與注入設定</value>
+  </data>
+  <data name="DiagnosticTool_SectionLogs" xml:space="preserve">
+    <value>診斷報告與日誌預覽</value>
+  </data>
+  <data name="DiagnosticTool_PrivacyNotice" xml:space="preserve">
+    <value>* 使用者名稱與隱私路徑已自動去識別化替換</value>
+  </data>
+  <data name="DiagnosticTool_ReportCopied" xml:space="preserve">
+    <value>診斷報告文字已複製到剪貼簿！</value>
+  </data>
+  <data name="DiagnosticTool_ExportSuccess" xml:space="preserve">
+    <value>診斷包已成功匯出至：{0}</value>
+  </data>
+  <data name="DiagnosticTool_ExportFailed" xml:space="preserve">
+    <value>匯出診斷包失敗。</value>
+  </data>
+  <data name="DiagnosticTool_Loading" xml:space="preserve">
+    <value>正在採集診斷資訊...</value>
+  </data>
+  <data name="DiagnosticTool_Cpu" xml:space="preserve">
+    <value>處理器 (CPU)</value>
+  </data>
+  <data name="DiagnosticTool_Memory" xml:space="preserve">
+    <value>實體記憶體 (RAM)</value>
+  </data>
+  <data name="DiagnosticTool_Gpu" xml:space="preserve">
+    <value>顯示卡與驅動程式 (GPU)</value>
+  </data>
+  <data name="DiagnosticTool_Display" xml:space="preserve">
+    <value>螢幕解析度與縮放</value>
+  </data>
+  <data name="DiagnosticTool_OS" xml:space="preserve">
+    <value>作業系統版本</value>
+  </data>
+  <data name="DiagnosticTool_Runtime" xml:space="preserve">
+    <value>系統執行階段</value>
+  </data>
+  <data name="DiagnosticTool_LauncherVer" xml:space="preserve">
+    <value>啟動器版本</value>
+  </data>
+  <data name="DiagnosticTool_Permissions" xml:space="preserve">
+    <value>處理程序權限</value>
+  </data>
+  <data name="DiagnosticTool_FrameworkVer" xml:space="preserve">
+    <value>HoYoShade 核心</value>
+  </data>
+  <data name="DiagnosticTool_RpcState" xml:space="preserve">
+    <value>RPC 背景服務</value>
+  </data>
+  <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
+    <value>尚未設定遊戲安裝路徑。</value>
+  </data>
+  <data name="DiagnosticTool_Motherboard" xml:space="preserve">
+    <value>主機板型號</value>
+  </data>
+  <data name="DiagnosticTool_MemorySticks" xml:space="preserve">
+    <value>記憶體插槽</value>
+  </data>
+  <data name="DiagnosticTool_Disks" xml:space="preserve">
+    <value>磁碟與對應磁碟機代號</value>
+  </data>
+  <data name="DiagnosticTool_Monitors" xml:space="preserve">
+    <value>顯示器裝置</value>
+  </data>
+  <data name="DiagnosticTool_Audio" xml:space="preserve">
+    <value>音效裝置</value>
+  </data>
+  <data name="DiagnosticTool_Network" xml:space="preserve">
+    <value>網路卡裝置</value>
+  </data>
 </root>
