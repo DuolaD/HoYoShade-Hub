@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using HoYoShadeHub.Core;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
@@ -315,7 +316,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             // 4. Games info
             if (report.Games.Count > 0)
             {
-                GamesSummaryText = string.Join("\n", report.Games.Select(g =>
+                GamesSummaryText = string.Join("\n\n", report.Games.Select(g =>
                 {
                     var badges = new System.Collections.Generic.List<string>();
                     if (g.EnableDX12) badges.Add("DX12");
@@ -324,7 +325,34 @@ public sealed partial class DiagnosticToolWindow : WindowEx
                     if (g.HasReShadeIni) badges.Add("ReShade.ini");
                     if (g.HasReShadeLog) badges.Add("ReShade.log");
                     string badgeStr = badges.Count > 0 ? $" ({string.Join(", ", badges)})" : "";
-                    return $"• {g.GameName} [{g.ServerName}]: {g.InstallPath}{badgeStr}";
+
+                    var launchList = new System.Collections.Generic.List<string>();
+                    launchList.Add($"{Lang.GameLauncherPage_LaunchGame}: {(g.EnableGameLaunch ? "✓" : "✗")}");
+                    if (g.UseStarwardLauncher)
+                    {
+                        launchList.Add($"{Lang.GameLauncherPage_LaunchWithStarward}: ✓");
+                    }
+                    launchList.Add($"HoYoShade: {(g.UseHoYoShade ? "✓" : "✗")}");
+                    launchList.Add($"OpenHoYoShade: {(g.UseOpenHoYoShade ? "✓" : "✗")}");
+                    if (g.Biz.StartsWith(GameBiz.hk4e, StringComparison.OrdinalIgnoreCase))
+                    {
+                        launchList.Add($"{Lang.GameLauncherPage_LaunchGenshinBlenderPlugin}: {(g.LaunchGenshinBlenderPlugin ? "✓" : "✗")}");
+                    }
+                    else if (g.Biz.StartsWith(GameBiz.nap, StringComparison.OrdinalIgnoreCase))
+                    {
+                        launchList.Add($"{Lang.GameLauncherPage_LaunchZZZBlenderPlugin}: {(g.LaunchZZZBlenderPlugin ? "✓" : "✗")}");
+                    }
+                    if (g.UsePopupWindow)
+                    {
+                        launchList.Add($"{Lang.GameSettingPage_UsePopupWindow}: ✓");
+                    }
+                    if (!string.IsNullOrWhiteSpace(g.StartArgument))
+                    {
+                        launchList.Add($"{Lang.GameLauncherSettingDialog_CommandLineArgument}: {g.StartArgument}");
+                    }
+
+                    string launchStr = $"\n  └ {Lang.GameLauncherPage_LaunchOptions}: {string.Join(" | ", launchList)}";
+                    return $"• {g.GameName} [{g.ServerName}]: {g.InstallPath}{badgeStr}{launchStr}";
                 }));
             }
             else

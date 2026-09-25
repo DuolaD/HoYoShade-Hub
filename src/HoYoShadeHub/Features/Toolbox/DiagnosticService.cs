@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using HoYoShadeHub.Core;
+using HoYoShadeHub.Core.HoYoPlay;
 using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.GameLauncher;
@@ -126,6 +127,18 @@ public class GameDiagnosticInfo
     public string GameName { get; set; } = string.Empty;
     public string ServerName { get; set; } = string.Empty;
     public string InstallPath { get; set; } = string.Empty;
+
+    // Launch Options (启动选项)
+    public bool EnableGameLaunch { get; set; } = true;
+    public bool UseStarwardLauncher { get; set; }
+    public bool UseHoYoShade { get; set; }
+    public bool UseOpenHoYoShade { get; set; }
+    public bool LaunchGenshinBlenderPlugin { get; set; }
+    public bool LaunchZZZBlenderPlugin { get; set; }
+    public bool UsePopupWindow { get; set; }
+    public string? StartArgument { get; set; }
+
+    // DX12 & Injection Files
     public bool EnableDX12 { get; set; }
     public bool IgnoreDX12Check { get; set; }
     public bool HasDxgiDll { get; set; }
@@ -410,6 +423,27 @@ public static class DiagnosticService
             {
                 sb.AppendLine($"  * {game.GameName} ({game.ServerName} / {game.Biz})");
                 sb.AppendLine($"    - 安装路径: {game.InstallPath}");
+
+                var opts = new List<string>();
+                opts.Add($"启动游戏={game.EnableGameLaunch}");
+                if (game.UseStarwardLauncher) opts.Add("Starward=True");
+                opts.Add($"HoYoShade={game.UseHoYoShade}");
+                opts.Add($"OpenHoYoShade={game.UseOpenHoYoShade}");
+                if (game.Biz.StartsWith(GameBiz.hk4e, StringComparison.OrdinalIgnoreCase))
+                {
+                    opts.Add($"原神Blender插件={game.LaunchGenshinBlenderPlugin}");
+                }
+                else if (game.Biz.StartsWith(GameBiz.nap, StringComparison.OrdinalIgnoreCase))
+                {
+                    opts.Add($"绝区零Blender插件={game.LaunchZZZBlenderPlugin}");
+                }
+                if (game.UsePopupWindow) opts.Add("无边框窗口=True");
+                sb.AppendLine($"    - 启动选项: {string.Join(", ", opts)}");
+                if (!string.IsNullOrWhiteSpace(game.StartArgument))
+                {
+                    sb.AppendLine($"    - 启动参数: {game.StartArgument}");
+                }
+
                 sb.AppendLine($"    - DX12 状态: 启用={game.EnableDX12}, 忽略检查={game.IgnoreDX12Check}");
                 var files = new List<string>();
                 if (game.HasDxgiDll) files.Add("dxgi.dll [存在]");
@@ -1161,6 +1195,31 @@ public static class DiagnosticService
                     candidatePaths.Add(singlePath.Trim());
                 }
 
+                // Query launch options for this game client
+                var gameId = GameId.FromGameBiz(biz) ?? new GameId { Id = biz.Value, GameBiz = biz };
+                bool enableGameLaunch = AppConfig.GetEnableGameLaunchOption(gameId);
+                bool useStarward = AppConfig.GetUseStarwardLaunchOption(gameId);
+                bool useHoYoShade = AppConfig.GetUseHoYoShadeLaunchOption(gameId);
+                bool useOpenHoYoShade = AppConfig.GetUseOpenHoYoShadeLaunchOption(gameId);
+                bool launchGenshinBlender = AppConfig.GetLaunchGenshinBlenderPluginOption(gameId);
+                bool launchZZZBlender = AppConfig.GetLaunchZZZBlenderPluginOption(gameId);
+                bool usePopupWindow = AppConfig.GetUsePopupWindow(biz);
+                string? startArgument = AppConfig.GetStartArgument(biz);
+
+                if (useHoYoShade && useOpenHoYoShade)
+                {
+                    useOpenHoYoShade = false;
+                }
+                if (enableGameLaunch && useStarward)
+                {
+                    useStarward = false;
+                }
+                if (launchGenshinBlender || launchZZZBlender)
+                {
+                    enableGameLaunch = false;
+                    useStarward = false;
+                }
+
                 var visitedNormalizedPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 foreach (var rawPath in candidatePaths)
                 {
@@ -1199,6 +1258,14 @@ public static class DiagnosticService
                             GameName = gameName,
                             ServerName = serverName,
                             InstallPath = Sanitize(normalized),
+                            EnableGameLaunch = enableGameLaunch,
+                            UseStarwardLauncher = useStarward,
+                            UseHoYoShade = useHoYoShade,
+                            UseOpenHoYoShade = useOpenHoYoShade,
+                            LaunchGenshinBlenderPlugin = launchGenshinBlender,
+                            LaunchZZZBlenderPlugin = launchZZZBlender,
+                            UsePopupWindow = usePopupWindow,
+                            StartArgument = Sanitize(startArgument),
                             EnableDX12 = enableDx12,
                             IgnoreDX12Check = ignoreDx12Check,
                             HasDxgiDll = hasDxgi,
