@@ -603,11 +603,16 @@ public static class DiagnosticService
                 }
             }
 
+            string? targetFolder = Path.GetDirectoryName(zipPath);
+            if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
+            {
+                Directory.CreateDirectory(targetFolder);
+            }
             if (File.Exists(zipPath))
             {
                 File.Delete(zipPath);
             }
-            File.Move(tempZip, zipPath);
+            File.Move(tempZip, zipPath, overwrite: true);
         }
         finally
         {

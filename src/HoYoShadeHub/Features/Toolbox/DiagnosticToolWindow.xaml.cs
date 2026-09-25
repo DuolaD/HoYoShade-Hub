@@ -597,7 +597,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             if (_currentReport == null) return;
 
             string suggestedFileName = $"HoYoShadeHub_Diagnostic_{DateTime.Now:yyyyMMdd_HHmmss}.zip";
-            string? savePath = await FileDialogHelper.OpenSaveFileDialogAsync(WindowHandle, suggestedFileName, ("Zip Archive (*.zip)", "*.zip"));
+            string? savePath = await FileDialogHelper.OpenSaveFileDialogAsync(WindowHandle, suggestedFileName, ("Zip Archive (*.zip)", ".zip"));
 
             if (string.IsNullOrWhiteSpace(savePath)) return;
 

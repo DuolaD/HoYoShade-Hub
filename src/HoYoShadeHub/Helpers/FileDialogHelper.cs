@@ -36,7 +36,7 @@ internal static class FileDialogHelper
             };
             foreach (var filter in fileTypeFilter)
             {
-                picker.FileTypeFilter.Add(filter.Extension);
+                picker.FileTypeFilter.Add(NormalizeExtension(filter.Extension));
             }
             InitializeWithWindow.Initialize(picker, parentWindow);
             var file = await picker.PickSingleFileAsync();
@@ -93,7 +93,7 @@ internal static class FileDialogHelper
             };
             foreach (var filter in fileTypeFilter)
             {
-                picker.FileTypeFilter.Add(filter.Extension);
+                picker.FileTypeFilter.Add(NormalizeExtension(filter.Extension));
             }
             InitializeWithWindow.Initialize(picker, parentWindow);
             IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
@@ -162,7 +162,11 @@ internal static class FileDialogHelper
             }
             foreach (var filter in fileTypeFilter)
             {
-                picker.FileTypeChoices.Add(filter.Name, new List<string> { filter.Extension });
+                picker.FileTypeChoices.Add(filter.Name, new List<string> { NormalizeExtension(filter.Extension) });
+            }
+            if (fileTypeFilter.Length > 0)
+            {
+                picker.DefaultFileExtension = NormalizeExtension(fileTypeFilter[0].Extension);
             }
             InitializeWithWindow.Initialize(picker, parentWindow);
             var file = await picker.PickSaveFileAsync();
@@ -230,20 +234,35 @@ internal static class FileDialogHelper
             count++;
             types = [new COMDLG_FILTERSPEC { pszName = "All", pszSpec = "*" }];
         }
-        else
-        if (count == 1)
+        else if (count == 1)
         {
-            types = [new COMDLG_FILTERSPEC { pszName = fileTypeFilter[0].Name, pszSpec = "*" + fileTypeFilter[0].Spec }];
+            types = [new COMDLG_FILTERSPEC { pszName = fileTypeFilter[0].Name, pszSpec = NormalizeSpec(fileTypeFilter[0].Spec) }];
         }
         else
         {
             count++;
             types = new COMDLG_FILTERSPEC[count];
-            types[0] = new COMDLG_FILTERSPEC { pszName = "All", pszSpec = string.Join(';', fileTypeFilter.Select(x => $"*{x.Spec}")) };
-            fileTypeFilter.Select(x => new COMDLG_FILTERSPEC { pszName = x.Name, pszSpec = x.Spec }).ToArray().CopyTo(types, 1);
+            types[0] = new COMDLG_FILTERSPEC { pszName = "All", pszSpec = string.Join(';', fileTypeFilter.Select(x => NormalizeSpec(x.Spec))) };
+            fileTypeFilter.Select(x => new COMDLG_FILTERSPEC { pszName = x.Name, pszSpec = NormalizeSpec(x.Spec) }).ToArray().CopyTo(types, 1);
         }
         dialog.SetFileTypes(count, types);
         return types;
+    }
+
+    private static string NormalizeExtension(string ext)
+    {
+        if (string.IsNullOrWhiteSpace(ext)) return ".*";
+        if (ext.StartsWith("*.", StringComparison.Ordinal)) return ext[1..];
+        if (!ext.StartsWith(".", StringComparison.Ordinal)) return "." + ext;
+        return ext;
+    }
+
+    private static string NormalizeSpec(string spec)
+    {
+        if (string.IsNullOrWhiteSpace(spec) || spec == "*") return "*";
+        if (spec.StartsWith("*.", StringComparison.Ordinal)) return spec;
+        if (spec.StartsWith(".", StringComparison.Ordinal)) return "*" + spec;
+        return "*." + spec;
     }
 
 
