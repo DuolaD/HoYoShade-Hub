@@ -322,6 +322,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
                     if (g.HasDxgiDll) badges.Add("dxgi.dll");
                     if (g.HasD3d11Dll) badges.Add("d3d11.dll");
                     if (g.HasReShadeIni) badges.Add("ReShade.ini");
+                    if (g.HasReShadeLog) badges.Add("ReShade.log");
                     string badgeStr = badges.Count > 0 ? $" ({string.Join(", ", badges)})" : "";
                     return $"• {g.GameName} [{g.ServerName}]: {g.InstallPath}{badgeStr}";
                 }));

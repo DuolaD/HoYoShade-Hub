@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using HoYoShadeHub.Core;
 using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Core.Networking;
+using HoYoShadeHub.Features.GameLauncher;
 using HoYoShadeHub.Features.RPC;
 using System;
 using System.Collections.Generic;
@@ -1083,41 +1084,137 @@ public static class DiagnosticService
         var result = new List<GameDiagnosticInfo>();
         try
         {
+            var candidateBizs = new List<GameBiz>();
+            var seenBizs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            // 1. Games currently added/selected in the launcher (in order)
+            if (!string.IsNullOrWhiteSpace(AppConfig.SelectedGameBizs))
+            {
+                var selected = AppConfig.SelectedGameBizs.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                foreach (var s in selected)
+                {
+                    if (seenBizs.Add(s))
+                    {
+                        candidateBizs.Add(new GameBiz(s));
+                    }
+                }
+            }
+
+            // 2. Current active game in launcher
+            GameBiz currentBiz = AppConfig.CurrentGameBiz;
+            if (!string.IsNullOrWhiteSpace(currentBiz.Value) && seenBizs.Add(currentBiz.Value))
+            {
+                candidateBizs.Add(currentBiz);
+            }
+
+            // 3. Any other known games that have configured paths in AppConfig
             foreach (var biz in GameBiz.AllGameBizs)
             {
-                string? rawPaths = AppConfig.GetGameInstallPaths(biz);
-                if (string.IsNullOrWhiteSpace(rawPaths)) continue;
-
-                var paths = rawPaths.Split(new[] { '|', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var path in paths)
+                if (string.IsNullOrWhiteSpace(biz.Value) || seenBizs.Contains(biz.Value))
                 {
-                    if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path)) continue;
+                    continue;
+                }
 
-                    bool enableDx12 = AppConfig.GetEnableDX12(biz);
-                    bool ignoreDx12Check = AppConfig.GetIgnoreDX12Check(biz);
+                if (!string.IsNullOrWhiteSpace(AppConfig.GetGameInstallPath(biz)) ||
+                    !string.IsNullOrWhiteSpace(AppConfig.GetGameInstallPaths(biz)))
+                {
+                    seenBizs.Add(biz.Value);
+                    candidateBizs.Add(biz);
+                }
+            }
 
-                    bool hasDxgi = File.Exists(Path.Combine(path, "dxgi.dll"));
-                    bool hasD3d11 = File.Exists(Path.Combine(path, "d3d11.dll"));
-                    bool hasReShadeIni = File.Exists(Path.Combine(path, "ReShade.ini"));
-                    bool hasReShadeLog = File.Exists(Path.Combine(path, "ReShade.log"));
+            foreach (var biz in candidateBizs)
+            {
+                if (string.IsNullOrWhiteSpace(biz.Value)) continue;
 
-                    result.Add(new GameDiagnosticInfo
+                var candidatePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                // 1. Primary path resolved via GameLauncherService
+                try
+                {
+                    string? launcherPath = GameLauncherService.GetGameInstallPath(biz);
+                    if (!string.IsNullOrWhiteSpace(launcherPath))
                     {
-                        Biz = biz.Value,
-                        GameName = biz.ToGameName(),
-                        ServerName = biz.ToGameServerName(),
-                        InstallPath = Sanitize(path),
-                        EnableDX12 = enableDx12,
-                        IgnoreDX12Check = ignoreDx12Check,
-                        HasDxgiDll = hasDxgi,
-                        HasD3d11Dll = hasD3d11,
-                        HasReShadeIni = hasReShadeIni,
-                        HasReShadeLog = hasReShadeLog
-                    });
+                        candidatePaths.Add(launcherPath.Trim());
+                    }
+                }
+                catch { }
+
+                // 2. Multiple paths configured in AppConfig
+                string? rawPaths = AppConfig.GetGameInstallPaths(biz);
+                if (!string.IsNullOrWhiteSpace(rawPaths))
+                {
+                    var paths = rawPaths.Split(new[] { '|', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    foreach (var p in paths)
+                    {
+                        if (!string.IsNullOrWhiteSpace(p))
+                        {
+                            candidatePaths.Add(p.Trim());
+                        }
+                    }
+                }
+
+                // 3. Single path configured in AppConfig (saved by auto search or individual selector)
+                string? singlePath = AppConfig.GetGameInstallPath(biz);
+                if (!string.IsNullOrWhiteSpace(singlePath))
+                {
+                    candidatePaths.Add(singlePath.Trim());
+                }
+
+                var visitedNormalizedPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var rawPath in candidatePaths)
+                {
+                    try
+                    {
+                        string p = GameLauncherService.GetFullPathIfRelativePath(rawPath);
+                        bool exists = Directory.Exists(p);
+                        if (!exists && !AppConfig.GetGameInstallPathRemovable(biz))
+                        {
+                            continue;
+                        }
+
+                        string normalized = exists ? Path.GetFullPath(p).TrimEnd('\\', '/') : p.TrimEnd('\\', '/');
+                        if (!visitedNormalizedPaths.Add(normalized))
+                        {
+                            continue;
+                        }
+
+                        bool enableDx12 = AppConfig.GetEnableDX12(biz);
+                        bool ignoreDx12Check = AppConfig.GetIgnoreDX12Check(biz);
+
+                        bool hasDxgi = exists && File.Exists(Path.Combine(normalized, "dxgi.dll"));
+                        bool hasD3d11 = exists && File.Exists(Path.Combine(normalized, "d3d11.dll"));
+                        bool hasReShadeIni = exists && File.Exists(Path.Combine(normalized, "ReShade.ini"));
+                        bool hasReShadeLog = exists && File.Exists(Path.Combine(normalized, "ReShade.log"));
+
+                        string gameName = biz.ToGameName();
+                        if (string.IsNullOrWhiteSpace(gameName)) gameName = biz.Value;
+
+                        string serverName = biz.ToGameServerName();
+                        if (string.IsNullOrWhiteSpace(serverName)) serverName = biz.Server;
+
+                        result.Add(new GameDiagnosticInfo
+                        {
+                            Biz = biz.Value,
+                            GameName = gameName,
+                            ServerName = serverName,
+                            InstallPath = Sanitize(normalized),
+                            EnableDX12 = enableDx12,
+                            IgnoreDX12Check = ignoreDx12Check,
+                            HasDxgiDll = hasDxgi,
+                            HasD3d11Dll = hasD3d11,
+                            HasReShadeIni = hasReShadeIni,
+                            HasReShadeLog = hasReShadeLog
+                        });
+                    }
+                    catch { }
                 }
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to collect game installations");
+        }
         return result;
     }
 
