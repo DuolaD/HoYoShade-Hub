@@ -1954,4 +1954,118 @@
   <data name="GameSelector_Unpin" xml:space="preserve">
     <value>取消固定</value>
   </data>
+  <data name="ToolboxSetting_DiagnosticTool" xml:space="preserve">
+    <value>系统与环境诊断</value>
+  </data>
+  <data name="ToolboxSetting_DiagnosticToolDescription" xml:space="preserve">
+    <value>一键采集软硬件规格、启动器运行状态与本地日志，便于排查与反馈问题。</value>
+  </data>
+  <data name="AboutSetting_ExportDiagnosticInfo" xml:space="preserve">
+    <value>环境与日志诊断</value>
+  </data>
+  <data name="AboutSetting_ExportDiagnosticInfoTip" xml:space="preserve">
+    <value>遇到异常问题？打开诊断工具一键查看并导出软硬件信息与运行日志。</value>
+  </data>
+  <data name="AboutSetting_OpenDiagnosticTool" xml:space="preserve">
+    <value>打开诊断工具</value>
+  </data>
+  <data name="DiagnosticTool_Title" xml:space="preserve">
+    <value>系统与环境诊断</value>
+  </data>
+  <data name="DiagnosticTool_Subtitle" xml:space="preserve">
+    <value>查看系统与硬件配置、启动器与游戏运行环境，并支持一键导出日志发送给开发者。</value>
+  </data>
+  <data name="DiagnosticTool_CopyReport" xml:space="preserve">
+    <value>复制诊断文本</value>
+  </data>
+  <data name="DiagnosticTool_ExportZip" xml:space="preserve">
+    <value>导出诊断压缩包 (.zip)</value>
+  </data>
+  <data name="DiagnosticTool_OpenLogFolder" xml:space="preserve">
+    <value>打开日志目录</value>
+  </data>
+  <data name="DiagnosticTool_Refresh" xml:space="preserve">
+    <value>刷新检测</value>
+  </data>
+  <data name="DiagnosticTool_SectionHardware" xml:space="preserve">
+    <value>硬件与显示配置</value>
+  </data>
+  <data name="DiagnosticTool_SectionSystem" xml:space="preserve">
+    <value>操作系统与运行环境</value>
+  </data>
+  <data name="DiagnosticTool_SectionLauncher" xml:space="preserve">
+    <value>启动器与框架状态</value>
+  </data>
+  <data name="DiagnosticTool_SectionGames" xml:space="preserve">
+    <value>已安装游戏与注入配置</value>
+  </data>
+  <data name="DiagnosticTool_SectionLogs" xml:space="preserve">
+    <value>诊断报告与日志预览</value>
+  </data>
+  <data name="DiagnosticTool_PrivacyNotice" xml:space="preserve">
+    <value>* 用户名与隐私路径已自动脱敏替换</value>
+  </data>
+  <data name="DiagnosticTool_ReportCopied" xml:space="preserve">
+    <value>诊断报告文本已复制到剪贴板！</value>
+  </data>
+  <data name="DiagnosticTool_ExportSuccess" xml:space="preserve">
+    <value>诊断包已成功导出至：{0}</value>
+  </data>
+  <data name="DiagnosticTool_ExportFailed" xml:space="preserve">
+    <value>导出诊断包失败。</value>
+  </data>
+  <data name="DiagnosticTool_Loading" xml:space="preserve">
+    <value>正在采集诊断信息...</value>
+  </data>
+  <data name="DiagnosticTool_Cpu" xml:space="preserve">
+    <value>处理器 (CPU)</value>
+  </data>
+  <data name="DiagnosticTool_Memory" xml:space="preserve">
+    <value>物理内存 (RAM)</value>
+  </data>
+  <data name="DiagnosticTool_Gpu" xml:space="preserve">
+    <value>显卡与驱动 (GPU)</value>
+  </data>
+  <data name="DiagnosticTool_Display" xml:space="preserve">
+    <value>屏幕分辨率与缩放</value>
+  </data>
+  <data name="DiagnosticTool_OS" xml:space="preserve">
+    <value>操作系统版本</value>
+  </data>
+  <data name="DiagnosticTool_Runtime" xml:space="preserve">
+    <value>系统运行库</value>
+  </data>
+  <data name="DiagnosticTool_LauncherVer" xml:space="preserve">
+    <value>启动器版本</value>
+  </data>
+  <data name="DiagnosticTool_Permissions" xml:space="preserve">
+    <value>进程权限</value>
+  </data>
+  <data name="DiagnosticTool_FrameworkVer" xml:space="preserve">
+    <value>HoYoShade 核心</value>
+  </data>
+  <data name="DiagnosticTool_RpcState" xml:space="preserve">
+    <value>RPC 后台服务</value>
+  </data>
+  <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
+    <value>暂未配置游戏安装路径。</value>
+  </data>
+  <data name="DiagnosticTool_Motherboard" xml:space="preserve">
+    <value>主板型号</value>
+  </data>
+  <data name="DiagnosticTool_MemorySticks" xml:space="preserve">
+    <value>内存槽位</value>
+  </data>
+  <data name="DiagnosticTool_Disks" xml:space="preserve">
+    <value>磁盘与对应盘符</value>
+  </data>
+  <data name="DiagnosticTool_Monitors" xml:space="preserve">
+    <value>显示器设备</value>
+  </data>
+  <data name="DiagnosticTool_Audio" xml:space="preserve">
+    <value>声卡设备</value>
+  </data>
+  <data name="DiagnosticTool_Network" xml:space="preserve">
+    <value>网卡设备</value>
+  </data>
 </root>
