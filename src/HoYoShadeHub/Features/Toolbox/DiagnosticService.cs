@@ -14,10 +14,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Management;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Vanara.PInvoke;
 
@@ -29,8 +32,42 @@ public class DiagnosticReport
     public HardwareDiagnosticInfo Hardware { get; set; } = new();
     public SystemDiagnosticInfo System { get; set; } = new();
     public LauncherDiagnosticInfo Launcher { get; set; } = new();
+    public NetworkDiagnosticInfo Network { get; set; } = new();
     public List<GameDiagnosticInfo> Games { get; set; } = [];
     public List<string> RecentLogSnippets { get; set; } = [];
+}
+
+public class NetworkDiagnosticInfo
+{
+    public string Ipv4 { get; set; } = string.Empty;
+    public string MaskedIpv4 { get; set; } = string.Empty;
+    public string Country { get; set; } = string.Empty;
+    public string CountryCode { get; set; } = string.Empty;
+    public string Region { get; set; } = string.Empty;
+    public string City { get; set; } = string.Empty;
+    public string Asn { get; set; } = string.Empty;
+    public string AsOrganization { get; set; } = string.Empty;
+    public string CloudflareColo { get; set; } = string.Empty;
+    public string SuccessfulTier { get; set; } = string.Empty;
+
+    public bool HasIpv6 { get; set; }
+    public string Ipv6 { get; set; } = string.Empty;
+    public string MaskedIpv6 { get; set; } = string.Empty;
+
+    public bool HasSystemProxy { get; set; }
+    public string SystemProxyServer { get; set; } = string.Empty;
+
+    public bool LauncherDohEnabled { get; set; }
+    public string LauncherDohProvider { get; set; } = string.Empty;
+    public bool LauncherEchEnabled { get; set; }
+
+    public bool DirectConnectionSuccess { get; set; }
+    public string DirectConnectionError { get; set; } = string.Empty;
+    public bool DohEchRescueAttempted { get; set; }
+    public bool DohEchRescueSuccess { get; set; }
+    public string DohEchRescueDetails { get; set; } = string.Empty;
+
+    public string DiagnosisConclusion { get; set; } = string.Empty;
 }
 
 public class HardwareDiagnosticInfo
@@ -308,7 +345,17 @@ public static class DiagnosticService
                 _logger.LogError(ex, "Failed to collect launcher diagnostic info");
             }
 
-            // 4. Games
+            // 4. Network Info
+            try
+            {
+                report.Network = await CollectNetworkDiagnosticInfoAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to collect network diagnostic info");
+            }
+
+            // 5. Games
             try
             {
                 report.Games = GetGameInstallations();
@@ -479,8 +526,38 @@ public static class DiagnosticService
         }
         sb.AppendLine();
 
-        // 4. 游戏与注入状态
-        sb.AppendLine("【4. 已安装游戏与注入配置 (Configured Games & Injections)】");
+        // 4. 网络环境与出口诊断
+        sb.AppendLine("【4. 网络环境与出口诊断 (Network & Connectivity)】");
+        string locParts = string.Join(" ", new[] { report.Network.Country, report.Network.Region, report.Network.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
+        if (string.IsNullOrWhiteSpace(locParts)) locParts = "-";
+
+        sb.AppendLine($"  - 出口 IPv4 地址: {(string.IsNullOrWhiteSpace(report.Network.Ipv4) ? "-" : report.Network.Ipv4)} (脱敏: {report.Network.MaskedIpv4})");
+        sb.AppendLine($"  - 物理归属地: {locParts}");
+
+        string asnText = string.IsNullOrWhiteSpace(report.Network.AsOrganization)
+            ? (string.IsNullOrWhiteSpace(report.Network.Asn) ? "-" : report.Network.Asn)
+            : $"{report.Network.Asn} {report.Network.AsOrganization}".Trim();
+        sb.AppendLine($"  - 运营商与自治域 (ASN): {asnText}");
+        sb.AppendLine($"  - Cloudflare 边缘节点 (Colo): {(string.IsNullOrWhiteSpace(report.Network.CloudflareColo) ? "-" : report.Network.CloudflareColo)}");
+
+        string ipv6Text = report.Network.HasIpv6
+            ? $"{report.Network.Ipv6} (脱敏: {report.Network.MaskedIpv6})"
+            : "未检测到 / 无 IPv6 出口";
+        sb.AppendLine($"  - 出口 IPv6 地址: {ipv6Text}");
+
+        sb.AppendLine($"  - 系统代理状态: {(report.Network.HasSystemProxy ? $"已启用 [{report.Network.SystemProxyServer}]" : "未开启 (Direct)")}");
+        sb.AppendLine($"  - 启动器安全加密: DoH={(report.Network.LauncherDohEnabled ? "开启" : "关闭")} [{report.Network.LauncherDohProvider}], ECH={(report.Network.LauncherEchEnabled ? "开启" : "关闭")}");
+        sb.AppendLine($"  - 探测命中梯队: {(string.IsNullOrWhiteSpace(report.Network.SuccessfulTier) ? "无" : report.Network.SuccessfulTier)}");
+
+        if (report.Network.DohEchRescueAttempted)
+        {
+            sb.AppendLine($"  - DoH+ECH 穿透验证: {(report.Network.DohEchRescueSuccess ? "成功恢复 (Rescue Success)" : "恢复失败 (Rescue Failed)")} - {report.Network.DohEchRescueDetails}");
+        }
+        sb.AppendLine($"  - 综合诊断结论: {report.Network.DiagnosisConclusion}");
+        sb.AppendLine();
+
+        // 5. 游戏与注入状态
+        sb.AppendLine("【5. 已安装游戏与注入配置 (Configured Games & Injections)】");
         if (report.Games.Count > 0)
         {
             foreach (var game in report.Games)
@@ -524,8 +601,8 @@ public static class DiagnosticService
         }
         sb.AppendLine();
 
-        // 5. 最近日志
-        sb.AppendLine("【5. 最近本地运行日志摘要 (Recent Launcher Logs)】");
+        // 6. 最近日志
+        sb.AppendLine("【6. 最近本地运行日志摘要 (Recent Launcher Logs)】");
         sb.AppendLine("--------------------------------------------------------------------------------");
         if (report.RecentLogSnippets.Count > 0)
         {
@@ -1554,4 +1631,425 @@ public static class DiagnosticService
         }
         return lines;
     }
+
+    #region Network Diagnostic Helpers
+
+    public static string MaskIpAddress(string? ip)
+    {
+        if (string.IsNullOrWhiteSpace(ip)) return "-";
+        ip = ip.Trim();
+        if (IPAddress.TryParse(ip, out var addr))
+        {
+            if (addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            {
+                var parts = ip.Split('.');
+                if (parts.Length == 4)
+                {
+                    return $"{parts[0]}.{parts[1]}.***.***";
+                }
+            }
+            else if (addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+            {
+                var parts = ip.Split(':');
+                if (parts.Length >= 3)
+                {
+                    return $"{parts[0]}:{parts[1]}:****:****:****";
+                }
+            }
+        }
+        return ip;
+    }
+
+    public static string FormatCountry(string? code)
+    {
+        if (string.IsNullOrWhiteSpace(code)) return string.Empty;
+        code = code.Trim();
+        if (code.Equals("CN", StringComparison.OrdinalIgnoreCase)) return "中国 (CN)";
+        if (code.Equals("HK", StringComparison.OrdinalIgnoreCase)) return "中国香港 (HK)";
+        if (code.Equals("MO", StringComparison.OrdinalIgnoreCase)) return "中国澳门 (MO)";
+        if (code.Equals("TW", StringComparison.OrdinalIgnoreCase)) return "中国台湾 (TW)";
+        if (code.Equals("US", StringComparison.OrdinalIgnoreCase)) return "美国 (US)";
+        if (code.Equals("JP", StringComparison.OrdinalIgnoreCase)) return "日本 (JP)";
+        if (code.Equals("KR", StringComparison.OrdinalIgnoreCase)) return "韩国 (KR)";
+        if (code.Equals("SG", StringComparison.OrdinalIgnoreCase)) return "新加坡 (SG)";
+        if (code.Equals("GB", StringComparison.OrdinalIgnoreCase) || code.Equals("UK", StringComparison.OrdinalIgnoreCase)) return "英国 (GB)";
+        if (code.Equals("DE", StringComparison.OrdinalIgnoreCase)) return "德国 (DE)";
+        if (code.Equals("CA", StringComparison.OrdinalIgnoreCase)) return "加拿大 (CA)";
+        if (code.Equals("AU", StringComparison.OrdinalIgnoreCase)) return "澳大利亚 (AU)";
+        if (code.Equals("RU", StringComparison.OrdinalIgnoreCase)) return "俄罗斯 (RU)";
+        try
+        {
+            if (code.Length == 2)
+            {
+                var reg = new System.Globalization.RegionInfo(code.ToUpperInvariant());
+                return $"{reg.DisplayName} ({reg.TwoLetterISORegionName})";
+            }
+        }
+        catch { }
+        return code;
+    }
+
+    public static async Task<NetworkDiagnosticInfo> CollectNetworkDiagnosticInfoAsync(bool forceDohEch = false)
+    {
+        var info = new NetworkDiagnosticInfo
+        {
+            LauncherDohEnabled = DohService.Enabled,
+            LauncherDohProvider = DohService.Provider.ToString(),
+            LauncherEchEnabled = DohService.EnableEch
+        };
+
+        // 1. Detect System Proxy
+        try
+        {
+            var targetUri = new Uri("https://hoyosha.de/");
+            var proxy = HttpClient.DefaultProxy.GetProxy(targetUri);
+            if (proxy != null && proxy != targetUri)
+            {
+                info.HasSystemProxy = true;
+                info.SystemProxyServer = proxy.ToString();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to check system proxy during network diagnosis.");
+        }
+
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+        if (forceDohEch)
+        {
+            await ExecuteDohEchRescueAsync(info, cts.Token);
+            return info;
+        }
+
+        // Phase 1: Native network probe (Direct / no DoH)
+        try
+        {
+            using var handler = new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(1),
+                ConnectTimeout = TimeSpan.FromSeconds(3)
+            };
+            using var directClient = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(4) };
+
+            var ipv6Task = DetectIpv6Async(directClient, info, cts.Token);
+
+            bool tier1Success = await TryTier1CloudflareMetaAsync(directClient, info, cts.Token);
+            if (!tier1Success)
+            {
+                _logger.LogInformation("Network diag: Tier 1 failed/timed out. Falling back to Tier 2 (icanhazip + ip-api).");
+                bool tier2Success = await TryTier2IcanhazipAndIpApiAsync(directClient, info, cts.Token);
+                if (!tier2Success)
+                {
+                    _logger.LogInformation("Network diag: Tier 2 failed. Falling back to Tier 3 (Cloudflare Trace).");
+                    bool tier3Success = await TryTier3CloudflareTraceAsync(directClient, info, cts.Token);
+                    if (tier3Success)
+                    {
+                        info.DirectConnectionSuccess = true;
+                    }
+                }
+                else
+                {
+                    info.DirectConnectionSuccess = true;
+                }
+            }
+            else
+            {
+                info.DirectConnectionSuccess = true;
+            }
+
+            try
+            {
+                await ipv6Task;
+            }
+            catch { }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Network diag: native direct probing encountered error.");
+            info.DirectConnectionSuccess = false;
+            info.DirectConnectionError = ex.Message;
+        }
+
+        // Phase 2: If native direct probing failed on all tiers, test DoH + ECH rescue!
+        if (!info.DirectConnectionSuccess)
+        {
+            _logger.LogInformation("Network diag: all direct tiers failed. Starting DoH + ECH rescue probe...");
+            await ExecuteDohEchRescueAsync(info, cts.Token);
+        }
+        else
+        {
+            info.DiagnosisConclusion = "本地直连网络通畅，已成功探测出口信息。";
+        }
+
+        return info;
+    }
+
+    private static async Task<bool> TryTier1CloudflareMetaAsync(HttpClient client, NetworkDiagnosticInfo info, CancellationToken ct)
+    {
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, "https://speed.cloudflare.com/meta");
+            request.Headers.Referrer = new Uri("https://speed.cloudflare.com/");
+            request.Headers.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) HoYoShadeHub");
+
+            using var resp = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
+            if (!resp.IsSuccessStatusCode) return false;
+
+            var json = await resp.Content.ReadAsStringAsync(ct);
+            if (string.IsNullOrWhiteSpace(json) || json.Trim() == "{}") return false;
+
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+            if (!root.TryGetProperty("clientIp", out var ipElem)) return false;
+
+            string? ip = ipElem.GetString();
+            if (string.IsNullOrWhiteSpace(ip)) return false;
+
+            info.Ipv4 = ip;
+            info.MaskedIpv4 = MaskIpAddress(ip);
+
+            if (root.TryGetProperty("country", out var countryElem))
+            {
+                string c = countryElem.GetString() ?? "";
+                info.CountryCode = c;
+                info.Country = FormatCountry(c);
+            }
+            if (root.TryGetProperty("region", out var regElem)) info.Region = regElem.GetString() ?? "";
+            if (root.TryGetProperty("city", out var cityElem)) info.City = cityElem.GetString() ?? "";
+
+            if (root.TryGetProperty("asn", out var asnElem))
+            {
+                if (asnElem.ValueKind == JsonValueKind.Number)
+                {
+                    info.Asn = $"AS{asnElem.GetInt64()}";
+                }
+                else if (asnElem.ValueKind == JsonValueKind.String)
+                {
+                    string s = asnElem.GetString() ?? "";
+                    info.Asn = s.StartsWith("AS", StringComparison.OrdinalIgnoreCase) ? s : $"AS{s}";
+                }
+            }
+
+            if (root.TryGetProperty("asOrganization", out var orgElem))
+            {
+                info.AsOrganization = orgElem.GetString() ?? "";
+            }
+
+            if (root.TryGetProperty("colo", out var coloElem) && coloElem.TryGetProperty("iata", out var iataElem))
+            {
+                info.CloudflareColo = iataElem.GetString() ?? "";
+            }
+
+            info.SuccessfulTier = "Cloudflare Speed Meta (Tier 1)";
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static async Task<bool> TryTier2IcanhazipAndIpApiAsync(HttpClient client, NetworkDiagnosticInfo info, CancellationToken ct)
+    {
+        try
+        {
+            string? ip = null;
+            // 1. Fetch IP from icanhazip (Cloudflare-owned)
+            try
+            {
+                using var req1 = new HttpRequestMessage(HttpMethod.Get, "https://icanhazip.com");
+                req1.Headers.UserAgent.ParseAdd("curl/8.0.0");
+                using var resp1 = await client.SendAsync(req1, ct);
+                if (resp1.IsSuccessStatusCode)
+                {
+                    string raw = (await resp1.Content.ReadAsStringAsync(ct)).Trim();
+                    if (Regex.IsMatch(raw, @"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$"))
+                    {
+                        ip = raw;
+                    }
+                }
+            }
+            catch { }
+
+            // Fallback to api.ipify.org if icanhazip failed
+            if (string.IsNullOrWhiteSpace(ip))
+            {
+                try
+                {
+                    using var req2 = new HttpRequestMessage(HttpMethod.Get, "https://api.ipify.org");
+                    req2.Headers.UserAgent.ParseAdd("curl/8.0.0");
+                    using var resp2 = await client.SendAsync(req2, ct);
+                    if (resp2.IsSuccessStatusCode)
+                    {
+                        string raw = (await resp2.Content.ReadAsStringAsync(ct)).Trim();
+                        if (Regex.IsMatch(raw, @"^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$"))
+                        {
+                            ip = raw;
+                        }
+                    }
+                }
+                catch { }
+            }
+
+            if (string.IsNullOrWhiteSpace(ip)) return false;
+
+            info.Ipv4 = ip;
+            info.MaskedIpv4 = MaskIpAddress(ip);
+
+            // 2. Query ip-api.com with Chinese localization
+            try
+            {
+                using var reqApi = new HttpRequestMessage(HttpMethod.Get, $"http://ip-api.com/json/{ip}?lang=zh-CN");
+                using var respApi = await client.SendAsync(reqApi, ct);
+                if (respApi.IsSuccessStatusCode)
+                {
+                    string json = await respApi.Content.ReadAsStringAsync(ct);
+                    using var doc = JsonDocument.Parse(json);
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("status", out var status) && status.GetString() == "success")
+                    {
+                        if (root.TryGetProperty("country", out var cElem)) info.Country = cElem.GetString() ?? "";
+                        if (root.TryGetProperty("countryCode", out var ccElem)) info.CountryCode = ccElem.GetString() ?? "";
+                        if (root.TryGetProperty("regionName", out var rElem)) info.Region = rElem.GetString() ?? "";
+                        if (root.TryGetProperty("city", out var cityElem)) info.City = cityElem.GetString() ?? "";
+                        if (root.TryGetProperty("as", out var asElem)) info.Asn = asElem.GetString() ?? "";
+                        if (root.TryGetProperty("isp", out var ispElem)) info.AsOrganization = ispElem.GetString() ?? "";
+                    }
+                }
+            }
+            catch { }
+
+            info.SuccessfulTier = "icanhazip + ip-api.com (Tier 2)";
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static async Task<bool> TryTier3CloudflareTraceAsync(HttpClient client, NetworkDiagnosticInfo info, CancellationToken ct)
+    {
+        try
+        {
+            using var req = new HttpRequestMessage(HttpMethod.Get, "https://www.cloudflare.com/cdn-cgi/trace");
+            using var resp = await client.SendAsync(req, ct);
+            if (!resp.IsSuccessStatusCode) return false;
+
+            string trace = await resp.Content.ReadAsStringAsync(ct);
+            if (string.IsNullOrWhiteSpace(trace)) return false;
+
+            var lines = trace.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            string? ip = null;
+            string? loc = null;
+            string? colo = null;
+            foreach (var line in lines)
+            {
+                int eq = line.IndexOf('=');
+                if (eq <= 0) continue;
+                string k = line[..eq].Trim();
+                string v = line[(eq + 1)..].Trim();
+                if (k.Equals("ip", StringComparison.OrdinalIgnoreCase)) ip = v;
+                else if (k.Equals("loc", StringComparison.OrdinalIgnoreCase)) loc = v;
+                else if (k.Equals("colo", StringComparison.OrdinalIgnoreCase)) colo = v;
+            }
+
+            if (string.IsNullOrWhiteSpace(ip)) return false;
+
+            info.Ipv4 = ip;
+            info.MaskedIpv4 = MaskIpAddress(ip);
+            if (!string.IsNullOrWhiteSpace(loc))
+            {
+                info.CountryCode = loc;
+                info.Country = FormatCountry(loc);
+            }
+            if (!string.IsNullOrWhiteSpace(colo)) info.CloudflareColo = colo;
+
+            info.SuccessfulTier = "Cloudflare Trace (Tier 3)";
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static async Task DetectIpv6Async(HttpClient client, NetworkDiagnosticInfo info, CancellationToken ct)
+    {
+        try
+        {
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            cts.CancelAfter(TimeSpan.FromSeconds(2.5));
+
+            using var req = new HttpRequestMessage(HttpMethod.Get, "https://ipv6.icanhazip.com");
+            req.Headers.UserAgent.ParseAdd("curl/8.0.0");
+            using var resp = await client.SendAsync(req, cts.Token);
+            if (resp.IsSuccessStatusCode)
+            {
+                string raw = (await resp.Content.ReadAsStringAsync(cts.Token)).Trim();
+                if (raw.Contains(':') && IPAddress.TryParse(raw, out var addr) && addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                {
+                    info.HasIpv6 = true;
+                    info.Ipv6 = raw;
+                    info.MaskedIpv6 = MaskIpAddress(raw);
+                }
+            }
+        }
+        catch
+        {
+            info.HasIpv6 = false;
+        }
+    }
+
+    private static async Task ExecuteDohEchRescueAsync(NetworkDiagnosticInfo info, CancellationToken ct)
+    {
+        info.DohEchRescueAttempted = true;
+        bool origEnabled = DohService.Enabled;
+        bool origEch = DohService.EnableEch;
+        var origProvider = DohService.Provider;
+
+        try
+        {
+            DohService.Enabled = true;
+            DohService.EnableEch = true;
+            DohService.Provider = DohProvider.Cloudflare;
+
+            using var handler = DohService.CreateSocketsHttpHandler();
+            using var rescueClient = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) };
+
+            bool success = await TryTier1CloudflareMetaAsync(rescueClient, info, ct);
+            if (!success)
+            {
+                success = await TryTier3CloudflareTraceAsync(rescueClient, info, ct);
+            }
+
+            if (success)
+            {
+                info.DohEchRescueSuccess = true;
+                info.DohEchRescueDetails = "直连受限，但通过 DoH+ECH 加密隧道成功获取出口信息";
+                info.DiagnosisConclusion = "检测到本地直连网络受到阻断或 DNS 污染，但通过 DoH+ECH 加密隧道可正常连通。建议在启动器网络设置中保持开启 DoH 与 ECH。";
+            }
+            else
+            {
+                info.DohEchRescueSuccess = false;
+                info.DohEchRescueDetails = "直连与 DoH+ECH 加密隧道均未能连通";
+                info.DiagnosisConclusion = "本地网络连接异常或已断开，请检查网络连接、本地网关/Wi-Fi 或系统代理配置。";
+            }
+        }
+        catch (Exception ex)
+        {
+            info.DohEchRescueSuccess = false;
+            info.DohEchRescueDetails = $"DoH+ECH 验证测试遇到异常: {ex.Message}";
+            info.DiagnosisConclusion = "本地网络连接异常，请检查网络设置。";
+        }
+        finally
+        {
+            DohService.Enabled = origEnabled;
+            DohService.EnableEch = origEch;
+            DohService.Provider = origProvider;
+        }
+    }
+
+    #endregion
 }

@@ -333,6 +333,100 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         set => SetProperty(ref _gamesSummaryText, value);
     }
 
+    // Network diagnostic properties
+    private bool _showFullIp;
+    public bool ShowFullIp
+    {
+        get => _showFullIp;
+        set
+        {
+            if (SetProperty(ref _showFullIp, value))
+            {
+                OnPropertyChanged(nameof(IpVisibilityGlyph));
+                UpdateNetworkIpDisplays();
+            }
+        }
+    }
+
+    public string IpVisibilityGlyph => _showFullIp ? "\uED1A" : "\uE890";
+
+    private string _networkIpv4Text = "-";
+    public string NetworkIpv4Text
+    {
+        get => _networkIpv4Text;
+        set => SetProperty(ref _networkIpv4Text, value);
+    }
+
+    private string _networkLocationText = "-";
+    public string NetworkLocationText
+    {
+        get => _networkLocationText;
+        set => SetProperty(ref _networkLocationText, value);
+    }
+
+    private string _networkAsnText = "-";
+    public string NetworkAsnText
+    {
+        get => _networkAsnText;
+        set => SetProperty(ref _networkAsnText, value);
+    }
+
+    private string _networkIpv6Text = "-";
+    public string NetworkIpv6Text
+    {
+        get => _networkIpv6Text;
+        set => SetProperty(ref _networkIpv6Text, value);
+    }
+
+    private string _networkColoText = "-";
+    public string NetworkColoText
+    {
+        get => _networkColoText;
+        set => SetProperty(ref _networkColoText, value);
+    }
+
+    private string _networkProxyText = "-";
+    public string NetworkProxyText
+    {
+        get => _networkProxyText;
+        set => SetProperty(ref _networkProxyText, value);
+    }
+
+    private string _networkEncryptionText = "-";
+    public string NetworkEncryptionText
+    {
+        get => _networkEncryptionText;
+        set => SetProperty(ref _networkEncryptionText, value);
+    }
+
+    private string _networkConclusionText = "-";
+    public string NetworkConclusionText
+    {
+        get => _networkConclusionText;
+        set => SetProperty(ref _networkConclusionText, value);
+    }
+
+    private SolidColorBrush _networkConclusionBrush = new(Windows.UI.Color.FromArgb(255, 16, 185, 129));
+    public SolidColorBrush NetworkConclusionBrush
+    {
+        get => _networkConclusionBrush;
+        set => SetProperty(ref _networkConclusionBrush, value);
+    }
+
+    private bool _isRetestingDoh;
+    public bool IsRetestingDoh
+    {
+        get => _isRetestingDoh;
+        set
+        {
+            if (SetProperty(ref _isRetestingDoh, value))
+            {
+                OnPropertyChanged(nameof(IsNotRetestingDoh));
+            }
+        }
+    }
+    public bool IsNotRetestingDoh => !_isRetestingDoh;
+
     private string _reportText = string.Empty;
     public string ReportText
     {
@@ -557,6 +651,9 @@ public sealed partial class DiagnosticToolWindow : WindowEx
                 GamesSummaryText = Lang.DiagnosticTool_NoGamesFound;
             }
 
+            // Network card summaries
+            UpdateNetworkCardDisplays(report.Network);
+
             ReportText = DiagnosticService.ToFormattedText(report);
         }
         catch (Exception ex)
@@ -665,4 +762,96 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         InfoBar_Status.ActionButton = actionButton;
         InfoBar_Status.IsOpen = true;
     }
+
+    #region Network Diagnostic Handlers
+
+    private void UpdateNetworkIpDisplays()
+    {
+        if (_currentReport?.Network == null) return;
+        var net = _currentReport.Network;
+
+        string displayV4 = _showFullIp
+            ? (string.IsNullOrWhiteSpace(net.Ipv4) ? "-" : net.Ipv4)
+            : (string.IsNullOrWhiteSpace(net.MaskedIpv4) ? "-" : net.MaskedIpv4);
+        NetworkIpv4Text = displayV4;
+
+        if (net.HasIpv6)
+        {
+            string displayV6 = _showFullIp
+                ? (string.IsNullOrWhiteSpace(net.Ipv6) ? "-" : net.Ipv6)
+                : (string.IsNullOrWhiteSpace(net.MaskedIpv6) ? "-" : net.MaskedIpv6);
+            NetworkIpv6Text = displayV6;
+        }
+        else
+        {
+            NetworkIpv6Text = "未检测到 / 无 IPv6 出口";
+        }
+    }
+
+    private void UpdateNetworkCardDisplays(NetworkDiagnosticInfo net)
+    {
+        UpdateNetworkIpDisplays();
+
+        string locParts = string.Join(" ", new[] { net.Country, net.Region, net.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
+        NetworkLocationText = string.IsNullOrWhiteSpace(locParts) ? "-" : locParts;
+
+        string asnText = string.IsNullOrWhiteSpace(net.AsOrganization)
+            ? (string.IsNullOrWhiteSpace(net.Asn) ? "-" : net.Asn)
+            : $"{net.Asn} {net.AsOrganization}".Trim();
+        NetworkAsnText = string.IsNullOrWhiteSpace(asnText) ? "-" : asnText;
+
+        NetworkColoText = string.IsNullOrWhiteSpace(net.CloudflareColo) ? "-" : net.CloudflareColo;
+
+        NetworkProxyText = net.HasSystemProxy
+            ? $"已启用 [{net.SystemProxyServer}]"
+            : "未开启 (Direct)";
+
+        NetworkEncryptionText = $"DoH: {(net.LauncherDohEnabled ? "开启" : "关闭")} [{net.LauncherDohProvider}] | ECH: {(net.LauncherEchEnabled ? "开启" : "关闭")}";
+
+        NetworkConclusionText = net.DiagnosisConclusion;
+
+        if (net.DohEchRescueAttempted && net.DohEchRescueSuccess)
+        {
+            NetworkConclusionBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 245, 158, 11));
+        }
+        else if (!net.DirectConnectionSuccess && (!net.DohEchRescueAttempted || !net.DohEchRescueSuccess))
+        {
+            NetworkConclusionBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 239, 68, 68));
+        }
+        else
+        {
+            NetworkConclusionBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 16, 185, 129));
+        }
+    }
+
+    private void Button_ToggleIpMask_Click(object sender, RoutedEventArgs e)
+    {
+        ShowFullIp = !ShowFullIp;
+    }
+
+    private async void Button_RetestWithDoh_Click(object sender, RoutedEventArgs e)
+    {
+        if (IsRetestingDoh || _currentReport == null) return;
+        try
+        {
+            IsRetestingDoh = true;
+            NetworkConclusionText = "正在使用 DoH+ECH 加密隧道测试连通性并获取网络信息...";
+            var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync(forceDohEch: true);
+            _currentReport.Network = netInfo;
+            UpdateNetworkCardDisplays(netInfo);
+            ReportText = DiagnosticService.ToFormattedText(_currentReport);
+            ShowStatus(InfoBarSeverity.Success, "DoH+ECH 连通性测试已完成并更新报告！");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retest network with DoH+ECH");
+            ShowStatus(InfoBarSeverity.Error, $"DoH+ECH 测试遇到异常: {ex.Message}");
+        }
+        finally
+        {
+            IsRetestingDoh = false;
+        }
+    }
+
+    #endregion
 }

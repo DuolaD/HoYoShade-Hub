@@ -2068,4 +2068,37 @@
   <data name="DiagnosticTool_Network" xml:space="preserve">
     <value>网卡设备</value>
   </data>
+  <data name="DiagnosticTool_SectionNetwork" xml:space="preserve">
+    <value>网络环境与出口诊断</value>
+  </data>
+  <data name="DiagnosticTool_NetworkIpv4" xml:space="preserve">
+    <value>出口 IPv4</value>
+  </data>
+  <data name="DiagnosticTool_NetworkIpv6" xml:space="preserve">
+    <value>出口 IPv6</value>
+  </data>
+  <data name="DiagnosticTool_NetworkAsn" xml:space="preserve">
+    <value>运营商与 ASN</value>
+  </data>
+  <data name="DiagnosticTool_NetworkLocation" xml:space="preserve">
+    <value>物理归属地</value>
+  </data>
+  <data name="DiagnosticTool_NetworkColo" xml:space="preserve">
+    <value>Cloudflare 边缘节点</value>
+  </data>
+  <data name="DiagnosticTool_NetworkProxy" xml:space="preserve">
+    <value>系统代理</value>
+  </data>
+  <data name="DiagnosticTool_NetworkEncryption" xml:space="preserve">
+    <value>启动器安全加密</value>
+  </data>
+  <data name="DiagnosticTool_NetworkConclusion" xml:space="preserve">
+    <value>网络诊断结论</value>
+  </data>
+  <data name="DiagnosticTool_ToggleIpVisibility" xml:space="preserve">
+    <value>显隐完整 IP</value>
+  </data>
+  <data name="DiagnosticTool_TestWithDoh" xml:space="preserve">
+    <value>DoH+ECH 重测</value>
+  </data>
 </root>

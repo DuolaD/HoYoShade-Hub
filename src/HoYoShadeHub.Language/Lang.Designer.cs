@@ -5898,5 +5898,104 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("DiagnosticTool_Network", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Network &amp; Connectivity 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_SectionNetwork {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_SectionNetwork", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Outbound IPv4 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkIpv4 {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkIpv4", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Outbound IPv6 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkIpv6 {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkIpv6", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ISP &amp; ASN 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkAsn {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkAsn", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Geo Location 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkLocation {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkLocation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Cloudflare Edge Node 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkColo {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkColo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 System Proxy 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkProxy {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkProxy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Launcher Encryption 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkEncryption {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkEncryption", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Diagnostic Result 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkConclusion {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkConclusion", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Toggle IP Masking 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ToggleIpVisibility {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ToggleIpVisibility", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Retest with DoH+ECH 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_TestWithDoh {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_TestWithDoh", resourceCulture);
+            }
+        }
     }
 }

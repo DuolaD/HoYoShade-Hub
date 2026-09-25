@@ -692,7 +692,126 @@
                     </StackPanel>
                 </Border>
 
-                <!--  Card 4: 已安装游戏与注入配置  -->
+                <!--  Card 4: 网络环境与出口诊断  -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="18,14">
+                    <StackPanel Spacing="14">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon FontSize="16"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                          Glyph="&#xE774;" />
+                                <TextBlock FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Text="{x:Bind lang:Lang.DiagnosticTool_SectionNetwork}" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                <Button Padding="10,4"
+                                        Click="Button_ToggleIpMask_Click"
+                                        CornerRadius="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="{x:Bind IpVisibilityGlyph}" />
+                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.DiagnosticTool_ToggleIpVisibility}" />
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Padding="10,4"
+                                        Click="Button_RetestWithDoh_Click"
+                                        CornerRadius="4"
+                                        IsEnabled="{x:Bind IsNotRetestingDoh}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xE72C;" />
+                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.DiagnosticTool_TestWithDoh}" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid ColumnSpacing="24" RowSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkIpv4}" />
+                            <TextBlock Grid.Row="0" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkIpv4Text}" />
+
+                            <TextBlock Grid.Row="1" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkLocation}" />
+                            <TextBlock Grid.Row="1" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkLocationText}" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkAsn}" />
+                            <TextBlock Grid.Row="2" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkAsnText}" />
+
+                            <TextBlock Grid.Row="3" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkIpv6}" />
+                            <TextBlock Grid.Row="3" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkIpv6Text}" />
+
+                            <TextBlock Grid.Row="4" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkColo}" />
+                            <TextBlock Grid.Row="4" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkColoText}" />
+
+                            <TextBlock Grid.Row="5" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkProxy}" />
+                            <TextBlock Grid.Row="5" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkProxyText}" />
+
+                            <TextBlock Grid.Row="6" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkConclusion}" />
+                            <TextBlock Grid.Row="6" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       Foreground="{x:Bind NetworkConclusionBrush}"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkConclusionText}"
+                                       TextWrapping="Wrap" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!--  Card 5: 已安装游戏与注入配置  -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
@@ -715,7 +834,7 @@
                     </StackPanel>
                 </Border>
 
-                <!--  Card 5: 诊断报告与日志预览  -->
+                <!--  Card 6: 诊断报告与日志预览  -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"

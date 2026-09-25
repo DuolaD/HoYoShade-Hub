@@ -2079,4 +2079,37 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="DiagnosticTool_Network" xml:space="preserve">
     <value>網路卡裝置</value>
   </data>
+  <data name="DiagnosticTool_SectionNetwork" xml:space="preserve">
+    <value>網路環境與出口診斷</value>
+  </data>
+  <data name="DiagnosticTool_NetworkIpv4" xml:space="preserve">
+    <value>出口 IPv4</value>
+  </data>
+  <data name="DiagnosticTool_NetworkIpv6" xml:space="preserve">
+    <value>出口 IPv6</value>
+  </data>
+  <data name="DiagnosticTool_NetworkAsn" xml:space="preserve">
+    <value>電信業者與 ASN</value>
+  </data>
+  <data name="DiagnosticTool_NetworkLocation" xml:space="preserve">
+    <value>物理歸屬地</value>
+  </data>
+  <data name="DiagnosticTool_NetworkColo" xml:space="preserve">
+    <value>Cloudflare 邊緣節點</value>
+  </data>
+  <data name="DiagnosticTool_NetworkProxy" xml:space="preserve">
+    <value>系統代理</value>
+  </data>
+  <data name="DiagnosticTool_NetworkEncryption" xml:space="preserve">
+    <value>啟動器安全加密</value>
+  </data>
+  <data name="DiagnosticTool_NetworkConclusion" xml:space="preserve">
+    <value>網路診斷結論</value>
+  </data>
+  <data name="DiagnosticTool_ToggleIpVisibility" xml:space="preserve">
+    <value>顯示/隱藏完整 IP</value>
+  </data>
+  <data name="DiagnosticTool_TestWithDoh" xml:space="preserve">
+    <value>DoH+ECH 重測</value>
+  </data>
 </root>
