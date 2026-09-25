@@ -275,13 +275,13 @@
                     </StackPanel>
                 </Border>
 
-                <!--  Card 3: 启动器与组件状态  -->
+                <!--  Card 3: 启动器与框架状态  -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
                         CornerRadius="8"
                         Padding="18,14">
-                    <StackPanel Spacing="12">
+                    <StackPanel Spacing="14">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon FontSize="16"
                                       Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
@@ -291,12 +291,14 @@
                                        Text="{x:Bind lang:Lang.DiagnosticTool_SectionLauncher}" />
                         </StackPanel>
 
+                        <!-- 启动器基础信息与框架设置 -->
                         <Grid ColumnSpacing="24" RowSpacing="8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -313,11 +315,11 @@
 
                             <TextBlock Grid.Row="1" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.DiagnosticTool_FrameworkVer}" />
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Permissions}" />
                             <TextBlock Grid.Row="1" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"
-                                       Text="{x:Bind FrameworkVerText}" />
+                                       Text="{x:Bind PermissionsText}" />
 
                             <TextBlock Grid.Row="2" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -329,12 +331,364 @@
 
                             <TextBlock Grid.Row="3" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.DiagnosticTool_Permissions}" />
+                                       Text="{x:Bind lang:Lang.HoYoShadeDownloadView_DownloadServer}" />
                             <TextBlock Grid.Row="3" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"
-                                       Text="{x:Bind PermissionsText}" />
+                                       Text="{x:Bind FrameworkDownloadServerText}" />
+
+                            <TextBlock Grid.Row="4" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.SettingPage_JoinPreviewReleaseChannel}" />
+                            <TextBlock Grid.Row="4" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind FrameworkPreviewChannelText}" />
                         </Grid>
+
+                        <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,2" />
+
+                        <!-- HoYoShade 框架详情 -->
+                        <TextBlock FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="{x:Bind lang:Lang.FileSettingPage_HoYoShadeFramework}" />
+
+                        <!-- HoYoShade 子卡片 -->
+                        <Border Background="{ThemeResource ControlFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="14,12">
+                            <StackPanel Spacing="10">
+                                <!-- 卡片头部：名称与状态徽章 -->
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                        <FontIcon FontSize="16"
+                                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                                  Glyph="&#xE896;" />
+                                        <TextBlock FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   Text="HoYoShade" />
+                                    </StackPanel>
+                                    <!-- 状态徽章 -->
+                                    <Border Grid.Column="1"
+                                            Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="8,2"
+                                            VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon FontSize="10"
+                                                      Foreground="{x:Bind HoYoShadeStatusBrush, Mode=OneWay}"
+                                                      Glyph="{x:Bind HoYoShadeStatusGlyph, Mode=OneWay}" />
+                                            <TextBlock FontSize="12"
+                                                       Foreground="{x:Bind HoYoShadeStatusBrush, Mode=OneWay}"
+                                                       Text="{x:Bind HoYoShadeStatusText, Mode=OneWay}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 已安装详细信息 -->
+                                <StackPanel Spacing="10"
+                                            Visibility="{x:Bind HoYoShadeInstalledVisibility, Mode=OneWay}">
+                                    <!-- 版本信息 -->
+                                    <StackPanel Orientation="Horizontal" Spacing="16">
+                                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                            <Run Text="{x:Bind lang:Lang.FileSettingPage_FrameworkVersion}" /><Run Text=": " />
+                                            <Run FontWeight="Medium" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{x:Bind HoYoShadeVersion, Mode=OneWay}" />
+                                        </TextBlock>
+                                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                            <Run Text="{x:Bind lang:Lang.FileSettingPage_ReShadeVersion}" /><Run Text=": " />
+                                            <Run FontWeight="Medium" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{x:Bind HoYoShadeReShadeVersion, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <!-- 安装路径 -->
+                                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Padding="10,6">
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <FontIcon Grid.Column="0"
+                                                      FontSize="13"
+                                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                      Glyph="&#xED25;" />
+                                            <TextBlock Grid.Column="1"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="12"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                       IsTextSelectionEnabled="True"
+                                                       Text="{x:Bind HoYoShadePath, Mode=OneWay}"
+                                                       TextWrapping="Wrap" />
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- 存储占用 -->
+                                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Padding="12,8">
+                                        <StackPanel Spacing="6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                                    <FontIcon FontSize="13"
+                                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                              Glyph="&#xEDA2;" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_TotalSize}" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1"
+                                                           FontSize="13"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                                           Text="{x:Bind HoYoShadeTotalSize, Mode=OneWay}" />
+                                            </Grid>
+
+                                            <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" Opacity="0.5" />
+
+                                            <Grid ColumnSpacing="8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- 着色器及插件 -->
+                                                <StackPanel Grid.Column="0" Spacing="2">
+                                                    <TextBlock FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_ShaderAndAddonSize}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="Medium"
+                                                               Text="{x:Bind HoYoShadeShaderSize, Mode=OneWay}" />
+                                                </StackPanel>
+
+                                                <!-- 预设 -->
+                                                <StackPanel Grid.Column="1" Spacing="2">
+                                                    <TextBlock FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_PresetSize}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="Medium"
+                                                               Text="{x:Bind HoYoShadePresetSize, Mode=OneWay}" />
+                                                </StackPanel>
+
+                                                <!-- 截图 -->
+                                                <StackPanel Grid.Column="2" Spacing="2">
+                                                    <TextBlock FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_ScreenshotSize}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="Medium"
+                                                               Text="{x:Bind HoYoShadeScreenshotSize, Mode=OneWay}" />
+                                                </StackPanel>
+
+                                                <!-- 其它内容 -->
+                                                <StackPanel Grid.Column="3" Spacing="2">
+                                                    <TextBlock FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_OtherContentSize}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="Medium"
+                                                               Text="{x:Bind HoYoShadeOtherSize, Mode=OneWay}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- OpenHoYoShade 子卡片 -->
+                        <Border Background="{ThemeResource ControlFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="14,12">
+                            <StackPanel Spacing="10">
+                                <!-- 卡片头部：名称与状态徽章 -->
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                        <FontIcon FontSize="16"
+                                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                                  Glyph="&#xE896;" />
+                                        <TextBlock FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   Text="OpenHoYoShade" />
+                                    </StackPanel>
+                                    <!-- 状态徽章 -->
+                                    <Border Grid.Column="1"
+                                            Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="8,2"
+                                            VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon FontSize="10"
+                                                      Foreground="{x:Bind OpenHoYoShadeStatusBrush, Mode=OneWay}"
+                                                      Glyph="{x:Bind OpenHoYoShadeStatusGlyph, Mode=OneWay}" />
+                                            <TextBlock FontSize="12"
+                                                       Foreground="{x:Bind OpenHoYoShadeStatusBrush, Mode=OneWay}"
+                                                       Text="{x:Bind OpenHoYoShadeStatusText, Mode=OneWay}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 已安装详细信息 -->
+                                <StackPanel Spacing="10"
+                                            Visibility="{x:Bind OpenHoYoShadeInstalledVisibility, Mode=OneWay}">
+                                    <!-- 版本信息 -->
+                                    <StackPanel Orientation="Horizontal" Spacing="16">
+                                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                            <Run Text="{x:Bind lang:Lang.FileSettingPage_FrameworkVersion}" /><Run Text=": " />
+                                            <Run FontWeight="Medium" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{x:Bind OpenHoYoShadeVersion, Mode=OneWay}" />
+                                        </TextBlock>
+                                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                            <Run Text="{x:Bind lang:Lang.FileSettingPage_ReShadeVersion}" /><Run Text=": " />
+                                            <Run FontWeight="Medium" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{x:Bind OpenHoYoShadeReShadeVersion, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <!-- 安装路径 -->
+                                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Padding="10,6">
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <FontIcon Grid.Column="0"
+                                                      FontSize="13"
+                                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                      Glyph="&#xED25;" />
+                                            <TextBlock Grid.Column="1"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="12"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                       IsTextSelectionEnabled="True"
+                                                       Text="{x:Bind OpenHoYoShadePath, Mode=OneWay}"
+                                                       TextWrapping="Wrap" />
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- 存储占用 -->
+                                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Padding="12,8">
+                                        <StackPanel Spacing="6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                                    <FontIcon FontSize="13"
+                                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                              Glyph="&#xEDA2;" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_TotalSize}" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1"
+                                                           FontSize="13"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                                           Text="{x:Bind OpenHoYoShadeTotalSize, Mode=OneWay}" />
+                                            </Grid>
+
+                                            <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" Opacity="0.5" />
+
+                                            <Grid ColumnSpacing="8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- 着色器及插件 -->
+                                                <StackPanel Grid.Column="0" Spacing="2">
+                                                    <TextBlock FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_ShaderAndAddonSize}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="Medium"
+                                                               Text="{x:Bind OpenHoYoShadeShaderSize, Mode=OneWay}" />
+                                                </StackPanel>
+
+                                                <!-- 预设 -->
+                                                <StackPanel Grid.Column="1" Spacing="2">
+                                                    <TextBlock FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_PresetSize}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="Medium"
+                                                               Text="{x:Bind OpenHoYoShadePresetSize, Mode=OneWay}" />
+                                                </StackPanel>
+
+                                                <!-- 截图 -->
+                                                <StackPanel Grid.Column="2" Spacing="2">
+                                                    <TextBlock FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_ScreenshotSize}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="Medium"
+                                                               Text="{x:Bind OpenHoYoShadeScreenshotSize, Mode=OneWay}" />
+                                                </StackPanel>
+
+                                                <!-- 其它内容 -->
+                                                <StackPanel Grid.Column="3" Spacing="2">
+                                                    <TextBlock FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               Text="{x:Bind lang:Lang.FileSettingPage_OtherContentSize}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock FontSize="12"
+                                                               FontWeight="Medium"
+                                                               Text="{x:Bind OpenHoYoShadeOtherSize, Mode=OneWay}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Border>
 

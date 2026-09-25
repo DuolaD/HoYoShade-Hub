@@ -6,6 +6,7 @@ using HoYoShadeHub.Core.HoYoShade;
 using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.GameLauncher;
 using HoYoShadeHub.Features.RPC;
+using HoYoShadeHub.Language;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -119,6 +120,26 @@ public class LauncherDiagnosticInfo
     public bool RpcRunning { get; set; }
     public string HoYoShadeFrameworkVersion { get; set; } = string.Empty;
     public string OpenHoYoShadeVersion { get; set; } = string.Empty;
+
+    // Detailed Framework information (Settings & Flavors)
+    public string FrameworkDownloadServer { get; set; } = string.Empty;
+    public bool FrameworkPreviewChannel { get; set; }
+    public FrameworkFlavorDiagnosticInfo HoYoShade { get; set; } = new();
+    public FrameworkFlavorDiagnosticInfo OpenHoYoShade { get; set; } = new();
+}
+
+public class FrameworkFlavorDiagnosticInfo
+{
+    public string Name { get; set; } = string.Empty;
+    public bool IsInstalled { get; set; }
+    public string Version { get; set; } = string.Empty;
+    public string ReShadeVersion { get; set; } = string.Empty;
+    public string InstallPath { get; set; } = string.Empty;
+    public string TotalSize { get; set; } = "0.00 B";
+    public string ShaderSize { get; set; } = "0.00 B";
+    public string PresetSize { get; set; } = "0.00 B";
+    public string ScreenshotSize { get; set; } = "0.00 B";
+    public string OtherSize { get; set; } = "0.00 B";
 }
 
 public class GameDiagnosticInfo
@@ -244,10 +265,19 @@ public static class DiagnosticService
                 _logger.LogError(ex, "Failed to collect system diagnostic info");
             }
 
-            // 3. Launcher Info
+            // 3. Launcher & Framework Info
             try
             {
-                var (hoyoshadeVer, openHoyoshadeVer) = await GetFrameworkVersionsAsync();
+                var versionService = !string.IsNullOrWhiteSpace(AppConfig.UserDataFolder)
+                    ? new HoYoShadeVersionService(AppConfig.UserDataFolder)
+                    : null;
+                var manifest = versionService != null
+                    ? await versionService.LoadManifestAsync()
+                    : new HoYoShadeVersionManifest();
+
+                var hoyoshadeInfo = await CollectFrameworkFlavorInfoAsync("HoYoShade", "HoYoShade", manifest);
+                var openHoyoshadeInfo = await CollectFrameworkFlavorInfoAsync("OpenHoYoShade", "OpenHoYoShade", manifest);
+
                 report.Launcher = new LauncherDiagnosticInfo
                 {
                     Version = AppConfig.AppVersion ?? "Unknown",
@@ -265,8 +295,12 @@ public static class DiagnosticService
                     EchEnabled = DohService.EnableEch,
                     DohProvider = DohService.Provider.ToString(),
                     RpcRunning = CheckRpcRunning(),
-                    HoYoShadeFrameworkVersion = hoyoshadeVer,
-                    OpenHoYoShadeVersion = openHoyoshadeVer
+                    HoYoShadeFrameworkVersion = hoyoshadeInfo.IsInstalled ? hoyoshadeInfo.Version : Lang.WelcomeView_NotInstalled,
+                    OpenHoYoShadeVersion = openHoyoshadeInfo.IsInstalled ? openHoyoshadeInfo.Version : Lang.WelcomeView_NotInstalled,
+                    FrameworkDownloadServer = GetFrameworkDownloadServerName(AppConfig.HoYoShadeFrameworkDownloadServer),
+                    FrameworkPreviewChannel = AppConfig.EnableHoYoShadePreviewChannel,
+                    HoYoShade = hoyoshadeInfo,
+                    OpenHoYoShade = openHoyoshadeInfo
                 };
             }
             catch (Exception ex)
@@ -399,20 +433,50 @@ public static class DiagnosticService
         sb.AppendLine($"  - 系统开机运行时间: {report.System.SystemUptime}");
         sb.AppendLine();
 
-        // 3. 启动器与组件状态
-        sb.AppendLine("【3. 启动器与组件状态 (Launcher & Framework)】");
+        // 3. 启动器与框架状态
+        sb.AppendLine("【3. 启动器与框架状态 (Launcher & Framework)】");
         sb.AppendLine($"  - 启动器版本: {report.Launcher.Version} (PID: {report.Launcher.ProcessId})");
         sb.AppendLine($"  - 运行权限: {(report.Launcher.IsAdmin ? "管理员权限 (Administrator)" : "普通用户权限 (Standard User)")}");
         sb.AppendLine($"  - 运行模式: 便携模式={report.Launcher.IsPortable}, 移动存储={report.Launcher.IsRemovableStorage}");
         sb.AppendLine($"  - 更新通道: {report.Launcher.UpdateChannel}");
-        sb.AppendLine($"  - HoYoShade 核心: {report.Launcher.HoYoShadeFrameworkVersion}");
-        sb.AppendLine($"  - OpenHoYoShade: {report.Launcher.OpenHoYoShadeVersion}");
         sb.AppendLine($"  - RPC 后台服务: {(report.Launcher.RpcRunning ? "正在运行 (Running)" : "未运行 (Not Running)")}");
         sb.AppendLine($"  - 网络加密: DoH={(report.Launcher.DohEnabled ? "开启" : "关闭")} [{report.Launcher.DohProvider}], ECH={(report.Launcher.EchEnabled ? "开启" : "关闭")}");
-        sb.AppendLine($"  - 下载节点: {report.Launcher.DownloadServer}");
+        sb.AppendLine($"  - 启动器下载节点: {report.Launcher.DownloadServer}");
         sb.AppendLine($"  - 程序主目录: {report.Launcher.BaseDirectory}");
         sb.AppendLine($"  - 用户数据目录: {report.Launcher.UserDataFolder}");
         sb.AppendLine($"  - 缓存文件目录: {report.Launcher.CacheFolder}");
+        sb.AppendLine();
+        sb.AppendLine("  [HoYoShade 框架通用设置]");
+        sb.AppendLine($"  - 框架下载服务器: {report.Launcher.FrameworkDownloadServer}");
+        sb.AppendLine($"  - 加入预览版更新通道: {(report.Launcher.FrameworkPreviewChannel ? "开启 (Enabled)" : "关闭 (Disabled)")}");
+        sb.AppendLine();
+        sb.AppendLine("  * HoYoShade:");
+        sb.AppendLine($"    - 状态: {(report.Launcher.HoYoShade.IsInstalled ? "已安装 (Installed)" : "未安装 (Not Installed)")}");
+        if (report.Launcher.HoYoShade.IsInstalled)
+        {
+            sb.AppendLine($"    - 框架版本: {report.Launcher.HoYoShade.Version}");
+            sb.AppendLine($"    - ReShade版本: {report.Launcher.HoYoShade.ReShadeVersion}");
+            sb.AppendLine($"    - 安装路径: {report.Launcher.HoYoShade.InstallPath}");
+            sb.AppendLine($"    - 存储总占用: {report.Launcher.HoYoShade.TotalSize}");
+            sb.AppendLine($"    - 着色器及插件占用: {report.Launcher.HoYoShade.ShaderSize}");
+            sb.AppendLine($"    - 预设占用: {report.Launcher.HoYoShade.PresetSize}");
+            sb.AppendLine($"    - 截图占用: {report.Launcher.HoYoShade.ScreenshotSize}");
+            sb.AppendLine($"    - 其他内容占用: {report.Launcher.HoYoShade.OtherSize}");
+        }
+        sb.AppendLine();
+        sb.AppendLine("  * OpenHoYoShade:");
+        sb.AppendLine($"    - 状态: {(report.Launcher.OpenHoYoShade.IsInstalled ? "已安装 (Installed)" : "未安装 (Not Installed)")}");
+        if (report.Launcher.OpenHoYoShade.IsInstalled)
+        {
+            sb.AppendLine($"    - 框架版本: {report.Launcher.OpenHoYoShade.Version}");
+            sb.AppendLine($"    - ReShade版本: {report.Launcher.OpenHoYoShade.ReShadeVersion}");
+            sb.AppendLine($"    - 安装路径: {report.Launcher.OpenHoYoShade.InstallPath}");
+            sb.AppendLine($"    - 存储总占用: {report.Launcher.OpenHoYoShade.TotalSize}");
+            sb.AppendLine($"    - 着色器及插件占用: {report.Launcher.OpenHoYoShade.ShaderSize}");
+            sb.AppendLine($"    - 预设占用: {report.Launcher.OpenHoYoShade.PresetSize}");
+            sb.AppendLine($"    - 截图占用: {report.Launcher.OpenHoYoShade.ScreenshotSize}");
+            sb.AppendLine($"    - 其他内容占用: {report.Launcher.OpenHoYoShade.OtherSize}");
+        }
         sb.AppendLine();
 
         // 4. 游戏与注入状态
@@ -1285,21 +1349,155 @@ public static class DiagnosticService
         return result;
     }
 
-    private static async Task<(string hoyoshade, string openhoyoshade)> GetFrameworkVersionsAsync()
+    private static async Task<FrameworkFlavorDiagnosticInfo> CollectFrameworkFlavorInfoAsync(string name, string folderName, HoYoShadeVersionManifest manifest)
+    {
+        var info = new FrameworkFlavorDiagnosticInfo { Name = name };
+        if (string.IsNullOrWhiteSpace(AppConfig.UserDataFolder))
+        {
+            info.Version = Lang.WelcomeView_NotInstalled;
+            info.ReShadeVersion = "-";
+            return info;
+        }
+
+        string fullPath = Path.Combine(AppConfig.UserDataFolder, folderName);
+        info.InstallPath = Sanitize(fullPath);
+
+        if (!Directory.Exists(fullPath))
+        {
+            info.IsInstalled = false;
+            info.Version = Lang.WelcomeView_NotInstalled;
+            info.ReShadeVersion = "-";
+            return info;
+        }
+
+        info.IsInstalled = true;
+
+        // Version from manifest
+        string? manifestVer = name switch
+        {
+            "HoYoShade" => manifest.HoYoShade?.Version,
+            "OpenHoYoShade" => manifest.OpenHoYoShade?.Version,
+            _ => null
+        };
+        info.Version = !string.IsNullOrWhiteSpace(manifestVer) ? manifestVer : "Unknown";
+
+        // ReShade version from ReShade64.dll
+        string reshadeDll = Path.Combine(fullPath, "ReShade64.dll");
+        info.ReShadeVersion = GetDllProductVersion(reshadeDll);
+
+        // Calculate sizes asynchronously
+        try
+        {
+            long total = await GetFolderSizeLongAsync(fullPath);
+            long shaders = 0;
+            long presets = 0;
+            long screenshots = 0;
+
+            string shadersPath = Path.Combine(fullPath, "reshade-shaders");
+            if (Directory.Exists(shadersPath))
+            {
+                shaders = await GetFolderSizeLongAsync(shadersPath);
+            }
+
+            string presetsPath = Path.Combine(fullPath, "Presets");
+            if (Directory.Exists(presetsPath))
+            {
+                presets = await GetFolderSizeLongAsync(presetsPath);
+            }
+
+            string screenshotsPath = Path.Combine(fullPath, "Screenshots");
+            if (Directory.Exists(screenshotsPath))
+            {
+                screenshots = await GetFolderSizeLongAsync(screenshotsPath);
+            }
+
+            long other = Math.Max(0, total - shaders - presets - screenshots);
+
+            info.TotalSize = FormatSize(total);
+            info.ShaderSize = FormatSize(shaders);
+            info.PresetSize = FormatSize(presets);
+            info.ScreenshotSize = FormatSize(screenshots);
+            info.OtherSize = FormatSize(other);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to calculate storage size for {Name}", name);
+        }
+
+        return info;
+    }
+
+    public static string GetFrameworkDownloadServerName(int serverIndex)
+    {
+        return serverIndex switch
+        {
+            -1 => Lang.HoYoShadeDownloadView_Server_AutoSelect,
+            0 => Lang.HoYoShadeDownloadView_Server_GithubDirect,
+            1 => AppConfig.EnableEch ? "Cloudflare ECH" : Lang.HoYoShadeDownloadView_Server_Cloudflare,
+            2 => Lang.HoYoShadeDownloadView_Server_TencentCloud,
+            3 => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
+            _ => Lang.HoYoShadeDownloadView_Server_AutoSelect
+        };
+    }
+
+    private static string GetDllProductVersion(string dllPath)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(AppConfig.UserDataFolder))
+            if (!File.Exists(dllPath))
             {
-                return ("Not installed", "Not installed");
+                return "-";
             }
-            var versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
-            var manifest = await versionService.LoadManifestAsync();
-            return (manifest.HoYoShade?.Version ?? "Not installed", manifest.OpenHoYoShade?.Version ?? "Not installed");
+
+            var versionInfo = FileVersionInfo.GetVersionInfo(dllPath);
+            return !string.IsNullOrWhiteSpace(versionInfo.ProductVersion) ? versionInfo.ProductVersion : "-";
         }
         catch
         {
-            return ("Unknown", "Unknown");
+            return "-";
+        }
+    }
+
+    private static async Task<long> GetFolderSizeLongAsync(string folder)
+    {
+        return await Task.Run(() =>
+        {
+            try
+            {
+                if (Directory.Exists(folder))
+                {
+                    return Directory.GetFiles(folder, "*", SearchOption.AllDirectories)
+                        .Sum(file => new FileInfo(file).Length);
+                }
+            }
+            catch
+            {
+            }
+            return 0L;
+        });
+    }
+
+    private static string FormatSize(long bytes)
+    {
+        const long KB = 1024;
+        const long MB = 1024 * 1024;
+        const long GB = 1024 * 1024 * 1024;
+
+        if (bytes < KB)
+        {
+            return $"{bytes:F2} B";
+        }
+        else if (bytes < MB)
+        {
+            return $"{bytes / (double)KB:F2} KB";
+        }
+        else if (bytes < GB)
+        {
+            return $"{bytes / (double)MB:F2} MB";
+        }
+        else
+        {
+            return $"{bytes / (double)GB:F2} GB";
         }
     }
 

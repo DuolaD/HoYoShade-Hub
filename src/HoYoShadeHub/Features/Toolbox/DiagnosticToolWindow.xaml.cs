@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using HoYoShadeHub.Core;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
@@ -135,6 +136,180 @@ public sealed partial class DiagnosticToolWindow : WindowEx
     {
         get => _frameworkVerText;
         set => SetProperty(ref _frameworkVerText, value);
+    }
+
+    private string _frameworkDownloadServerText = "-";
+    public string FrameworkDownloadServerText
+    {
+        get => _frameworkDownloadServerText;
+        set => SetProperty(ref _frameworkDownloadServerText, value);
+    }
+
+    private string _frameworkPreviewChannelText = "-";
+    public string FrameworkPreviewChannelText
+    {
+        get => _frameworkPreviewChannelText;
+        set => SetProperty(ref _frameworkPreviewChannelText, value);
+    }
+
+    // HoYoShade flavor properties
+    private bool _hoYoShadeInstalled;
+    public bool HoYoShadeInstalled
+    {
+        get => _hoYoShadeInstalled;
+        set
+        {
+            if (SetProperty(ref _hoYoShadeInstalled, value))
+            {
+                OnPropertyChanged(nameof(HoYoShadeInstalledVisibility));
+                OnPropertyChanged(nameof(HoYoShadeStatusGlyph));
+                OnPropertyChanged(nameof(HoYoShadeStatusText));
+                OnPropertyChanged(nameof(HoYoShadeStatusBrush));
+            }
+        }
+    }
+
+    public Visibility HoYoShadeInstalledVisibility => HoYoShadeInstalled ? Visibility.Visible : Visibility.Collapsed;
+    public string HoYoShadeStatusGlyph => HoYoShadeInstalled ? "\uE73E" : "\uE711";
+    public string HoYoShadeStatusText => HoYoShadeInstalled ? Lang.WelcomeView_Installed : Lang.WelcomeView_NotInstalled;
+    public SolidColorBrush HoYoShadeStatusBrush => HoYoShadeInstalled 
+        ? new SolidColorBrush(Windows.UI.Color.FromArgb(255, 16, 185, 129)) 
+        : new SolidColorBrush(Windows.UI.Color.FromArgb(255, 239, 68, 68));
+
+    private string _hoYoShadeVersion = "-";
+    public string HoYoShadeVersion
+    {
+        get => _hoYoShadeVersion;
+        set => SetProperty(ref _hoYoShadeVersion, value);
+    }
+
+    private string _hoYoShadeReShadeVersion = "-";
+    public string HoYoShadeReShadeVersion
+    {
+        get => _hoYoShadeReShadeVersion;
+        set => SetProperty(ref _hoYoShadeReShadeVersion, value);
+    }
+
+    private string _hoYoShadePath = "-";
+    public string HoYoShadePath
+    {
+        get => _hoYoShadePath;
+        set => SetProperty(ref _hoYoShadePath, value);
+    }
+
+    private string _hoYoShadeTotalSize = "0.00 B";
+    public string HoYoShadeTotalSize
+    {
+        get => _hoYoShadeTotalSize;
+        set => SetProperty(ref _hoYoShadeTotalSize, value);
+    }
+
+    private string _hoYoShadeShaderSize = "0.00 B";
+    public string HoYoShadeShaderSize
+    {
+        get => _hoYoShadeShaderSize;
+        set => SetProperty(ref _hoYoShadeShaderSize, value);
+    }
+
+    private string _hoYoShadePresetSize = "0.00 B";
+    public string HoYoShadePresetSize
+    {
+        get => _hoYoShadePresetSize;
+        set => SetProperty(ref _hoYoShadePresetSize, value);
+    }
+
+    private string _hoYoShadeScreenshotSize = "0.00 B";
+    public string HoYoShadeScreenshotSize
+    {
+        get => _hoYoShadeScreenshotSize;
+        set => SetProperty(ref _hoYoShadeScreenshotSize, value);
+    }
+
+    private string _hoYoShadeOtherSize = "0.00 B";
+    public string HoYoShadeOtherSize
+    {
+        get => _hoYoShadeOtherSize;
+        set => SetProperty(ref _hoYoShadeOtherSize, value);
+    }
+
+    // OpenHoYoShade flavor properties
+    private bool _openHoYoShadeInstalled;
+    public bool OpenHoYoShadeInstalled
+    {
+        get => _openHoYoShadeInstalled;
+        set
+        {
+            if (SetProperty(ref _openHoYoShadeInstalled, value))
+            {
+                OnPropertyChanged(nameof(OpenHoYoShadeInstalledVisibility));
+                OnPropertyChanged(nameof(OpenHoYoShadeStatusGlyph));
+                OnPropertyChanged(nameof(OpenHoYoShadeStatusText));
+                OnPropertyChanged(nameof(OpenHoYoShadeStatusBrush));
+            }
+        }
+    }
+
+    public Visibility OpenHoYoShadeInstalledVisibility => OpenHoYoShadeInstalled ? Visibility.Visible : Visibility.Collapsed;
+    public string OpenHoYoShadeStatusGlyph => OpenHoYoShadeInstalled ? "\uE73E" : "\uE711";
+    public string OpenHoYoShadeStatusText => OpenHoYoShadeInstalled ? Lang.WelcomeView_Installed : Lang.WelcomeView_NotInstalled;
+    public SolidColorBrush OpenHoYoShadeStatusBrush => OpenHoYoShadeInstalled 
+        ? new SolidColorBrush(Windows.UI.Color.FromArgb(255, 16, 185, 129)) 
+        : new SolidColorBrush(Windows.UI.Color.FromArgb(255, 239, 68, 68));
+
+    private string _openHoYoShadeVersion = "-";
+    public string OpenHoYoShadeVersion
+    {
+        get => _openHoYoShadeVersion;
+        set => SetProperty(ref _openHoYoShadeVersion, value);
+    }
+
+    private string _openHoYoShadeReShadeVersion = "-";
+    public string OpenHoYoShadeReShadeVersion
+    {
+        get => _openHoYoShadeReShadeVersion;
+        set => SetProperty(ref _openHoYoShadeReShadeVersion, value);
+    }
+
+    private string _openHoYoShadePath = "-";
+    public string OpenHoYoShadePath
+    {
+        get => _openHoYoShadePath;
+        set => SetProperty(ref _openHoYoShadePath, value);
+    }
+
+    private string _openHoYoShadeTotalSize = "0.00 B";
+    public string OpenHoYoShadeTotalSize
+    {
+        get => _openHoYoShadeTotalSize;
+        set => SetProperty(ref _openHoYoShadeTotalSize, value);
+    }
+
+    private string _openHoYoShadeShaderSize = "0.00 B";
+    public string OpenHoYoShadeShaderSize
+    {
+        get => _openHoYoShadeShaderSize;
+        set => SetProperty(ref _openHoYoShadeShaderSize, value);
+    }
+
+    private string _openHoYoShadePresetSize = "0.00 B";
+    public string OpenHoYoShadePresetSize
+    {
+        get => _openHoYoShadePresetSize;
+        set => SetProperty(ref _openHoYoShadePresetSize, value);
+    }
+
+    private string _openHoYoShadeScreenshotSize = "0.00 B";
+    public string OpenHoYoShadeScreenshotSize
+    {
+        get => _openHoYoShadeScreenshotSize;
+        set => SetProperty(ref _openHoYoShadeScreenshotSize, value);
+    }
+
+    private string _openHoYoShadeOtherSize = "0.00 B";
+    public string OpenHoYoShadeOtherSize
+    {
+        get => _openHoYoShadeOtherSize;
+        set => SetProperty(ref _openHoYoShadeOtherSize, value);
     }
 
     private string _rpcStateText = "-";
@@ -307,11 +482,33 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             RuntimeText = $"{report.System.DotNetRuntime} | WebView2: {report.System.WebView2Version}";
             UptimeText = report.System.SystemUptime;
 
-            // 3. Launcher info
+            // 3. Launcher & Framework info
             LauncherVerText = $"{report.Launcher.Version} (PID: {report.Launcher.ProcessId})";
             FrameworkVerText = $"HoYoShade: {report.Launcher.HoYoShadeFrameworkVersion} | OpenHoYoShade: {report.Launcher.OpenHoYoShadeVersion}";
             RpcStateText = report.Launcher.RpcRunning ? "Running" : "Not Running";
             PermissionsText = report.Launcher.IsAdmin ? "Administrator" : "Standard User";
+            FrameworkDownloadServerText = report.Launcher.FrameworkDownloadServer;
+            FrameworkPreviewChannelText = report.Launcher.FrameworkPreviewChannel ? "✓ Enabled" : "✗ Disabled";
+
+            HoYoShadeInstalled = report.Launcher.HoYoShade.IsInstalled;
+            HoYoShadeVersion = report.Launcher.HoYoShade.Version;
+            HoYoShadeReShadeVersion = report.Launcher.HoYoShade.ReShadeVersion;
+            HoYoShadePath = report.Launcher.HoYoShade.InstallPath;
+            HoYoShadeTotalSize = report.Launcher.HoYoShade.TotalSize;
+            HoYoShadeShaderSize = report.Launcher.HoYoShade.ShaderSize;
+            HoYoShadePresetSize = report.Launcher.HoYoShade.PresetSize;
+            HoYoShadeScreenshotSize = report.Launcher.HoYoShade.ScreenshotSize;
+            HoYoShadeOtherSize = report.Launcher.HoYoShade.OtherSize;
+
+            OpenHoYoShadeInstalled = report.Launcher.OpenHoYoShade.IsInstalled;
+            OpenHoYoShadeVersion = report.Launcher.OpenHoYoShade.Version;
+            OpenHoYoShadeReShadeVersion = report.Launcher.OpenHoYoShade.ReShadeVersion;
+            OpenHoYoShadePath = report.Launcher.OpenHoYoShade.InstallPath;
+            OpenHoYoShadeTotalSize = report.Launcher.OpenHoYoShade.TotalSize;
+            OpenHoYoShadeShaderSize = report.Launcher.OpenHoYoShade.ShaderSize;
+            OpenHoYoShadePresetSize = report.Launcher.OpenHoYoShade.PresetSize;
+            OpenHoYoShadeScreenshotSize = report.Launcher.OpenHoYoShade.ScreenshotSize;
+            OpenHoYoShadeOtherSize = report.Launcher.OpenHoYoShade.OtherSize;
 
             // 4. Games info
             if (report.Games.Count > 0)
