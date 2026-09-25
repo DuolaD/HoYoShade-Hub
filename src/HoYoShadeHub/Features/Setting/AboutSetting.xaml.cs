@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using NuGet.Versioning;
+using HoYoShadeHub.Features.Toolbox;
 
 
 namespace HoYoShadeHub.Features.Setting;
@@ -256,6 +257,18 @@ public sealed partial class AboutSetting : PageBase
     }
 
 
+    [RelayCommand]
+    private void OpenDiagnosticTool()
+    {
+        try
+        {
+            new DiagnosticToolWindow().ShowWindow(XamlRoot.ContentIslandEnvironment.AppWindowId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Open diagnostic tool");
+        }
+    }
 
 
 }

@@ -36,6 +36,11 @@ public sealed partial class ToolboxSetting : PageBase
                             nameof(BlenderRepairToolWindow),
                             nameof(Lang.ToolboxSetting_BlenderRepairTool),
                             nameof(Lang.ToolboxSetting_BlenderRepairToolDescription)),
+            new ToolboxItem("\xE9F9",
+                            null,
+                            nameof(DiagnosticToolWindow),
+                            nameof(Lang.ToolboxSetting_DiagnosticTool),
+                            nameof(Lang.ToolboxSetting_DiagnosticToolDescription)),
         ];
     }
 
@@ -75,6 +80,10 @@ public sealed partial class ToolboxSetting : PageBase
                 else if (item.Tag is nameof(BlenderRepairToolWindow))
                 {
                     new BlenderRepairToolWindow().ShowWindow(XamlRoot.ContentIslandEnvironment.AppWindowId);
+                }
+                else if (item.Tag is nameof(DiagnosticToolWindow))
+                {
+                    new DiagnosticToolWindow().ShowWindow(XamlRoot.ContentIslandEnvironment.AppWindowId);
                 }
             }
         }

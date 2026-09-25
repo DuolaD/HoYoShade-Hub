@@ -5556,5 +5556,293 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("GameSelector_Unpin", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 System &amp; Environment Diagnostics 的本地化字符串。
+        /// </summary>
+        public static string ToolboxSetting_DiagnosticTool {
+            get {
+                return ResourceManager.GetString("ToolboxSetting_DiagnosticTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Collect hardware/software specs, launcher status, and local logs for troubleshooting and reporting. 的本地化字符串。
+        /// </summary>
+        public static string ToolboxSetting_DiagnosticToolDescription {
+            get {
+                return ResourceManager.GetString("ToolboxSetting_DiagnosticToolDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Diagnostics &amp; Logs 的本地化字符串。
+        /// </summary>
+        public static string AboutSetting_ExportDiagnosticInfo {
+            get {
+                return ResourceManager.GetString("AboutSetting_ExportDiagnosticInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Encounter an issue? Open the diagnostic tool to view and export system info and logs. 的本地化字符串。
+        /// </summary>
+        public static string AboutSetting_ExportDiagnosticInfoTip {
+            get {
+                return ResourceManager.GetString("AboutSetting_ExportDiagnosticInfoTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Open Diagnostic Tool 的本地化字符串。
+        /// </summary>
+        public static string AboutSetting_OpenDiagnosticTool {
+            get {
+                return ResourceManager.GetString("AboutSetting_OpenDiagnosticTool", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 System &amp; Environment Diagnostics 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Title {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Inspect your system configuration, runtime environment, and export logs to share with developers. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Subtitle {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Copy Text 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_CopyReport {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_CopyReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Export Zip Package 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ExportZip {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ExportZip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Open Log Folder 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_OpenLogFolder {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_OpenLogFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Refresh 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Refresh {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Hardware &amp; Displays 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_SectionHardware {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_SectionHardware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Operating System &amp; Runtime 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_SectionSystem {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_SectionSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Launcher &amp; Framework 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_SectionLauncher {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_SectionLauncher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Installed Games &amp; Injections 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_SectionGames {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_SectionGames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Diagnostic Report &amp; Log Preview 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_SectionLogs {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_SectionLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 * Personal usernames and privacy paths have been automatically sanitized. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_PrivacyNotice {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_PrivacyNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Diagnostic report has been copied to clipboard. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ReportCopied {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ReportCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Diagnostic package exported successfully: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ExportSuccess {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ExportSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Failed to export diagnostic package. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ExportFailed {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ExportFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Collecting diagnostic information... 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Loading {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Processor (CPU) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Cpu {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Cpu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Memory (RAM) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Memory {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Memory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Graphics (GPU) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Gpu {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Gpu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Display &amp; Scale 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Display {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Display", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 OS Version 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_OS {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_OS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Runtimes 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Runtime {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Runtime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Launcher Version 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_LauncherVer {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_LauncherVer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Permissions 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Permissions {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Permissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 HoYoShade Core 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_FrameworkVer {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_FrameworkVer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 RPC Background Service 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_RpcState {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_RpcState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No game installation paths configured yet. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NoGamesFound {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NoGamesFound", resourceCulture);
+            }
+        }
     }
 }

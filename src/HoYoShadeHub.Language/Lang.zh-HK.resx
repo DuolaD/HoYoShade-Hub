@@ -1965,4 +1965,100 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="GameSelector_Unpin" xml:space="preserve">
     <value>取消釘選</value>
   </data>
+  <data name="ToolboxSetting_DiagnosticTool" xml:space="preserve">
+    <value>系統與環境診斷</value>
+  </data>
+  <data name="ToolboxSetting_DiagnosticToolDescription" xml:space="preserve">
+    <value>一鍵採集軟硬件規格、啟動器運行狀態與本地日誌，便於排查與反饋問題。</value>
+  </data>
+  <data name="AboutSetting_ExportDiagnosticInfo" xml:space="preserve">
+    <value>環境與日誌診斷</value>
+  </data>
+  <data name="AboutSetting_ExportDiagnosticInfoTip" xml:space="preserve">
+    <value>遇到異常問題？打開診斷工具一鍵查看並導出軟硬件信息與運行日誌。</value>
+  </data>
+  <data name="AboutSetting_OpenDiagnosticTool" xml:space="preserve">
+    <value>打開診斷工具</value>
+  </data>
+  <data name="DiagnosticTool_Title" xml:space="preserve">
+    <value>系統與環境診斷</value>
+  </data>
+  <data name="DiagnosticTool_Subtitle" xml:space="preserve">
+    <value>查看系統與硬件配置、啟動器與遊戲運行環境，並支援一鍵導出日誌發送給開發者。</value>
+  </data>
+  <data name="DiagnosticTool_CopyReport" xml:space="preserve">
+    <value>複製診斷文本</value>
+  </data>
+  <data name="DiagnosticTool_ExportZip" xml:space="preserve">
+    <value>導出診斷壓縮包 (.zip)</value>
+  </data>
+  <data name="DiagnosticTool_OpenLogFolder" xml:space="preserve">
+    <value>打開日誌目錄</value>
+  </data>
+  <data name="DiagnosticTool_Refresh" xml:space="preserve">
+    <value>刷新檢測</value>
+  </data>
+  <data name="DiagnosticTool_SectionHardware" xml:space="preserve">
+    <value>硬件與顯示配置</value>
+  </data>
+  <data name="DiagnosticTool_SectionSystem" xml:space="preserve">
+    <value>操作系統與運行環境</value>
+  </data>
+  <data name="DiagnosticTool_SectionLauncher" xml:space="preserve">
+    <value>啟動器與框架狀態</value>
+  </data>
+  <data name="DiagnosticTool_SectionGames" xml:space="preserve">
+    <value>已安裝遊戲與注入配置</value>
+  </data>
+  <data name="DiagnosticTool_SectionLogs" xml:space="preserve">
+    <value>診斷報告與日誌預覽</value>
+  </data>
+  <data name="DiagnosticTool_PrivacyNotice" xml:space="preserve">
+    <value>* 用戶名與私隱路徑已自動脫敏替換</value>
+  </data>
+  <data name="DiagnosticTool_ReportCopied" xml:space="preserve">
+    <value>診斷報告文本已複製到剪貼板！</value>
+  </data>
+  <data name="DiagnosticTool_ExportSuccess" xml:space="preserve">
+    <value>診斷包已成功導出至：{0}</value>
+  </data>
+  <data name="DiagnosticTool_ExportFailed" xml:space="preserve">
+    <value>導出診斷包失敗。</value>
+  </data>
+  <data name="DiagnosticTool_Loading" xml:space="preserve">
+    <value>正在採集診斷信息...</value>
+  </data>
+  <data name="DiagnosticTool_Cpu" xml:space="preserve">
+    <value>處理器 (CPU)</value>
+  </data>
+  <data name="DiagnosticTool_Memory" xml:space="preserve">
+    <value>物理記憶體 (RAM)</value>
+  </data>
+  <data name="DiagnosticTool_Gpu" xml:space="preserve">
+    <value>顯示卡與驅動 (GPU)</value>
+  </data>
+  <data name="DiagnosticTool_Display" xml:space="preserve">
+    <value>螢幕解析度與縮放</value>
+  </data>
+  <data name="DiagnosticTool_OS" xml:space="preserve">
+    <value>操作系統版本</value>
+  </data>
+  <data name="DiagnosticTool_Runtime" xml:space="preserve">
+    <value>系統運行庫</value>
+  </data>
+  <data name="DiagnosticTool_LauncherVer" xml:space="preserve">
+    <value>啟動器版本</value>
+  </data>
+  <data name="DiagnosticTool_Permissions" xml:space="preserve">
+    <value>進程權限</value>
+  </data>
+  <data name="DiagnosticTool_FrameworkVer" xml:space="preserve">
+    <value>HoYoShade 核心</value>
+  </data>
+  <data name="DiagnosticTool_RpcState" xml:space="preserve">
+    <value>RPC 後台服務</value>
+  </data>
+  <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
+    <value>暫未配置遊戲安裝路徑。</value>
+  </data>
 </root>

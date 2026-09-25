@@ -1965,4 +1965,100 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="GameSelector_Unpin" xml:space="preserve">
     <value>Unpin</value>
   </data>
+  <data name="ToolboxSetting_DiagnosticTool" xml:space="preserve">
+    <value>System &amp; Environment Diagnostics</value>
+  </data>
+  <data name="ToolboxSetting_DiagnosticToolDescription" xml:space="preserve">
+    <value>Collect hardware/software specs, launcher status, and local logs for troubleshooting and reporting.</value>
+  </data>
+  <data name="AboutSetting_ExportDiagnosticInfo" xml:space="preserve">
+    <value>Diagnostics &amp; Logs</value>
+  </data>
+  <data name="AboutSetting_ExportDiagnosticInfoTip" xml:space="preserve">
+    <value>Encounter an issue? Open the diagnostic tool to view and export system info and logs.</value>
+  </data>
+  <data name="AboutSetting_OpenDiagnosticTool" xml:space="preserve">
+    <value>Open Diagnostic Tool</value>
+  </data>
+  <data name="DiagnosticTool_Title" xml:space="preserve">
+    <value>System &amp; Environment Diagnostics</value>
+  </data>
+  <data name="DiagnosticTool_Subtitle" xml:space="preserve">
+    <value>Inspect your system configuration, runtime environment, and export logs to share with developers.</value>
+  </data>
+  <data name="DiagnosticTool_CopyReport" xml:space="preserve">
+    <value>Copy Text</value>
+  </data>
+  <data name="DiagnosticTool_ExportZip" xml:space="preserve">
+    <value>Export Zip Package</value>
+  </data>
+  <data name="DiagnosticTool_OpenLogFolder" xml:space="preserve">
+    <value>Open Log Folder</value>
+  </data>
+  <data name="DiagnosticTool_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="DiagnosticTool_SectionHardware" xml:space="preserve">
+    <value>Hardware &amp; Displays</value>
+  </data>
+  <data name="DiagnosticTool_SectionSystem" xml:space="preserve">
+    <value>Operating System &amp; Runtime</value>
+  </data>
+  <data name="DiagnosticTool_SectionLauncher" xml:space="preserve">
+    <value>Launcher &amp; Framework</value>
+  </data>
+  <data name="DiagnosticTool_SectionGames" xml:space="preserve">
+    <value>Installed Games &amp; Injections</value>
+  </data>
+  <data name="DiagnosticTool_SectionLogs" xml:space="preserve">
+    <value>Diagnostic Report &amp; Log Preview</value>
+  </data>
+  <data name="DiagnosticTool_PrivacyNotice" xml:space="preserve">
+    <value>* Personal usernames and privacy paths have been automatically sanitized.</value>
+  </data>
+  <data name="DiagnosticTool_ReportCopied" xml:space="preserve">
+    <value>Diagnostic report has been copied to clipboard.</value>
+  </data>
+  <data name="DiagnosticTool_ExportSuccess" xml:space="preserve">
+    <value>Diagnostic package exported successfully: {0}</value>
+  </data>
+  <data name="DiagnosticTool_ExportFailed" xml:space="preserve">
+    <value>Failed to export diagnostic package.</value>
+  </data>
+  <data name="DiagnosticTool_Loading" xml:space="preserve">
+    <value>Collecting diagnostic information...</value>
+  </data>
+  <data name="DiagnosticTool_Cpu" xml:space="preserve">
+    <value>Processor (CPU)</value>
+  </data>
+  <data name="DiagnosticTool_Memory" xml:space="preserve">
+    <value>Memory (RAM)</value>
+  </data>
+  <data name="DiagnosticTool_Gpu" xml:space="preserve">
+    <value>Graphics (GPU)</value>
+  </data>
+  <data name="DiagnosticTool_Display" xml:space="preserve">
+    <value>Display &amp; Scale</value>
+  </data>
+  <data name="DiagnosticTool_OS" xml:space="preserve">
+    <value>OS Version</value>
+  </data>
+  <data name="DiagnosticTool_Runtime" xml:space="preserve">
+    <value>Runtimes</value>
+  </data>
+  <data name="DiagnosticTool_LauncherVer" xml:space="preserve">
+    <value>Launcher Version</value>
+  </data>
+  <data name="DiagnosticTool_Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="DiagnosticTool_FrameworkVer" xml:space="preserve">
+    <value>HoYoShade Core</value>
+  </data>
+  <data name="DiagnosticTool_RpcState" xml:space="preserve">
+    <value>RPC Background Service</value>
+  </data>
+  <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
+    <value>No game installation paths configured yet.</value>
+  </data>
 </root>

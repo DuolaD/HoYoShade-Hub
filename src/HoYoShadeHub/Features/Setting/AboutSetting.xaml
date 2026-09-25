@@ -157,6 +157,29 @@
             </Grid>
 
 
+            <!--  环境与日志诊断  -->
+            <TextBlock Margin="0,20,0,0"
+                       FontSize="20"
+                       Text="{x:Bind lang:Lang.AboutSetting_ExportDiagnosticInfo}" />
+            <TextBlock Margin="0,8,0,0"
+                       FontSize="14"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Text="{x:Bind lang:Lang.AboutSetting_ExportDiagnosticInfoTip}"
+                       TextWrapping="Wrap" />
+            <Button Height="40"
+                    Margin="0,12,0,0"
+                    Padding="16,0,16,0"
+                    BorderThickness="0"
+                    Command="{x:Bind OpenDiagnosticToolCommand}"
+                    CornerRadius="8,20,20,8"
+                    Style="{ThemeResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE9F9;" />
+                    <TextBlock Text="{x:Bind lang:Lang.AboutSetting_OpenDiagnosticTool}" />
+                </StackPanel>
+            </Button>
+
+
             <!--  相关链接  -->
             <TextBlock Margin="0,20,0,0"
                        FontSize="20"
