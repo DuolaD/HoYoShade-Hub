@@ -6087,5 +6087,707 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("DiagnosticTool_ProbingNetwork", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 System Uptime 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Uptime {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Uptime", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Running 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Running {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Running", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Not Running 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NotRunning {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NotRunning", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Administrator 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Admin {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Admin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Standard User 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_StandardUser {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_StandardUser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Enabled 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Enabled {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Enabled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Disabled 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Disabled {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Disabled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 On 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_On {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_On", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Off 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Off {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Off", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Direct 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Direct {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Direct", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Not detected / No IPv6 outbound 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Ipv6NotDetected {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Ipv6NotDetected", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Enabled [{0}] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ProxyEnabled {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ProxyEnabled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Disabled (Direct) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ProxyDisabled {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ProxyDisabled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Testing connectivity with DoH+ECH tunnel and fetching network info... 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_TestingWithDoh {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_TestingWithDoh", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 DoH+ECH connectivity test completed and report updated! 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohTestComplete {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohTestComplete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 DoH+ECH test encountered error: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohTestFailed {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohTestFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Failed to retrieve network info: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkProbeFailed {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkProbeFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Direct connection is working normally. Outbound network information retrieved successfully. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Conclusion_DirectSuccess {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Conclusion_DirectSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Local direct connection is blocked or experiencing DNS pollution, but connection succeeded via DoH+ECH tunnel. It is recommended to keep DoH and ECH enabled in Launcher Network Settings. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Conclusion_DohRescueSuccess {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Conclusion_DohRescueSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Local network connection is abnormal or disconnected. Please check your network connection, local gateway/Wi-Fi, or system proxy configuration. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Conclusion_AllFailed {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Conclusion_AllFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Network probe error: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Conclusion_Exception {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Conclusion_Exception", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Direct connection restricted, but egress info retrieved via DoH+ECH tunnel 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohRescueDetails_Success {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohRescueDetails_Success", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Both direct connection and DoH+ECH tunnel failed 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohRescueDetails_Failed {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohRescueDetails_Failed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 DoH+ECH test encountered error: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohRescueDetails_Exception {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohRescueDetails_Exception", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Rescue Success 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohRescue_Success {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohRescue_Success", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Rescue Failed 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohRescue_Failed {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohRescue_Failed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 HoYoShade Hub Diagnostic Report 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Title {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Generated At: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_GeneratedAt {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_GeneratedAt", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 [1. Hardware Configuration] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_SecHardware {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_SecHardware", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 [2. Operating System & Runtime] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_SecSystem {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_SecSystem", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 [3. Launcher & Framework] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_SecLauncher {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_SecLauncher", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 [4. Network & Connectivity Diagnostics] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_SecNetwork {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_SecNetwork", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 [5. Configured Games & Injections] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_SecGames {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_SecGames", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 [6. Recent Launcher Logs Summary] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_SecLogs {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_SecLogs", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 {0} Cores / {1} Threads 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_CoresThreads {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_CoresThreads", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 {0} Cores 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Cores {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Cores", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Physical Memory (RAM): {0} [Total: {1} / Avail: {2}] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_MemorySummary {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_MemorySummary", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Graphics & Drivers (GPU): 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Gpu {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Gpu", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Driver: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Driver {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Driver", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Primary: {0} ({1}) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_PrimaryDisplay {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_PrimaryDisplay", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Storage Disks & Drive Letters: 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_DisksDrives {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_DisksDrives", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Audio Devices: 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Audio {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Audio", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Network Adapters: 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_NetworkAdapters {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_NetworkAdapters", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Architecture: System {0} / Process {1} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_OsArch {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_OsArch", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Running Mode: Portable={0}, Removable Storage={1} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_RunningMode {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_RunningMode", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Update Channel: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_UpdateChannel {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_UpdateChannel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 RPC Background Service: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_RpcService {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_RpcService", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Network Encryption: DoH={0} [{1}], ECH={2} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_NetworkEncryption {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_NetworkEncryption", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Launcher Download Node: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_LauncherDownloadNode {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_LauncherDownloadNode", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Auto 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_DownloadNode_Auto {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_DownloadNode_Auto", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Server #{0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_DownloadNode_Server {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_DownloadNode_Server", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Application Directory: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_BaseDirectory {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_BaseDirectory", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 User Data Directory: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_UserDataFolder {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_UserDataFolder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Cache Directory: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_CacheFolder {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_CacheFolder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 [HoYoShade Framework General Settings] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_FrameworkGeneralSettings {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_FrameworkGeneralSettings", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Framework Download Server: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_FrameworkDownloadServer {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_FrameworkDownloadServer", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Preview Update Channel: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_FrameworkPreviewChannel {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_FrameworkPreviewChannel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Status: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Status {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Status", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Install Path: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_InstallPath {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_InstallPath", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似  (Masked) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Ipv4MaskedSuffix {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Ipv4MaskedSuffix", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似  (Plaintext) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Ipv4PlainSuffix {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Ipv4PlainSuffix", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Detection Tier Hit: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_ProbingTier {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_ProbingTier", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 None 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_TierNone {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_TierNone", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 DoH+ECH Penetration Test: {0} - {1} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_DohEchRescue {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_DohEchRescue", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 DX12 Status: Enabled={0}, Ignore Check={1} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_Dx12Status {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_Dx12Status", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Injection File Check: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_InjectionFiles {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_InjectionFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 [Found] 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_FilePresent {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_FilePresent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Core injection files not detected 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_NoInjectionFiles {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_NoInjectionFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 (No logs available) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_NoLogs {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_NoLogs", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Launch Options: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_LaunchOptions {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_LaunchOptions", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Launch Arguments: {0} 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_LaunchArguments {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_LaunchArguments", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Launch Game 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_LaunchGame {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_LaunchGame", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Genshin Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_GenshinBlender {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_GenshinBlender", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 ZZZ Blender Plugin 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_ZZZBlender {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_ZZZBlender", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Borderless Window 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_BorderlessWindow {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_BorderlessWindow", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似                  (Contains only system &amp; hardware summary; sensitive info like public IP is processed) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_PrivacyNotice {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_PrivacyNotice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Preview 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_ChannelPreview {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_ChannelPreview", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Release 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Report_ChannelRelease {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Report_ChannelRelease", resourceCulture);
+            }
+        }
     }
 }

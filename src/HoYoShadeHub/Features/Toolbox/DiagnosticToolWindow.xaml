@@ -371,7 +371,7 @@
 
                             <TextBlock Grid.Row="2" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="Uptime" />
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_Uptime}" />
                             <TextBlock Grid.Row="2" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"

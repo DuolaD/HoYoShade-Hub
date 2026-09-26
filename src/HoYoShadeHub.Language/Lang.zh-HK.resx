@@ -2142,4 +2142,238 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="DiagnosticTool_ProbingNetwork" xml:space="preserve">
     <value>正在探測網絡環境...</value>
   </data>
+  <data name="DiagnosticTool_Uptime" xml:space="preserve">
+    <value>系統運作時間</value>
+  </data>
+  <data name="DiagnosticTool_Running" xml:space="preserve">
+    <value>正在執行</value>
+  </data>
+  <data name="DiagnosticTool_NotRunning" xml:space="preserve">
+    <value>未執行</value>
+  </data>
+  <data name="DiagnosticTool_Admin" xml:space="preserve">
+    <value>系統管理員權限</value>
+  </data>
+  <data name="DiagnosticTool_StandardUser" xml:space="preserve">
+    <value>標準使用者權限</value>
+  </data>
+  <data name="DiagnosticTool_Enabled" xml:space="preserve">
+    <value>已開啟</value>
+  </data>
+  <data name="DiagnosticTool_Disabled" xml:space="preserve">
+    <value>已關閉</value>
+  </data>
+  <data name="DiagnosticTool_On" xml:space="preserve">
+    <value>開啟</value>
+  </data>
+  <data name="DiagnosticTool_Off" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="DiagnosticTool_Direct" xml:space="preserve">
+    <value>直連</value>
+  </data>
+  <data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
+    <value>未偵測到 / 無 IPv6 出口</value>
+  </data>
+  <data name="DiagnosticTool_ProxyEnabled" xml:space="preserve">
+    <value>已啟用 [{0}]</value>
+  </data>
+  <data name="DiagnosticTool_ProxyDisabled" xml:space="preserve">
+    <value>未開啟 (直連)</value>
+  </data>
+  <data name="DiagnosticTool_TestingWithDoh" xml:space="preserve">
+    <value>正在使用 DoH+ECH 加密通道測試連通性並取得網路資訊...</value>
+  </data>
+  <data name="DiagnosticTool_DohTestComplete" xml:space="preserve">
+    <value>DoH+ECH 連通性測試已完成並更新報告！</value>
+  </data>
+  <data name="DiagnosticTool_DohTestFailed" xml:space="preserve">
+    <value>DoH+ECH 測試遇到異常: {0}</value>
+  </data>
+  <data name="DiagnosticTool_NetworkProbeFailed" xml:space="preserve">
+    <value>網路資訊取得失敗: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DirectSuccess" xml:space="preserve">
+    <value>本機直連網路通暢，已成功探測出口資訊。</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohRescueSuccess" xml:space="preserve">
+    <value>偵測到本機直連網路受到阻斷或 DNS 污染，但透過 DoH+ECH 加密通道可正常連通。建議在啟動器網路設定中保持開啟 DoH 與 ECH。</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_AllFailed" xml:space="preserve">
+    <value>本機網路連線異常或已中斷，請檢查網路連線、本機閘道/Wi-Fi 或系統 Proxy 設定。</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_Exception" xml:space="preserve">
+    <value>網路探測異常: {0}</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Success" xml:space="preserve">
+    <value>直連受限，但透過 DoH+ECH 加密通道成功取得出口資訊</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Failed" xml:space="preserve">
+    <value>直連與 DoH+ECH 加密通道均未能連通</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Exception" xml:space="preserve">
+    <value>DoH+ECH 驗證測試遇到異常: {0}</value>
+  </data>
+  <data name="DiagnosticTool_DohRescue_Success" xml:space="preserve">
+    <value>成功復原</value>
+  </data>
+  <data name="DiagnosticTool_DohRescue_Failed" xml:space="preserve">
+    <value>復原失敗</value>
+  </data>
+  <data name="DiagnosticTool_Report_Title" xml:space="preserve">
+    <value>HoYoShade Hub 診斷報告</value>
+  </data>
+  <data name="DiagnosticTool_Report_GeneratedAt" xml:space="preserve">
+    <value>產生時間: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecHardware" xml:space="preserve">
+    <value>【1. 本機硬體設定清單】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecSystem" xml:space="preserve">
+    <value>【2. 作業系統與執行環境】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecLauncher" xml:space="preserve">
+    <value>【3. 啟動器與架構狀態】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecNetwork" xml:space="preserve">
+    <value>【4. 網路環境與出口診斷】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecGames" xml:space="preserve">
+    <value>【5. 已安裝遊戲與注入設定】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecLogs" xml:space="preserve">
+    <value>【6. 最近本機執行記錄檔摘要】</value>
+  </data>
+  <data name="DiagnosticTool_Report_CoresThreads" xml:space="preserve">
+    <value>{0} 核心 / {1} 執行緒</value>
+  </data>
+  <data name="DiagnosticTool_Report_Cores" xml:space="preserve">
+    <value>{0} 核心</value>
+  </data>
+  <data name="DiagnosticTool_Report_MemorySummary" xml:space="preserve">
+    <value>實體記憶體 (RAM): {0} [總量: {1} / 可用: {2}]</value>
+  </data>
+  <data name="DiagnosticTool_Report_Gpu" xml:space="preserve">
+    <value>顯示卡與驅動程式 (GPU):</value>
+  </data>
+  <data name="DiagnosticTool_Report_Driver" xml:space="preserve">
+    <value>驅動程式: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_PrimaryDisplay" xml:space="preserve">
+    <value>主顯示器: {0} ({1})</value>
+  </data>
+  <data name="DiagnosticTool_Report_DisksDrives" xml:space="preserve">
+    <value>存放磁碟與對應磁碟區代號:</value>
+  </data>
+  <data name="DiagnosticTool_Report_Audio" xml:space="preserve">
+    <value>音效裝置:</value>
+  </data>
+  <data name="DiagnosticTool_Report_NetworkAdapters" xml:space="preserve">
+    <value>網路介面卡:</value>
+  </data>
+  <data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
+    <value>架構規格: 系統 {0} / 處理程序 {1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_RunningMode" xml:space="preserve">
+    <value>運作模式: 可攜模式={0}, 外接存放裝置={1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_UpdateChannel" xml:space="preserve">
+    <value>更新通道: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_RpcService" xml:space="preserve">
+    <value>RPC 背景服務: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_NetworkEncryption" xml:space="preserve">
+    <value>網路加密: DoH={0} [{1}], ECH={2}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LauncherDownloadNode" xml:space="preserve">
+    <value>啟動器下載節點: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_DownloadNode_Auto" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="DiagnosticTool_Report_DownloadNode_Server" xml:space="preserve">
+    <value>節點 #{0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_BaseDirectory" xml:space="preserve">
+    <value>程式主目錄: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_UserDataFolder" xml:space="preserve">
+    <value>使用者資料目錄: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_CacheFolder" xml:space="preserve">
+    <value>快取檔案目錄: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkGeneralSettings" xml:space="preserve">
+    <value>[HoYoShade 架構通用設定]</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkDownloadServer" xml:space="preserve">
+    <value>架構下載伺服器: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkPreviewChannel" xml:space="preserve">
+    <value>加入預覽版更新通道: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Status" xml:space="preserve">
+    <value>狀態: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_InstallPath" xml:space="preserve">
+    <value>安裝路徑: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Ipv4MaskedSuffix" xml:space="preserve">
+    <value> (已脫敏保護)</value>
+  </data>
+  <data name="DiagnosticTool_Report_Ipv4PlainSuffix" xml:space="preserve">
+    <value> (完整明文)</value>
+  </data>
+  <data name="DiagnosticTool_Report_ProbingTier" xml:space="preserve">
+    <value>探測命中梯隊: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_TierNone" xml:space="preserve">
+    <value>無</value>
+  </data>
+  <data name="DiagnosticTool_Report_DohEchRescue" xml:space="preserve">
+    <value>DoH+ECH 穿透驗證: {0} - {1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Dx12Status" xml:space="preserve">
+    <value>DX12 狀態: 啟用={0}, 忽略檢查={1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_InjectionFiles" xml:space="preserve">
+    <value>注入檔案檢測: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FilePresent" xml:space="preserve">
+    <value>[存在]</value>
+  </data>
+  <data name="DiagnosticTool_Report_NoInjectionFiles" xml:space="preserve">
+    <value>未偵測到核心注入檔案</value>
+  </data>
+  <data name="DiagnosticTool_Report_NoLogs" xml:space="preserve">
+    <value>(暫無可用記錄檔內容)</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchOptions" xml:space="preserve">
+    <value>啟動選項: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchArguments" xml:space="preserve">
+    <value>啟動參數: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchGame" xml:space="preserve">
+    <value>啟動遊戲</value>
+  </data>
+  <data name="DiagnosticTool_Report_GenshinBlender" xml:space="preserve">
+    <value>原神Blender外掛程式</value>
+  </data>
+  <data name="DiagnosticTool_Report_ZZZBlender" xml:space="preserve">
+    <value>絕區零Blender外掛程式</value>
+  </data>
+  <data name="DiagnosticTool_Report_BorderlessWindow" xml:space="preserve">
+    <value>無邊框視窗</value>
+  </data>
+  <data name="DiagnosticTool_Report_PrivacyNotice" xml:space="preserve">
+    <value>                 (僅包含系統與硬體摘要，已對公網 IP 等敏感資訊作處理)</value>
+  </data>
+  <data name="DiagnosticTool_Report_ChannelPreview" xml:space="preserve">
+    <value>測試版 (Preview)</value>
+  </data>
+  <data name="DiagnosticTool_Report_ChannelRelease" xml:space="preserve">
+    <value>正式版 (Release)</value>
+  </data>
 </root>

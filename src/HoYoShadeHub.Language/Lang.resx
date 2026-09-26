@@ -2142,4 +2142,238 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="DiagnosticTool_ProbingNetwork" xml:space="preserve">
     <value>Probing network environment...</value>
   </data>
+  <data name="DiagnosticTool_Uptime" xml:space="preserve">
+    <value>System Uptime</value>
+  </data>
+  <data name="DiagnosticTool_Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="DiagnosticTool_NotRunning" xml:space="preserve">
+    <value>Not Running</value>
+  </data>
+  <data name="DiagnosticTool_Admin" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="DiagnosticTool_StandardUser" xml:space="preserve">
+    <value>Standard User</value>
+  </data>
+  <data name="DiagnosticTool_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="DiagnosticTool_Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="DiagnosticTool_On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="DiagnosticTool_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="DiagnosticTool_Direct" xml:space="preserve">
+    <value>Direct</value>
+  </data>
+  <data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
+    <value>Not detected / No IPv6 outbound</value>
+  </data>
+  <data name="DiagnosticTool_ProxyEnabled" xml:space="preserve">
+    <value>Enabled [{0}]</value>
+  </data>
+  <data name="DiagnosticTool_ProxyDisabled" xml:space="preserve">
+    <value>Disabled (Direct)</value>
+  </data>
+  <data name="DiagnosticTool_TestingWithDoh" xml:space="preserve">
+    <value>Testing connectivity with DoH+ECH tunnel and fetching network info...</value>
+  </data>
+  <data name="DiagnosticTool_DohTestComplete" xml:space="preserve">
+    <value>DoH+ECH connectivity test completed and report updated!</value>
+  </data>
+  <data name="DiagnosticTool_DohTestFailed" xml:space="preserve">
+    <value>DoH+ECH test encountered error: {0}</value>
+  </data>
+  <data name="DiagnosticTool_NetworkProbeFailed" xml:space="preserve">
+    <value>Failed to retrieve network info: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DirectSuccess" xml:space="preserve">
+    <value>Direct connection is working normally. Outbound network information retrieved successfully.</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohRescueSuccess" xml:space="preserve">
+    <value>Local direct connection is blocked or experiencing DNS pollution, but connection succeeded via DoH+ECH tunnel. It is recommended to keep DoH and ECH enabled in Launcher Network Settings.</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_AllFailed" xml:space="preserve">
+    <value>Local network connection is abnormal or disconnected. Please check your network connection, local gateway/Wi-Fi, or system proxy configuration.</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_Exception" xml:space="preserve">
+    <value>Network probe error: {0}</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Success" xml:space="preserve">
+    <value>Direct connection restricted, but egress info retrieved via DoH+ECH tunnel</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Failed" xml:space="preserve">
+    <value>Both direct connection and DoH+ECH tunnel failed</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Exception" xml:space="preserve">
+    <value>DoH+ECH test encountered error: {0}</value>
+  </data>
+  <data name="DiagnosticTool_DohRescue_Success" xml:space="preserve">
+    <value>Rescue Success</value>
+  </data>
+  <data name="DiagnosticTool_DohRescue_Failed" xml:space="preserve">
+    <value>Rescue Failed</value>
+  </data>
+  <data name="DiagnosticTool_Report_Title" xml:space="preserve">
+    <value>HoYoShade Hub Diagnostic Report</value>
+  </data>
+  <data name="DiagnosticTool_Report_GeneratedAt" xml:space="preserve">
+    <value>Generated At: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecHardware" xml:space="preserve">
+    <value>[1. Hardware Configuration]</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecSystem" xml:space="preserve">
+    <value>[2. Operating System &amp; Runtime]</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecLauncher" xml:space="preserve">
+    <value>[3. Launcher &amp; Framework]</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecNetwork" xml:space="preserve">
+    <value>[4. Network &amp; Connectivity Diagnostics]</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecGames" xml:space="preserve">
+    <value>[5. Configured Games &amp; Injections]</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecLogs" xml:space="preserve">
+    <value>[6. Recent Launcher Logs Summary]</value>
+  </data>
+  <data name="DiagnosticTool_Report_CoresThreads" xml:space="preserve">
+    <value>{0} Cores / {1} Threads</value>
+  </data>
+  <data name="DiagnosticTool_Report_Cores" xml:space="preserve">
+    <value>{0} Cores</value>
+  </data>
+  <data name="DiagnosticTool_Report_MemorySummary" xml:space="preserve">
+    <value>Physical Memory (RAM): {0} [Total: {1} / Avail: {2}]</value>
+  </data>
+  <data name="DiagnosticTool_Report_Gpu" xml:space="preserve">
+    <value>Graphics &amp; Drivers (GPU):</value>
+  </data>
+  <data name="DiagnosticTool_Report_Driver" xml:space="preserve">
+    <value>Driver: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_PrimaryDisplay" xml:space="preserve">
+    <value>Primary: {0} ({1})</value>
+  </data>
+  <data name="DiagnosticTool_Report_DisksDrives" xml:space="preserve">
+    <value>Storage Disks &amp; Drive Letters:</value>
+  </data>
+  <data name="DiagnosticTool_Report_Audio" xml:space="preserve">
+    <value>Audio Devices:</value>
+  </data>
+  <data name="DiagnosticTool_Report_NetworkAdapters" xml:space="preserve">
+    <value>Network Adapters:</value>
+  </data>
+  <data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
+    <value>Architecture: System {0} / Process {1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_RunningMode" xml:space="preserve">
+    <value>Running Mode: Portable={0}, Removable Storage={1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_UpdateChannel" xml:space="preserve">
+    <value>Update Channel: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_RpcService" xml:space="preserve">
+    <value>RPC Background Service: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_NetworkEncryption" xml:space="preserve">
+    <value>Network Encryption: DoH={0} [{1}], ECH={2}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LauncherDownloadNode" xml:space="preserve">
+    <value>Launcher Download Node: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_DownloadNode_Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="DiagnosticTool_Report_DownloadNode_Server" xml:space="preserve">
+    <value>Server #{0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_BaseDirectory" xml:space="preserve">
+    <value>Application Directory: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_UserDataFolder" xml:space="preserve">
+    <value>User Data Directory: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_CacheFolder" xml:space="preserve">
+    <value>Cache Directory: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkGeneralSettings" xml:space="preserve">
+    <value>[HoYoShade Framework General Settings]</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkDownloadServer" xml:space="preserve">
+    <value>Framework Download Server: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkPreviewChannel" xml:space="preserve">
+    <value>Preview Update Channel: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Status" xml:space="preserve">
+    <value>Status: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_InstallPath" xml:space="preserve">
+    <value>Install Path: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Ipv4MaskedSuffix" xml:space="preserve">
+    <value> (Masked)</value>
+  </data>
+  <data name="DiagnosticTool_Report_Ipv4PlainSuffix" xml:space="preserve">
+    <value> (Plaintext)</value>
+  </data>
+  <data name="DiagnosticTool_Report_ProbingTier" xml:space="preserve">
+    <value>Detection Tier Hit: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_TierNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="DiagnosticTool_Report_DohEchRescue" xml:space="preserve">
+    <value>DoH+ECH Penetration Test: {0} - {1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Dx12Status" xml:space="preserve">
+    <value>DX12 Status: Enabled={0}, Ignore Check={1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_InjectionFiles" xml:space="preserve">
+    <value>Injection File Check: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FilePresent" xml:space="preserve">
+    <value>[Found]</value>
+  </data>
+  <data name="DiagnosticTool_Report_NoInjectionFiles" xml:space="preserve">
+    <value>Core injection files not detected</value>
+  </data>
+  <data name="DiagnosticTool_Report_NoLogs" xml:space="preserve">
+    <value>(No logs available)</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchOptions" xml:space="preserve">
+    <value>Launch Options: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchArguments" xml:space="preserve">
+    <value>Launch Arguments: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchGame" xml:space="preserve">
+    <value>Launch Game</value>
+  </data>
+  <data name="DiagnosticTool_Report_GenshinBlender" xml:space="preserve">
+    <value>Genshin Blender Plugin</value>
+  </data>
+  <data name="DiagnosticTool_Report_ZZZBlender" xml:space="preserve">
+    <value>ZZZ Blender Plugin</value>
+  </data>
+  <data name="DiagnosticTool_Report_BorderlessWindow" xml:space="preserve">
+    <value>Borderless Window</value>
+  </data>
+  <data name="DiagnosticTool_Report_PrivacyNotice" xml:space="preserve">
+    <value>                 (Contains only system &amp; hardware summary; sensitive info like public IP is processed)</value>
+  </data>
+  <data name="DiagnosticTool_Report_ChannelPreview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="DiagnosticTool_Report_ChannelRelease" xml:space="preserve">
+    <value>Release</value>
+  </data>
 </root>

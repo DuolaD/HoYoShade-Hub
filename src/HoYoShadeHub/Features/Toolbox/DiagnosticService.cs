@@ -370,7 +370,7 @@ public static class DiagnosticService
                 report.Network = new NetworkDiagnosticInfo
                 {
                     IsEnabled = true,
-                    DiagnosisConclusion = $"网络探测异常: {ex.Message}"
+                    DiagnosisConclusion = string.Format(Lang.DiagnosticTool_Conclusion_Exception, ex.Message)
                 };
             }
 
@@ -398,34 +398,76 @@ public static class DiagnosticService
         return report;
     }
 
+    public static string GetDiagnosisConclusion(NetworkDiagnosticInfo? net)
+    {
+        if (net == null || !net.IsEnabled)
+        {
+            return Lang.DiagnosticTool_NetworkDisabledNotice;
+        }
+        if (!string.IsNullOrWhiteSpace(net.DirectConnectionError) && !net.DohEchRescueAttempted)
+        {
+            return string.Format(Lang.DiagnosticTool_Conclusion_Exception, net.DirectConnectionError);
+        }
+        if (net.DirectConnectionSuccess)
+        {
+            return Lang.DiagnosticTool_Conclusion_DirectSuccess;
+        }
+        if (net.DohEchRescueAttempted)
+        {
+            if (net.DohEchRescueSuccess)
+            {
+                return Lang.DiagnosticTool_Conclusion_DohRescueSuccess;
+            }
+            else
+            {
+                return Lang.DiagnosticTool_Conclusion_AllFailed;
+            }
+        }
+        return !string.IsNullOrWhiteSpace(net.DiagnosisConclusion) ? net.DiagnosisConclusion : Lang.DiagnosticTool_Conclusion_DirectSuccess;
+    }
+
+    public static string GetDohRescueDetails(NetworkDiagnosticInfo? net)
+    {
+        if (net == null) return string.Empty;
+        if (net.DohEchRescueSuccess)
+        {
+            return Lang.DiagnosticTool_DohRescueDetails_Success;
+        }
+        if (!string.IsNullOrWhiteSpace(net.DohEchRescueDetails) && net.DohEchRescueDetails.StartsWith("Error:", StringComparison.OrdinalIgnoreCase))
+        {
+            return string.Format(Lang.DiagnosticTool_DohRescueDetails_Exception, net.DohEchRescueDetails["Error:".Length..].Trim());
+        }
+        return Lang.DiagnosticTool_DohRescueDetails_Failed;
+    }
+
     public static string ToFormattedText(DiagnosticReport report, bool? maskIp = null)
     {
         var sb = new StringBuilder();
         sb.AppendLine("================================================================================");
-        sb.AppendLine("                 HoYoShade Hub 诊断报告 (Diagnostic Report)                      ");
-        sb.AppendLine($"生成时间 (Generated At): {report.Timestamp:yyyy-MM-dd HH:mm:ss}");
-        sb.AppendLine("* 隐私说明: 涉及的用户名与私有路径已自动去识别化脱敏处理");
+        sb.AppendLine($"                 {Lang.DiagnosticTool_Report_Title}                      ");
+        sb.AppendLine(string.Format(Lang.DiagnosticTool_Report_GeneratedAt, $"{report.Timestamp:yyyy-MM-dd HH:mm:ss}"));
+        sb.AppendLine(Lang.DiagnosticTool_Report_PrivacyNotice);
         sb.AppendLine("================================================================================");
         sb.AppendLine();
 
         // 1. 本机硬件配置单
-        sb.AppendLine("【1. 本机硬件配置单 (Hardware Configuration)】");
+        sb.AppendLine(Lang.DiagnosticTool_Report_SecHardware);
         string coreText = report.Hardware.PhysicalCores > 0
-            ? $"{report.Hardware.PhysicalCores} Cores / {report.Hardware.LogicalCores} Threads"
-            : $"{report.Hardware.LogicalCores} Cores";
-        sb.AppendLine($"  - 处理器 (CPU): {report.Hardware.CpuName} ({coreText})");
-        sb.AppendLine($"  - 主板型号 (Motherboard): {(string.IsNullOrWhiteSpace(report.Hardware.Motherboard) ? "-" : report.Hardware.Motherboard)}");
-        sb.AppendLine($"  - 物理内存 (RAM): {report.Hardware.MemorySummary} [Total: {report.Hardware.TotalPhysicalMemory} / Avail: {report.Hardware.AvailablePhysicalMemory}]");
+            ? string.Format(Lang.DiagnosticTool_Report_CoresThreads, report.Hardware.PhysicalCores, report.Hardware.LogicalCores)
+            : string.Format(Lang.DiagnosticTool_Report_Cores, report.Hardware.LogicalCores);
+        sb.AppendLine($"  - {Lang.DiagnosticTool_Cpu}: {report.Hardware.CpuName} ({coreText})");
+        sb.AppendLine($"  - {Lang.DiagnosticTool_Motherboard}: {(string.IsNullOrWhiteSpace(report.Hardware.Motherboard) ? "-" : report.Hardware.Motherboard)}");
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_MemorySummary, report.Hardware.MemorySummary, report.Hardware.TotalPhysicalMemory, report.Hardware.AvailablePhysicalMemory)}");
 
         if (report.Hardware.Gpus.Count > 0)
         {
-            sb.AppendLine("  - 显卡与驱动 (GPU):");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_Report_Gpu}");
             for (int i = 0; i < report.Hardware.Gpus.Count; i++)
             {
                 var gpu = report.Hardware.Gpus[i];
                 var parts = new List<string>();
                 if (!string.IsNullOrWhiteSpace(gpu.VramSize)) parts.Add(gpu.VramSize);
-                if (!string.IsNullOrWhiteSpace(gpu.DriverVersion)) parts.Add($"Driver: {gpu.DriverVersion}");
+                if (!string.IsNullOrWhiteSpace(gpu.DriverVersion)) parts.Add(string.Format(Lang.DiagnosticTool_Report_Driver, gpu.DriverVersion));
                 if (!string.IsNullOrWhiteSpace(gpu.Provider)) parts.Add(gpu.Provider);
                 string extra = parts.Count > 0 ? $" ({string.Join(" / ", parts)})" : "";
                 sb.AppendLine($"      * {gpu.Name}{extra}");
@@ -433,12 +475,12 @@ public static class DiagnosticService
         }
         else
         {
-            sb.AppendLine("  - 显卡与驱动 (GPU): -");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_Report_Gpu} -");
         }
 
         if (report.Hardware.Monitors.Count > 0)
         {
-            sb.AppendLine("  - 显示器设备 (Monitors):");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_Monitors}:");
             foreach (var mon in report.Hardware.Monitors)
             {
                 var parts = new List<string>();
@@ -450,16 +492,16 @@ public static class DiagnosticService
                 string sizeStr = string.IsNullOrWhiteSpace(mon.DiagonalSize) ? "" : $" ({mon.DiagonalSize})";
                 sb.AppendLine($"      * {mon.Name}{extraBracket}{sizeStr}");
             }
-            sb.AppendLine($"      * Primary: {report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})");
+            sb.AppendLine($"      * {string.Format(Lang.DiagnosticTool_Report_PrimaryDisplay, report.Hardware.PrimaryResolution, report.Hardware.DisplayDpiScale)}");
         }
         else
         {
-            sb.AppendLine($"  - 屏幕分辨率 (Display): {report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_Display}: {report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})");
         }
 
         if (report.Hardware.Disks.Count > 0)
         {
-            sb.AppendLine("  - 存储磁盘与对应盘符 (Disks & Drive Letters):");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_Report_DisksDrives}");
             foreach (var disk in report.Hardware.Disks)
             {
                 string drives = disk.DriveLetters.Count > 0 ? string.Join(", ", disk.DriveLetters) : "-";
@@ -468,12 +510,12 @@ public static class DiagnosticService
         }
         else
         {
-            sb.AppendLine("  - 存储磁盘与对应盘符: -");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_Report_DisksDrives} -");
         }
 
         if (report.Hardware.AudioDevices.Count > 0)
         {
-            sb.AppendLine("  - 声卡设备 (Audio):");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_Audio}:");
             foreach (var audio in report.Hardware.AudioDevices)
             {
                 sb.AppendLine($"      * {audio}");
@@ -482,7 +524,7 @@ public static class DiagnosticService
 
         if (report.Hardware.NetworkAdapters.Count > 0)
         {
-            sb.AppendLine("  - 网卡设备 (Network):");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_Network}:");
             foreach (var net in report.Hardware.NetworkAdapters)
             {
                 sb.AppendLine($"      * {net}");
@@ -491,65 +533,77 @@ public static class DiagnosticService
         sb.AppendLine();
 
         // 2. 操作系统与运行环境
-        sb.AppendLine("【2. 操作系统与运行环境 (OS & Runtime)】");
-        sb.AppendLine($"  - 操作系统: {report.System.OsName} {report.System.OsVersion} (Build {report.System.OsBuild})");
-        sb.AppendLine($"  - 架构规格: 系统 {report.System.OsArchitecture} / 进程 {report.System.ProcessArchitecture}");
-        sb.AppendLine($"  - .NET 运行时: {report.System.DotNetRuntime}");
-        sb.AppendLine($"  - WebView2 运行时: {report.System.WebView2Version}");
-        sb.AppendLine($"  - 系统开机运行时间: {report.System.SystemUptime}");
+        sb.AppendLine(Lang.DiagnosticTool_Report_SecSystem);
+        sb.AppendLine($"  - {Lang.DiagnosticTool_OS}: {report.System.OsName} {report.System.OsVersion} (Build {report.System.OsBuild})");
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_OsArch, report.System.OsArchitecture, report.System.ProcessArchitecture)}");
+        sb.AppendLine($"  - {Lang.DiagnosticTool_Runtime}: {report.System.DotNetRuntime}");
+        sb.AppendLine($"  - WebView2: {report.System.WebView2Version}");
+        sb.AppendLine($"  - {Lang.DiagnosticTool_Uptime}: {report.System.SystemUptime}");
         sb.AppendLine();
 
         // 3. 启动器与框架状态
-        sb.AppendLine("【3. 启动器与框架状态 (Launcher & Framework)】");
-        sb.AppendLine($"  - 启动器版本: {report.Launcher.Version} (PID: {report.Launcher.ProcessId})");
-        sb.AppendLine($"  - 运行权限: {(report.Launcher.IsAdmin ? "管理员权限 (Administrator)" : "普通用户权限 (Standard User)")}");
-        sb.AppendLine($"  - 运行模式: 便携模式={report.Launcher.IsPortable}, 移动存储={report.Launcher.IsRemovableStorage}");
-        sb.AppendLine($"  - 更新通道: {report.Launcher.UpdateChannel}");
-        sb.AppendLine($"  - RPC 后台服务: {(report.Launcher.RpcRunning ? "正在运行 (Running)" : "未运行 (Not Running)")}");
-        sb.AppendLine($"  - 网络加密: DoH={(report.Launcher.DohEnabled ? "开启" : "关闭")} [{report.Launcher.DohProvider}], ECH={(report.Launcher.EchEnabled ? "开启" : "关闭")}");
-        sb.AppendLine($"  - 启动器下载节点: {report.Launcher.DownloadServer}");
-        sb.AppendLine($"  - 程序主目录: {report.Launcher.BaseDirectory}");
-        sb.AppendLine($"  - 用户数据目录: {report.Launcher.UserDataFolder}");
-        sb.AppendLine($"  - 缓存文件目录: {report.Launcher.CacheFolder}");
+        sb.AppendLine(Lang.DiagnosticTool_Report_SecLauncher);
+        sb.AppendLine($"  - {Lang.DiagnosticTool_LauncherVer}: {report.Launcher.Version} (PID: {report.Launcher.ProcessId})");
+        string adminText = report.Launcher.IsAdmin ? Lang.DiagnosticTool_Admin : Lang.DiagnosticTool_StandardUser;
+        sb.AppendLine($"  - {Lang.DiagnosticTool_Permissions}: {adminText}");
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_RunningMode, report.Launcher.IsPortable, report.Launcher.IsRemovableStorage)}");
+        string updateChannelDisplay = report.Launcher.UpdateChannel == "Preview" ? Lang.DiagnosticTool_Report_ChannelPreview : Lang.DiagnosticTool_Report_ChannelRelease;
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_UpdateChannel, updateChannelDisplay)}");
+        string rpcText = report.Launcher.RpcRunning ? Lang.DiagnosticTool_Running : Lang.DiagnosticTool_NotRunning;
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_RpcService, rpcText)}");
+        string dohState = report.Launcher.DohEnabled ? Lang.DiagnosticTool_On : Lang.DiagnosticTool_Off;
+        string echState = report.Launcher.EchEnabled ? Lang.DiagnosticTool_On : Lang.DiagnosticTool_Off;
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_NetworkEncryption, dohState, report.Launcher.DohProvider, echState)}");
+        string dlServer = report.Launcher.DownloadServer;
+        if (dlServer == "Auto" || dlServer == Lang.HoYoShadeDownloadView_Server_AutoSelect) dlServer = Lang.DiagnosticTool_Report_DownloadNode_Auto;
+        else if (dlServer.StartsWith("Server #")) dlServer = string.Format(Lang.DiagnosticTool_Report_DownloadNode_Server, dlServer["Server #".Length..]);
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_LauncherDownloadNode, dlServer)}");
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_BaseDirectory, report.Launcher.BaseDirectory)}");
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_UserDataFolder, report.Launcher.UserDataFolder)}");
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_CacheFolder, report.Launcher.CacheFolder)}");
         sb.AppendLine();
-        sb.AppendLine("  [HoYoShade 框架通用设置]");
-        sb.AppendLine($"  - 框架下载服务器: {report.Launcher.FrameworkDownloadServer}");
-        sb.AppendLine($"  - 加入预览版更新通道: {(report.Launcher.FrameworkPreviewChannel ? "开启 (Enabled)" : "关闭 (Disabled)")}");
+        sb.AppendLine($"  {Lang.DiagnosticTool_Report_FrameworkGeneralSettings}");
+        string fwServer = GetFrameworkDownloadServerName(AppConfig.HoYoShadeFrameworkDownloadServer);
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_FrameworkDownloadServer, fwServer)}");
+        string fwPreview = report.Launcher.FrameworkPreviewChannel ? Lang.DiagnosticTool_Enabled : Lang.DiagnosticTool_Disabled;
+        sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_FrameworkPreviewChannel, fwPreview)}");
         sb.AppendLine();
         sb.AppendLine("  * HoYoShade:");
-        sb.AppendLine($"    - 状态: {(report.Launcher.HoYoShade.IsInstalled ? "已安装 (Installed)" : "未安装 (Not Installed)")}");
+        string hysStatus = report.Launcher.HoYoShade.IsInstalled ? Lang.WelcomeView_Installed : Lang.WelcomeView_NotInstalled;
+        sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_Status, hysStatus)}");
         if (report.Launcher.HoYoShade.IsInstalled)
         {
-            sb.AppendLine($"    - 框架版本: {report.Launcher.HoYoShade.Version}");
-            sb.AppendLine($"    - ReShade版本: {report.Launcher.HoYoShade.ReShadeVersion}");
-            sb.AppendLine($"    - 安装路径: {report.Launcher.HoYoShade.InstallPath}");
-            sb.AppendLine($"    - 存储总占用: {report.Launcher.HoYoShade.TotalSize}");
-            sb.AppendLine($"    - 着色器及插件占用: {report.Launcher.HoYoShade.ShaderSize}");
-            sb.AppendLine($"    - 预设占用: {report.Launcher.HoYoShade.PresetSize}");
-            sb.AppendLine($"    - 截图占用: {report.Launcher.HoYoShade.ScreenshotSize}");
-            sb.AppendLine($"    - 其他内容占用: {report.Launcher.HoYoShade.OtherSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_FrameworkVersion}: {report.Launcher.HoYoShade.Version}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_ReShadeVersion}: {report.Launcher.HoYoShade.ReShadeVersion}");
+            sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_InstallPath, report.Launcher.HoYoShade.InstallPath)}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_TotalSize}: {report.Launcher.HoYoShade.TotalSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_ShaderAndAddonSize}: {report.Launcher.HoYoShade.ShaderSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_PresetSize}: {report.Launcher.HoYoShade.PresetSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_ScreenshotSize}: {report.Launcher.HoYoShade.ScreenshotSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_OtherContentSize}: {report.Launcher.HoYoShade.OtherSize}");
         }
         sb.AppendLine();
         sb.AppendLine("  * OpenHoYoShade:");
-        sb.AppendLine($"    - 状态: {(report.Launcher.OpenHoYoShade.IsInstalled ? "已安装 (Installed)" : "未安装 (Not Installed)")}");
+        string ohysStatus = report.Launcher.OpenHoYoShade.IsInstalled ? Lang.WelcomeView_Installed : Lang.WelcomeView_NotInstalled;
+        sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_Status, ohysStatus)}");
         if (report.Launcher.OpenHoYoShade.IsInstalled)
         {
-            sb.AppendLine($"    - 框架版本: {report.Launcher.OpenHoYoShade.Version}");
-            sb.AppendLine($"    - ReShade版本: {report.Launcher.OpenHoYoShade.ReShadeVersion}");
-            sb.AppendLine($"    - 安装路径: {report.Launcher.OpenHoYoShade.InstallPath}");
-            sb.AppendLine($"    - 存储总占用: {report.Launcher.OpenHoYoShade.TotalSize}");
-            sb.AppendLine($"    - 着色器及插件占用: {report.Launcher.OpenHoYoShade.ShaderSize}");
-            sb.AppendLine($"    - 预设占用: {report.Launcher.OpenHoYoShade.PresetSize}");
-            sb.AppendLine($"    - 截图占用: {report.Launcher.OpenHoYoShade.ScreenshotSize}");
-            sb.AppendLine($"    - 其他内容占用: {report.Launcher.OpenHoYoShade.OtherSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_FrameworkVersion}: {report.Launcher.OpenHoYoShade.Version}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_ReShadeVersion}: {report.Launcher.OpenHoYoShade.ReShadeVersion}");
+            sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_InstallPath, report.Launcher.OpenHoYoShade.InstallPath)}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_TotalSize}: {report.Launcher.OpenHoYoShade.TotalSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_ShaderAndAddonSize}: {report.Launcher.OpenHoYoShade.ShaderSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_PresetSize}: {report.Launcher.OpenHoYoShade.PresetSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_ScreenshotSize}: {report.Launcher.OpenHoYoShade.ScreenshotSize}");
+            sb.AppendLine($"    - {Lang.FileSettingPage_OtherContentSize}: {report.Launcher.OpenHoYoShade.OtherSize}");
         }
         sb.AppendLine();
 
         // 4. 网络环境与出口诊断
-        sb.AppendLine("【4. 网络环境与出口诊断 (Network & Connectivity)】");
+        sb.AppendLine(Lang.DiagnosticTool_Report_SecNetwork);
         if (!report.Network.IsEnabled && string.IsNullOrWhiteSpace(report.Network.Ipv4) && string.IsNullOrWhiteSpace(report.Network.SuccessfulTier))
         {
-            sb.AppendLine($"  - 状态: {Lang.DiagnosticTool_NetworkDisabledNotice}");
+            sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_Status, Lang.DiagnosticTool_NetworkDisabledNotice)}");
             sb.AppendLine();
         }
         else
@@ -558,18 +612,21 @@ public static class DiagnosticService
             string v4Display = isMasked
                 ? (string.IsNullOrWhiteSpace(report.Network.MaskedIpv4) ? "-" : report.Network.MaskedIpv4)
                 : (string.IsNullOrWhiteSpace(report.Network.Ipv4) ? "-" : report.Network.Ipv4);
-            string v4Suffix = isMasked ? " (已脱敏保护)" : " (完整明文)";
-            sb.AppendLine($"  - 出口 IPv4 地址: {v4Display}{v4Suffix}");
+            string v4Suffix = isMasked ? Lang.DiagnosticTool_Report_Ipv4MaskedSuffix : Lang.DiagnosticTool_Report_Ipv4PlainSuffix;
+            sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkIpv4}: {v4Display}{v4Suffix}");
 
-            string locParts = string.Join(" ", new[] { report.Network.Country, report.Network.Region, report.Network.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            string countryDisplay = !string.IsNullOrWhiteSpace(report.Network.CountryCode)
+                ? FormatCountry(report.Network.CountryCode)
+                : report.Network.Country;
+            string locParts = string.Join(" ", new[] { countryDisplay, report.Network.Region, report.Network.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
             if (string.IsNullOrWhiteSpace(locParts)) locParts = "-";
-            sb.AppendLine($"  - 物理归属地: {locParts}");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkLocation}: {locParts}");
 
             string asnText = string.IsNullOrWhiteSpace(report.Network.AsOrganization)
                 ? (string.IsNullOrWhiteSpace(report.Network.Asn) ? "-" : report.Network.Asn)
                 : $"{report.Network.Asn} {report.Network.AsOrganization}".Trim();
-            sb.AppendLine($"  - 运营商与自治域 (ASN): {asnText}");
-            sb.AppendLine($"  - Cloudflare 边缘节点 (Colo): {(string.IsNullOrWhiteSpace(report.Network.CloudflareColo) ? "-" : report.Network.CloudflareColo)}");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkAsn}: {asnText}");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkColo}: {(string.IsNullOrWhiteSpace(report.Network.CloudflareColo) ? "-" : report.Network.CloudflareColo)}");
 
             string ipv6Text;
             if (report.Network.HasIpv6)
@@ -577,74 +634,90 @@ public static class DiagnosticService
                 string v6Display = isMasked
                     ? (string.IsNullOrWhiteSpace(report.Network.MaskedIpv6) ? "-" : report.Network.MaskedIpv6)
                     : (string.IsNullOrWhiteSpace(report.Network.Ipv6) ? "-" : report.Network.Ipv6);
-                string v6Suffix = isMasked ? " (已脱敏保护)" : " (完整明文)";
+                string v6Suffix = isMasked ? Lang.DiagnosticTool_Report_Ipv4MaskedSuffix : Lang.DiagnosticTool_Report_Ipv4PlainSuffix;
                 ipv6Text = $"{v6Display}{v6Suffix}";
             }
             else
             {
-                ipv6Text = "未检测到 / 无 IPv6 出口";
+                ipv6Text = Lang.DiagnosticTool_Ipv6NotDetected;
             }
-            sb.AppendLine($"  - 出口 IPv6 地址: {ipv6Text}");
+            sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkIpv6}: {ipv6Text}");
 
-            sb.AppendLine($"  - 系统代理状态: {(report.Network.HasSystemProxy ? $"已启用 [{report.Network.SystemProxyServer}]" : "未开启 (Direct)")}");
-            sb.AppendLine($"  - 启动器安全加密: DoH={(report.Network.LauncherDohEnabled ? "开启" : "关闭")} [{report.Network.LauncherDohProvider}], ECH={(report.Network.LauncherEchEnabled ? "开启" : "关闭")}");
-            sb.AppendLine($"  - 探测命中梯队: {(string.IsNullOrWhiteSpace(report.Network.SuccessfulTier) ? "无" : report.Network.SuccessfulTier)}");
+            string proxyText = report.Network.HasSystemProxy
+                ? string.Format(Lang.DiagnosticTool_ProxyEnabled, report.Network.SystemProxyServer)
+                : Lang.DiagnosticTool_ProxyDisabled;
+            sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkProxy}: {proxyText}");
+
+            string netDoh = report.Network.LauncherDohEnabled ? Lang.DiagnosticTool_On : Lang.DiagnosticTool_Off;
+            string netEch = report.Network.LauncherEchEnabled ? Lang.DiagnosticTool_On : Lang.DiagnosticTool_Off;
+            sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkEncryption}: DoH={netDoh} [{report.Network.LauncherDohProvider}], ECH={netEch}");
+
+            string tierText = string.IsNullOrWhiteSpace(report.Network.SuccessfulTier) ? Lang.DiagnosticTool_Report_TierNone : report.Network.SuccessfulTier;
+            sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_ProbingTier, tierText)}");
 
             if (report.Network.DohEchRescueAttempted)
             {
-                sb.AppendLine($"  - DoH+ECH 穿透验证: {(report.Network.DohEchRescueSuccess ? "成功恢复 (Rescue Success)" : "恢复失败 (Rescue Failed)")} - {report.Network.DohEchRescueDetails}");
+                string rescueState = report.Network.DohEchRescueSuccess ? Lang.DiagnosticTool_DohRescue_Success : Lang.DiagnosticTool_DohRescue_Failed;
+                string rescueDetails = GetDohRescueDetails(report.Network);
+                sb.AppendLine($"  - {string.Format(Lang.DiagnosticTool_Report_DohEchRescue, rescueState, rescueDetails)}");
             }
-            sb.AppendLine($"  - 综合诊断结论: {report.Network.DiagnosisConclusion}");
+            string conclusion = GetDiagnosisConclusion(report.Network);
+            sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkConclusion}: {conclusion}");
             sb.AppendLine();
         }
 
         // 5. 游戏与注入状态
-        sb.AppendLine("【5. 已安装游戏与注入配置 (Configured Games & Injections)】");
+        sb.AppendLine(Lang.DiagnosticTool_Report_SecGames);
         if (report.Games.Count > 0)
         {
             foreach (var game in report.Games)
             {
-                sb.AppendLine($"  * {game.GameName} ({game.ServerName} / {game.Biz})");
-                sb.AppendLine($"    - 安装路径: {game.InstallPath}");
+                string gameName = new GameBiz(game.Biz).ToGameName();
+                if (string.IsNullOrWhiteSpace(gameName)) gameName = game.GameName;
+                string serverName = new GameBiz(game.Biz).ToGameServerName();
+                if (string.IsNullOrWhiteSpace(serverName)) serverName = game.ServerName;
+
+                sb.AppendLine($"  * {gameName} ({serverName} / {game.Biz})");
+                sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_InstallPath, game.InstallPath)}");
 
                 var opts = new List<string>();
-                opts.Add($"启动游戏={game.EnableGameLaunch}");
+                opts.Add($"{Lang.DiagnosticTool_Report_LaunchGame}={game.EnableGameLaunch}");
                 if (game.UseStarwardLauncher) opts.Add("Starward=True");
                 opts.Add($"HoYoShade={game.UseHoYoShade}");
                 opts.Add($"OpenHoYoShade={game.UseOpenHoYoShade}");
                 if (game.Biz.StartsWith(GameBiz.hk4e, StringComparison.OrdinalIgnoreCase))
                 {
-                    opts.Add($"原神Blender插件={game.LaunchGenshinBlenderPlugin}");
+                    opts.Add($"{Lang.DiagnosticTool_Report_GenshinBlender}={game.LaunchGenshinBlenderPlugin}");
                 }
                 else if (game.Biz.StartsWith(GameBiz.nap, StringComparison.OrdinalIgnoreCase))
                 {
-                    opts.Add($"绝区零Blender插件={game.LaunchZZZBlenderPlugin}");
+                    opts.Add($"{Lang.DiagnosticTool_Report_ZZZBlender}={game.LaunchZZZBlenderPlugin}");
                 }
-                if (game.UsePopupWindow) opts.Add("无边框窗口=True");
-                sb.AppendLine($"    - 启动选项: {string.Join(", ", opts)}");
+                if (game.UsePopupWindow) opts.Add($"{Lang.DiagnosticTool_Report_BorderlessWindow}=True");
+                sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_LaunchOptions, string.Join(", ", opts))}");
                 if (!string.IsNullOrWhiteSpace(game.StartArgument))
                 {
-                    sb.AppendLine($"    - 启动参数: {game.StartArgument}");
+                    sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_LaunchArguments, game.StartArgument)}");
                 }
 
-                sb.AppendLine($"    - DX12 状态: 启用={game.EnableDX12}, 忽略检查={game.IgnoreDX12Check}");
+                sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_Dx12Status, game.EnableDX12, game.IgnoreDX12Check)}");
                 var files = new List<string>();
-                if (game.HasDxgiDll) files.Add("dxgi.dll [存在]");
-                if (game.HasD3d11Dll) files.Add("d3d11.dll [存在]");
-                if (game.HasReShadeIni) files.Add("ReShade.ini [存在]");
-                if (game.HasReShadeLog) files.Add("ReShade.log [存在]");
-                string filesStr = files.Count > 0 ? string.Join(", ", files) : "未检测到核心注入文件";
-                sb.AppendLine($"    - 注入文件检测: {filesStr}");
+                if (game.HasDxgiDll) files.Add($"dxgi.dll {Lang.DiagnosticTool_Report_FilePresent}");
+                if (game.HasD3d11Dll) files.Add($"d3d11.dll {Lang.DiagnosticTool_Report_FilePresent}");
+                if (game.HasReShadeIni) files.Add($"ReShade.ini {Lang.DiagnosticTool_Report_FilePresent}");
+                if (game.HasReShadeLog) files.Add($"ReShade.log {Lang.DiagnosticTool_Report_FilePresent}");
+                string filesStr = files.Count > 0 ? string.Join(", ", files) : Lang.DiagnosticTool_Report_NoInjectionFiles;
+                sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_InjectionFiles, filesStr)}");
             }
         }
         else
         {
-            sb.AppendLine("  (尚未配置任何游戏安装路径)");
+            sb.AppendLine($"  {Lang.DiagnosticTool_NoGamesFound}");
         }
         sb.AppendLine();
 
         // 6. 最近日志
-        sb.AppendLine("【6. 最近本地运行日志摘要 (Recent Launcher Logs)】");
+        sb.AppendLine(Lang.DiagnosticTool_Report_SecLogs);
         sb.AppendLine("--------------------------------------------------------------------------------");
         if (report.RecentLogSnippets.Count > 0)
         {
@@ -655,7 +728,7 @@ public static class DiagnosticService
         }
         else
         {
-            sb.AppendLine("  (暂无可用日志内容)");
+            sb.AppendLine($"  {Lang.DiagnosticTool_Report_NoLogs}");
         }
         sb.AppendLine("================================================================================");
 
@@ -1719,26 +1792,93 @@ public static class DiagnosticService
     public static string FormatCountry(string? code)
     {
         if (string.IsNullOrWhiteSpace(code)) return string.Empty;
-        code = code.Trim();
-        if (code.Equals("CN", StringComparison.OrdinalIgnoreCase)) return "中国 (CN)";
-        if (code.Equals("HK", StringComparison.OrdinalIgnoreCase)) return "中国香港 (HK)";
-        if (code.Equals("MO", StringComparison.OrdinalIgnoreCase)) return "中国澳门 (MO)";
-        if (code.Equals("TW", StringComparison.OrdinalIgnoreCase)) return "中国台湾 (TW)";
-        if (code.Equals("US", StringComparison.OrdinalIgnoreCase)) return "美国 (US)";
-        if (code.Equals("JP", StringComparison.OrdinalIgnoreCase)) return "日本 (JP)";
-        if (code.Equals("KR", StringComparison.OrdinalIgnoreCase)) return "韩国 (KR)";
-        if (code.Equals("SG", StringComparison.OrdinalIgnoreCase)) return "新加坡 (SG)";
-        if (code.Equals("GB", StringComparison.OrdinalIgnoreCase) || code.Equals("UK", StringComparison.OrdinalIgnoreCase)) return "英国 (GB)";
-        if (code.Equals("DE", StringComparison.OrdinalIgnoreCase)) return "德国 (DE)";
-        if (code.Equals("CA", StringComparison.OrdinalIgnoreCase)) return "加拿大 (CA)";
-        if (code.Equals("AU", StringComparison.OrdinalIgnoreCase)) return "澳大利亚 (AU)";
-        if (code.Equals("RU", StringComparison.OrdinalIgnoreCase)) return "俄罗斯 (RU)";
+        code = code.Trim().ToUpperInvariant();
+        var culture = Lang.Culture ?? System.Globalization.CultureInfo.CurrentUICulture;
+        bool isZhCn = culture.Name.Equals("zh-CN", StringComparison.OrdinalIgnoreCase);
+        bool isZhTw = culture.Name.Equals("zh-TW", StringComparison.OrdinalIgnoreCase);
+        bool isZhHk = culture.Name.Equals("zh-HK", StringComparison.OrdinalIgnoreCase);
+        bool isZh = isZhCn || isZhTw || isZhHk;
+
+        if (!isZh)
+        {
+            return code switch
+            {
+                "CN" => "China (CN)",
+                "HK" => "Hong Kong (HK)",
+                "MO" => "Macao (MO)",
+                "TW" => "Taiwan (TW)",
+                "US" => "United States (US)",
+                "JP" => "Japan (JP)",
+                "KR" => "South Korea (KR)",
+                "SG" => "Singapore (SG)",
+                "GB" or "UK" => "United Kingdom (GB)",
+                "DE" => "Germany (DE)",
+                "CA" => "Canada (CA)",
+                "AU" => "Australia (AU)",
+                "RU" => "Russia (RU)",
+                "FR" => "France (FR)",
+                "NL" => "Netherlands (NL)",
+                "IN" => "India (IN)",
+                _ => FormatCountryFallback(code, false)
+            };
+        }
+        else if (isZhTw || isZhHk)
+        {
+            return code switch
+            {
+                "CN" => "中國 (CN)",
+                "HK" => "中國香港 (HK)",
+                "MO" => "中國澳門 (MO)",
+                "TW" => "中國台灣 (TW)",
+                "US" => "美國 (US)",
+                "JP" => "日本 (JP)",
+                "KR" => "韓國 (KR)",
+                "SG" => "新加坡 (SG)",
+                "GB" or "UK" => "英國 (GB)",
+                "DE" => "德國 (DE)",
+                "CA" => "加拿大 (CA)",
+                "AU" => "澳大利亞 (AU)",
+                "RU" => "俄羅斯 (RU)",
+                "FR" => "法國 (FR)",
+                "NL" => "荷蘭 (NL)",
+                "IN" => "印度 (IN)",
+                _ => FormatCountryFallback(code, true)
+            };
+        }
+        else
+        {
+            return code switch
+            {
+                "CN" => "中国 (CN)",
+                "HK" => "中国香港 (HK)",
+                "MO" => "中国澳门 (MO)",
+                "TW" => "中国台湾 (TW)",
+                "US" => "美国 (US)",
+                "JP" => "日本 (JP)",
+                "KR" => "韩国 (KR)",
+                "SG" => "新加坡 (SG)",
+                "GB" or "UK" => "英国 (GB)",
+                "DE" => "德国 (DE)",
+                "CA" => "加拿大 (CA)",
+                "AU" => "澳大利亚 (AU)",
+                "RU" => "俄罗斯 (RU)",
+                "FR" => "法国 (FR)",
+                "NL" => "荷兰 (NL)",
+                "IN" => "印度 (IN)",
+                _ => FormatCountryFallback(code, true)
+            };
+        }
+    }
+
+    private static string FormatCountryFallback(string code, bool isZh)
+    {
         try
         {
             if (code.Length == 2)
             {
-                var reg = new System.Globalization.RegionInfo(code.ToUpperInvariant());
-                return $"{reg.DisplayName} ({reg.TwoLetterISORegionName})";
+                var reg = new System.Globalization.RegionInfo(code);
+                string name = isZh ? reg.DisplayName : reg.EnglishName;
+                return $"{name} ({reg.TwoLetterISORegionName})";
             }
         }
         catch { }
@@ -1835,7 +1975,7 @@ public static class DiagnosticService
         }
         else
         {
-            info.DiagnosisConclusion = "本地直连网络通畅，已成功探测出口信息。";
+            info.DiagnosisConclusion = Lang.DiagnosticTool_Conclusion_DirectSuccess;
         }
 
         return info;
@@ -1953,10 +2093,12 @@ public static class DiagnosticService
             info.Ipv4 = ip;
             info.MaskedIpv4 = MaskIpAddress(ip);
 
-            // 2. Query ip-api.com with Chinese localization
+            // 2. Query ip-api.com with localization
             try
             {
-                using var reqApi = new HttpRequestMessage(HttpMethod.Get, $"http://ip-api.com/json/{ip}?lang=zh-CN");
+                var culture = Lang.Culture ?? System.Globalization.CultureInfo.CurrentUICulture;
+                string langParam = culture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase) ? "zh-CN" : "en";
+                using var reqApi = new HttpRequestMessage(HttpMethod.Get, $"http://ip-api.com/json/{ip}?lang={langParam}");
                 using var respApi = await client.SendAsync(reqApi, ct);
                 if (respApi.IsSuccessStatusCode)
                 {
@@ -2083,21 +2225,21 @@ public static class DiagnosticService
             if (success)
             {
                 info.DohEchRescueSuccess = true;
-                info.DohEchRescueDetails = "直连受限，但通过 DoH+ECH 加密隧道成功获取出口信息";
-                info.DiagnosisConclusion = "检测到本地直连网络受到阻断或 DNS 污染，但通过 DoH+ECH 加密隧道可正常连通。建议在启动器网络设置中保持开启 DoH 与 ECH。";
+                info.DohEchRescueDetails = Lang.DiagnosticTool_DohRescueDetails_Success;
+                info.DiagnosisConclusion = Lang.DiagnosticTool_Conclusion_DohRescueSuccess;
             }
             else
             {
                 info.DohEchRescueSuccess = false;
-                info.DohEchRescueDetails = "直连与 DoH+ECH 加密隧道均未能连通";
-                info.DiagnosisConclusion = "本地网络连接异常或已断开，请检查网络连接、本地网关/Wi-Fi 或系统代理配置。";
+                info.DohEchRescueDetails = Lang.DiagnosticTool_DohRescueDetails_Failed;
+                info.DiagnosisConclusion = Lang.DiagnosticTool_Conclusion_AllFailed;
             }
         }
         catch (Exception ex)
         {
             info.DohEchRescueSuccess = false;
-            info.DohEchRescueDetails = $"DoH+ECH 验证测试遇到异常: {ex.Message}";
-            info.DiagnosisConclusion = "本地网络连接异常，请检查网络设置。";
+            info.DohEchRescueDetails = string.Format(Lang.DiagnosticTool_DohRescueDetails_Exception, ex.Message);
+            info.DiagnosisConclusion = string.Format(Lang.DiagnosticTool_Conclusion_Exception, ex.Message);
         }
         finally
         {

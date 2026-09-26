@@ -2131,4 +2131,238 @@
   <data name="DiagnosticTool_ProbingNetwork" xml:space="preserve">
     <value>正在探测网络环境...</value>
   </data>
+  <data name="DiagnosticTool_Uptime" xml:space="preserve">
+    <value>系统运行时间</value>
+  </data>
+  <data name="DiagnosticTool_Running" xml:space="preserve">
+    <value>正在运行</value>
+  </data>
+  <data name="DiagnosticTool_NotRunning" xml:space="preserve">
+    <value>未运行</value>
+  </data>
+  <data name="DiagnosticTool_Admin" xml:space="preserve">
+    <value>管理员权限</value>
+  </data>
+  <data name="DiagnosticTool_StandardUser" xml:space="preserve">
+    <value>普通用户权限</value>
+  </data>
+  <data name="DiagnosticTool_Enabled" xml:space="preserve">
+    <value>已开启</value>
+  </data>
+  <data name="DiagnosticTool_Disabled" xml:space="preserve">
+    <value>已关闭</value>
+  </data>
+  <data name="DiagnosticTool_On" xml:space="preserve">
+    <value>开启</value>
+  </data>
+  <data name="DiagnosticTool_Off" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="DiagnosticTool_Direct" xml:space="preserve">
+    <value>直连</value>
+  </data>
+  <data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
+    <value>未检测到 / 无 IPv6 出口</value>
+  </data>
+  <data name="DiagnosticTool_ProxyEnabled" xml:space="preserve">
+    <value>已启用 [{0}]</value>
+  </data>
+  <data name="DiagnosticTool_ProxyDisabled" xml:space="preserve">
+    <value>未开启 (直连)</value>
+  </data>
+  <data name="DiagnosticTool_TestingWithDoh" xml:space="preserve">
+    <value>正在使用 DoH+ECH 加密隧道测试连通性并获取网络信息...</value>
+  </data>
+  <data name="DiagnosticTool_DohTestComplete" xml:space="preserve">
+    <value>DoH+ECH 连通性测试已完成并更新报告！</value>
+  </data>
+  <data name="DiagnosticTool_DohTestFailed" xml:space="preserve">
+    <value>DoH+ECH 测试遇到异常: {0}</value>
+  </data>
+  <data name="DiagnosticTool_NetworkProbeFailed" xml:space="preserve">
+    <value>网络信息获取失败: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DirectSuccess" xml:space="preserve">
+    <value>本地直连网络通畅，已成功探测出口信息。</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohRescueSuccess" xml:space="preserve">
+    <value>检测到本地直连网络受到阻断或 DNS 污染，但通过 DoH+ECH 加密隧道可正常连通。建议在启动器网络设置中保持开启 DoH 与 ECH。</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_AllFailed" xml:space="preserve">
+    <value>本地网络连接异常或已断开，请检查网络连接、本地网关/Wi-Fi 或系统代理配置。</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_Exception" xml:space="preserve">
+    <value>网络探测异常: {0}</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Success" xml:space="preserve">
+    <value>直连受限，但通过 DoH+ECH 加密隧道成功获取出口信息</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Failed" xml:space="preserve">
+    <value>直连与 DoH+ECH 加密隧道均未能连通</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_Exception" xml:space="preserve">
+    <value>DoH+ECH 验证测试遇到异常: {0}</value>
+  </data>
+  <data name="DiagnosticTool_DohRescue_Success" xml:space="preserve">
+    <value>成功恢复</value>
+  </data>
+  <data name="DiagnosticTool_DohRescue_Failed" xml:space="preserve">
+    <value>恢复失败</value>
+  </data>
+  <data name="DiagnosticTool_Report_Title" xml:space="preserve">
+    <value>HoYoShade Hub 诊断报告</value>
+  </data>
+  <data name="DiagnosticTool_Report_GeneratedAt" xml:space="preserve">
+    <value>生成时间: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecHardware" xml:space="preserve">
+    <value>【1. 本机硬件配置单】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecSystem" xml:space="preserve">
+    <value>【2. 操作系统与运行环境】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecLauncher" xml:space="preserve">
+    <value>【3. 启动器与框架状态】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecNetwork" xml:space="preserve">
+    <value>【4. 网络环境与出口诊断】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecGames" xml:space="preserve">
+    <value>【5. 已安装游戏与注入配置】</value>
+  </data>
+  <data name="DiagnosticTool_Report_SecLogs" xml:space="preserve">
+    <value>【6. 最近本地运行日志摘要】</value>
+  </data>
+  <data name="DiagnosticTool_Report_CoresThreads" xml:space="preserve">
+    <value>{0} 核心 / {1} 线程</value>
+  </data>
+  <data name="DiagnosticTool_Report_Cores" xml:space="preserve">
+    <value>{0} 核心</value>
+  </data>
+  <data name="DiagnosticTool_Report_MemorySummary" xml:space="preserve">
+    <value>物理内存 (RAM): {0} [总量: {1} / 可用: {2}]</value>
+  </data>
+  <data name="DiagnosticTool_Report_Gpu" xml:space="preserve">
+    <value>显卡与驱动 (GPU):</value>
+  </data>
+  <data name="DiagnosticTool_Report_Driver" xml:space="preserve">
+    <value>驱动: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_PrimaryDisplay" xml:space="preserve">
+    <value>主显示器: {0} ({1})</value>
+  </data>
+  <data name="DiagnosticTool_Report_DisksDrives" xml:space="preserve">
+    <value>存储磁盘与对应盘符:</value>
+  </data>
+  <data name="DiagnosticTool_Report_Audio" xml:space="preserve">
+    <value>声卡设备:</value>
+  </data>
+  <data name="DiagnosticTool_Report_NetworkAdapters" xml:space="preserve">
+    <value>网卡设备:</value>
+  </data>
+  <data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
+    <value>架构规格: 系统 {0} / 进程 {1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_RunningMode" xml:space="preserve">
+    <value>运行模式: 便携模式={0}, 移动存储={1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_UpdateChannel" xml:space="preserve">
+    <value>更新通道: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_RpcService" xml:space="preserve">
+    <value>RPC 后台服务: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_NetworkEncryption" xml:space="preserve">
+    <value>网络加密: DoH={0} [{1}], ECH={2}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LauncherDownloadNode" xml:space="preserve">
+    <value>启动器下载节点: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_DownloadNode_Auto" xml:space="preserve">
+    <value>自动</value>
+  </data>
+  <data name="DiagnosticTool_Report_DownloadNode_Server" xml:space="preserve">
+    <value>节点 #{0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_BaseDirectory" xml:space="preserve">
+    <value>程序主目录: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_UserDataFolder" xml:space="preserve">
+    <value>用户数据目录: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_CacheFolder" xml:space="preserve">
+    <value>缓存文件目录: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkGeneralSettings" xml:space="preserve">
+    <value>[HoYoShade 框架通用设置]</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkDownloadServer" xml:space="preserve">
+    <value>框架下载服务器: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FrameworkPreviewChannel" xml:space="preserve">
+    <value>加入预览版更新通道: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Status" xml:space="preserve">
+    <value>状态: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_InstallPath" xml:space="preserve">
+    <value>安装路径: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Ipv4MaskedSuffix" xml:space="preserve">
+    <value> (已脱敏保护)</value>
+  </data>
+  <data name="DiagnosticTool_Report_Ipv4PlainSuffix" xml:space="preserve">
+    <value> (完整明文)</value>
+  </data>
+  <data name="DiagnosticTool_Report_ProbingTier" xml:space="preserve">
+    <value>探测命中梯队: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_TierNone" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="DiagnosticTool_Report_DohEchRescue" xml:space="preserve">
+    <value>DoH+ECH 穿透验证: {0} - {1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_Dx12Status" xml:space="preserve">
+    <value>DX12 状态: 启用={0}, 忽略检查={1}</value>
+  </data>
+  <data name="DiagnosticTool_Report_InjectionFiles" xml:space="preserve">
+    <value>注入文件检测: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_FilePresent" xml:space="preserve">
+    <value>[存在]</value>
+  </data>
+  <data name="DiagnosticTool_Report_NoInjectionFiles" xml:space="preserve">
+    <value>未检测到核心注入文件</value>
+  </data>
+  <data name="DiagnosticTool_Report_NoLogs" xml:space="preserve">
+    <value>(暂无可用日志内容)</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchOptions" xml:space="preserve">
+    <value>启动选项: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchArguments" xml:space="preserve">
+    <value>启动参数: {0}</value>
+  </data>
+  <data name="DiagnosticTool_Report_LaunchGame" xml:space="preserve">
+    <value>启动游戏</value>
+  </data>
+  <data name="DiagnosticTool_Report_GenshinBlender" xml:space="preserve">
+    <value>原神Blender插件</value>
+  </data>
+  <data name="DiagnosticTool_Report_ZZZBlender" xml:space="preserve">
+    <value>绝区零Blender插件</value>
+  </data>
+  <data name="DiagnosticTool_Report_BorderlessWindow" xml:space="preserve">
+    <value>无边框窗口</value>
+  </data>
+  <data name="DiagnosticTool_Report_PrivacyNotice" xml:space="preserve">
+    <value>                 (仅包含系统与硬件摘要，已对公网 IP 等敏感信息作处理)</value>
+  </data>
+  <data name="DiagnosticTool_Report_ChannelPreview" xml:space="preserve">
+    <value>测试版 (Preview)</value>
+  </data>
+  <data name="DiagnosticTool_Report_ChannelRelease" xml:space="preserve">
+    <value>正式版 (Release)</value>
+  </data>
 </root>

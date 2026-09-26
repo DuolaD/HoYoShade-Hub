@@ -1,10 +1,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using HoYoShadeHub.Core;
+using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
@@ -468,6 +470,22 @@ public sealed partial class DiagnosticToolWindow : WindowEx
     {
         InitializeComponent();
         InitializeWindow();
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) => OnLanguageChanged());
+        Closed += (_, _) => WeakReferenceMessenger.Default.Unregister<LanguageChangedMessage>(this);
+    }
+
+    private void OnLanguageChanged()
+    {
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            Title = Lang.DiagnosticTool_Title;
+            this.Bindings.Update();
+            if (_currentReport != null)
+            {
+                UpdateCardDisplaysAfterReportLoaded(_currentReport);
+                ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+            }
+        });
     }
 
     private void InitializeWindow()
@@ -533,154 +551,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             var report = await DiagnosticService.CollectReportAsync(WindowHandle, EnableNetworkInfo);
             _currentReport = report;
 
-            // 1. Hardware card summaries
-            string coreInfo = report.Hardware.PhysicalCores > 0
-                ? $"{report.Hardware.PhysicalCores} Cores / {report.Hardware.LogicalCores} Threads"
-                : $"{report.Hardware.LogicalCores} Cores";
-            CpuText = $"{report.Hardware.CpuName} ({coreInfo})";
-            MotherboardText = string.IsNullOrWhiteSpace(report.Hardware.Motherboard) ? "-" : report.Hardware.Motherboard;
-            MemoryText = $"{report.Hardware.MemorySummary} [Total: {report.Hardware.TotalPhysicalMemory} / Avail: {report.Hardware.AvailablePhysicalMemory}]";
-
-            if (report.Hardware.Gpus.Count > 0)
-            {
-                GpuText = string.Join("\n", report.Hardware.Gpus.Select(g =>
-                {
-                    var extra = new[] { g.VramSize, string.IsNullOrWhiteSpace(g.DriverVersion) ? "" : $"Driver: {g.DriverVersion}", g.Provider }
-                        .Where(s => !string.IsNullOrWhiteSpace(s));
-                    string extraStr = extra.Any() ? $" ({string.Join(" / ", extra)})" : "";
-                    return $"• {g.Name}{extraStr}";
-                }));
-            }
-            else
-            {
-                GpuText = "-";
-            }
-
-            if (report.Hardware.Monitors.Count > 0)
-            {
-                var monLines = report.Hardware.Monitors.Select(m =>
-                {
-                    var parts = new System.Collections.Generic.List<string>();
-                    if (!string.IsNullOrWhiteSpace(m.Manufacturer) || !string.IsNullOrWhiteSpace(m.ModelCode))
-                    {
-                        parts.Add($"{m.Manufacturer} {m.ModelCode}".Trim());
-                    }
-                    string extraBracket = parts.Count > 0 ? $" [{string.Join(" ", parts)}]" : "";
-                    string sizeStr = string.IsNullOrWhiteSpace(m.DiagonalSize) ? "" : $" ({m.DiagonalSize})";
-                    return $"• {m.Name}{extraBracket}{sizeStr}";
-                }).ToList();
-                monLines.Add($"• Primary: {report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})");
-                MonitorsText = string.Join("\n", monLines);
-            }
-            else
-            {
-                MonitorsText = $"{report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})";
-            }
-
-            if (report.Hardware.Disks.Count > 0)
-            {
-                DisksText = string.Join("\n", report.Hardware.Disks.Select(d =>
-                {
-                    string drives = d.DriveLetters.Count > 0 ? string.Join(", ", d.DriveLetters) : "-";
-                    return $"• {d.Model} ( {d.SizeString} ) -> [ {drives} ]";
-                }));
-            }
-            else
-            {
-                DisksText = "-";
-            }
-
-            AudioText = report.Hardware.AudioDevices.Count > 0
-                ? string.Join("\n", report.Hardware.AudioDevices.Select(a => $"• {a}"))
-                : "-";
-
-            NetworkText = report.Hardware.NetworkAdapters.Count > 0
-                ? string.Join("\n", report.Hardware.NetworkAdapters.Select(n => $"• {n}"))
-                : "-";
-
-            // 2. System info
-            DisplayText = $"{report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})";
-            OsText = $"{report.System.OsName} {report.System.OsVersion} (Build {report.System.OsBuild}) [{report.System.OsArchitecture}]";
-            RuntimeText = $"{report.System.DotNetRuntime} | WebView2: {report.System.WebView2Version}";
-            UptimeText = report.System.SystemUptime;
-
-            // 3. Launcher & Framework info
-            LauncherVerText = $"{report.Launcher.Version} (PID: {report.Launcher.ProcessId})";
-            FrameworkVerText = $"HoYoShade: {report.Launcher.HoYoShadeFrameworkVersion} | OpenHoYoShade: {report.Launcher.OpenHoYoShadeVersion}";
-            RpcStateText = report.Launcher.RpcRunning ? "Running" : "Not Running";
-            PermissionsText = report.Launcher.IsAdmin ? "Administrator" : "Standard User";
-            FrameworkDownloadServerText = report.Launcher.FrameworkDownloadServer;
-            FrameworkPreviewChannelText = report.Launcher.FrameworkPreviewChannel ? "✓ Enabled" : "✗ Disabled";
-
-            HoYoShadeInstalled = report.Launcher.HoYoShade.IsInstalled;
-            HoYoShadeVersion = report.Launcher.HoYoShade.Version;
-            HoYoShadeReShadeVersion = report.Launcher.HoYoShade.ReShadeVersion;
-            HoYoShadePath = report.Launcher.HoYoShade.InstallPath;
-            HoYoShadeTotalSize = report.Launcher.HoYoShade.TotalSize;
-            HoYoShadeShaderSize = report.Launcher.HoYoShade.ShaderSize;
-            HoYoShadePresetSize = report.Launcher.HoYoShade.PresetSize;
-            HoYoShadeScreenshotSize = report.Launcher.HoYoShade.ScreenshotSize;
-            HoYoShadeOtherSize = report.Launcher.HoYoShade.OtherSize;
-
-            OpenHoYoShadeInstalled = report.Launcher.OpenHoYoShade.IsInstalled;
-            OpenHoYoShadeVersion = report.Launcher.OpenHoYoShade.Version;
-            OpenHoYoShadeReShadeVersion = report.Launcher.OpenHoYoShade.ReShadeVersion;
-            OpenHoYoShadePath = report.Launcher.OpenHoYoShade.InstallPath;
-            OpenHoYoShadeTotalSize = report.Launcher.OpenHoYoShade.TotalSize;
-            OpenHoYoShadeShaderSize = report.Launcher.OpenHoYoShade.ShaderSize;
-            OpenHoYoShadePresetSize = report.Launcher.OpenHoYoShade.PresetSize;
-            OpenHoYoShadeScreenshotSize = report.Launcher.OpenHoYoShade.ScreenshotSize;
-            OpenHoYoShadeOtherSize = report.Launcher.OpenHoYoShade.OtherSize;
-
-            // 4. Games info
-            if (report.Games.Count > 0)
-            {
-                GamesSummaryText = string.Join("\n\n", report.Games.Select(g =>
-                {
-                    var badges = new System.Collections.Generic.List<string>();
-                    if (g.EnableDX12) badges.Add("DX12");
-                    if (g.HasDxgiDll) badges.Add("dxgi.dll");
-                    if (g.HasD3d11Dll) badges.Add("d3d11.dll");
-                    if (g.HasReShadeIni) badges.Add("ReShade.ini");
-                    if (g.HasReShadeLog) badges.Add("ReShade.log");
-                    string badgeStr = badges.Count > 0 ? $" ({string.Join(", ", badges)})" : "";
-
-                    var launchList = new System.Collections.Generic.List<string>();
-                    launchList.Add($"{Lang.GameLauncherPage_LaunchGame}: {(g.EnableGameLaunch ? "✓" : "✗")}");
-                    if (g.UseStarwardLauncher)
-                    {
-                        launchList.Add($"{Lang.GameLauncherPage_LaunchWithStarward}: ✓");
-                    }
-                    launchList.Add($"HoYoShade: {(g.UseHoYoShade ? "✓" : "✗")}");
-                    launchList.Add($"OpenHoYoShade: {(g.UseOpenHoYoShade ? "✓" : "✗")}");
-                    if (g.Biz.StartsWith(GameBiz.hk4e, StringComparison.OrdinalIgnoreCase))
-                    {
-                        launchList.Add($"{Lang.GameLauncherPage_LaunchGenshinBlenderPlugin}: {(g.LaunchGenshinBlenderPlugin ? "✓" : "✗")}");
-                    }
-                    else if (g.Biz.StartsWith(GameBiz.nap, StringComparison.OrdinalIgnoreCase))
-                    {
-                        launchList.Add($"{Lang.GameLauncherPage_LaunchZZZBlenderPlugin}: {(g.LaunchZZZBlenderPlugin ? "✓" : "✗")}");
-                    }
-                    if (g.UsePopupWindow)
-                    {
-                        launchList.Add($"{Lang.GameSettingPage_UsePopupWindow}: ✓");
-                    }
-                    if (!string.IsNullOrWhiteSpace(g.StartArgument))
-                    {
-                        launchList.Add($"{Lang.GameLauncherSettingDialog_CommandLineArgument}: {g.StartArgument}");
-                    }
-
-                    string launchStr = $"\n  └ {Lang.GameLauncherPage_LaunchOptions}: {string.Join(" | ", launchList)}";
-                    return $"• {g.GameName} [{g.ServerName}]: {g.InstallPath}{badgeStr}{launchStr}";
-                }));
-            }
-            else
-            {
-                GamesSummaryText = Lang.DiagnosticTool_NoGamesFound;
-            }
-
-            // Network card summaries
-            UpdateNetworkCardDisplays(report.Network);
+            UpdateCardDisplaysAfterReportLoaded(report);
 
             ReportText = DiagnosticService.ToFormattedText(report, MaskIpAddress);
         }
@@ -693,6 +564,158 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         {
             IsLoading = false;
         }
+    }
+
+    private void UpdateCardDisplaysAfterReportLoaded(DiagnosticReport report)
+    {
+        // 1. Hardware card summaries
+        string coreInfo = report.Hardware.PhysicalCores > 0
+            ? string.Format(Lang.DiagnosticTool_Report_CoresThreads, report.Hardware.PhysicalCores, report.Hardware.LogicalCores)
+            : string.Format(Lang.DiagnosticTool_Report_Cores, report.Hardware.LogicalCores);
+        CpuText = $"{report.Hardware.CpuName} ({coreInfo})";
+        MotherboardText = string.IsNullOrWhiteSpace(report.Hardware.Motherboard) ? "-" : report.Hardware.Motherboard;
+        MemoryText = $"{report.Hardware.MemorySummary} [Total: {report.Hardware.TotalPhysicalMemory} / Avail: {report.Hardware.AvailablePhysicalMemory}]";
+
+        if (report.Hardware.Gpus.Count > 0)
+        {
+            GpuText = string.Join("\n", report.Hardware.Gpus.Select(g =>
+            {
+                var extra = new[] { g.VramSize, string.IsNullOrWhiteSpace(g.DriverVersion) ? "" : string.Format(Lang.DiagnosticTool_Report_Driver, g.DriverVersion), g.Provider }
+                    .Where(s => !string.IsNullOrWhiteSpace(s));
+                string extraStr = extra.Any() ? $" ({string.Join(" / ", extra)})" : "";
+                return $"• {g.Name}{extraStr}";
+            }));
+        }
+        else
+        {
+            GpuText = "-";
+        }
+
+        if (report.Hardware.Monitors.Count > 0)
+        {
+            var monLines = report.Hardware.Monitors.Select(m =>
+            {
+                var parts = new System.Collections.Generic.List<string>();
+                if (!string.IsNullOrWhiteSpace(m.Manufacturer) || !string.IsNullOrWhiteSpace(m.ModelCode))
+                {
+                    parts.Add($"{m.Manufacturer} {m.ModelCode}".Trim());
+                }
+                string extraBracket = parts.Count > 0 ? $" [{string.Join(" ", parts)}]" : "";
+                string sizeStr = string.IsNullOrWhiteSpace(m.DiagonalSize) ? "" : $" ({m.DiagonalSize})";
+                return $"• {m.Name}{extraBracket}{sizeStr}";
+            }).ToList();
+            monLines.Add($"• {string.Format(Lang.DiagnosticTool_Report_PrimaryDisplay, report.Hardware.PrimaryResolution, report.Hardware.DisplayDpiScale)}");
+            MonitorsText = string.Join("\n", monLines);
+        }
+        else
+        {
+            MonitorsText = $"{report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})";
+        }
+
+        if (report.Hardware.Disks.Count > 0)
+        {
+            DisksText = string.Join("\n", report.Hardware.Disks.Select(d =>
+            {
+                string drives = d.DriveLetters.Count > 0 ? string.Join(", ", d.DriveLetters) : "-";
+                return $"• {d.Model} ( {d.SizeString} ) -> [ {drives} ]";
+            }));
+        }
+        else
+        {
+            DisksText = "-";
+        }
+
+        AudioText = report.Hardware.AudioDevices.Count > 0
+            ? string.Join("\n", report.Hardware.AudioDevices.Select(a => $"• {a}"))
+            : "-";
+
+        NetworkText = report.Hardware.NetworkAdapters.Count > 0
+            ? string.Join("\n", report.Hardware.NetworkAdapters.Select(n => $"• {n}"))
+            : "-";
+
+        // 2. System info
+        DisplayText = $"{report.Hardware.PrimaryResolution} ({report.Hardware.DisplayDpiScale})";
+        OsText = $"{report.System.OsName} {report.System.OsVersion} (Build {report.System.OsBuild}) [{report.System.OsArchitecture}]";
+        RuntimeText = $"{report.System.DotNetRuntime} | WebView2: {report.System.WebView2Version}";
+        UptimeText = report.System.SystemUptime;
+
+        // 3. Launcher & Framework info
+        LauncherVerText = $"{report.Launcher.Version} (PID: {report.Launcher.ProcessId})";
+        FrameworkVerText = $"HoYoShade: {report.Launcher.HoYoShadeFrameworkVersion} | OpenHoYoShade: {report.Launcher.OpenHoYoShadeVersion}";
+        RpcStateText = report.Launcher.RpcRunning ? Lang.DiagnosticTool_Running : Lang.DiagnosticTool_NotRunning;
+        PermissionsText = report.Launcher.IsAdmin ? Lang.DiagnosticTool_Admin : Lang.DiagnosticTool_StandardUser;
+        FrameworkDownloadServerText = report.Launcher.FrameworkDownloadServer;
+        FrameworkPreviewChannelText = report.Launcher.FrameworkPreviewChannel ? $"✓ {Lang.DiagnosticTool_Enabled}" : $"✗ {Lang.DiagnosticTool_Disabled}";
+
+        HoYoShadeInstalled = report.Launcher.HoYoShade.IsInstalled;
+        HoYoShadeVersion = report.Launcher.HoYoShade.Version;
+        HoYoShadeReShadeVersion = report.Launcher.HoYoShade.ReShadeVersion;
+        HoYoShadePath = report.Launcher.HoYoShade.InstallPath;
+        HoYoShadeTotalSize = report.Launcher.HoYoShade.TotalSize;
+        HoYoShadeShaderSize = report.Launcher.HoYoShade.ShaderSize;
+        HoYoShadePresetSize = report.Launcher.HoYoShade.PresetSize;
+        HoYoShadeScreenshotSize = report.Launcher.HoYoShade.ScreenshotSize;
+        HoYoShadeOtherSize = report.Launcher.HoYoShade.OtherSize;
+
+        OpenHoYoShadeInstalled = report.Launcher.OpenHoYoShade.IsInstalled;
+        OpenHoYoShadeVersion = report.Launcher.OpenHoYoShade.Version;
+        OpenHoYoShadeReShadeVersion = report.Launcher.OpenHoYoShade.ReShadeVersion;
+        OpenHoYoShadePath = report.Launcher.OpenHoYoShade.InstallPath;
+        OpenHoYoShadeTotalSize = report.Launcher.OpenHoYoShade.TotalSize;
+        OpenHoYoShadeShaderSize = report.Launcher.OpenHoYoShade.ShaderSize;
+        OpenHoYoShadePresetSize = report.Launcher.OpenHoYoShade.PresetSize;
+        OpenHoYoShadeScreenshotSize = report.Launcher.OpenHoYoShade.ScreenshotSize;
+        OpenHoYoShadeOtherSize = report.Launcher.OpenHoYoShade.OtherSize;
+
+        // 4. Games info
+        if (report.Games.Count > 0)
+        {
+            GamesSummaryText = string.Join("\n\n", report.Games.Select(g =>
+            {
+                var badges = new System.Collections.Generic.List<string>();
+                if (g.EnableDX12) badges.Add("DX12");
+                if (g.HasDxgiDll) badges.Add("dxgi.dll");
+                if (g.HasD3d11Dll) badges.Add("d3d11.dll");
+                if (g.HasReShadeIni) badges.Add("ReShade.ini");
+                if (g.HasReShadeLog) badges.Add("ReShade.log");
+                string badgeStr = badges.Count > 0 ? $" ({string.Join(", ", badges)})" : "";
+
+                var launchList = new System.Collections.Generic.List<string>();
+                launchList.Add($"{Lang.GameLauncherPage_LaunchGame}: {(g.EnableGameLaunch ? "✓" : "✗")}");
+                if (g.UseStarwardLauncher)
+                {
+                    launchList.Add($"{Lang.GameLauncherPage_LaunchWithStarward}: ✓");
+                }
+                launchList.Add($"HoYoShade: {(g.UseHoYoShade ? "✓" : "✗")}");
+                launchList.Add($"OpenHoYoShade: {(g.UseOpenHoYoShade ? "✓" : "✗")}");
+                if (g.Biz.StartsWith(GameBiz.hk4e, StringComparison.OrdinalIgnoreCase))
+                {
+                    launchList.Add($"{Lang.GameLauncherPage_LaunchGenshinBlenderPlugin}: {(g.LaunchGenshinBlenderPlugin ? "✓" : "✗")}");
+                }
+                else if (g.Biz.StartsWith(GameBiz.nap, StringComparison.OrdinalIgnoreCase))
+                {
+                    launchList.Add($"{Lang.GameLauncherPage_LaunchZZZBlenderPlugin}: {(g.LaunchZZZBlenderPlugin ? "✓" : "✗")}");
+                }
+                if (g.UsePopupWindow)
+                {
+                    launchList.Add($"{Lang.GameSettingPage_UsePopupWindow}: ✓");
+                }
+                if (!string.IsNullOrWhiteSpace(g.StartArgument))
+                {
+                    launchList.Add($"{Lang.GameLauncherSettingDialog_CommandLineArgument}: {g.StartArgument}");
+                }
+
+                string launchStr = $"\n  └ {Lang.GameLauncherPage_LaunchOptions}: {string.Join(" | ", launchList)}";
+                return $"• {g.GameName} [{g.ServerName}]: {g.InstallPath}{badgeStr}{launchStr}";
+            }));
+        }
+        else
+        {
+            GamesSummaryText = Lang.DiagnosticTool_NoGamesFound;
+        }
+
+        // Network card summaries
+        UpdateNetworkCardDisplays(report.Network);
     }
 
     private void Button_CopyReport_Click(object sender, RoutedEventArgs e)
@@ -812,7 +835,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         }
         else
         {
-            NetworkIpv6Text = "未检测到 / 无 IPv6 出口";
+            NetworkIpv6Text = Lang.DiagnosticTool_Ipv6NotDetected;
         }
     }
 
@@ -820,7 +843,8 @@ public sealed partial class DiagnosticToolWindow : WindowEx
     {
         UpdateNetworkIpDisplays();
 
-        string locParts = string.Join(" ", new[] { net.Country, net.Region, net.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
+        string countryDisplay = DiagnosticService.FormatCountry(net.CountryCode);
+        string locParts = string.Join(" ", new[] { string.IsNullOrWhiteSpace(countryDisplay) ? net.Country : countryDisplay, net.Region, net.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
         NetworkLocationText = string.IsNullOrWhiteSpace(locParts) ? "-" : locParts;
 
         string asnText = string.IsNullOrWhiteSpace(net.AsOrganization)
@@ -831,12 +855,14 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         NetworkColoText = string.IsNullOrWhiteSpace(net.CloudflareColo) ? "-" : net.CloudflareColo;
 
         NetworkProxyText = net.HasSystemProxy
-            ? $"已启用 [{net.SystemProxyServer}]"
-            : "未开启 (Direct)";
+            ? string.Format(Lang.DiagnosticTool_ProxyEnabled, net.SystemProxyServer)
+            : Lang.DiagnosticTool_ProxyDisabled;
 
-        NetworkEncryptionText = $"DoH: {(net.LauncherDohEnabled ? "开启" : "关闭")} [{net.LauncherDohProvider}] | ECH: {(net.LauncherEchEnabled ? "开启" : "关闭")}";
+        string dohStatus = net.LauncherDohEnabled ? Lang.DiagnosticTool_On : Lang.DiagnosticTool_Off;
+        string echStatus = net.LauncherEchEnabled ? Lang.DiagnosticTool_On : Lang.DiagnosticTool_Off;
+        NetworkEncryptionText = $"DoH: {dohStatus} [{net.LauncherDohProvider}] | ECH: {echStatus}";
 
-        NetworkConclusionText = net.DiagnosisConclusion;
+        NetworkConclusionText = DiagnosticService.GetDiagnosisConclusion(net);
 
         if (net.DohEchRescueAttempted && net.DohEchRescueSuccess)
         {
@@ -1003,7 +1029,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         try
         {
             IsNetworkProbing = true;
-            NetworkConclusionText = "正在向 Cloudflare 发送探测请求以分析网络环境...";
+            NetworkConclusionText = Lang.DiagnosticTool_ProbingNetwork;
             var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync();
             netInfo.IsEnabled = true;
             _currentReport.Network = netInfo;
@@ -1013,7 +1039,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to probe network diagnostic info");
-            ShowStatus(InfoBarSeverity.Warning, $"网络信息获取失败: {ex.Message}");
+            ShowStatus(InfoBarSeverity.Warning, string.Format(Lang.DiagnosticTool_NetworkProbeFailed, ex.Message));
         }
         finally
         {
@@ -1032,18 +1058,18 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         try
         {
             IsRetestingDoh = true;
-            NetworkConclusionText = "正在使用 DoH+ECH 加密隧道测试连通性并获取网络信息...";
+            NetworkConclusionText = Lang.DiagnosticTool_TestingWithDoh;
             var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync(forceDohEch: true);
             netInfo.IsEnabled = true;
             _currentReport.Network = netInfo;
             UpdateNetworkCardDisplays(netInfo);
             ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
-            ShowStatus(InfoBarSeverity.Success, "DoH+ECH 连通性测试已完成并更新报告！");
+            ShowStatus(InfoBarSeverity.Success, Lang.DiagnosticTool_DohTestComplete);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to retest network with DoH+ECH");
-            ShowStatus(InfoBarSeverity.Error, $"DoH+ECH 测试遇到异常: {ex.Message}");
+            ShowStatus(InfoBarSeverity.Error, string.Format(Lang.DiagnosticTool_DohTestFailed, ex.Message));
         }
         finally
         {
