@@ -114,6 +114,111 @@
                                   Visibility="{x:Bind LoadingVisibility}" />
                 </StackPanel>
 
+                <!--  网络诊断与脱敏设置选项栏  -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="18,14">
+                    <StackPanel Spacing="12">
+                        <!--  第 1 行：网络诊断开关  -->
+                        <Grid ColumnSpacing="14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0"
+                                      FontSize="18"
+                                      Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                      Glyph="&#xE774;"
+                                      VerticalAlignment="Center" />
+
+                            <StackPanel Grid.Column="1"
+                                        Spacing="2"
+                                        VerticalAlignment="Center">
+                                <TextBlock FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Text="{x:Bind lang:Lang.DiagnosticTool_EnableNetwork}" />
+                                <TextBlock FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           Text="{x:Bind lang:Lang.DiagnosticTool_EnableNetwork_Desc}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        Spacing="10"
+                                        VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="6"
+                                            VerticalAlignment="Center"
+                                            Visibility="{x:Bind NetworkProbingVisibility, Mode=OneWay}">
+                                    <ProgressRing Width="16"
+                                                  Height="16"
+                                                  IsActive="True" />
+                                    <TextBlock FontSize="11"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind lang:Lang.DiagnosticTool_ProbingNetwork}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="Toggle_EnableNetwork"
+                                              Margin="0"
+                                              MinWidth="0"
+                                              VerticalAlignment="Center"
+                                              IsOn="{x:Bind EnableNetworkInfo, Mode=OneWay}"
+                                              OffContent=""
+                                              OnContent=""
+                                              Toggled="Toggle_EnableNetwork_Toggled" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!--  分割线  -->
+                        <Border Height="1"
+                                Background="{ThemeResource CardStrokeColorDefaultBrush}"
+                                Opacity="0.5" />
+
+                        <!--  第 2 行：IP 脱敏保护开关  -->
+                        <Grid ColumnSpacing="14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0"
+                                      FontSize="18"
+                                      Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                      Glyph="&#xE72E;"
+                                      VerticalAlignment="Center" />
+
+                            <StackPanel Grid.Column="1"
+                                        Spacing="2"
+                                        VerticalAlignment="Center">
+                                <TextBlock FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Text="{x:Bind lang:Lang.DiagnosticTool_MaskIp}" />
+                                <TextBlock FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           Text="{x:Bind lang:Lang.DiagnosticTool_MaskIp_Desc}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <ToggleSwitch Grid.Column="2"
+                                          x:Name="Toggle_MaskIp"
+                                          Margin="0"
+                                          MinWidth="0"
+                                          VerticalAlignment="Center"
+                                          IsEnabled="{x:Bind EnableNetworkInfo, Mode=OneWay}"
+                                          IsOn="{x:Bind MaskIpAddress, Mode=OneWay}"
+                                          OffContent=""
+                                          OnContent=""
+                                          Toggled="Toggle_MaskIp_Toggled" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
                 <!--  Card 1: 硬件与显示配置  -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -697,7 +802,8 @@
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
                         CornerRadius="8"
-                        Padding="18,14">
+                        Padding="18,14"
+                        Visibility="{x:Bind NetworkCardVisibility, Mode=OneWay}">
                     <StackPanel Spacing="14">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -718,7 +824,7 @@
                                         Click="Button_ToggleIpMask_Click"
                                         CornerRadius="4">
                                     <StackPanel Orientation="Horizontal" Spacing="6">
-                                        <FontIcon FontSize="13" Glyph="{x:Bind IpVisibilityGlyph}" />
+                                        <FontIcon FontSize="13" Glyph="{x:Bind IpVisibilityGlyph, Mode=OneWay}" />
                                         <TextBlock FontSize="12" Text="{x:Bind lang:Lang.DiagnosticTool_ToggleIpVisibility}" />
                                     </StackPanel>
                                 </Button>
@@ -726,7 +832,7 @@
                                 <Button Padding="10,4"
                                         Click="Button_RetestWithDoh_Click"
                                         CornerRadius="4"
-                                        IsEnabled="{x:Bind IsNotRetestingDoh}">
+                                        IsEnabled="{x:Bind IsNotRetestingDoh, Mode=OneWay}">
                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                         <FontIcon FontSize="13" Glyph="&#xE72C;" />
                                         <TextBlock FontSize="12" Text="{x:Bind lang:Lang.DiagnosticTool_TestWithDoh}" />

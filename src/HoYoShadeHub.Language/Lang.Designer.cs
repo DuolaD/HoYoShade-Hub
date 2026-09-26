@@ -5997,5 +5997,95 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("DiagnosticTool_TestWithDoh", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Detect &amp; Display Network Info 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_EnableNetwork {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_EnableNetwork", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Send lightweight requests to Cloudflare to probe egress IP, region, and ASN 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_EnableNetwork_Desc {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_EnableNetwork_Desc", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 IP Address Masking 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_MaskIp {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_MaskIp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Mask sensitive parts of public IP addresses to protect privacy in logs 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_MaskIp_Desc {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_MaskIp_Desc", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Privacy &amp; Security Warning 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_UnmaskWarning_Title {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_UnmaskWarning_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Only enable this when communicating directly with the developer and no third party can access logs. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_UnmaskWarning_Content {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_UnmaskWarning_Content", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Keep Masked 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_KeepMasked {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_KeepMasked", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Reveal IP 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ConfirmUnmask {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ConfirmUnmask", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Network diagnostics disabled (no probe requests sent) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkDisabledNotice {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkDisabledNotice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Probing network environment... 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_ProbingNetwork {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_ProbingNetwork", resourceCulture);
+            }
+        }
     }
 }

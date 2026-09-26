@@ -428,6 +428,18 @@ public static class AppConfig
         set => SetValue(value);
     }
 
+    public static bool EnableDiagnosticNetworkInfo
+    {
+        get => GetValue(false);
+        set => SetValue(value);
+    }
+
+    public static bool DiagnosticIpMasking
+    {
+        get => GetValue(true);
+        set => SetValue(value);
+    }
+
 
     public static bool ExitWhenClosing
     {

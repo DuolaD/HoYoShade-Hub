@@ -39,6 +39,7 @@ public class DiagnosticReport
 
 public class NetworkDiagnosticInfo
 {
+    public bool IsEnabled { get; set; }
     public string Ipv4 { get; set; } = string.Empty;
     public string MaskedIpv4 { get; set; } = string.Empty;
     public string Country { get; set; } = string.Empty;
@@ -227,7 +228,7 @@ public static class DiagnosticService
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
 
-    public static async Task<DiagnosticReport> CollectReportAsync(nint windowHandle = 0)
+    public static async Task<DiagnosticReport> CollectReportAsync(nint windowHandle = 0, bool? enableNetwork = null)
     {
         var report = new DiagnosticReport
         {
@@ -348,11 +349,29 @@ public static class DiagnosticService
             // 4. Network Info
             try
             {
-                report.Network = await CollectNetworkDiagnosticInfoAsync();
+                bool checkNetwork = enableNetwork ?? AppConfig.EnableDiagnosticNetworkInfo;
+                if (checkNetwork)
+                {
+                    report.Network = await CollectNetworkDiagnosticInfoAsync();
+                    report.Network.IsEnabled = true;
+                }
+                else
+                {
+                    report.Network = new NetworkDiagnosticInfo
+                    {
+                        IsEnabled = false,
+                        DiagnosisConclusion = Lang.DiagnosticTool_NetworkDisabledNotice
+                    };
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to collect network diagnostic info");
+                report.Network = new NetworkDiagnosticInfo
+                {
+                    IsEnabled = true,
+                    DiagnosisConclusion = $"网络探测异常: {ex.Message}"
+                };
             }
 
             // 5. Games
@@ -379,7 +398,7 @@ public static class DiagnosticService
         return report;
     }
 
-    public static string ToFormattedText(DiagnosticReport report)
+    public static string ToFormattedText(DiagnosticReport report, bool? maskIp = null)
     {
         var sb = new StringBuilder();
         sb.AppendLine("================================================================================");
@@ -528,33 +547,56 @@ public static class DiagnosticService
 
         // 4. 网络环境与出口诊断
         sb.AppendLine("【4. 网络环境与出口诊断 (Network & Connectivity)】");
-        string locParts = string.Join(" ", new[] { report.Network.Country, report.Network.Region, report.Network.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
-        if (string.IsNullOrWhiteSpace(locParts)) locParts = "-";
-
-        sb.AppendLine($"  - 出口 IPv4 地址: {(string.IsNullOrWhiteSpace(report.Network.Ipv4) ? "-" : report.Network.Ipv4)} (脱敏: {report.Network.MaskedIpv4})");
-        sb.AppendLine($"  - 物理归属地: {locParts}");
-
-        string asnText = string.IsNullOrWhiteSpace(report.Network.AsOrganization)
-            ? (string.IsNullOrWhiteSpace(report.Network.Asn) ? "-" : report.Network.Asn)
-            : $"{report.Network.Asn} {report.Network.AsOrganization}".Trim();
-        sb.AppendLine($"  - 运营商与自治域 (ASN): {asnText}");
-        sb.AppendLine($"  - Cloudflare 边缘节点 (Colo): {(string.IsNullOrWhiteSpace(report.Network.CloudflareColo) ? "-" : report.Network.CloudflareColo)}");
-
-        string ipv6Text = report.Network.HasIpv6
-            ? $"{report.Network.Ipv6} (脱敏: {report.Network.MaskedIpv6})"
-            : "未检测到 / 无 IPv6 出口";
-        sb.AppendLine($"  - 出口 IPv6 地址: {ipv6Text}");
-
-        sb.AppendLine($"  - 系统代理状态: {(report.Network.HasSystemProxy ? $"已启用 [{report.Network.SystemProxyServer}]" : "未开启 (Direct)")}");
-        sb.AppendLine($"  - 启动器安全加密: DoH={(report.Network.LauncherDohEnabled ? "开启" : "关闭")} [{report.Network.LauncherDohProvider}], ECH={(report.Network.LauncherEchEnabled ? "开启" : "关闭")}");
-        sb.AppendLine($"  - 探测命中梯队: {(string.IsNullOrWhiteSpace(report.Network.SuccessfulTier) ? "无" : report.Network.SuccessfulTier)}");
-
-        if (report.Network.DohEchRescueAttempted)
+        if (!report.Network.IsEnabled && string.IsNullOrWhiteSpace(report.Network.Ipv4) && string.IsNullOrWhiteSpace(report.Network.SuccessfulTier))
         {
-            sb.AppendLine($"  - DoH+ECH 穿透验证: {(report.Network.DohEchRescueSuccess ? "成功恢复 (Rescue Success)" : "恢复失败 (Rescue Failed)")} - {report.Network.DohEchRescueDetails}");
+            sb.AppendLine($"  - 状态: {Lang.DiagnosticTool_NetworkDisabledNotice}");
+            sb.AppendLine();
         }
-        sb.AppendLine($"  - 综合诊断结论: {report.Network.DiagnosisConclusion}");
-        sb.AppendLine();
+        else
+        {
+            bool isMasked = maskIp ?? AppConfig.DiagnosticIpMasking;
+            string v4Display = isMasked
+                ? (string.IsNullOrWhiteSpace(report.Network.MaskedIpv4) ? "-" : report.Network.MaskedIpv4)
+                : (string.IsNullOrWhiteSpace(report.Network.Ipv4) ? "-" : report.Network.Ipv4);
+            string v4Suffix = isMasked ? " (已脱敏保护)" : " (完整明文)";
+            sb.AppendLine($"  - 出口 IPv4 地址: {v4Display}{v4Suffix}");
+
+            string locParts = string.Join(" ", new[] { report.Network.Country, report.Network.Region, report.Network.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            if (string.IsNullOrWhiteSpace(locParts)) locParts = "-";
+            sb.AppendLine($"  - 物理归属地: {locParts}");
+
+            string asnText = string.IsNullOrWhiteSpace(report.Network.AsOrganization)
+                ? (string.IsNullOrWhiteSpace(report.Network.Asn) ? "-" : report.Network.Asn)
+                : $"{report.Network.Asn} {report.Network.AsOrganization}".Trim();
+            sb.AppendLine($"  - 运营商与自治域 (ASN): {asnText}");
+            sb.AppendLine($"  - Cloudflare 边缘节点 (Colo): {(string.IsNullOrWhiteSpace(report.Network.CloudflareColo) ? "-" : report.Network.CloudflareColo)}");
+
+            string ipv6Text;
+            if (report.Network.HasIpv6)
+            {
+                string v6Display = isMasked
+                    ? (string.IsNullOrWhiteSpace(report.Network.MaskedIpv6) ? "-" : report.Network.MaskedIpv6)
+                    : (string.IsNullOrWhiteSpace(report.Network.Ipv6) ? "-" : report.Network.Ipv6);
+                string v6Suffix = isMasked ? " (已脱敏保护)" : " (完整明文)";
+                ipv6Text = $"{v6Display}{v6Suffix}";
+            }
+            else
+            {
+                ipv6Text = "未检测到 / 无 IPv6 出口";
+            }
+            sb.AppendLine($"  - 出口 IPv6 地址: {ipv6Text}");
+
+            sb.AppendLine($"  - 系统代理状态: {(report.Network.HasSystemProxy ? $"已启用 [{report.Network.SystemProxyServer}]" : "未开启 (Direct)")}");
+            sb.AppendLine($"  - 启动器安全加密: DoH={(report.Network.LauncherDohEnabled ? "开启" : "关闭")} [{report.Network.LauncherDohProvider}], ECH={(report.Network.LauncherEchEnabled ? "开启" : "关闭")}");
+            sb.AppendLine($"  - 探测命中梯队: {(string.IsNullOrWhiteSpace(report.Network.SuccessfulTier) ? "无" : report.Network.SuccessfulTier)}");
+
+            if (report.Network.DohEchRescueAttempted)
+            {
+                sb.AppendLine($"  - DoH+ECH 穿透验证: {(report.Network.DohEchRescueSuccess ? "成功恢复 (Rescue Success)" : "恢复失败 (Rescue Failed)")} - {report.Network.DohEchRescueDetails}");
+            }
+            sb.AppendLine($"  - 综合诊断结论: {report.Network.DiagnosisConclusion}");
+            sb.AppendLine();
+        }
 
         // 5. 游戏与注入状态
         sb.AppendLine("【5. 已安装游戏与注入配置 (Configured Games & Injections)】");
@@ -642,7 +684,21 @@ public static class DiagnosticService
                 using (var writer = new StreamWriter(entryStream, Encoding.UTF8))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    await writer.WriteAsync(JsonSerializer.Serialize(report, options));
+                    var exportReport = report;
+                    if (AppConfig.DiagnosticIpMasking && report.Network != null)
+                    {
+                        var serialized = JsonSerializer.Serialize(report, options);
+                        exportReport = JsonSerializer.Deserialize<DiagnosticReport>(serialized, options) ?? report;
+                        if (!string.IsNullOrWhiteSpace(exportReport.Network.MaskedIpv4))
+                        {
+                            exportReport.Network.Ipv4 = exportReport.Network.MaskedIpv4;
+                        }
+                        if (!string.IsNullOrWhiteSpace(exportReport.Network.MaskedIpv6))
+                        {
+                            exportReport.Network.Ipv6 = exportReport.Network.MaskedIpv6;
+                        }
+                    }
+                    await writer.WriteAsync(JsonSerializer.Serialize(exportReport, options));
                 }
 
                 // 3. logs folder

@@ -2101,4 +2101,34 @@
   <data name="DiagnosticTool_TestWithDoh" xml:space="preserve">
     <value>DoH+ECH 重测</value>
   </data>
+  <data name="DiagnosticTool_EnableNetwork" xml:space="preserve">
+    <value>检测与显示网络信息</value>
+  </data>
+  <data name="DiagnosticTool_EnableNetwork_Desc" xml:space="preserve">
+    <value>开启后向 Cloudflare 发送轻量请求以探测公网出口、地区和 ASN 信息</value>
+  </data>
+  <data name="DiagnosticTool_MaskIp" xml:space="preserve">
+    <value>IP 地址脱敏保护</value>
+  </data>
+  <data name="DiagnosticTool_MaskIp_Desc" xml:space="preserve">
+    <value>隐藏公网 IP 的敏感字段，防止网络痕迹在日志中泄露</value>
+  </data>
+  <data name="DiagnosticTool_UnmaskWarning_Title" xml:space="preserve">
+    <value>隐私与网络安全警示</value>
+  </data>
+  <data name="DiagnosticTool_UnmaskWarning_Content" xml:space="preserve">
+    <value>仅在用户直接与开发者对话且无其他人可获取日志的情况下启用，此操作可能会导致日志信息被第三方获取后用于追踪个人所有网络活动。</value>
+  </data>
+  <data name="DiagnosticTool_KeepMasked" xml:space="preserve">
+    <value>保持脱敏保护</value>
+  </data>
+  <data name="DiagnosticTool_ConfirmUnmask" xml:space="preserve">
+    <value>确认显示明文</value>
+  </data>
+  <data name="DiagnosticTool_NetworkDisabledNotice" xml:space="preserve">
+    <value>未启用网络诊断 (未向网络发送探测请求)</value>
+  </data>
+  <data name="DiagnosticTool_ProbingNetwork" xml:space="preserve">
+    <value>正在探测网络环境...</value>
+  </data>
 </root>

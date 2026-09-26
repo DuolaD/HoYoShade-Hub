@@ -333,14 +333,42 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         set => SetProperty(ref _gamesSummaryText, value);
     }
 
-    // Network diagnostic properties
-    private bool _showFullIp;
-    public bool ShowFullIp
+    // Network diagnostic properties & switches
+    private bool _enableNetworkInfo = AppConfig.EnableDiagnosticNetworkInfo;
+    public bool EnableNetworkInfo
     {
-        get => _showFullIp;
+        get => _enableNetworkInfo;
         set
         {
-            if (SetProperty(ref _showFullIp, value))
+            if (SetProperty(ref _enableNetworkInfo, value))
+            {
+                OnPropertyChanged(nameof(NetworkCardVisibility));
+            }
+        }
+    }
+    public Visibility NetworkCardVisibility => EnableNetworkInfo ? Visibility.Visible : Visibility.Collapsed;
+
+    private bool _isNetworkProbing;
+    public bool IsNetworkProbing
+    {
+        get => _isNetworkProbing;
+        set
+        {
+            if (SetProperty(ref _isNetworkProbing, value))
+            {
+                OnPropertyChanged(nameof(NetworkProbingVisibility));
+            }
+        }
+    }
+    public Visibility NetworkProbingVisibility => IsNetworkProbing ? Visibility.Visible : Visibility.Collapsed;
+
+    private bool _maskIpAddress = AppConfig.DiagnosticIpMasking;
+    public bool MaskIpAddress
+    {
+        get => _maskIpAddress;
+        set
+        {
+            if (SetProperty(ref _maskIpAddress, value))
             {
                 OnPropertyChanged(nameof(IpVisibilityGlyph));
                 UpdateNetworkIpDisplays();
@@ -348,7 +376,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         }
     }
 
-    public string IpVisibilityGlyph => _showFullIp ? "\uED1A" : "\uE890";
+    public string IpVisibilityGlyph => MaskIpAddress ? "\uE890" : "\uED1A";
 
     private string _networkIpv4Text = "-";
     public string NetworkIpv4Text
@@ -502,7 +530,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             IsLoading = true;
             InfoBar_Status.IsOpen = false;
 
-            var report = await DiagnosticService.CollectReportAsync(WindowHandle);
+            var report = await DiagnosticService.CollectReportAsync(WindowHandle, EnableNetworkInfo);
             _currentReport = report;
 
             // 1. Hardware card summaries
@@ -654,7 +682,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             // Network card summaries
             UpdateNetworkCardDisplays(report.Network);
 
-            ReportText = DiagnosticService.ToFormattedText(report);
+            ReportText = DiagnosticService.ToFormattedText(report, MaskIpAddress);
         }
         catch (Exception ex)
         {
@@ -770,16 +798,16 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         if (_currentReport?.Network == null) return;
         var net = _currentReport.Network;
 
-        string displayV4 = _showFullIp
-            ? (string.IsNullOrWhiteSpace(net.Ipv4) ? "-" : net.Ipv4)
-            : (string.IsNullOrWhiteSpace(net.MaskedIpv4) ? "-" : net.MaskedIpv4);
+        string displayV4 = MaskIpAddress
+            ? (string.IsNullOrWhiteSpace(net.MaskedIpv4) ? "-" : net.MaskedIpv4)
+            : (string.IsNullOrWhiteSpace(net.Ipv4) ? "-" : net.Ipv4);
         NetworkIpv4Text = displayV4;
 
         if (net.HasIpv6)
         {
-            string displayV6 = _showFullIp
-                ? (string.IsNullOrWhiteSpace(net.Ipv6) ? "-" : net.Ipv6)
-                : (string.IsNullOrWhiteSpace(net.MaskedIpv6) ? "-" : net.MaskedIpv6);
+            string displayV6 = MaskIpAddress
+                ? (string.IsNullOrWhiteSpace(net.MaskedIpv6) ? "-" : net.MaskedIpv6)
+                : (string.IsNullOrWhiteSpace(net.Ipv6) ? "-" : net.Ipv6);
             NetworkIpv6Text = displayV6;
         }
         else
@@ -824,9 +852,178 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         }
     }
 
-    private void Button_ToggleIpMask_Click(object sender, RoutedEventArgs e)
+    private bool _suppressMaskToggledEvent;
+    private bool _isShowingUnmaskDialog;
+
+    private async void Toggle_EnableNetwork_Toggled(object sender, RoutedEventArgs e)
     {
-        ShowFullIp = !ShowFullIp;
+        bool isEnabled = Toggle_EnableNetwork.IsOn;
+        AppConfig.EnableDiagnosticNetworkInfo = isEnabled;
+        EnableNetworkInfo = isEnabled;
+
+        if (isEnabled)
+        {
+            // If network info is not yet fetched or was empty, probe it now
+            if (_currentReport != null && (!_currentReport.Network.IsEnabled || (string.IsNullOrWhiteSpace(_currentReport.Network.Ipv4) && string.IsNullOrWhiteSpace(_currentReport.Network.SuccessfulTier))))
+            {
+                await FetchNetworkInfoAsync();
+            }
+            else if (_currentReport != null)
+            {
+                UpdateNetworkCardDisplays(_currentReport.Network);
+                ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+            }
+        }
+        else
+        {
+            if (_currentReport != null)
+            {
+                ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+            }
+        }
+    }
+
+    private async Task RequestSetMaskIpAddressAsync(bool targetMasked)
+    {
+        // If already in target state, ensure UI switch is synchronized without re-triggering
+        if (targetMasked == MaskIpAddress)
+        {
+            if (Toggle_MaskIp.IsOn != targetMasked)
+            {
+                _suppressMaskToggledEvent = true;
+                try
+                {
+                    Toggle_MaskIp.IsOn = targetMasked;
+                }
+                finally
+                {
+                    _suppressMaskToggledEvent = false;
+                }
+            }
+            return;
+        }
+
+        if (!targetMasked)
+        {
+            // User requested to unmask IP -> display security warning dialog
+            var confirmed = await ShowUnmaskWarningDialogAsync();
+            if (!confirmed)
+            {
+                // User cancelled or closed dialog -> keep masked, revert toggle switch to On
+                _suppressMaskToggledEvent = true;
+                try
+                {
+                    Toggle_MaskIp.IsOn = true;
+                }
+                finally
+                {
+                    _suppressMaskToggledEvent = false;
+                }
+                return;
+            }
+
+            AppConfig.DiagnosticIpMasking = false;
+            _suppressMaskToggledEvent = true;
+            try
+            {
+                MaskIpAddress = false;
+                Toggle_MaskIp.IsOn = false;
+            }
+            finally
+            {
+                _suppressMaskToggledEvent = false;
+            }
+        }
+        else
+        {
+            // User requested to enable IP masking protection
+            AppConfig.DiagnosticIpMasking = true;
+            _suppressMaskToggledEvent = true;
+            try
+            {
+                MaskIpAddress = true;
+                Toggle_MaskIp.IsOn = true;
+            }
+            finally
+            {
+                _suppressMaskToggledEvent = false;
+            }
+        }
+
+        if (_currentReport != null)
+        {
+            ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+        }
+    }
+
+    private async void Toggle_MaskIp_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (_suppressMaskToggledEvent) return;
+        await RequestSetMaskIpAddressAsync(Toggle_MaskIp.IsOn);
+    }
+
+    private async Task<bool> ShowUnmaskWarningDialogAsync()
+    {
+        if (_isShowingUnmaskDialog) return false;
+        try
+        {
+            _isShowingUnmaskDialog = true;
+            var dialog = new ContentDialog
+            {
+                XamlRoot = Content.XamlRoot,
+                Title = Lang.DiagnosticTool_UnmaskWarning_Title,
+                Content = new TextBlock
+                {
+                    Text = Lang.DiagnosticTool_UnmaskWarning_Content,
+                    TextWrapping = TextWrapping.Wrap,
+                    LineHeight = 22
+                },
+                PrimaryButtonText = Lang.DiagnosticTool_ConfirmUnmask,
+                CloseButtonText = Lang.DiagnosticTool_KeepMasked,
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            var result = await dialog.ShowAsync();
+            return result == ContentDialogResult.Primary;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to show unmask warning dialog");
+            return false;
+        }
+        finally
+        {
+            _isShowingUnmaskDialog = false;
+        }
+    }
+
+    private async Task FetchNetworkInfoAsync()
+    {
+        if (IsNetworkProbing || _currentReport == null) return;
+        try
+        {
+            IsNetworkProbing = true;
+            NetworkConclusionText = "正在向 Cloudflare 发送探测请求以分析网络环境...";
+            var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync();
+            netInfo.IsEnabled = true;
+            _currentReport.Network = netInfo;
+            UpdateNetworkCardDisplays(netInfo);
+            ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to probe network diagnostic info");
+            ShowStatus(InfoBarSeverity.Warning, $"网络信息获取失败: {ex.Message}");
+        }
+        finally
+        {
+            IsNetworkProbing = false;
+        }
+    }
+
+    private async void Button_ToggleIpMask_Click(object sender, RoutedEventArgs e)
+    {
+        await RequestSetMaskIpAddressAsync(!MaskIpAddress);
     }
 
     private async void Button_RetestWithDoh_Click(object sender, RoutedEventArgs e)
@@ -837,9 +1034,10 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             IsRetestingDoh = true;
             NetworkConclusionText = "正在使用 DoH+ECH 加密隧道测试连通性并获取网络信息...";
             var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync(forceDohEch: true);
+            netInfo.IsEnabled = true;
             _currentReport.Network = netInfo;
             UpdateNetworkCardDisplays(netInfo);
-            ReportText = DiagnosticService.ToFormattedText(_currentReport);
+            ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
             ShowStatus(InfoBarSeverity.Success, "DoH+ECH 连通性测试已完成并更新报告！");
         }
         catch (Exception ex)
