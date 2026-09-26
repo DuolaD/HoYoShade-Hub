@@ -2376,4 +2376,10 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="DiagnosticTool_Report_ChannelRelease" xml:space="preserve">
     <value>Release</value>
   </data>
+  <data name="DiagnosticTool_NetworkIpv6Location" xml:space="preserve">
+    <value>IPv6 Location</value>
+  </data>
+  <data name="DiagnosticTool_NetworkIpv6Asn" xml:space="preserve">
+    <value>IPv6 ISP &amp; ASN</value>
+  </data>
 </root>

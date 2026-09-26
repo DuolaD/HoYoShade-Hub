@@ -408,6 +408,27 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         set => SetProperty(ref _networkIpv6Text, value);
     }
 
+    private string _networkIpv6LocationText = "-";
+    public string NetworkIpv6LocationText
+    {
+        get => _networkIpv6LocationText;
+        set => SetProperty(ref _networkIpv6LocationText, value);
+    }
+
+    private string _networkIpv6AsnText = "-";
+    public string NetworkIpv6AsnText
+    {
+        get => _networkIpv6AsnText;
+        set => SetProperty(ref _networkIpv6AsnText, value);
+    }
+
+    private Visibility _networkIpv6DetailsVisibility = Visibility.Collapsed;
+    public Visibility NetworkIpv6DetailsVisibility
+    {
+        get => _networkIpv6DetailsVisibility;
+        set => SetProperty(ref _networkIpv6DetailsVisibility, value);
+    }
+
     private string _networkColoText = "-";
     public string NetworkColoText
     {
@@ -849,10 +870,25 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         string locParts = string.Join(" ", new[] { countryDisplay, net.Region, net.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
         NetworkLocationText = string.IsNullOrWhiteSpace(locParts) ? "-" : locParts;
 
-        string asnText = string.IsNullOrWhiteSpace(net.AsOrganization)
-            ? (string.IsNullOrWhiteSpace(net.Asn) ? "-" : net.Asn)
-            : $"{net.Asn} {net.AsOrganization}".Trim();
-        NetworkAsnText = string.IsNullOrWhiteSpace(asnText) ? "-" : asnText;
+        string asnText = DiagnosticService.FormatAsn(net.Asn, net.AsOrganization);
+        NetworkAsnText = asnText;
+
+        if (net.HasIpv6)
+        {
+            NetworkIpv6DetailsVisibility = Visibility.Visible;
+            string v6CountryDisplay = !string.IsNullOrWhiteSpace(net.Ipv6CountryCode)
+                ? DiagnosticService.FormatCountry(net.Ipv6CountryCode)
+                : (!string.IsNullOrWhiteSpace(net.Ipv6Country) ? DiagnosticService.FormatCountry(net.Ipv6Country) : string.Empty);
+            string v6LocParts = string.Join(" ", new[] { v6CountryDisplay, net.Ipv6Region, net.Ipv6City }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            NetworkIpv6LocationText = string.IsNullOrWhiteSpace(v6LocParts) ? "-" : v6LocParts;
+            NetworkIpv6AsnText = DiagnosticService.FormatAsn(net.Ipv6Asn, net.Ipv6AsOrganization);
+        }
+        else
+        {
+            NetworkIpv6DetailsVisibility = Visibility.Collapsed;
+            NetworkIpv6LocationText = "-";
+            NetworkIpv6AsnText = "-";
+        }
 
         NetworkColoText = string.IsNullOrWhiteSpace(net.CloudflareColo) ? "-" : net.CloudflareColo;
 
@@ -1063,6 +1099,18 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             NetworkConclusionText = Lang.DiagnosticTool_TestingWithDoh;
             var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync(forceDohEch: true);
             netInfo.IsEnabled = true;
+            if (_currentReport.Network != null)
+            {
+                netInfo.HasIpv6 = _currentReport.Network.HasIpv6;
+                netInfo.Ipv6 = _currentReport.Network.Ipv6;
+                netInfo.MaskedIpv6 = _currentReport.Network.MaskedIpv6;
+                netInfo.Ipv6Country = _currentReport.Network.Ipv6Country;
+                netInfo.Ipv6CountryCode = _currentReport.Network.Ipv6CountryCode;
+                netInfo.Ipv6Region = _currentReport.Network.Ipv6Region;
+                netInfo.Ipv6City = _currentReport.Network.Ipv6City;
+                netInfo.Ipv6Asn = _currentReport.Network.Ipv6Asn;
+                netInfo.Ipv6AsOrganization = _currentReport.Network.Ipv6AsOrganization;
+            }
             _currentReport.Network = netInfo;
             UpdateNetworkCardDisplays(netInfo);
             ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);

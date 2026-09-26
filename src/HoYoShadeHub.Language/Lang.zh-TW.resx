@@ -2376,4 +2376,10 @@
   <data name="DiagnosticTool_Report_ChannelRelease" xml:space="preserve">
     <value>正式版 (Release)</value>
   </data>
+  <data name="DiagnosticTool_NetworkIpv6Location" xml:space="preserve">
+    <value>IPv6 物理歸屬地</value>
+  </data>
+  <data name="DiagnosticTool_NetworkIpv6Asn" xml:space="preserve">
+    <value>IPv6 電信業者與 ASN</value>
+  </data>
 </root>

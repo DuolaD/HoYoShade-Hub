@@ -6789,5 +6789,23 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("DiagnosticTool_Report_ChannelRelease", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 IPv6 Location 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkIpv6Location {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkIpv6Location", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 IPv6 ISP &amp; ASN 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_NetworkIpv6Asn {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_NetworkIpv6Asn", resourceCulture);
+            }
+        }
     }
 }

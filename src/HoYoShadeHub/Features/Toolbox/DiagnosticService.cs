@@ -54,6 +54,12 @@ public class NetworkDiagnosticInfo
     public bool HasIpv6 { get; set; }
     public string Ipv6 { get; set; } = string.Empty;
     public string MaskedIpv6 { get; set; } = string.Empty;
+    public string Ipv6Country { get; set; } = string.Empty;
+    public string Ipv6CountryCode { get; set; } = string.Empty;
+    public string Ipv6Region { get; set; } = string.Empty;
+    public string Ipv6City { get; set; } = string.Empty;
+    public string Ipv6Asn { get; set; } = string.Empty;
+    public string Ipv6AsOrganization { get; set; } = string.Empty;
 
     public bool HasSystemProxy { get; set; }
     public string SystemProxyServer { get; set; } = string.Empty;
@@ -622,9 +628,7 @@ public static class DiagnosticService
             if (string.IsNullOrWhiteSpace(locParts)) locParts = "-";
             sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkLocation}: {locParts}");
 
-            string asnText = string.IsNullOrWhiteSpace(report.Network.AsOrganization)
-                ? (string.IsNullOrWhiteSpace(report.Network.Asn) ? "-" : report.Network.Asn)
-                : $"{report.Network.Asn} {report.Network.AsOrganization}".Trim();
+            string asnText = FormatAsn(report.Network.Asn, report.Network.AsOrganization);
             sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkAsn}: {asnText}");
             sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkColo}: {(string.IsNullOrWhiteSpace(report.Network.CloudflareColo) ? "-" : report.Network.CloudflareColo)}");
 
@@ -642,6 +646,19 @@ public static class DiagnosticService
                 ipv6Text = Lang.DiagnosticTool_Ipv6NotDetected;
             }
             sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkIpv6}: {ipv6Text}");
+
+            if (report.Network.HasIpv6)
+            {
+                string v6CountryDisplay = !string.IsNullOrWhiteSpace(report.Network.Ipv6CountryCode)
+                    ? FormatCountry(report.Network.Ipv6CountryCode)
+                    : (!string.IsNullOrWhiteSpace(report.Network.Ipv6Country) ? FormatCountry(report.Network.Ipv6Country) : string.Empty);
+                string v6LocParts = string.Join(" ", new[] { v6CountryDisplay, report.Network.Ipv6Region, report.Network.Ipv6City }.Where(s => !string.IsNullOrWhiteSpace(s)));
+                if (string.IsNullOrWhiteSpace(v6LocParts)) v6LocParts = "-";
+                sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkIpv6Location}: {v6LocParts}");
+
+                string v6AsnText = FormatAsn(report.Network.Ipv6Asn, report.Network.Ipv6AsOrganization);
+                sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkIpv6Asn}: {v6AsnText}");
+            }
 
             string proxyText = report.Network.HasSystemProxy
                 ? string.Format(Lang.DiagnosticTool_ProxyEnabled, report.Network.SystemProxyServer)
@@ -1840,6 +1857,17 @@ public static class DiagnosticService
         return nameOrCode.ToUpperInvariant();
     }
 
+    public static string FormatAsn(string? asn, string? org)
+    {
+        asn = asn?.Trim() ?? string.Empty;
+        org = org?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(asn) && string.IsNullOrWhiteSpace(org)) return "-";
+        if (string.IsNullOrWhiteSpace(org)) return asn;
+        if (string.IsNullOrWhiteSpace(asn)) return org;
+        if (asn.Contains(org, StringComparison.OrdinalIgnoreCase)) return asn;
+        return $"{asn} {org}".Trim();
+    }
+
     public static async Task<NetworkDiagnosticInfo> CollectNetworkDiagnosticInfoAsync(bool forceDohEch = false)
     {
         var info = new NetworkDiagnosticInfo
@@ -2159,6 +2187,124 @@ public static class DiagnosticService
         {
             info.HasIpv6 = false;
         }
+
+        if (info.HasIpv6 && !string.IsNullOrWhiteSpace(info.Ipv6))
+        {
+            await QueryIpv6LocationAsync(client, info, ct);
+        }
+    }
+
+    private static async Task QueryIpv6LocationAsync(HttpClient client, NetworkDiagnosticInfo info, CancellationToken ct)
+    {
+        var culture = Lang.Culture ?? System.Globalization.CultureInfo.CurrentUICulture;
+        string langParam = culture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase) ? "zh-CN" : "en";
+
+        // 1. Try ip-api.com
+        try
+        {
+            using var ctsApi = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            ctsApi.CancelAfter(TimeSpan.FromSeconds(3));
+            using var reqApi = new HttpRequestMessage(HttpMethod.Get, $"http://ip-api.com/json/{info.Ipv6}?lang={langParam}");
+            using var respApi = await client.SendAsync(reqApi, ctsApi.Token);
+            if (respApi.IsSuccessStatusCode)
+            {
+                string json = await respApi.Content.ReadAsStringAsync(ctsApi.Token);
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+                if (root.TryGetProperty("status", out var status) && status.GetString() == "success")
+                {
+                    if (root.TryGetProperty("countryCode", out var ccElem)) info.Ipv6CountryCode = ccElem.GetString() ?? "";
+                    if (root.TryGetProperty("country", out var cElem))
+                    {
+                        string cStr = cElem.GetString() ?? "";
+                        info.Ipv6Country = !string.IsNullOrWhiteSpace(info.Ipv6CountryCode)
+                            ? FormatCountry(info.Ipv6CountryCode)
+                            : FormatCountry(cStr);
+                    }
+                    if (root.TryGetProperty("regionName", out var rElem)) info.Ipv6Region = rElem.GetString() ?? "";
+                    if (root.TryGetProperty("city", out var cityElem)) info.Ipv6City = cityElem.GetString() ?? "";
+                    if (root.TryGetProperty("as", out var asElem))
+                    {
+                        string asVal = asElem.GetString() ?? "";
+                        int spaceIdx = asVal.IndexOf(' ');
+                        if (spaceIdx > 0 && asVal.StartsWith("AS", StringComparison.OrdinalIgnoreCase))
+                        {
+                            info.Ipv6Asn = asVal[..spaceIdx];
+                            if (string.IsNullOrWhiteSpace(info.Ipv6AsOrganization))
+                            {
+                                info.Ipv6AsOrganization = asVal[(spaceIdx + 1)..].Trim();
+                            }
+                        }
+                        else
+                        {
+                            info.Ipv6Asn = asVal;
+                        }
+                    }
+                    if (root.TryGetProperty("isp", out var ispElem))
+                    {
+                        string ispVal = ispElem.GetString() ?? "";
+                        if (!string.IsNullOrWhiteSpace(ispVal))
+                        {
+                            info.Ipv6AsOrganization = ispVal;
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+        catch { }
+
+        // 2. Fallback to ipwho.is
+        try
+        {
+            using var ctsWhois = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            ctsWhois.CancelAfter(TimeSpan.FromSeconds(3));
+            using var reqWhois = new HttpRequestMessage(HttpMethod.Get, $"https://ipwho.is/{info.Ipv6}?lang={langParam}");
+            using var respWhois = await client.SendAsync(reqWhois, ctsWhois.Token);
+            if (respWhois.IsSuccessStatusCode)
+            {
+                string json = await respWhois.Content.ReadAsStringAsync(ctsWhois.Token);
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+                if (root.TryGetProperty("success", out var succ) && succ.GetBoolean())
+                {
+                    if (root.TryGetProperty("country_code", out var ccElem)) info.Ipv6CountryCode = ccElem.GetString() ?? "";
+                    if (root.TryGetProperty("country", out var cElem))
+                    {
+                        string cStr = cElem.GetString() ?? "";
+                        info.Ipv6Country = !string.IsNullOrWhiteSpace(info.Ipv6CountryCode)
+                            ? FormatCountry(info.Ipv6CountryCode)
+                            : FormatCountry(cStr);
+                    }
+                    if (root.TryGetProperty("region", out var rElem)) info.Ipv6Region = rElem.GetString() ?? "";
+                    if (root.TryGetProperty("city", out var cityElem)) info.Ipv6City = cityElem.GetString() ?? "";
+                    if (root.TryGetProperty("connection", out var connElem))
+                    {
+                        if (connElem.TryGetProperty("asn", out var asnElem))
+                        {
+                            if (asnElem.ValueKind == JsonValueKind.Number)
+                            {
+                                info.Ipv6Asn = $"AS{asnElem.GetInt64()}";
+                            }
+                            else if (asnElem.ValueKind == JsonValueKind.String)
+                            {
+                                string s = asnElem.GetString() ?? "";
+                                info.Ipv6Asn = s.StartsWith("AS", StringComparison.OrdinalIgnoreCase) ? s : $"AS{s}";
+                            }
+                        }
+                        if (connElem.TryGetProperty("org", out var orgElem))
+                        {
+                            info.Ipv6AsOrganization = orgElem.GetString() ?? "";
+                        }
+                        else if (connElem.TryGetProperty("isp", out var ispElem))
+                        {
+                            info.Ipv6AsOrganization = ispElem.GetString() ?? "";
+                        }
+                    }
+                }
+            }
+        }
+        catch { }
     }
 
     private static async Task ExecuteDohEchRescueAsync(NetworkDiagnosticInfo info, CancellationToken ct)

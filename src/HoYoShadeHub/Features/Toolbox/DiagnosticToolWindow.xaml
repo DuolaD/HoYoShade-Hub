@@ -854,6 +854,8 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Grid.Column="0"
@@ -890,24 +892,44 @@
 
                             <TextBlock Grid.Row="4" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkColo}" />
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkIpv6Location}"
+                                       Visibility="{x:Bind NetworkIpv6DetailsVisibility, Mode=OneWay}" />
                             <TextBlock Grid.Row="4" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkIpv6LocationText}"
+                                       Visibility="{x:Bind NetworkIpv6DetailsVisibility, Mode=OneWay}" />
+
+                            <TextBlock Grid.Row="5" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkIpv6Asn}"
+                                       Visibility="{x:Bind NetworkIpv6DetailsVisibility, Mode=OneWay}" />
+                            <TextBlock Grid.Row="5" Grid.Column="1"
+                                       FontWeight="Medium"
+                                       IsTextSelectionEnabled="True"
+                                       Text="{x:Bind NetworkIpv6AsnText}"
+                                       Visibility="{x:Bind NetworkIpv6DetailsVisibility, Mode=OneWay}" />
+
+                            <TextBlock Grid.Row="6" Grid.Column="0"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.DiagnosticTool_NetworkColo}" />
+                            <TextBlock Grid.Row="6" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"
                                        Text="{x:Bind NetworkColoText}" />
 
-                            <TextBlock Grid.Row="5" Grid.Column="0"
+                            <TextBlock Grid.Row="7" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        Text="{x:Bind lang:Lang.DiagnosticTool_NetworkProxy}" />
-                            <TextBlock Grid.Row="5" Grid.Column="1"
+                            <TextBlock Grid.Row="7" Grid.Column="1"
                                        FontWeight="Medium"
                                        IsTextSelectionEnabled="True"
                                        Text="{x:Bind NetworkProxyText}" />
 
-                            <TextBlock Grid.Row="6" Grid.Column="0"
+                            <TextBlock Grid.Row="8" Grid.Column="0"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        Text="{x:Bind lang:Lang.DiagnosticTool_NetworkConclusion}" />
-                            <TextBlock Grid.Row="6" Grid.Column="1"
+                            <TextBlock Grid.Row="8" Grid.Column="1"
                                        FontWeight="Medium"
                                        Foreground="{x:Bind NetworkConclusionBrush}"
                                        IsTextSelectionEnabled="True"
