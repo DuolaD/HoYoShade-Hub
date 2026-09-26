@@ -1100,6 +1100,9 @@
   <data name="HoYoShadeDownloadView_StatusFailedToLoadVersions" xml:space="preserve">
     <value>拎版本列表失敗：{0}</value>
   </data>
+  <data name="HoYoShadeDownloadView_StatusRateLimitExceeded" xml:space="preserve">
+    <value>拎版本列表失敗：觸發咗 GitHub 存取頻率限制 (403/429)，請嘗試切換下載伺服器或者稍後再試。</value>
+  </data>
   <data name="HoYoShadeDownloadView_StatusInitializing" xml:space="preserve">
     <value>初始化下載緊...</value>
   </data>

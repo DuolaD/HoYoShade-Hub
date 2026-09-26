@@ -2453,6 +2453,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 Failed to load versions: GitHub API rate limit reached (403/429). Please switch the download server or try again later. 的本地化字符串。
+        /// </summary>
+        public static string HoYoShadeDownloadView_StatusRateLimitExceeded {
+            get {
+                return ResourceManager.GetString("HoYoShadeDownloadView_StatusRateLimitExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Fetching releases... 的本地化字符串。
         /// </summary>
         public static string HoYoShadeDownloadView_StatusFetchingReleases {

@@ -1100,6 +1100,9 @@
 	<data name="HoYoShadeDownloadView_StatusFailedToLoadVersions" xml:space="preserve">
     <value>Failed to load versions: {0}</value>
   </data>
+	<data name="HoYoShadeDownloadView_StatusRateLimitExceeded" xml:space="preserve">
+    <value>Failed to load versions: GitHub API rate limit reached (403/429). Please switch the download server or try again later.</value>
+  </data>
 	<data name="HoYoShadeDownloadView_StatusInitializing" xml:space="preserve">
     <value>Initializing download...</value>
   </data>

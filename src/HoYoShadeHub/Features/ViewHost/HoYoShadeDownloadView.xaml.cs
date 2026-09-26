@@ -528,7 +528,14 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         }
         catch (Exception ex)
         {
-            StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusFailedToLoadVersions, ex.Message);
+            if (IsGitHubRateLimitExceeded(ex))
+            {
+                StatusMessage = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+            }
+            else
+            {
+                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusFailedToLoadVersions, ex.Message);
+            }
         }
         finally
         {
@@ -538,6 +545,16 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     private static bool IsGitHubRateLimitExceeded(Exception ex)
     {
+        if (ex is AggregateException aggEx && aggEx.InnerExceptions.Count > 0)
+        {
+            return aggEx.InnerExceptions.Any(IsGitHubRateLimitExceeded);
+        }
+
+        if (ex.InnerException != null && IsGitHubRateLimitExceeded(ex.InnerException))
+        {
+            return true;
+        }
+
         if (ex is HttpRequestException httpEx)
         {
             if (httpEx.StatusCode == HttpStatusCode.Forbidden || httpEx.StatusCode == HttpStatusCode.TooManyRequests)
@@ -547,7 +564,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         }
 
         return ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase) ||
-            ex.Message.Contains("403", StringComparison.OrdinalIgnoreCase);
+            ex.Message.Contains("403", StringComparison.OrdinalIgnoreCase) ||
+            ex.Message.Contains("429", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
