@@ -843,8 +843,10 @@ public sealed partial class DiagnosticToolWindow : WindowEx
     {
         UpdateNetworkIpDisplays();
 
-        string countryDisplay = DiagnosticService.FormatCountry(net.CountryCode);
-        string locParts = string.Join(" ", new[] { string.IsNullOrWhiteSpace(countryDisplay) ? net.Country : countryDisplay, net.Region, net.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
+        string countryDisplay = !string.IsNullOrWhiteSpace(net.CountryCode)
+            ? DiagnosticService.FormatCountry(net.CountryCode)
+            : (!string.IsNullOrWhiteSpace(net.Country) ? DiagnosticService.FormatCountry(net.Country) : string.Empty);
+        string locParts = string.Join(" ", new[] { countryDisplay, net.Region, net.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
         NetworkLocationText = string.IsNullOrWhiteSpace(locParts) ? "-" : locParts;
 
         string asnText = string.IsNullOrWhiteSpace(net.AsOrganization)

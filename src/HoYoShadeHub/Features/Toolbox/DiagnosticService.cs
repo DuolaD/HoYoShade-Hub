@@ -617,7 +617,7 @@ public static class DiagnosticService
 
             string countryDisplay = !string.IsNullOrWhiteSpace(report.Network.CountryCode)
                 ? FormatCountry(report.Network.CountryCode)
-                : report.Network.Country;
+                : (!string.IsNullOrWhiteSpace(report.Network.Country) ? FormatCountry(report.Network.Country) : string.Empty);
             string locParts = string.Join(" ", new[] { countryDisplay, report.Network.Region, report.Network.City }.Where(s => !string.IsNullOrWhiteSpace(s)));
             if (string.IsNullOrWhiteSpace(locParts)) locParts = "-";
             sb.AppendLine($"  - {Lang.DiagnosticTool_NetworkLocation}: {locParts}");
@@ -1792,97 +1792,52 @@ public static class DiagnosticService
     public static string FormatCountry(string? code)
     {
         if (string.IsNullOrWhiteSpace(code)) return string.Empty;
-        code = code.Trim().ToUpperInvariant();
-        var culture = Lang.Culture ?? System.Globalization.CultureInfo.CurrentUICulture;
-        bool isZhCn = culture.Name.Equals("zh-CN", StringComparison.OrdinalIgnoreCase);
-        bool isZhTw = culture.Name.Equals("zh-TW", StringComparison.OrdinalIgnoreCase);
-        bool isZhHk = culture.Name.Equals("zh-HK", StringComparison.OrdinalIgnoreCase);
-        bool isZh = isZhCn || isZhTw || isZhHk;
+        string trimmed = code.Trim();
+        if (trimmed.Length == 2 && char.IsAsciiLetter(trimmed[0]) && char.IsAsciiLetter(trimmed[1]))
+        {
+            return trimmed.ToUpperInvariant();
+        }
 
-        if (!isZh)
+        return trimmed.ToUpperInvariant() switch
         {
-            return code switch
-            {
-                "CN" => "China (CN)",
-                "HK" => "Hong Kong (HK)",
-                "MO" => "Macao (MO)",
-                "TW" => "Taiwan (TW)",
-                "US" => "United States (US)",
-                "JP" => "Japan (JP)",
-                "KR" => "South Korea (KR)",
-                "SG" => "Singapore (SG)",
-                "GB" or "UK" => "United Kingdom (GB)",
-                "DE" => "Germany (DE)",
-                "CA" => "Canada (CA)",
-                "AU" => "Australia (AU)",
-                "RU" => "Russia (RU)",
-                "FR" => "France (FR)",
-                "NL" => "Netherlands (NL)",
-                "IN" => "India (IN)",
-                _ => FormatCountryFallback(code, false)
-            };
-        }
-        else if (isZhTw || isZhHk)
-        {
-            return code switch
-            {
-                "CN" => "中國 (CN)",
-                "HK" => "中國香港 (HK)",
-                "MO" => "中國澳門 (MO)",
-                "TW" => "中國台灣 (TW)",
-                "US" => "美國 (US)",
-                "JP" => "日本 (JP)",
-                "KR" => "韓國 (KR)",
-                "SG" => "新加坡 (SG)",
-                "GB" or "UK" => "英國 (GB)",
-                "DE" => "德國 (DE)",
-                "CA" => "加拿大 (CA)",
-                "AU" => "澳大利亞 (AU)",
-                "RU" => "俄羅斯 (RU)",
-                "FR" => "法國 (FR)",
-                "NL" => "荷蘭 (NL)",
-                "IN" => "印度 (IN)",
-                _ => FormatCountryFallback(code, true)
-            };
-        }
-        else
-        {
-            return code switch
-            {
-                "CN" => "中国 (CN)",
-                "HK" => "中国香港 (HK)",
-                "MO" => "中国澳门 (MO)",
-                "TW" => "中国台湾 (TW)",
-                "US" => "美国 (US)",
-                "JP" => "日本 (JP)",
-                "KR" => "韩国 (KR)",
-                "SG" => "新加坡 (SG)",
-                "GB" or "UK" => "英国 (GB)",
-                "DE" => "德国 (DE)",
-                "CA" => "加拿大 (CA)",
-                "AU" => "澳大利亚 (AU)",
-                "RU" => "俄罗斯 (RU)",
-                "FR" => "法国 (FR)",
-                "NL" => "荷兰 (NL)",
-                "IN" => "印度 (IN)",
-                _ => FormatCountryFallback(code, true)
-            };
-        }
+            "CHINA" or "中国" or "中國" => "CN",
+            "HONG KONG" or "HONGKONG" or "香港" or "中國香港" or "中国香港" => "HK",
+            "MACAO" or "MACAU" or "澳门" or "澳門" or "中國澳門" or "中国澳门" => "MO",
+            "TAIWAN" or "台湾" or "台灣" or "中国台湾" or "中國台灣" => "TW",
+            "UNITED STATES" or "UNITED STATES OF AMERICA" or "USA" or "美国" or "美國" => "US",
+            "JAPAN" or "日本" => "JP",
+            "SOUTH KOREA" or "KOREA" or "REPUBLIC OF KOREA" or "韩国" or "韓國" => "KR",
+            "SINGAPORE" or "新加坡" => "SG",
+            "UNITED KINGDOM" or "GREAT BRITAIN" or "UK" or "英国" or "英國" => "GB",
+            "GERMANY" or "DEUTSCHLAND" or "德国" or "德國" => "DE",
+            "FRANCE" or "法国" or "法國" => "FR",
+            "CANADA" or "加拿大" => "CA",
+            "AUSTRALIA" or "澳大利亚" or "澳大利亞" => "AU",
+            "RUSSIA" or "RUSSIAN FEDERATION" or "俄罗斯" or "俄羅斯" => "RU",
+            "NETHERLANDS" or "荷兰" or "荷蘭" => "NL",
+            "INDIA" or "印度" => "IN",
+            _ => TryGetIsoTwoLetterCode(trimmed)
+        };
     }
 
-    private static string FormatCountryFallback(string code, bool isZh)
+    private static string TryGetIsoTwoLetterCode(string nameOrCode)
     {
         try
         {
-            if (code.Length == 2)
+            foreach (var culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures))
             {
-                var reg = new System.Globalization.RegionInfo(code);
-                string name = isZh ? reg.DisplayName : reg.EnglishName;
-                return $"{name} ({reg.TwoLetterISORegionName})";
+                var region = new System.Globalization.RegionInfo(culture.Name);
+                if (string.Equals(region.EnglishName, nameOrCode, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(region.NativeName, nameOrCode, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(region.DisplayName, nameOrCode, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(region.Name, nameOrCode, StringComparison.OrdinalIgnoreCase))
+                {
+                    return region.TwoLetterISORegionName.ToUpperInvariant();
+                }
             }
         }
         catch { }
-        return code;
+        return nameOrCode.ToUpperInvariant();
     }
 
     public static async Task<NetworkDiagnosticInfo> CollectNetworkDiagnosticInfoAsync(bool forceDohEch = false)
@@ -2107,8 +2062,14 @@ public static class DiagnosticService
                     var root = doc.RootElement;
                     if (root.TryGetProperty("status", out var status) && status.GetString() == "success")
                     {
-                        if (root.TryGetProperty("country", out var cElem)) info.Country = cElem.GetString() ?? "";
                         if (root.TryGetProperty("countryCode", out var ccElem)) info.CountryCode = ccElem.GetString() ?? "";
+                        if (root.TryGetProperty("country", out var cElem))
+                        {
+                            string cStr = cElem.GetString() ?? "";
+                            info.Country = !string.IsNullOrWhiteSpace(info.CountryCode)
+                                ? FormatCountry(info.CountryCode)
+                                : FormatCountry(cStr);
+                        }
                         if (root.TryGetProperty("regionName", out var rElem)) info.Region = rElem.GetString() ?? "";
                         if (root.TryGetProperty("city", out var cityElem)) info.City = cityElem.GetString() ?? "";
                         if (root.TryGetProperty("as", out var asElem)) info.Asn = asElem.GetString() ?? "";
