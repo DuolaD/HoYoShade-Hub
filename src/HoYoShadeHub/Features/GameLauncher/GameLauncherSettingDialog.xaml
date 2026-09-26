@@ -20,81 +20,6 @@
         <Thickness x:Key="ContentDialogPadding">0</Thickness>
         <StaticResource x:Key="ContentDialogSmokeFill" ResourceKey="ControlFillColorTransparentBrush" />
         <StaticResource x:Key="ContentDialogTopOverlay" ResourceKey="ControlFillColorTransparentBrush" />
-        <!--  游戏包体 DataTemplate  -->
-        <DataTemplate x:Key="PackageGroupsDataTemplate">
-            <Expander HorizontalAlignment="Stretch"
-                      HorizontalContentAlignment="Stretch"
-                      Background="#40000000">
-                <Expander.Header>
-                    <Grid>
-                        <TextBlock VerticalAlignment="Center"
-                                   FontSize="16"
-                                   Text="{Binding Name}" />
-                        <Button HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                Click="Button_CopyUrl_Click"
-                                Style="{ThemeResource DateTimePickerFlyoutButtonStyle}">
-                            <Button.Content>
-                                <FontIcon FontSize="20"
-                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                          Glyph="&#xE71B;" />
-                            </Button.Content>
-                        </Button>
-                    </Grid>
-                </Expander.Header>
-                <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Items}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Spacing="16" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid RowSpacing="2">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <TextBlock FontSize="14" Text="{Binding FileName}" />
-                                <StackPanel Grid.Row="1"
-                                            Orientation="Horizontal"
-                                            Spacing="8">
-                                    <FontIcon FontSize="12"
-                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                              Glyph="&#xF012;" />
-                                    <TextBlock Width="80"
-                                               FontSize="12"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                               Text="{Binding PackageSizeString}" />
-                                    <FontIcon FontSize="12"
-                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                              Glyph="&#xE95E;" />
-                                    <TextBlock FontSize="12"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                               Text="MD5" />
-                                    <TextBlock FontSize="12"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                               IsTextSelectionEnabled="True"
-                                               Text="{Binding Md5}" />
-                                </StackPanel>
-                                <Button Grid.RowSpan="2"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Click="Button_CopyUrl_Click"
-                                        Style="{ThemeResource DateTimePickerFlyoutButtonStyle}"
-                                        Visibility="{Binding Url, Converter={StaticResource ObjectToVisibilityConverter}}">
-                                    <Button.Content>
-                                        <FontIcon FontSize="20"
-                                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                                  Glyph="&#xE71B;" />
-                                    </Button.Content>
-                                </Button>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Expander>
-        </DataTemplate>
     </ContentDialog.Resources>
 
 
@@ -142,18 +67,20 @@
 
 
             <FlipView x:Name="FlipView_Settings"
+                      Height="432"
                       Margin="24,24,0,0"
                       Background="Transparent"
                       Loaded="FlipView_Settings_Loaded">
                 <FlipView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <VirtualizingStackPanel Orientation="Vertical" />
+                        <StackPanel Orientation="Vertical" />
                     </ItemsPanelTemplate>
                 </FlipView.ItemsPanel>
 
                 <!--  基本信息  -->
-                <FlipViewItem>
-                    <StackPanel Spacing="12">
+                <FlipViewItem Height="432">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Padding="0,0,16,0" Spacing="12">
 
                         <Grid ColumnSpacing="20">
                             <Grid.ColumnDefinitions>
@@ -475,11 +402,13 @@
                                    Visibility="{x:Bind ShowUninstallReShadeCompletedMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                     </StackPanel>
-                </FlipViewItem>
+                </ScrollViewer>
+            </FlipViewItem>
 
-                <!--  启动参数  -->
-                <FlipViewItem>
-                    <StackPanel Spacing="12">
+            <!--  启动参数  -->
+            <FlipViewItem Height="432">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Padding="0,0,16,0" Spacing="12">
 
                         <TextBlock Text="{x:Bind lang:Lang.GameLauncherSettingDialog_CommandLineArgument}" />
 
@@ -569,11 +498,12 @@
                         </Grid>
 
                     </StackPanel>
-                </FlipViewItem>
+                </ScrollViewer>
+            </FlipViewItem>
 
-                <!--  自定义背景  -->
-                <FlipViewItem>
-                    <StackPanel Spacing="12">
+            <!--  自定义背景  -->
+            <FlipViewItem Height="432">
+                <StackPanel Spacing="12">
                         <!--  自定义背景  -->
                         <ToggleSwitch Margin="0,0,0,-8"
                                       IsOn="{x:Bind EnableCustomBg, Mode=TwoWay}"
@@ -703,9 +633,9 @@
                 </FlipViewItem>
 
                 <!--  联动第三方程序  -->
-                <FlipViewItem>
-                    <ScrollViewer>
-                        <StackPanel Padding="0,0,0,24" Spacing="16">
+                <FlipViewItem Height="432">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Padding="0,0,16,24" Spacing="16">
                             <!--  标题  -->
                             <TextBlock FontSize="20"
                                        FontWeight="SemiBold"
@@ -916,45 +846,6 @@
 
                         </StackPanel>
                     </ScrollViewer>
-                </FlipViewItem>
-
-                <!--  游戏包体  -->
-                <FlipViewItem>
-                    <Pivot>
-
-                        <Pivot.Resources>
-                            <Thickness x:Key="PivotItemMargin">0,8,0,0</Thickness>
-                            <Thickness x:Key="PivotHeaderItemMargin">0,0,24,0</Thickness>
-                            <Style BasedOn="{StaticResource DefaultPivotHeaderItemStyle}" TargetType="PivotHeaderItem">
-                                <Setter Property="Height" Value="28" />
-                                <Setter Property="FontSize" Value="16" />
-                                <Setter Property="VerticalContentAlignment" Value="Top" />
-                            </Style>
-                        </Pivot.Resources>
-
-                        <!--  正式版  -->
-                        <PivotItem Margin="0,-8,0,0">
-                            <PivotItem.Header>
-                                <TextBlock>
-                                    <Run Text="{x:Bind lang:Lang.GameResourcePage_LatestVersion}" />
-                                    <Run Text="" />
-                                    <Run Text="{x:Bind LatestVersion}" />
-                                </TextBlock>
-                            </PivotItem.Header>
-                            <ScrollViewer>
-                                <ItemsControl Margin="0,0,8,0"
-                                              ItemTemplate="{StaticResource PackageGroupsDataTemplate}"
-                                              ItemsSource="{x:Bind LatestPackageGroups}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Spacing="8" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </PivotItem>
-
-                    </Pivot>
                 </FlipViewItem>
 
             </FlipView>

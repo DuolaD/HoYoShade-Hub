@@ -94,6 +94,8 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     {
         try
         {
+            FlipView_Settings.BringIntoViewRequested += (_, args) => args.Handled = true;
+
             var grid = VisualTreeHelper.GetChild(FlipView_Settings, 0);
             if (grid != null)
             {
@@ -158,15 +160,12 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         await InitializeGameInstallPathsAsync();
         InitializeStartArgument();
         InitializeCustomBg();
-        await InitializeGamePackagesAsync();
         await InitializeThirdPartyIntegrationAsync();
     }
 
 
     private void GameLauncherSettingDialog_Unloaded(object sender, RoutedEventArgs e)
     {
-        LatestPackageGroups = null!;
-        PreInstallPackageGroups = null!;
         FlipView_Settings.Items.Clear();
     }
 
