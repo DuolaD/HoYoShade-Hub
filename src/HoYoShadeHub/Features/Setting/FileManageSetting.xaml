@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <sf:PageBase x:Class="HoYoShadeHub.Features.Setting.FileManageSetting"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:cwc="using:CommunityToolkit.WinUI.Controls"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:lang="using:HoYoShadeHub.Language"
@@ -217,8 +218,8 @@
                     Padding="16,12">
                 <Grid ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!-- 左侧：图标与标题说明 -->
@@ -235,15 +236,27 @@
                     </StackPanel>
 
                     <!-- 右侧：安装操作按钮 -->
-                    <StackPanel Grid.Column="1"
-                                Orientation="Horizontal"
-                                Spacing="8"
-                                VerticalAlignment="Center">
+                    <cwc:WrapPanel Grid.Column="1"
+                                   Orientation="Horizontal"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   HorizontalSpacing="8"
+                                   VerticalSpacing="8">
+                        <Button Height="36"
+                                Padding="14,0"
+                                Command="{x:Bind NavigateToQuickSetupCommand}"
+                                CornerRadius="6"
+                                Style="{ThemeResource AccentButtonStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontSize="14" Glyph="&#xE771;" />
+                                <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_InitializationWizard}" />
+                            </StackPanel>
+                        </Button>
+
                         <Button Height="36"
                                 Padding="14,0"
                                 Command="{x:Bind InstallHoYoShadeFrameworkCommand}"
-                                CornerRadius="6"
-                                Style="{ThemeResource AccentButtonStyle}">
+                                CornerRadius="6">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <FontIcon FontSize="14" Glyph="&#xE896;" />
                                 <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_InstallHoYoShadeFramework}" />
@@ -259,7 +272,7 @@
                                 <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_InstallReShadeShadersAndAddons}" />
                             </StackPanel>
                         </Button>
-                    </StackPanel>
+                    </cwc:WrapPanel>
                 </Grid>
             </Border>
 

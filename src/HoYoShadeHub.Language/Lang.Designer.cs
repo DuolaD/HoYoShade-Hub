@@ -976,7 +976,16 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Install HoYoShade Framework 的本地化字符串。
+        ///   查找类似 Quick Start 的本地化字符串。
+        /// </summary>
+        public static string FileSettingPage_InitializationWizard {
+            get {
+                return ResourceManager.GetString("FileSettingPage_InitializationWizard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Install Framework 的本地化字符串。
         /// </summary>
         public static string FileSettingPage_InstallHoYoShadeFramework {
             get {
@@ -985,7 +994,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Install ReShade shaders &amp; addons 的本地化字符串。
+        ///   查找类似 Install Shaders &amp; Addons 的本地化字符串。
         /// </summary>
         public static string FileSettingPage_InstallReShadeShadersAndAddons {
             get {
@@ -6814,6 +6823,15 @@ namespace HoYoShadeHub.Language {
         public static string DiagnosticTool_NetworkIpv6Asn {
             get {
                 return ResourceManager.GetString("DiagnosticTool_NetworkIpv6Asn", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Want something simpler? Go to  的本地化字符串。
+        /// </summary>
+        public static string HoYoShadeDownloadView_WantSimplerGoToPrefix {
+            get {
+                return ResourceManager.GetString("HoYoShadeDownloadView_WantSimplerGoToPrefix", resourceCulture);
             }
         }
     }

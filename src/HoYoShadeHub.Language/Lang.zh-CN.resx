@@ -1302,6 +1302,9 @@
   <data name="FileSettingPage_HoYoShadeFramework" xml:space="preserve">
     <value>HoYoShade框架</value>
   </data>
+  <data name="FileSettingPage_InitializationWizard" xml:space="preserve">
+    <value>初始化向导</value>
+  </data>
   <data name="FileSettingPage_InstallHoYoShadeFramework" xml:space="preserve">
     <value>安装HoYoShade框架</value>
   </data>
@@ -2373,5 +2376,8 @@
   </data>
   <data name="DiagnosticTool_NetworkIpv6Asn" xml:space="preserve">
     <value>IPv6 运营商与 ASN</value>
+  </data>
+  <data name="HoYoShadeDownloadView_WantSimplerGoToPrefix" xml:space="preserve">
+    <value>想要简单一点？前往</value>
   </data>
 </root>

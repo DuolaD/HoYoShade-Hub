@@ -1302,6 +1302,9 @@
   <data name="FileSettingPage_HoYoShadeFramework" xml:space="preserve">
     <value>HoYoShade框架</value>
   </data>
+  <data name="FileSettingPage_InitializationWizard" xml:space="preserve">
+    <value>初始化精靈</value>
+  </data>
   <data name="FileSettingPage_InstallHoYoShadeFramework" xml:space="preserve">
     <value>安裝HoYoShade框架</value>
   </data>
@@ -2384,5 +2387,8 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   </data>
   <data name="DiagnosticTool_NetworkIpv6Asn" xml:space="preserve">
     <value>IPv6 電信業者與 ASN</value>
+  </data>
+  <data name="HoYoShadeDownloadView_WantSimplerGoToPrefix" xml:space="preserve">
+    <value>想要簡單一點？前往</value>
   </data>
 </root>

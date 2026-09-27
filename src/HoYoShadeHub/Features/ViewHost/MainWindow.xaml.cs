@@ -27,6 +27,7 @@ public enum ViewTransitionType
 {
     None,
     SlideFromRight,
+    SlideFromLeft,
     DrillIn,
 }
 
@@ -186,10 +187,13 @@ public sealed partial class MainWindow : WindowEx
 
         var cubicEasing = compositor.CreateCubicBezierEasingFunction(new Vector2(0.1f, 0.9f), new Vector2(0.2f, 1.0f));
 
-        if (transitionType == ViewTransitionType.SlideFromRight)
+        if (transitionType == ViewTransitionType.SlideFromRight || transitionType == ViewTransitionType.SlideFromLeft)
         {
-            // Incoming: start offset X = 60px, opacity = 0 -> offset X = 0, opacity = 1
-            incomingVisual.Offset = new Vector3(60f, 0f, 0f);
+            float inStartX = transitionType == ViewTransitionType.SlideFromLeft ? -60f : 60f;
+            float outEndX = transitionType == ViewTransitionType.SlideFromLeft ? 50f : -50f;
+
+            // Incoming: start offset X = ±60px, opacity = 0 -> offset X = 0, opacity = 1
+            incomingVisual.Offset = new Vector3(inStartX, 0f, 0f);
 
             var inOffsetAnim = compositor.CreateVector3KeyFrameAnimation();
             inOffsetAnim.Duration = TimeSpan.FromMilliseconds(350);
@@ -199,10 +203,10 @@ public sealed partial class MainWindow : WindowEx
             inOpacityAnim.Duration = TimeSpan.FromMilliseconds(300);
             inOpacityAnim.InsertKeyFrame(1.0f, 1.0f, cubicEasing);
 
-            // Outgoing: offset X = 0 -> -50px, opacity = 1 -> 0
+            // Outgoing: offset X = 0 -> ∓50px, opacity = 1 -> 0
             var outOffsetAnim = compositor.CreateVector3KeyFrameAnimation();
             outOffsetAnim.Duration = TimeSpan.FromMilliseconds(300);
-            outOffsetAnim.InsertKeyFrame(1.0f, new Vector3(-50f, 0f, 0f), cubicEasing);
+            outOffsetAnim.InsertKeyFrame(1.0f, new Vector3(outEndX, 0f, 0f), cubicEasing);
 
             var outOpacityAnim = compositor.CreateScalarKeyFrameAnimation();
             outOpacityAnim.Duration = TimeSpan.FromMilliseconds(250);
@@ -311,9 +315,12 @@ public sealed partial class MainWindow : WindowEx
     }
 
 
-    private void OnNavigateToQuickSetupPage(object _, NavigateToQuickSetupPageMessage __)
+    private void OnNavigateToQuickSetupPage(object _, NavigateToQuickSetupPageMessage m)
     {
-        NavigateToView(new QuickSetupView(), ViewTransitionType.SlideFromRight);
+        var transitionType = (m.SlideFromLeft || _currentPresenter.Content is HoYoShadeDownloadView or ReShadeDownloadView)
+            ? ViewTransitionType.SlideFromLeft
+            : ViewTransitionType.SlideFromRight;
+        NavigateToView(new QuickSetupView(), transitionType);
     }
 
 

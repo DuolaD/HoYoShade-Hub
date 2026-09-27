@@ -1302,11 +1302,14 @@ The list is synchronized with official ReShade; missing effects can be manually 
 	<data name="FileSettingPage_HoYoShadeFramework" xml:space="preserve">
     <value>HoYoShade Framework</value>
   </data>
+	<data name="FileSettingPage_InitializationWizard" xml:space="preserve">
+    <value>Quick Start</value>
+  </data>
 	<data name="FileSettingPage_InstallHoYoShadeFramework" xml:space="preserve">
-    <value>Install HoYoShade Framework</value>
+    <value>Install Framework</value>
   </data>
 	<data name="FileSettingPage_InstallReShadeShadersAndAddons" xml:space="preserve">
-    <value>Install ReShade shaders &amp; addons</value>
+    <value>Install Shaders &amp; Addons</value>
   </data>
 	<data name="FileSettingPage_InstallStatus" xml:space="preserve">
     <value>Install Status</value>
@@ -2384,5 +2387,8 @@ When the content provider supports ECH, the program will preferentially attempt 
   </data>
   <data name="DiagnosticTool_NetworkIpv6Asn" xml:space="preserve">
     <value>IPv6 ISP &amp; ASN</value>
+  </data>
+  <data name="HoYoShadeDownloadView_WantSimplerGoToPrefix" xml:space="preserve">
+    <value>Want something simpler? Go to</value>
   </data>
 </root>

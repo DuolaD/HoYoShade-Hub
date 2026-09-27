@@ -532,6 +532,24 @@ public sealed partial class FileManageSetting : PageBase
 
 
     /// <summary>
+    /// 打开初始化向导 / 快速配置
+    /// </summary>
+    [RelayCommand]
+    private void NavigateToQuickSetup()
+    {
+        try
+        {
+            _logger.LogInformation("Navigate to QuickSetup page");
+            WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Navigate to QuickSetup page");
+        }
+    }
+
+
+    /// <summary>
     /// 安装HoYoShade框架
     /// </summary>
     [RelayCommand]

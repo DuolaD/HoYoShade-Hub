@@ -206,7 +206,10 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [NotifyCanExecuteChangedFor(nameof(ImportFromLocalCommand))]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     [NotifyPropertyChangedFor(nameof(CanImport))]
+    [NotifyPropertyChangedFor(nameof(CanNavigateToQuickSetup))]
     private bool isDownloading;
+
+    public bool CanNavigateToQuickSetup => !IsDownloading;
 
     public bool CanDownload => !IsDownloading && SelectedVersion != null && !IsLoadingVersions &&
         ((IsHoYoShadeSelected && (!IsHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledHoYoShadeVersion))) || 
@@ -1918,6 +1921,18 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     {
         var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
         await dialog.ShowAsync();
+    }
+
+    [RelayCommand]
+    private void NavigateToQuickSetup()
+    {
+        if (IsDownloading)
+        {
+            return;
+        }
+
+        _loadVersionsCts?.Cancel();
+        WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage { SlideFromLeft = true });
     }
 }
 

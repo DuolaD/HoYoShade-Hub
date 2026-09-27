@@ -259,6 +259,8 @@ public sealed partial class ReShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(ShowPauseButton))]
     [NotifyPropertyChangedFor(nameof(ShowStopButton))]
     [NotifyPropertyChangedFor(nameof(CanNext))]
+    [NotifyPropertyChangedFor(nameof(CanImport))]
+    [NotifyPropertyChangedFor(nameof(CanNavigateToQuickSetup))]
     private bool isDownloading;
 
     public bool CanDownload => !IsDownloading &&
@@ -279,6 +281,8 @@ public sealed partial class ReShadeDownloadView : UserControl
     public bool ShowStopButton => IsDownloading;
 
     public bool CanImport => !IsDownloading;
+
+    public bool CanNavigateToQuickSetup => !IsDownloading;
 
     [ObservableProperty]
     private double downloadProgress;
@@ -1416,6 +1420,17 @@ public sealed partial class ReShadeDownloadView : UserControl
     {
         var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
         await dialog.ShowAsync();
+    }
+
+    [RelayCommand]
+    private void NavigateToQuickSetup()
+    {
+        if (IsDownloading)
+        {
+            return;
+        }
+
+        WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage { SlideFromLeft = true });
     }
 }
 
