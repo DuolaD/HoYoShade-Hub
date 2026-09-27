@@ -62,6 +62,10 @@
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            TextWrapping="Wrap"
                            FontSize="12" />
+                <TextBlock Text="{x:Bind lang:Lang.SettingPage_BlenderPluginDeveloperStatement}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           TextWrapping="Wrap"
+                           FontSize="12" />
                 <TextBlock Text="{x:Bind LocationText, Mode=OneWay}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            TextWrapping="Wrap"

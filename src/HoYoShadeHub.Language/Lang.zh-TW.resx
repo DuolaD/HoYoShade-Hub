@@ -1547,6 +1547,9 @@
   <data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
     <value>該插件僅在中國大陸/香港/澳門/臺灣/新加坡等國家及地區可用。如果你並不位於上述國家及地區，該插件開發者/貢獻者及 HoYoShade Hub 的開發者/貢獻者有權拒絕提供支持。</value>
   </data>
+  <data name="SettingPage_BlenderPluginDeveloperStatement" xml:space="preserve">
+    <value>有關其它使用規則及限制，請以Blender/留影機開發者聲明為準。</value>
+  </data>
   <data name="SettingPage_CurrentRegion" xml:space="preserve">
     <value>您目前的國家/地區為：{0}</value>
   </data>

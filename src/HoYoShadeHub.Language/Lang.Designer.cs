@@ -3890,6 +3890,15 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
+        ///   查找类似 For other usage rules and restrictions, please refer to the Blender Plugin developer&apos;s statement. 的本地化字符串。
+        /// </summary>
+        public static string SettingPage_BlenderPluginDeveloperStatement {
+            get {
+                return ResourceManager.GetString("SettingPage_BlenderPluginDeveloperStatement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Your current country/region is: {0} 的本地化字符串。
         /// </summary>
         public static string SettingPage_CurrentRegion {
