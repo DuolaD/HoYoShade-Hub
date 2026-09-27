@@ -1100,6 +1100,9 @@
   <data name="HoYoShadeDownloadView_StatusFailedToLoadVersions" xml:space="preserve">
     <value>获取版本列表失败：{0}</value>
   </data>
+  <data name="HoYoShadeDownloadView_StatusRateLimitExceeded" xml:space="preserve">
+    <value>获取版本列表失败：触发了 GitHub 访问频率限制 (403/429)，请尝试切换下载服务器或稍后重试。</value>
+  </data>
   <data name="HoYoShadeDownloadView_StatusInitializing" xml:space="preserve">
     <value>正在初始化下载...</value>
   </data>
