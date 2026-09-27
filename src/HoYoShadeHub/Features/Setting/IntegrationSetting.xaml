@@ -39,31 +39,16 @@
                 </StackPanel>
 
                 <!--  使用Starward启动器开关  -->
-                <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                <StackPanel Spacing="8">
+                    <ToggleSwitch IsOn="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind IsStarwardProtocolAvailable, Mode=OneWay}"
+                                  OffContent="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherToStartGame}"
+                                  OnContent="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherToStartGame}" />
 
-                    <ToggleSwitch Margin="0,8,0,0"
-                                      IsOn="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind IsStarwardProtocolAvailable, Mode=OneWay}"
-                                      OnContent=""
-                                      OffContent="" />
-
-                    <StackPanel Grid.Column="1" 
-                                VerticalAlignment="Top"
-                                Spacing="2"
-                                Margin="0,8,0,0">
-                        <TextBlock Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherToStartGame}"
-                                   FontWeight="SemiBold"
-                                   TextWrapping="Wrap" />
-                        <TextBlock Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherDescription}"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               TextWrapping="Wrap"
-                               FontSize="12" />
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherDescription}"
+                               TextWrapping="Wrap" />
                 </StackPanel>
-                </Grid>
             </StackPanel>
 
             <!--  Blender/留影机插件  -->
