@@ -13,9 +13,63 @@
     <ScrollViewer>
         <StackPanel Padding="0,0,24,0" Spacing="20" Margin="0,0,0,20">
 
+            <!--  Starward启动器  -->
+            <TextBlock FontSize="20"
+                       FontWeight="Bold"
+                       Text="{x:Bind lang:Lang.SettingPage_StarwardLauncher}" />
+
+            <StackPanel Spacing="12">
+
+                <!--  协议状态显示  -->
+                <StackPanel Spacing="8">
+
+                    <TextBlock>
+                        <Run Text="{x:Bind lang:Lang.SettingPage_StarwardLauncherIntegration}" 
+                             Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <Run Text="{x:Bind ProtocolStatusText, Mode=OneWay}" 
+                             Foreground="{x:Bind ProtocolStatusColor, Mode=OneWay}" />
+                    </TextBlock>
+
+                    <!--  不可用时的提示  -->
+                    <TextBlock Visibility="{x:Bind IsStarwardProtocolAvailable, Converter={StaticResource BoolToVisibilityReversedConverter}, Mode=OneWay}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               TextWrapping="Wrap"
+                               FontSize="12"
+                               Text="{x:Bind lang:Lang.SettingPage_StarwardProtocolNotAvailableTip}" />
+                </StackPanel>
+
+                <!--  使用Starward启动器开关  -->
+                <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                    <ToggleSwitch Margin="0,8,0,0"
+                                      IsOn="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind IsStarwardProtocolAvailable, Mode=OneWay}"
+                                      OnContent=""
+                                      OffContent="" />
+
+                    <StackPanel Grid.Column="1" 
+                                VerticalAlignment="Top"
+                                Spacing="2"
+                                Margin="0,8,0,0">
+                        <TextBlock Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherToStartGame}"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherDescription}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               TextWrapping="Wrap"
+                               FontSize="12" />
+                </StackPanel>
+                </Grid>
+            </StackPanel>
+
             <!--  Blender/留影机插件  -->
             <TextBlock FontSize="20"
                        FontWeight="Bold"
+                       Margin="0,20,0,0"
                        Text="{x:Bind lang:Lang.SettingPage_BlenderPlugin}" />
 
             <StackPanel Spacing="8">
@@ -127,60 +181,6 @@
                             Content="{x:Bind lang:Lang.SettingPage_Unbind}"
                             IsEnabled="{x:Bind ZZZBlenderPluginPath, Converter={StaticResource ObjectToBoolConverter}, Mode=OneWay}" />
                 </StackPanel>
-            </StackPanel>
-
-            <!--  Starward启动器  -->
-            <TextBlock FontSize="20"
-                       FontWeight="Bold"
-                       Margin="0,20,0,0"
-                       Text="{x:Bind lang:Lang.SettingPage_StarwardLauncher}" />
-
-            <StackPanel Spacing="12">
-
-                <!--  协议状态显示  -->
-                <StackPanel Spacing="8">
-
-                    <TextBlock>
-                        <Run Text="{x:Bind lang:Lang.SettingPage_StarwardLauncherIntegration}" 
-                             Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <Run Text="{x:Bind ProtocolStatusText, Mode=OneWay}" 
-                             Foreground="{x:Bind ProtocolStatusColor, Mode=OneWay}" />
-                    </TextBlock>
-
-                    <!--  不可用时的提示  -->
-                    <TextBlock Visibility="{x:Bind IsStarwardProtocolAvailable, Converter={StaticResource BoolToVisibilityReversedConverter}, Mode=OneWay}"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               TextWrapping="Wrap"
-                               FontSize="12"
-                               Text="{x:Bind lang:Lang.SettingPage_StarwardProtocolNotAvailableTip}" />
-                </StackPanel>
-
-                <!--  使用Starward启动器开关  -->
-                <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                    <ToggleSwitch Margin="0,8,0,0"
-                                      IsOn="{x:Bind UseStarwardLauncher, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind IsStarwardProtocolAvailable, Mode=OneWay}"
-                                      OnContent=""
-                                      OffContent="" />
-
-                    <StackPanel Grid.Column="1" 
-                                VerticalAlignment="Top"
-                                Spacing="2"
-                                Margin="0,8,0,0">
-                        <TextBlock Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherToStartGame}"
-                                   FontWeight="SemiBold"
-                                   TextWrapping="Wrap" />
-                        <TextBlock Text="{x:Bind lang:Lang.SettingPage_UseStarwardLauncherDescription}"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               TextWrapping="Wrap"
-                               FontSize="12" />
-                </StackPanel>
-                </Grid>
             </StackPanel>
 
         </StackPanel>
