@@ -711,11 +711,11 @@ public sealed partial class DiagnosticToolWindow : WindowEx
                 launchList.Add($"OpenHoYoShade: {(g.UseOpenHoYoShade ? "✓" : "✗")}");
                 if (g.Biz.StartsWith(GameBiz.hk4e, StringComparison.OrdinalIgnoreCase))
                 {
-                    launchList.Add($"{Lang.GameLauncherPage_LaunchGenshinBlenderPlugin}: {(g.LaunchGenshinBlenderPlugin ? "✓" : "✗")}");
+                    launchList.Add($"{Lang.GameLauncherPage_LaunchExMGenshinBlenderPlugin}: {(g.LaunchGenshinBlenderPlugin ? "✓" : "✗")}");
                 }
                 else if (g.Biz.StartsWith(GameBiz.nap, StringComparison.OrdinalIgnoreCase))
                 {
-                    launchList.Add($"{Lang.GameLauncherPage_LaunchZZZBlenderPlugin}: {(g.LaunchZZZBlenderPlugin ? "✓" : "✗")}");
+                    launchList.Add($"{Lang.GameLauncherPage_LaunchExMZZZBlenderPlugin}: {(g.LaunchZZZBlenderPlugin ? "✓" : "✗")}");
                 }
                 if (g.UsePopupWindow)
                 {

@@ -1448,14 +1448,14 @@ Do you want to continue with the reset operation?</value>
 	<data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
     <value>Integration features coming soon...</value>
   </data>
-	<data name="SettingPage_BlenderPlugin" xml:space="preserve">
-    <value>Blender Plugin</value>
+	<data name="SettingPage_ExMBlenderPlugin" xml:space="preserve">
+    <value>Ex_M/REL Blender Plugin</value>
   </data>
-	<data name="SettingPage_GenshinBlenderPlugin" xml:space="preserve">
-    <value>Genshin Impact Blender Plugin</value>
+	<data name="SettingPage_ExMGenshinBlenderPlugin" xml:space="preserve">
+    <value>Ex_M/REL Genshin Impact Blender Plugin</value>
   </data>
-	<data name="SettingPage_ZZZBlenderPlugin" xml:space="preserve">
-    <value>Zenless Zone Zero Blender Plugin</value>
+	<data name="SettingPage_ExMZZZBlenderPlugin" xml:space="preserve">
+    <value>Ex_M/REL Zenless Zone Zero Blender Plugin</value>
   </data>
 	<data name="SettingPage_PluginFolderPath" xml:space="preserve">
     <value>Plugin Folder Path</value>
@@ -1469,23 +1469,23 @@ Do you want to continue with the reset operation?</value>
 	<data name="SettingPage_NotSet" xml:space="preserve">
     <value>Not Set</value>
   </data>
-	<data name="SettingPage_GenshinBlenderPluginValidationFailed" xml:space="preserve">
-    <value>Genshin Impact Plugin Validation Failed</value>
+	<data name="SettingPage_ExMGenshinBlenderPluginValidationFailed" xml:space="preserve">
+    <value>Ex_M/REL Genshin Impact Blender Plugin Validation Failed</value>
   </data>
-	<data name="SettingPage_GenshinBlenderPluginMustContainClientExe" xml:space="preserve">
+	<data name="SettingPage_ExMGenshinBlenderPluginMustContainClientExe" xml:space="preserve">
     <value>The selected folder must contain client.exe</value>
   </data>
-	<data name="SettingPage_ZZZBlenderPluginValidationFailed" xml:space="preserve">
-    <value>Zenless Zone Zero Plugin Validation Failed</value>
+	<data name="SettingPage_ExMZZZBlenderPluginValidationFailed" xml:space="preserve">
+    <value>Ex_M/REL Zenless Zone Zero Blender Plugin Validation Failed</value>
   </data>
-	<data name="SettingPage_ZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
+	<data name="SettingPage_ExMZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
     <value>The selected folder must contain loader.exe</value>
   </data>
-	<data name="GameLauncherPage_LaunchGenshinBlenderPlugin" xml:space="preserve">
-    <value>Launch Genshin Impact Blender Plugin</value>
+	<data name="GameLauncherPage_LaunchExMGenshinBlenderPlugin" xml:space="preserve">
+    <value>Launch Ex_M/REL Genshin Impact Blender Plugin</value>
   </data>
-	<data name="GameLauncherPage_LaunchZZZBlenderPlugin" xml:space="preserve">
-    <value>Launch ZZZ Blender Plugin</value>
+	<data name="GameLauncherPage_LaunchExMZZZBlenderPlugin" xml:space="preserve">
+    <value>Launch Ex_M/REL ZZZ Blender Plugin</value>
   </data>
 	<data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
     <value>{0} is not installed. Please install it before use</value>
@@ -1502,8 +1502,8 @@ Do you want to continue with the reset operation?</value>
 	<data name="GameLauncher_InjectorStartFailed" xml:space="preserve">
     <value>Failed to start {0} injector: {1}</value>
   </data>
-	<data name="GameLauncher_BlenderPluginNotConfigured" xml:space="preserve">
-    <value>{0} Blender Plugin path not configured. Please configure it in settings</value>
+	<data name="GameLauncher_ExMBlenderPluginNotConfigured" xml:space="preserve">
+    <value>Ex_M/REL {0} Blender Plugin path not configured. Please configure it in settings</value>
   </data>
 	<data name="GameLauncher_ClientExeNotFound" xml:space="preserve">
     <value>client.exe not found. Please check the plugin path</value>
@@ -1511,11 +1511,11 @@ Do you want to continue with the reset operation?</value>
 	<data name="GameLauncher_LoaderExeNotFound" xml:space="preserve">
     <value>loader.exe not found. Please check the plugin path</value>
   </data>
-	<data name="GameLauncher_BlenderPluginStarted" xml:space="preserve">
-    <value>{0} Blender Plugin started</value>
+	<data name="GameLauncher_ExMBlenderPluginStarted" xml:space="preserve">
+    <value>Ex_M/REL {0} Blender Plugin started</value>
   </data>
-	<data name="GameLauncher_BlenderPluginStartFailed" xml:space="preserve">
-    <value>Failed to start {0} Blender Plugin: {1}</value>
+	<data name="GameLauncher_ExMBlenderPluginStartFailed" xml:space="preserve">
+    <value>Failed to start Ex_M/REL {0} Blender Plugin: {1}</value>
   </data>
 	<data name="GameLauncher_GameNotStartedKillingInjector" xml:space="preserve">
     <value>Game not started, HoYoShade/OpenHoYoShade injector process terminated</value>
@@ -1538,17 +1538,17 @@ Do you want to continue with the reset operation?</value>
 	<data name="GameName_GenshinImpact" xml:space="preserve">
     <value>Genshin Impact</value>
   </data>
-	<data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunning" xml:space="preserve">
-    <value>Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin again.</value>
+	<data name="GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunning" xml:space="preserve">
+    <value>Ex_M/REL Blender plugin injection process ({0}) is already running. Cannot launch Ex_M/REL Blender plugin again.</value>
   </data>
-	<data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
-    <value>Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin or HoYoShade/OpenHoYoShade injector.</value>
+	<data name="GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
+    <value>Ex_M/REL Blender plugin injection process ({0}) is already running. Cannot launch Ex_M/REL Blender plugin or HoYoShade/OpenHoYoShade injector.</value>
   </data>
-	<data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
+	<data name="SettingPage_ExMBlenderPluginRegionRestriction" xml:space="preserve">
     <value>This plugin is only available in Mainland China/Hong Kong/Macau/Taiwan/Singapore. If you are not in the above countries and regions, the plugin developers/contributors and HoYoShade Hub developers/contributors reserve the right to refuse support.</value>
   </data>
-  <data name="SettingPage_BlenderPluginDeveloperStatement" xml:space="preserve">
-    <value>For other usage rules and restrictions, please refer to the Blender Plugin developer's statement.</value>
+  <data name="SettingPage_ExMBlenderPluginDeveloperStatement" xml:space="preserve">
+    <value>For other usage rules and restrictions, please refer to the Ex_M/REL Blender Plugin developer's statement.</value>
   </data>
   <data name="SettingPage_CurrentRegion" xml:space="preserve">
     <value>Your current country/region is: {0}</value>
@@ -1595,113 +1595,113 @@ Do you want to continue with the reset operation?</value>
 	<data name="GameLauncher_StarwardLaunchError" xml:space="preserve">
     <value>Failed to launch game via Starward: {0}</value>
   </data>
-	<data name="BlenderRepairTool_WindowTitle" xml:space="preserve">
-    <value>Blender Plugin Repair Tools</value>
+	<data name="ExMBlenderRepairTool_WindowTitle" xml:space="preserve">
+    <value>Ex_M/REL Blender Plugin Repair Tools</value>
   </data>
-	<data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
-    <value>Fix Blender renderer and screenshot tool issues</value>
+	<data name="ExMBlenderRepairTool_WindowSubtitle" xml:space="preserve">
+    <value>Fix Ex_M/REL Blender renderer and screenshot tool issues</value>
   </data>
-	<data name="BlenderRepairTool_TimeSyncSection" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_TimeSyncSection" xml:space="preserve">
     <value>Time Synchronization</value>
   </data>
-	<data name="BlenderRepairTool_LocalTime" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_LocalTime" xml:space="preserve">
     <value>Local Time</value>
   </data>
-	<data name="BlenderRepairTool_AccurateTime" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_AccurateTime" xml:space="preserve">
     <value>Accurate Time</value>
   </data>
-	<data name="BlenderRepairTool_Refresh" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
-	<data name="BlenderRepairTool_SyncMethod" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_SyncMethod" xml:space="preserve">
     <value>Sync Method</value>
   </data>
-	<data name="BlenderRepairTool_NTPSync" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_NTPSync" xml:space="preserve">
     <value>NTP Sync</value>
   </data>
-	<data name="BlenderRepairTool_HTTPSync" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_HTTPSync" xml:space="preserve">
     <value>HTTP Sync (Cloudflare Trace API)</value>
   </data>
-	<data name="BlenderRepairTool_NTPServer" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_NTPServer" xml:space="preserve">
     <value>NTP Server</value>
   </data>
-	<data name="BlenderRepairTool_TraceEndpoint" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_TraceEndpoint" xml:space="preserve">
     <value>Trace Endpoint</value>
   </data>
-	<data name="BlenderRepairTool_SyncTimeNow" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_SyncTimeNow" xml:space="preserve">
     <value>Sync Time Now</value>
   </data>
-	<data name="BlenderRepairTool_EnableAutoSync" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_EnableAutoSync" xml:space="preserve">
     <value>Enable Auto Sync</value>
   </data>
-	<data name="BlenderRepairTool_SyncInterval" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_SyncInterval" xml:space="preserve">
     <value>Sync Interval (minutes)</value>
   </data>
-	<data name="BlenderRepairTool_PluginRepairTools" xml:space="preserve">
-    <value>Blender Plugin Repair Tools</value>
+	<data name="ExMBlenderRepairTool_PluginRepairTools" xml:space="preserve">
+    <value>Ex_M/REL Blender Plugin Repair Tools</value>
   </data>
-	<data name="BlenderRepairTool_ResetClientTarget" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_ResetClientTarget" xml:space="preserve">
     <value>Reset Plugin Client Target (Delete config file)</value>
   </data>
-	<data name="BlenderRepairTool_FixLoginError" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_FixLoginError" xml:space="preserve">
     <value>Fix 'Account Not Logged In' Error (Delete cookie file)</value>
   </data>
-	<data name="BlenderRepairTool_ResetConfirmTitle" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_ResetConfirmTitle" xml:space="preserve">
     <value>Reset Plugin Client Target</value>
   </data>
-	<data name="BlenderRepairTool_ResetConfirmMessage" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_ResetConfirmMessage" xml:space="preserve">
     <value>Are you sure you want to continue?
 
 After deletion, you need to restart the client once to let the drone re-acquire the game process root directory.</value>
   </data>
-	<data name="BlenderRepairTool_SelectGamesToRepair" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_SelectGamesToRepair" xml:space="preserve">
     <value>Select game(s) to repair:</value>
   </data>
-	<data name="BlenderRepairTool_GenshinImpact" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_GenshinImpact" xml:space="preserve">
     <value>Genshin Impact</value>
   </data>
-	<data name="BlenderRepairTool_ZenlessZoneZero" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_ZenlessZoneZero" xml:space="preserve">
     <value>Zenless Zone Zero</value>
   </data>
-	<data name="BlenderRepairTool_NotConfigured" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_NotConfigured" xml:space="preserve">
     <value>Not configured</value>
   </data>
-	<data name="BlenderRepairTool_NoPluginPathConfigured" xml:space="preserve">
-    <value>No Blender plugin path configured. Please configure plugin paths in the launcher first.</value>
+	<data name="ExMBlenderRepairTool_NoPluginPathConfigured" xml:space="preserve">
+    <value>No Ex_M/REL Blender plugin path configured. Please configure plugin paths in the launcher first.</value>
   </data>
-	<data name="BlenderRepairTool_SelectAtLeastOneGame" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_SelectAtLeastOneGame" xml:space="preserve">
     <value>Please select at least one game to repair.</value>
   </data>
-	<data name="BlenderRepairTool_SuccessMessage" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_SuccessMessage" xml:space="preserve">
     <value>Successfully deleted config file(s) for {0} game(s).
 Please re-select the client while Injector run next time.</value>
   </data>
-	<data name="BlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
     <value>Partially completed: {0} succeeded, {1} failed. Check logs for details.</value>
   </data>
-	<data name="BlenderRepairTool_AllFailedMessage" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
     <value>All operations failed. Check logs for details.</value>
   </data>
-	<data name="BlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
     <value>Are you sure you want to delete the cookie file?
 
 After deletion, you need to scan the QR code again to log in to your Bilibili account.</value>
   </data>
-	<data name="BlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
     <value>Successfully deleted cookie file(s) for {0} game(s).
 Please scan QR code while Injector run next time to login again.</value>
   </data>
-	<data name="BlenderRepairTool_GenshinCookie" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_GenshinCookie" xml:space="preserve">
     <value>Genshin Impact (cookies.json)</value>
   </data>
-	<data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
+	<data name="ExMBlenderRepairTool_ZZZCookie" xml:space="preserve">
     <value>Zenless Zone Zero (cookies.json)</value>
   </data>
-	<data name="ToolboxSetting_BlenderRepairTool" xml:space="preserve">
-    <value>Blender Plugin Repair Tool</value>
+	<data name="ToolboxSetting_ExMBlenderRepairTool" xml:space="preserve">
+    <value>Ex_M/REL Blender Plugin Repair Tool</value>
   </data>
-	<data name="ToolboxSetting_BlenderRepairToolDescription" xml:space="preserve">
-    <value>Fix Blender Plugin issues</value>
+	<data name="ToolboxSetting_ExMBlenderRepairToolDescription" xml:space="preserve">
+    <value>Fix Ex_M/REL Blender Plugin issues</value>
   </data>
 	<data name="UninstallShadersDialog_Title" xml:space="preserve">
     <value>Uninstall {0} shaders and plugins</value>
@@ -2367,11 +2367,11 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="DiagnosticTool_Report_LaunchGame" xml:space="preserve">
     <value>Launch Game</value>
   </data>
-  <data name="DiagnosticTool_Report_GenshinBlender" xml:space="preserve">
-    <value>Genshin Blender Plugin</value>
+  <data name="DiagnosticTool_Report_ExMGenshinBlender" xml:space="preserve">
+    <value>Ex_M/REL Genshin Blender Plugin</value>
   </data>
-  <data name="DiagnosticTool_Report_ZZZBlender" xml:space="preserve">
-    <value>ZZZ Blender Plugin</value>
+  <data name="DiagnosticTool_Report_ExMZZZBlender" xml:space="preserve">
+    <value>Ex_M/REL ZZZ Blender Plugin</value>
   </data>
   <data name="DiagnosticTool_Report_BorderlessWindow" xml:space="preserve">
     <value>Borderless Window</value>

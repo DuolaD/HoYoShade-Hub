@@ -1320,13 +1320,13 @@ public sealed partial class GameLauncherPage : PageBase
                 {
                     // Both Blender plugin and shader selected - block both
                     _logger.LogWarning("Blender plugin injection process ({ProcessName}) is already running. Blocking launch of both Blender plugin and HoYoShade/OpenHoYoShade.", runningInjectionProcess);
-                    InAppToast.MainWindow?.Warning(null, string.Format(Lang.GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader, runningInjectionProcess), 5000);
+                    InAppToast.MainWindow?.Warning(null, string.Format(Lang.GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunningWithShader, runningInjectionProcess), 5000);
                 }
                 else
                 {
                     // Only Blender plugin selected - block it
                     _logger.LogWarning("Blender plugin injection process ({ProcessName}) is already running. Blocking launch of Blender plugin.", runningInjectionProcess);
-                    InAppToast.MainWindow?.Warning(null, string.Format(Lang.GameLauncher_BlenderPluginInjectionProcessAlreadyRunning, runningInjectionProcess), 5000);
+                    InAppToast.MainWindow?.Warning(null, string.Format(Lang.GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunning, runningInjectionProcess), 5000);
                 }
                 return;
             }
@@ -1550,7 +1550,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (string.IsNullOrWhiteSpace(pluginPath) || !Directory.Exists(pluginPath))
             {
                 _logger.LogWarning("Genshin Blender plugin path not configured");
-                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_BlenderPluginNotConfigured, GetGameName(GameBiz.hk4e)));
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ExMBlenderPluginNotConfigured, GetGameName(GameBiz.hk4e)));
                 return null;
             }
 
@@ -1572,7 +1572,7 @@ public sealed partial class GameLauncherPage : PageBase
             };
 
             Process? process = Process.Start(startInfo);
-            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_BlenderPluginStarted, GetGameName(GameBiz.hk4e)));
+            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_ExMBlenderPluginStarted, GetGameName(GameBiz.hk4e)));
             _logger.LogInformation("Genshin Blender plugin launched successfully (PID: {Pid})", process?.Id ?? -1);
 
             return process;
@@ -1580,7 +1580,7 @@ public sealed partial class GameLauncherPage : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch Genshin Blender plugin");
-            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_BlenderPluginStartFailed, GetGameName(GameBiz.hk4e), ex.Message));
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ExMBlenderPluginStartFailed, GetGameName(GameBiz.hk4e), ex.Message));
             return null;
         }
     }
@@ -1593,7 +1593,7 @@ public sealed partial class GameLauncherPage : PageBase
             if (string.IsNullOrWhiteSpace(pluginPath) || !Directory.Exists(pluginPath))
             {
                 _logger.LogWarning("ZZZ Blender plugin path not configured");
-                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_BlenderPluginNotConfigured, GetGameName(GameBiz.nap)));
+                InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ExMBlenderPluginNotConfigured, GetGameName(GameBiz.nap)));
                 return null;
             }
 
@@ -1615,7 +1615,7 @@ public sealed partial class GameLauncherPage : PageBase
             };
 
             Process? process = Process.Start(startInfo);
-            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_BlenderPluginStarted, GetGameName(GameBiz.nap)));
+            InAppToast.MainWindow?.Success(string.Format(Lang.GameLauncher_ExMBlenderPluginStarted, GetGameName(GameBiz.nap)));
             _logger.LogInformation("ZZZ Blender plugin launched successfully (PID: {Pid})", process?.Id ?? -1);
 
             return process;
@@ -1623,7 +1623,7 @@ public sealed partial class GameLauncherPage : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Launch ZZZ Blender plugin");
-            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_BlenderPluginStartFailed, GetGameName(GameBiz.nap), ex.Message));
+            InAppToast.MainWindow?.Error(string.Format(Lang.GameLauncher_ExMBlenderPluginStartFailed, GetGameName(GameBiz.nap), ex.Message));
             return null;
         }
     }

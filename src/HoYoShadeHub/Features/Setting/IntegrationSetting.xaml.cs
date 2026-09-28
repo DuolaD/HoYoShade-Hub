@@ -313,8 +313,8 @@ public sealed partial class IntegrationSetting : PageBase
                 if (!File.Exists(clientExePath))
                 {
                     await ShowErrorDialogAsync(
-                        Lang.SettingPage_GenshinBlenderPluginValidationFailed,
-                        Lang.SettingPage_GenshinBlenderPluginMustContainClientExe
+                        Lang.SettingPage_ExMGenshinBlenderPluginValidationFailed,
+                        Lang.SettingPage_ExMGenshinBlenderPluginMustContainClientExe
                     );
                     return;
                 }
@@ -384,8 +384,8 @@ public sealed partial class IntegrationSetting : PageBase
                 if (!File.Exists(loaderExePath))
                 {
                     await ShowErrorDialogAsync(
-                        Lang.SettingPage_ZZZBlenderPluginValidationFailed,
-                        Lang.SettingPage_ZZZBlenderPluginMustContainLoaderExe
+                        Lang.SettingPage_ExMZZZBlenderPluginValidationFailed,
+                        Lang.SettingPage_ExMZZZBlenderPluginMustContainLoaderExe
                     );
                     return;
                 }

@@ -34,7 +34,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
     private bool _isSyncing = false;
     private bool _isRefreshingAccurateTime = false;
     
-    // ÓÃÓÚ×¼È·Ê±¼äµÄ¼ÆÊ±
+    // ç”¨äºŽå‡†ç¡®æ—¶é—´çš„è®¡æ—¶
     private DateTime? _lastNetworkTime;
     private DateTime? _lastNetworkTimeReceived;
 
@@ -47,7 +47,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
     private void InitializeWindow()
     {
-        Title = Lang.BlenderRepairTool_WindowTitle;
+        Title = Lang.ExMBlenderRepairTool_WindowTitle;
         AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
         AppWindow.TitleBar.IconShowOptions = IconShowOptions.ShowIconAndSystemMenu;
         AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
@@ -57,16 +57,16 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         // Set window size
         AppWindow.Resize(new Windows.Graphics.SizeInt32(800, 600));
         
-        // ¼àÌý´°¿Ú¼¤»îÊÂ¼þÒÔË¢ÐÂÅäÖÃ
+        // ç›‘å¬çª—å£æ¿€æ´»äº‹ä»¶ä»¥åˆ·æ–°é…ç½®
         this.Activated += BlenderRepairToolWindow_Activated;
     }
 
     private void BlenderRepairToolWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
-        // ´°¿Ú¼¤»îÊ±Ë¢ÐÂÅäÖÃ£¨ÀýÈç´ÓÆäËû´°¿ÚÇÐ»»»ØÀ´Ê±£©
+        // çª—å£æ¿€æ´»æ—¶åˆ·æ–°é…ç½®ï¼ˆä¾‹å¦‚ä»Žå…¶ä»–çª—å£åˆ‡æ¢å›žæ¥æ—¶ï¼‰
         if (args.WindowActivationState != WindowActivationState.Deactivated)
         {
-            // ¿ÉÒÔÔÚÕâÀïÌí¼ÓÅäÖÃË¢ÐÂÂß¼­£¬µ«ÎªÁËÐÔÄÜ¿¼ÂÇ£¬ÎÒÃÇÖ»ÔÚ°´Å¥µã»÷Ê±¼ì²â
+            // å¯ä»¥åœ¨è¿™é‡Œæ·»åŠ é…ç½®åˆ·æ–°é€»è¾‘ï¼Œä½†ä¸ºäº†æ€§èƒ½è€ƒè™‘ï¼Œæˆ‘ä»¬åªåœ¨æŒ‰é’®ç‚¹å‡»æ—¶æ£€æµ‹
             _logger.LogDebug("Window activated, plugin configurations will be checked on button click");
         }
     }
@@ -117,7 +117,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
     {
         if (_lastNetworkTime.HasValue && _lastNetworkTimeReceived.HasValue)
         {
-            // ¼ÆËã´ÓÉÏ´Î»ñÈ¡ÍøÂçÊ±¼äµ½ÏÖÔÚ¾­¹ýµÄÊ±¼ä
+            // è®¡ç®—ä»Žä¸Šæ¬¡èŽ·å–ç½‘ç»œæ—¶é—´åˆ°çŽ°åœ¨ç»è¿‡çš„æ—¶é—´
             var elapsed = DateTime.UtcNow - _lastNetworkTimeReceived.Value;
             var currentAccurateTime = _lastNetworkTime.Value.Add(elapsed);
             
@@ -148,11 +148,11 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
                 "https://www.wto.org/cdn-cgi/trace", 
                 cts.Token);
 
-            // ¼ÇÂ¼ÍøÂçÊ±¼äºÍ½ÓÊÕÊ±¼ä
+            // è®°å½•ç½‘ç»œæ—¶é—´å’ŒæŽ¥æ”¶æ—¶é—´
             _lastNetworkTime = networkTime;
             _lastNetworkTimeReceived = DateTime.UtcNow;
             
-            // Á¢¼´¸üÐÂÏÔÊ¾
+            // ç«‹å³æ›´æ–°æ˜¾ç¤º
             UpdateAccurateTimeDisplay();
             
             _logger.LogInformation("Network time fetched successfully: {Time}", networkTime);
@@ -356,10 +356,10 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
     {
         try
         {
-            // Çå³ýÅäÖÃ»º´æ£¬ÖØÐÂ´ÓÊý¾Ý¿â¶ÁÈ¡×îÐÂÅäÖÃ
+            // æ¸…é™¤é…ç½®ç¼“å­˜ï¼Œé‡æ–°ä»Žæ•°æ®åº“è¯»å–æœ€æ–°é…ç½®
             AppConfig.ClearCache();
             
-            // Ê¹ÓÃÕýÈ·µÄÅäÖÃÊôÐÔÃû
+            // ä½¿ç”¨æ­£ç¡®çš„é…ç½®å±žæ€§å
             string? genshinPath = AppConfig.GenshinBlenderPluginPath;
             string? zzzPath = AppConfig.ZZZBlenderPluginPath;
             
@@ -371,40 +371,40 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
             if (!hasGenshin && !hasZZZ)
             {
-                ShowPluginRepairError(Lang.BlenderRepairTool_NoPluginPathConfigured);
+                ShowPluginRepairError(Lang.ExMBlenderRepairTool_NoPluginPathConfigured);
                 return;
             }
 
-            // ´´½¨Ñ¡Ôñ½çÃæ
+            // åˆ›å»ºé€‰æ‹©ç•Œé¢
             var dialogContent = new StackPanel { Spacing = 12 };
             
-            // ¾¯¸æÐÅÏ¢
+            // è­¦å‘Šä¿¡æ¯
             dialogContent.Children.Add(new TextBlock
             {
-                Text = Lang.BlenderRepairTool_ResetConfirmMessage,
+                Text = Lang.ExMBlenderRepairTool_ResetConfirmMessage,
                 TextWrapping = TextWrapping.Wrap
             });
 
-            // ÓÎÏ·Ñ¡Ôñ±êÌâ
+            // æ¸¸æˆé€‰æ‹©æ ‡é¢˜
             dialogContent.Children.Add(new TextBlock
             {
-                Text = Lang.BlenderRepairTool_SelectGamesToRepair,
+                Text = Lang.ExMBlenderRepairTool_SelectGamesToRepair,
                 Margin = new Thickness(0, 8, 0, 0),
                 FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
             });
 
-            // Ô­Éñ¸´Ñ¡¿ò
+            // åŽŸç¥žå¤é€‰æ¡†
             var genshinCheckBox = new CheckBox
             {
-                Content = hasGenshin ? Lang.BlenderRepairTool_GenshinImpact : $"{Lang.BlenderRepairTool_GenshinImpact} ({Lang.BlenderRepairTool_NotConfigured})",
+                Content = hasGenshin ? Lang.ExMBlenderRepairTool_GenshinImpact : $"{Lang.ExMBlenderRepairTool_GenshinImpact} ({Lang.ExMBlenderRepairTool_NotConfigured})",
                 IsEnabled = hasGenshin,
                 Margin = new Thickness(0, 4, 0, 0)
             };
 
-            // ¾øÇøÁã¸´Ñ¡¿ò
+            // ç»åŒºé›¶å¤é€‰æ¡†
             var zzzCheckBox = new CheckBox
             {
-                Content = hasZZZ ? Lang.BlenderRepairTool_ZenlessZoneZero : $"{Lang.BlenderRepairTool_ZenlessZoneZero} ({Lang.BlenderRepairTool_NotConfigured})",
+                Content = hasZZZ ? Lang.ExMBlenderRepairTool_ZenlessZoneZero : $"{Lang.ExMBlenderRepairTool_ZenlessZoneZero} ({Lang.ExMBlenderRepairTool_NotConfigured})",
                 IsEnabled = hasZZZ,
                 Margin = new Thickness(0, 4, 0, 0)
             };
@@ -415,7 +415,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             var dialog = new ContentDialog
             {
                 XamlRoot = Content.XamlRoot,
-                Title = Lang.BlenderRepairTool_ResetConfirmTitle,
+                Title = Lang.ExMBlenderRepairTool_ResetConfirmTitle,
                 Content = dialogContent,
                 PrimaryButtonText = Lang.Common_Cancel,
                 SecondaryButtonText = Lang.Common_Continue,
@@ -426,20 +426,20 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
             if (result != ContentDialogResult.Secondary)
             {
-                return; // ÓÃ»§È¡Ïû
+                return; // ç”¨æˆ·å–æ¶ˆ
             }
 
-            // ¼ì²éÊÇ·ñÑ¡ÔñÁËÓÎÏ·
+            // æ£€æŸ¥æ˜¯å¦é€‰æ‹©äº†æ¸¸æˆ
             bool selectedGenshin = genshinCheckBox.IsChecked == true;
             bool selectedZZZ = zzzCheckBox.IsChecked == true;
 
             if (!selectedGenshin && !selectedZZZ)
             {
-                ShowPluginRepairError(Lang.BlenderRepairTool_SelectAtLeastOneGame);
+                ShowPluginRepairError(Lang.ExMBlenderRepairTool_SelectAtLeastOneGame);
                 return;
             }
 
-            // Ö´ÐÐÉ¾³ý²Ù×÷
+            // æ‰§è¡Œåˆ é™¤æ“ä½œ
             int successCount = 0;
             int failCount = 0;
             int notFoundCount = 0;
@@ -466,26 +466,26 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
                     failCount++;
             }
 
-            // ÏÔÊ¾½á¹û
+            // æ˜¾ç¤ºç»“æžœ
             if (successCount > 0 && failCount == 0 && notFoundCount == 0)
             {
-                ShowPluginRepairSuccess(string.Format(Lang.BlenderRepairTool_SuccessMessage, successCount));
+                ShowPluginRepairSuccess(string.Format(Lang.ExMBlenderRepairTool_SuccessMessage, successCount));
             }
             else if (notFoundCount > 0 && successCount == 0 && failCount == 0)
             {
-                ShowPluginRepairError($"Ñ¡ÖÐµÄÓÎÏ·²å¼þÖÐÎ´ÕÒµ½ config ÎÄ¼þ¡£");
+                ShowPluginRepairError($"é€‰ä¸­çš„æ¸¸æˆæ’ä»¶ä¸­æœªæ‰¾åˆ° config æ–‡ä»¶ã€‚");
             }
             else if (successCount > 0)
             {
-                string message = $"³É¹¦É¾³ý {successCount} ¸öÎÄ¼þ";
-                if (notFoundCount > 0) message += $"£¬{notFoundCount} ¸öÎÄ¼þÎ´ÕÒµ½";
-                if (failCount > 0) message += $"£¬{failCount} ¸öÎÄ¼þÉ¾³ýÊ§°Ü";
-                message += "¡£";
+                string message = $"æˆåŠŸåˆ é™¤ {successCount} ä¸ªæ–‡ä»¶";
+                if (notFoundCount > 0) message += $"ï¼Œ{notFoundCount} ä¸ªæ–‡ä»¶æœªæ‰¾åˆ°";
+                if (failCount > 0) message += $"ï¼Œ{failCount} ä¸ªæ–‡ä»¶åˆ é™¤å¤±è´¥";
+                message += "ã€‚";
                 ShowPluginRepairSuccess(message);
             }
             else
             {
-                ShowPluginRepairError(Lang.BlenderRepairTool_AllFailedMessage);
+                ShowPluginRepairError(Lang.ExMBlenderRepairTool_AllFailedMessage);
             }
         }
         catch (Exception ex)
@@ -499,10 +499,10 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
     {
         try
         {
-            // Çå³ýÅäÖÃ»º´æ£¬ÖØÐÂ´ÓÊý¾Ý¿â¶ÁÈ¡×îÐÂÅäÖÃ
+            // æ¸…é™¤é…ç½®ç¼“å­˜ï¼Œé‡æ–°ä»Žæ•°æ®åº“è¯»å–æœ€æ–°é…ç½®
             AppConfig.ClearCache();
             
-            // Ê¹ÓÃÕýÈ·µÄÅäÖÃÊôÐÔÃû
+            // ä½¿ç”¨æ­£ç¡®çš„é…ç½®å±žæ€§å
             string? genshinPath = AppConfig.GenshinBlenderPluginPath;
             string? zzzPath = AppConfig.ZZZBlenderPluginPath;
             
@@ -514,40 +514,40 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
             if (!hasGenshin && !hasZZZ)
             {
-                ShowPluginRepairError(Lang.BlenderRepairTool_NoPluginPathConfigured);
+                ShowPluginRepairError(Lang.ExMBlenderRepairTool_NoPluginPathConfigured);
                 return;
             }
 
-            // ´´½¨Ñ¡Ôñ½çÃæ
+            // åˆ›å»ºé€‰æ‹©ç•Œé¢
             var dialogContent = new StackPanel { Spacing = 12 };
             
-            // ¾¯¸æÐÅÏ¢
+            // è­¦å‘Šä¿¡æ¯
             dialogContent.Children.Add(new TextBlock
             {
-                Text = Lang.BlenderRepairTool_FixLoginConfirmMessage,
+                Text = Lang.ExMBlenderRepairTool_FixLoginConfirmMessage,
                 TextWrapping = TextWrapping.Wrap
             });
 
-            // ÓÎÏ·Ñ¡Ôñ±êÌâ
+            // æ¸¸æˆé€‰æ‹©æ ‡é¢˜
             dialogContent.Children.Add(new TextBlock
             {
-                Text = Lang.BlenderRepairTool_SelectGamesToRepair,
+                Text = Lang.ExMBlenderRepairTool_SelectGamesToRepair,
                 Margin = new Thickness(0, 8, 0, 0),
                 FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
             });
 
-            // Ô­Éñ¸´Ñ¡¿ò
+            // åŽŸç¥žå¤é€‰æ¡†
             var genshinCheckBox = new CheckBox
             {
-                Content = hasGenshin ? Lang.BlenderRepairTool_GenshinCookie : $"{Lang.BlenderRepairTool_GenshinImpact} ({Lang.BlenderRepairTool_NotConfigured})",
+                Content = hasGenshin ? Lang.ExMBlenderRepairTool_GenshinCookie : $"{Lang.ExMBlenderRepairTool_GenshinImpact} ({Lang.ExMBlenderRepairTool_NotConfigured})",
                 IsEnabled = hasGenshin,
                 Margin = new Thickness(0, 4, 0, 0)
             };
 
-            // ¾øÇøÁã¸´Ñ¡¿ò
+            // ç»åŒºé›¶å¤é€‰æ¡†
             var zzzCheckBox = new CheckBox
             {
-                Content = hasZZZ ? Lang.BlenderRepairTool_ZZZCookie : $"{Lang.BlenderRepairTool_ZenlessZoneZero} ({Lang.BlenderRepairTool_NotConfigured})",
+                Content = hasZZZ ? Lang.ExMBlenderRepairTool_ZZZCookie : $"{Lang.ExMBlenderRepairTool_ZenlessZoneZero} ({Lang.ExMBlenderRepairTool_NotConfigured})",
                 IsEnabled = hasZZZ,
                 Margin = new Thickness(0, 4, 0, 0)
             };
@@ -558,7 +558,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             var dialog = new ContentDialog
             {
                 XamlRoot = Content.XamlRoot,
-                Title = Lang.BlenderRepairTool_FixLoginError,
+                Title = Lang.ExMBlenderRepairTool_FixLoginError,
                 Content = dialogContent,
                 PrimaryButtonText = Lang.Common_Cancel,
                 SecondaryButtonText = Lang.Common_Continue,
@@ -569,20 +569,20 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
             if (result != ContentDialogResult.Secondary)
             {
-                return; // ÓÃ»§È¡Ïû
+                return; // ç”¨æˆ·å–æ¶ˆ
             }
 
-            // ¼ì²éÊÇ·ñÑ¡ÔñÁËÓÎÏ·
+            // æ£€æŸ¥æ˜¯å¦é€‰æ‹©äº†æ¸¸æˆ
             bool selectedGenshin = genshinCheckBox.IsChecked == true;
             bool selectedZZZ = zzzCheckBox.IsChecked == true;
 
             if (!selectedGenshin && !selectedZZZ)
             {
-                ShowPluginRepairError(Lang.BlenderRepairTool_SelectAtLeastOneGame);
+                ShowPluginRepairError(Lang.ExMBlenderRepairTool_SelectAtLeastOneGame);
                 return;
             }
 
-            // Ö´ÐÐÉ¾³ý²Ù×÷
+            // æ‰§è¡Œåˆ é™¤æ“ä½œ
             int successCount = 0;
             int failCount = 0;
             int notFoundCount = 0;
@@ -609,26 +609,26 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
                     failCount++;
             }
 
-            // ÏÔÊ¾½á¹û
+            // æ˜¾ç¤ºç»“æžœ
             if (successCount > 0 && failCount == 0 && notFoundCount == 0)
             {
-                ShowPluginRepairSuccess(string.Format(Lang.BlenderRepairTool_CookieSuccessMessage, successCount));
+                ShowPluginRepairSuccess(string.Format(Lang.ExMBlenderRepairTool_CookieSuccessMessage, successCount));
             }
             else if (notFoundCount > 0 && successCount == 0 && failCount == 0)
             {
-                ShowPluginRepairError($"Ñ¡ÖÐµÄÓÎÏ·²å¼þÖÐÎ´ÕÒµ½ cookies.json ÎÄ¼þ¡£");
+                ShowPluginRepairError($"é€‰ä¸­çš„æ¸¸æˆæ’ä»¶ä¸­æœªæ‰¾åˆ° cookies.json æ–‡ä»¶ã€‚");
             }
             else if (successCount > 0)
             {
-                string message = $"³É¹¦É¾³ý {successCount} ¸öÎÄ¼þ";
-                if (notFoundCount > 0) message += $"£¬{notFoundCount} ¸öÎÄ¼þÎ´ÕÒµ½";
-                if (failCount > 0) message += $"£¬{failCount} ¸öÎÄ¼þÉ¾³ýÊ§°Ü";
-                message += "¡£";
+                string message = $"æˆåŠŸåˆ é™¤ {successCount} ä¸ªæ–‡ä»¶";
+                if (notFoundCount > 0) message += $"ï¼Œ{notFoundCount} ä¸ªæ–‡ä»¶æœªæ‰¾åˆ°";
+                if (failCount > 0) message += $"ï¼Œ{failCount} ä¸ªæ–‡ä»¶åˆ é™¤å¤±è´¥";
+                message += "ã€‚";
                 ShowPluginRepairSuccess(message);
             }
             else
             {
-                ShowPluginRepairError(Lang.BlenderRepairTool_AllFailedMessage);
+                ShowPluginRepairError(Lang.ExMBlenderRepairTool_AllFailedMessage);
             }
         }
         catch (Exception ex)

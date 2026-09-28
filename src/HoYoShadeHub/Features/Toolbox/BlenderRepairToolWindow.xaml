@@ -37,7 +37,7 @@
                        Margin="12,0,0,0"
                        VerticalAlignment="Center"
                        Style="{ThemeResource CaptionTextBlockStyle}"
-                       Text="{x:Bind lang:Lang.BlenderRepairTool_WindowTitle}" />
+                       Text="{x:Bind lang:Lang.ExMBlenderRepairTool_WindowTitle}" />
         </Grid>
 
         <!--  Content  -->
@@ -47,16 +47,16 @@
                 <!--  Page Title  -->
                 <StackPanel Spacing="8">
                     <TextBlock Style="{ThemeResource TitleTextBlockStyle}"
-                               Text="{x:Bind lang:Lang.BlenderRepairTool_WindowTitle}" />
+                               Text="{x:Bind lang:Lang.ExMBlenderRepairTool_WindowTitle}" />
                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind lang:Lang.BlenderRepairTool_WindowSubtitle}"
+                               Text="{x:Bind lang:Lang.ExMBlenderRepairTool_WindowSubtitle}"
                                TextWrapping="Wrap" />
                 </StackPanel>
 
                 <!--  Time Sync Tool  -->
                 <StackPanel Spacing="16">
                     <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
-                               Text="{x:Bind lang:Lang.BlenderRepairTool_TimeSyncSection}" />
+                               Text="{x:Bind lang:Lang.ExMBlenderRepairTool_TimeSyncSection}" />
                     
                     <InfoBar x:Name="InfoBar_TimeSync"
                              IsClosable="True"
@@ -72,7 +72,7 @@
                                 Padding="16,12">
                             <StackPanel Spacing="4">
                                 <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           Text="{x:Bind lang:Lang.BlenderRepairTool_AccurateTime}" />
+                                           Text="{x:Bind lang:Lang.ExMBlenderRepairTool_AccurateTime}" />
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock x:Name="TextBlock_AccurateTime"
                                                FontSize="20"
@@ -84,7 +84,7 @@
                                             Padding="0"
                                             VerticalAlignment="Center"
                                             Click="Button_RefreshAccurateTime_Click"
-                                            ToolTipService.ToolTip="{x:Bind lang:Lang.BlenderRepairTool_Refresh}">
+                                            ToolTipService.ToolTip="{x:Bind lang:Lang.ExMBlenderRepairTool_Refresh}">
                                         <FontIcon FontSize="14" Glyph="&#xE72C;" />
                                     </Button>
                                 </StackPanel>
@@ -99,7 +99,7 @@
                                 Padding="16,12">
                             <StackPanel Spacing="4">
                                 <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           Text="{x:Bind lang:Lang.BlenderRepairTool_LocalTime}" />
+                                           Text="{x:Bind lang:Lang.ExMBlenderRepairTool_LocalTime}" />
                                 <TextBlock x:Name="TextBlock_LocalTime"
                                            FontSize="20"
                                            FontWeight="SemiBold"
@@ -109,13 +109,13 @@
 
                         <!--  Time Sync Method Selection  -->
                         <StackPanel Spacing="8">
-                            <TextBlock Text="{x:Bind lang:Lang.BlenderRepairTool_SyncMethod}" />
+                            <TextBlock Text="{x:Bind lang:Lang.ExMBlenderRepairTool_SyncMethod}" />
                             <RadioButtons x:Name="RadioButtons_SyncMethod"
                                           MaxColumns="2"
                                           SelectedIndex="0"
                                           SelectionChanged="RadioButtons_SyncMethod_SelectionChanged">
-                                <RadioButton Content="{x:Bind lang:Lang.BlenderRepairTool_NTPSync}" Tag="NTP" />
-                                <RadioButton Content="{x:Bind lang:Lang.BlenderRepairTool_HTTPSync}" Tag="HTTP" />
+                                <RadioButton Content="{x:Bind lang:Lang.ExMBlenderRepairTool_NTPSync}" Tag="NTP" />
+                                <RadioButton Content="{x:Bind lang:Lang.ExMBlenderRepairTool_HTTPSync}" Tag="HTTP" />
                             </RadioButtons>
                         </StackPanel>
 
@@ -123,7 +123,7 @@
                         <StackPanel x:Name="StackPanel_NtpOptions"
                                     Spacing="8"
                                     Visibility="Visible">
-                            <TextBlock Text="{x:Bind lang:Lang.BlenderRepairTool_NTPServer}" />
+                            <TextBlock Text="{x:Bind lang:Lang.ExMBlenderRepairTool_NTPServer}" />
                             <ComboBox x:Name="ComboBox_NtpServer"
                                       HorizontalAlignment="Stretch"
                                       PlaceholderText="Select NTP Server" />
@@ -133,7 +133,7 @@
                         <StackPanel x:Name="StackPanel_HttpOptions"
                                     Spacing="8"
                                     Visibility="Collapsed">
-                            <TextBlock Text="{x:Bind lang:Lang.BlenderRepairTool_TraceEndpoint}" />
+                            <TextBlock Text="{x:Bind lang:Lang.ExMBlenderRepairTool_TraceEndpoint}" />
                             <ComboBox x:Name="ComboBox_HttpEndpoint"
                                       HorizontalAlignment="Stretch"
                                       PlaceholderText="Select Trace Endpoint" />
@@ -145,21 +145,21 @@
                                 Click="Button_SyncTime_Click">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon FontSize="16" Glyph="&#xE895;" />
-                                <TextBlock Text="{x:Bind lang:Lang.BlenderRepairTool_SyncTimeNow}" />
+                                <TextBlock Text="{x:Bind lang:Lang.ExMBlenderRepairTool_SyncTimeNow}" />
                             </StackPanel>
                         </Button>
 
                         <!--  Auto Sync Options  -->
                         <StackPanel Spacing="8">
                             <CheckBox x:Name="CheckBox_AutoSync"
-                                      Content="{x:Bind lang:Lang.BlenderRepairTool_EnableAutoSync}"
+                                      Content="{x:Bind lang:Lang.ExMBlenderRepairTool_EnableAutoSync}"
                                       Checked="CheckBox_AutoSync_CheckedChanged"
                                       Unchecked="CheckBox_AutoSync_CheckedChanged" />
                             
                             <StackPanel Orientation="Horizontal"
                                         Spacing="8"
                                         Visibility="{x:Bind CheckBox_AutoSync.IsChecked, Mode=OneWay}">
-                                <TextBlock VerticalAlignment="Center" Text="{x:Bind lang:Lang.BlenderRepairTool_SyncInterval}" />
+                                <TextBlock VerticalAlignment="Center" Text="{x:Bind lang:Lang.ExMBlenderRepairTool_SyncInterval}" />
                                 <NumberBox x:Name="NumberBox_SyncInterval"
                                            Width="120"
                                            Maximum="1440"
@@ -175,7 +175,7 @@
                 <!--  Blender Plugin Repair Tools  -->
                 <StackPanel Spacing="16">
                     <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}"
-                               Text="{x:Bind lang:Lang.BlenderRepairTool_PluginRepairTools}" />
+                               Text="{x:Bind lang:Lang.ExMBlenderRepairTool_PluginRepairTools}" />
 
                     <InfoBar x:Name="InfoBar_PluginRepair"
                              IsClosable="True"
@@ -188,7 +188,7 @@
                                 Click="Button_ResetClientTarget_Click">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon FontSize="16" Glyph="&#xE8BA;" />
-                                <TextBlock Text="{x:Bind lang:Lang.BlenderRepairTool_ResetClientTarget}" />
+                                <TextBlock Text="{x:Bind lang:Lang.ExMBlenderRepairTool_ResetClientTarget}" />
                             </StackPanel>
                         </Button>
 
@@ -197,7 +197,7 @@
                                 Click="Button_FixLoginError_Click">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon FontSize="16" Glyph="&#xE8D7;" />
-                                <TextBlock Text="{x:Bind lang:Lang.BlenderRepairTool_FixLoginError}" />
+                                <TextBlock Text="{x:Bind lang:Lang.ExMBlenderRepairTool_FixLoginError}" />
                             </StackPanel>
                         </Button>
                     </StackPanel>

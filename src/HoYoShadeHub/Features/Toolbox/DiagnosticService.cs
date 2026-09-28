@@ -704,11 +704,11 @@ public static class DiagnosticService
                 opts.Add($"OpenHoYoShade={game.UseOpenHoYoShade}");
                 if (game.Biz.StartsWith(GameBiz.hk4e, StringComparison.OrdinalIgnoreCase))
                 {
-                    opts.Add($"{Lang.DiagnosticTool_Report_GenshinBlender}={game.LaunchGenshinBlenderPlugin}");
+                    opts.Add($"{Lang.DiagnosticTool_Report_ExMGenshinBlender}={game.LaunchGenshinBlenderPlugin}");
                 }
                 else if (game.Biz.StartsWith(GameBiz.nap, StringComparison.OrdinalIgnoreCase))
                 {
-                    opts.Add($"{Lang.DiagnosticTool_Report_ZZZBlender}={game.LaunchZZZBlenderPlugin}");
+                    opts.Add($"{Lang.DiagnosticTool_Report_ExMZZZBlender}={game.LaunchZZZBlenderPlugin}");
                 }
                 if (game.UsePopupWindow) opts.Add($"{Lang.DiagnosticTool_Report_BorderlessWindow}=True");
                 sb.AppendLine($"    - {string.Format(Lang.DiagnosticTool_Report_LaunchOptions, string.Join(", ", opts))}");

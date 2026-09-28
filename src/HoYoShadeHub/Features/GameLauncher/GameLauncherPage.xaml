@@ -671,14 +671,14 @@
                       Margin="0,4" />
             
             <CheckBox x:Name="CheckBox_LaunchGenshinBlenderPlugin"
-                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchGenshinBlenderPlugin}"
+                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchExMGenshinBlenderPlugin}"
                       IsChecked="{x:Bind LaunchGenshinBlenderPlugin, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsGenshinBlenderPluginConfigured}"
                       Visibility="{x:Bind IsGenshinBlenderPluginVisible}"
                       Margin="0,4" />
             
             <CheckBox x:Name="CheckBox_LaunchZZZBlenderPlugin"
-                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchZZZBlenderPlugin}"
+                      Content="{x:Bind lang:Lang.GameLauncherPage_LaunchExMZZZBlenderPlugin}"
                       IsChecked="{x:Bind LaunchZZZBlenderPlugin, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsZZZBlenderPluginConfigured}"
                       Visibility="{x:Bind IsZZZBlenderPluginVisible}"

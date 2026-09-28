@@ -1448,14 +1448,14 @@
   <data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
     <value>聯動功能即將推出，敬請期待...</value>
   </data>
-  <data name="SettingPage_BlenderPlugin" xml:space="preserve">
-    <value>Blender/留影機插件</value>
+  <data name="SettingPage_ExMBlenderPlugin" xml:space="preserve">
+    <value>Ex_M/REL Blender/留影機插件</value>
   </data>
-  <data name="SettingPage_GenshinBlenderPlugin" xml:space="preserve">
-    <value>原神Blender/留影機插件</value>
+  <data name="SettingPage_ExMGenshinBlenderPlugin" xml:space="preserve">
+    <value>Ex_M/REL 原神Blender/留影機插件</value>
   </data>
-  <data name="SettingPage_ZZZBlenderPlugin" xml:space="preserve">
-    <value>絕區零Blender/留影機插件</value>
+  <data name="SettingPage_ExMZZZBlenderPlugin" xml:space="preserve">
+    <value>Ex_M/REL 絕區零Blender/留影機插件</value>
   </data>
   <data name="SettingPage_PluginFolderPath" xml:space="preserve">
     <value>插件資料夾路徑</value>
@@ -1469,23 +1469,23 @@
   <data name="SettingPage_NotSet" xml:space="preserve">
     <value>未設定</value>
   </data>
-  <data name="SettingPage_GenshinBlenderPluginValidationFailed" xml:space="preserve">
-    <value>原神插件驗證失敗</value>
+  <data name="SettingPage_ExMGenshinBlenderPluginValidationFailed" xml:space="preserve">
+    <value>Ex_M/REL 原神Blender/留影機插件驗證失敗</value>
   </data>
-  <data name="SettingPage_GenshinBlenderPluginMustContainClientExe" xml:space="preserve">
+  <data name="SettingPage_ExMGenshinBlenderPluginMustContainClientExe" xml:space="preserve">
     <value>所選資料夾必須包含 client.exe 檔案</value>
   </data>
-  <data name="SettingPage_ZZZBlenderPluginValidationFailed" xml:space="preserve">
-    <value>絕區零插件驗證失敗</value>
+  <data name="SettingPage_ExMZZZBlenderPluginValidationFailed" xml:space="preserve">
+    <value>Ex_M/REL 絕區零Blender/留影機插件驗證失敗</value>
   </data>
-  <data name="SettingPage_ZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
+  <data name="SettingPage_ExMZZZBlenderPluginMustContainLoaderExe" xml:space="preserve">
     <value>所選資料夾必須包含 loader.exe 檔案</value>
   </data>
-  <data name="GameLauncherPage_LaunchGenshinBlenderPlugin" xml:space="preserve">
-    <value>啟動原神Blender/留影機插件</value>
+  <data name="GameLauncherPage_LaunchExMGenshinBlenderPlugin" xml:space="preserve">
+    <value>啟動 Ex_M/REL 原神Blender/留影機插件</value>
   </data>
-  <data name="GameLauncherPage_LaunchZZZBlenderPlugin" xml:space="preserve">
-    <value>啟動絕區零Blender/留影機插件</value>
+  <data name="GameLauncherPage_LaunchExMZZZBlenderPlugin" xml:space="preserve">
+    <value>啟動 Ex_M/REL 絕區零Blender/留影機插件</value>
   </data>
   <data name="GameLauncher_ShaderNotInstalled" xml:space="preserve">
     <value>{0} 未安裝，請先安裝後再使用</value>
@@ -1502,8 +1502,8 @@
   <data name="GameLauncher_InjectorStartFailed" xml:space="preserve">
     <value>啟動 {0} 注入器失敗: {1}</value>
   </data>
-  <data name="GameLauncher_BlenderPluginNotConfigured" xml:space="preserve">
-    <value>{0}Blender/留影機外掛路徑未配置，請在設定中配置</value>
+  <data name="GameLauncher_ExMBlenderPluginNotConfigured" xml:space="preserve">
+    <value>Ex_M/REL {0}Blender/留影機外掛路徑未配置，請在設定中配置</value>
   </data>
   <data name="GameLauncher_ClientExeNotFound" xml:space="preserve">
     <value>未找到 client.exe，請檢查外掛路徑</value>
@@ -1511,11 +1511,11 @@
   <data name="GameLauncher_LoaderExeNotFound" xml:space="preserve">
     <value>未找到 loader.exe，請檢查外掛路徑</value>
   </data>
-  <data name="GameLauncher_BlenderPluginStarted" xml:space="preserve">
-    <value>已啟動{0}Blender/留影機外掛</value>
+  <data name="GameLauncher_ExMBlenderPluginStarted" xml:space="preserve">
+    <value>已啟動 Ex_M/REL {0}Blender/留影機外掛</value>
   </data>
-  <data name="GameLauncher_BlenderPluginStartFailed" xml:space="preserve">
-    <value>啟動{0}Blender/留影機外掛失敗: {1}</value>
+  <data name="GameLauncher_ExMBlenderPluginStartFailed" xml:space="preserve">
+    <value>啟動 Ex_M/REL {0}Blender/留影機外掛失敗: {1}</value>
   </data>
   <data name="GameLauncher_GameNotStartedKillingInjector" xml:space="preserve">
     <value>遊戲未啟動，已終止HoYoShade/OpenHoYoShade注入器處理程序</value>
@@ -1538,17 +1538,17 @@
   <data name="GameName_GenshinImpact" xml:space="preserve">
     <value>原神</value>
   </data>
-  <data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunning" xml:space="preserve">
-    <value>Blender/留影機外掛注入處理程序 ({0}) 已在執行中，無法再次啟動 Blender/留影機外掛。</value>
+  <data name="GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunning" xml:space="preserve">
+    <value>Ex_M/REL Blender/留影機外掛注入處理程序 ({0}) 已在執行中，無法再次啟動 Ex_M/REL Blender/留影機外掛。</value>
   </data>
-  <data name="GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
-    <value>Blender/留影機外掛注入處理程序 ({0}) 已在執行中，無法啟動 Blender/留影機外掛或 HoYoShade/OpenHoYoShade 注入器。</value>
+  <data name="GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
+    <value>Ex_M/REL Blender/留影機外掛注入處理程序 ({0}) 已在執行中，無法啟動 Ex_M/REL Blender/留影機外掛或 HoYoShade/OpenHoYoShade 注入器。</value>
   </data>
-  <data name="SettingPage_BlenderPluginRegionRestriction" xml:space="preserve">
+  <data name="SettingPage_ExMBlenderPluginRegionRestriction" xml:space="preserve">
     <value>該插件僅在中國大陸/香港/澳門/臺灣/新加坡等國家及地區可用。如果你並不位於上述國家及地區，該插件開發者/貢獻者及 HoYoShade Hub 的開發者/貢獻者有權拒絕提供支持。</value>
   </data>
-  <data name="SettingPage_BlenderPluginDeveloperStatement" xml:space="preserve">
-    <value>有關其它使用規則及限制，請以Blender/留影機開發者聲明為準。</value>
+  <data name="SettingPage_ExMBlenderPluginDeveloperStatement" xml:space="preserve">
+    <value>有關其它使用規則及限制，請以 Ex_M/REL Blender/留影機開發者聲明為準。</value>
   </data>
   <data name="SettingPage_CurrentRegion" xml:space="preserve">
     <value>您目前的國家/地區為：{0}</value>
@@ -1595,113 +1595,113 @@
   <data name="GameLauncher_StarwardLaunchError" xml:space="preserve">
     <value>通過 Starward 啓動遊戲失敗: {0}</value>
   </data>
-  <data name="BlenderRepairTool_WindowTitle" xml:space="preserve">
-    <value>Blender/留影機插件 修復工具</value>
+  <data name="ExMBlenderRepairTool_WindowTitle" xml:space="preserve">
+    <value>Ex_M/REL Blender/留影機插件 修復工具</value>
   </data>
-  <data name="BlenderRepairTool_WindowSubtitle" xml:space="preserve">
-    <value>修復 Blender/留影機插件 功能問題</value>
+  <data name="ExMBlenderRepairTool_WindowSubtitle" xml:space="preserve">
+    <value>修復 Ex_M/REL Blender/留影機插件 功能問題</value>
   </data>
-  <data name="BlenderRepairTool_TimeSyncSection" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_TimeSyncSection" xml:space="preserve">
     <value>時間同步</value>
   </data>
-  <data name="BlenderRepairTool_LocalTime" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_LocalTime" xml:space="preserve">
     <value>本地時間</value>
   </data>
-  <data name="BlenderRepairTool_AccurateTime" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_AccurateTime" xml:space="preserve">
     <value>準確時間</value>
   </data>
-  <data name="BlenderRepairTool_Refresh" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_Refresh" xml:space="preserve">
     <value>重新整理</value>
   </data>
-  <data name="BlenderRepairTool_SyncMethod" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_SyncMethod" xml:space="preserve">
     <value>同步方式</value>
   </data>
-  <data name="BlenderRepairTool_NTPSync" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_NTPSync" xml:space="preserve">
     <value>NTP 同步</value>
   </data>
-  <data name="BlenderRepairTool_HTTPSync" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_HTTPSync" xml:space="preserve">
     <value>HTTP 同步 (Cloudflare Trace API)</value>
   </data>
-  <data name="BlenderRepairTool_NTPServer" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_NTPServer" xml:space="preserve">
     <value>NTP 伺服器</value>
   </data>
-  <data name="BlenderRepairTool_TraceEndpoint" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_TraceEndpoint" xml:space="preserve">
     <value>Trace 端點</value>
   </data>
-  <data name="BlenderRepairTool_SyncTimeNow" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_SyncTimeNow" xml:space="preserve">
     <value>立即同步時間</value>
   </data>
-  <data name="BlenderRepairTool_EnableAutoSync" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_EnableAutoSync" xml:space="preserve">
     <value>啟用自動同步</value>
   </data>
-  <data name="BlenderRepairTool_SyncInterval" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_SyncInterval" xml:space="preserve">
     <value>同步間隔（分鐘）</value>
   </data>
-  <data name="BlenderRepairTool_PluginRepairTools" xml:space="preserve">
-    <value>Blender/留影機插件 修復工具</value>
+  <data name="ExMBlenderRepairTool_PluginRepairTools" xml:space="preserve">
+    <value>Ex_M/REL Blender/留影機插件 修復工具</value>
   </data>
-  <data name="BlenderRepairTool_ResetClientTarget" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_ResetClientTarget" xml:space="preserve">
     <value>重設插件客戶端目標（刪除 config 檔）</value>
   </data>
-  <data name="BlenderRepairTool_FixLoginError" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_FixLoginError" xml:space="preserve">
     <value>修復「帳號未登入」錯誤（刪除 cookie 檔）</value>
   </data>
-  <data name="BlenderRepairTool_ResetConfirmTitle" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_ResetConfirmTitle" xml:space="preserve">
     <value>重設插件客戶端目標</value>
   </data>
-  <data name="BlenderRepairTool_ResetConfirmMessage" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_ResetConfirmMessage" xml:space="preserve">
     <value>你確定要繼續嗎？
 
 刪除後，你需要重新啟動一次客戶端，以便讓無人機重新獲取遊戲程序根目錄。</value>
   </data>
-  <data name="BlenderRepairTool_SelectGamesToRepair" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_SelectGamesToRepair" xml:space="preserve">
     <value>選擇要修復的遊戲：</value>
   </data>
-  <data name="BlenderRepairTool_GenshinImpact" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_GenshinImpact" xml:space="preserve">
     <value>原神</value>
   </data>
-  <data name="BlenderRepairTool_ZenlessZoneZero" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_ZenlessZoneZero" xml:space="preserve">
     <value>絕區零</value>
   </data>
-  <data name="BlenderRepairTool_NotConfigured" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_NotConfigured" xml:space="preserve">
     <value>未設定</value>
   </data>
-  <data name="BlenderRepairTool_NoPluginPathConfigured" xml:space="preserve">
-    <value>未設定 Blender/留影機插件 路徑，請先在啟動器中設定插件路徑。</value>
+  <data name="ExMBlenderRepairTool_NoPluginPathConfigured" xml:space="preserve">
+    <value>未設定 Ex_M/REL Blender/留影機插件 路徑，請先在啟動器中設定插件路徑。</value>
   </data>
-  <data name="BlenderRepairTool_SelectAtLeastOneGame" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_SelectAtLeastOneGame" xml:space="preserve">
     <value>請至少選擇一個遊戲進行修復。</value>
   </data>
-  <data name="BlenderRepairTool_SuccessMessage" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_SuccessMessage" xml:space="preserve">
     <value>已成功刪除 {0} 個遊戲的 config 檔。
 請在注入器啓動後重新指定客戶端。</value>
   </data>
-  <data name="BlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
     <value>部分完成：{0} 個成功，{1} 個失敗。請檢視日誌了解詳情。</value>
   </data>
-  <data name="BlenderRepairTool_AllFailedMessage" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
     <value>所有操作均失敗。請檢視日誌了解詳情。</value>
   </data>
-  <data name="BlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
     <value>你確定要刪除 cookie 檔嗎？
 
 刪除後，你需要重新掃碼登入嗶哩嗶哩帳號。</value>
   </data>
-  <data name="BlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
     <value>已成功刪除 {0} 個遊戲的 cookie 檔。
 請在注入器啓動後重新掃碼登錄。</value>
   </data>
-  <data name="BlenderRepairTool_GenshinCookie" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_GenshinCookie" xml:space="preserve">
     <value>原神 (cookies.json)</value>
   </data>
-  <data name="BlenderRepairTool_ZZZCookie" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_ZZZCookie" xml:space="preserve">
     <value>絕區零 (cookies.json)</value>
   </data>
-  <data name="ToolboxSetting_BlenderRepairTool" xml:space="preserve">
-    <value>Blender/留影機外掛 修復工具</value>
+  <data name="ToolboxSetting_ExMBlenderRepairTool" xml:space="preserve">
+    <value>Ex_M/REL Blender/留影機外掛 修復工具</value>
   </data>
-  <data name="ToolboxSetting_BlenderRepairToolDescription" xml:space="preserve">
-    <value>修復 Blender/留影機插件 功能問題</value>
+  <data name="ToolboxSetting_ExMBlenderRepairToolDescription" xml:space="preserve">
+    <value>修復 Ex_M/REL Blender/留影機插件 功能問題</value>
   </data>
   <data name="UninstallShadersDialog_Title" xml:space="preserve">
     <value>解安裝 {0} 著色器和插件</value>
@@ -2367,11 +2367,11 @@
   <data name="DiagnosticTool_Report_LaunchGame" xml:space="preserve">
     <value>啟動遊戲</value>
   </data>
-  <data name="DiagnosticTool_Report_GenshinBlender" xml:space="preserve">
-    <value>原神Blender外掛程式</value>
+  <data name="DiagnosticTool_Report_ExMGenshinBlender" xml:space="preserve">
+    <value>Ex_M/REL 原神Blender/留影機外掛程式</value>
   </data>
-  <data name="DiagnosticTool_Report_ZZZBlender" xml:space="preserve">
-    <value>絕區零Blender外掛程式</value>
+  <data name="DiagnosticTool_Report_ExMZZZBlender" xml:space="preserve">
+    <value>Ex_M/REL 絕區零Blender/留影機外掛程式</value>
   </data>
   <data name="DiagnosticTool_Report_BorderlessWindow" xml:space="preserve">
     <value>無邊框視窗</value>

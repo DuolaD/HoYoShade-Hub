@@ -55,14 +55,14 @@
             <TextBlock FontSize="20"
                        FontWeight="Bold"
                        Margin="0,20,0,0"
-                       Text="{x:Bind lang:Lang.SettingPage_BlenderPlugin}" />
+                       Text="{x:Bind lang:Lang.SettingPage_ExMBlenderPlugin}" />
 
             <StackPanel Spacing="8">
-                <TextBlock Text="{x:Bind lang:Lang.SettingPage_BlenderPluginRegionRestriction}"
+                <TextBlock Text="{x:Bind lang:Lang.SettingPage_ExMBlenderPluginRegionRestriction}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            TextWrapping="Wrap"
                            FontSize="12" />
-                <TextBlock Text="{x:Bind lang:Lang.SettingPage_BlenderPluginDeveloperStatement}"
+                <TextBlock Text="{x:Bind lang:Lang.SettingPage_ExMBlenderPluginDeveloperStatement}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            TextWrapping="Wrap"
                            FontSize="12" />
@@ -76,7 +76,7 @@
             <StackPanel Spacing="12">
                 <TextBlock FontSize="16"
                            FontWeight="SemiBold"
-                           Text="{x:Bind lang:Lang.SettingPage_GenshinBlenderPlugin}" />
+                           Text="{x:Bind lang:Lang.SettingPage_ExMGenshinBlenderPlugin}" />
 
                 <!--  路径显示（仅在已设置时显示）  -->
                 <StackPanel Spacing="8" Visibility="{x:Bind GenshinBlenderPluginPath, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}">
@@ -126,7 +126,7 @@
             <StackPanel Spacing="12">
                 <TextBlock FontSize="16"
                            FontWeight="SemiBold"
-                           Text="{x:Bind lang:Lang.SettingPage_ZZZBlenderPlugin}" />
+                           Text="{x:Bind lang:Lang.SettingPage_ExMZZZBlenderPlugin}" />
 
                 <!--  路径显示（仅在已设置时显示）  -->
                 <StackPanel Spacing="8" Visibility="{x:Bind ZZZBlenderPluginPath, Converter={StaticResource ObjectToVisibilityConverter}, Mode=OneWay}">

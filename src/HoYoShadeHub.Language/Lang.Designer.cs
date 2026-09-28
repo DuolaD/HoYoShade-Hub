@@ -99,18 +99,18 @@ namespace HoYoShadeHub.Language {
         /// <summary>
         ///   查找类似 Accurate Time 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_AccurateTime {
+        public static string ExMBlenderRepairTool_AccurateTime {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_AccurateTime", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_AccurateTime", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 All operations failed. Check logs for details. 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_AllFailedMessage {
+        public static string ExMBlenderRepairTool_AllFailedMessage {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_AllFailedMessage", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_AllFailedMessage", resourceCulture);
             }
         }
         
@@ -118,18 +118,18 @@ namespace HoYoShadeHub.Language {
         ///   查找类似 Successfully deleted cookie file(s) for {0} game(s).
         ///Please scan QR code while Injector run next time to login again. 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_CookieSuccessMessage {
+        public static string ExMBlenderRepairTool_CookieSuccessMessage {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_CookieSuccessMessage", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_CookieSuccessMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Enable Auto Sync 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_EnableAutoSync {
+        public static string ExMBlenderRepairTool_EnableAutoSync {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_EnableAutoSync", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_EnableAutoSync", resourceCulture);
             }
         }
         
@@ -138,126 +138,126 @@ namespace HoYoShadeHub.Language {
         ///
         ///After deletion, you need to scan the QR code again to log in to your Bilibili account. 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_FixLoginConfirmMessage {
+        public static string ExMBlenderRepairTool_FixLoginConfirmMessage {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_FixLoginConfirmMessage", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_FixLoginConfirmMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Fix &apos;Account Not Logged In&apos; Error (Delete cookie file) 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_FixLoginError {
+        public static string ExMBlenderRepairTool_FixLoginError {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_FixLoginError", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_FixLoginError", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Genshin Impact (cookies.json) 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_GenshinCookie {
+        public static string ExMBlenderRepairTool_GenshinCookie {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_GenshinCookie", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_GenshinCookie", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Genshin Impact 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_GenshinImpact {
+        public static string ExMBlenderRepairTool_GenshinImpact {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_GenshinImpact", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_GenshinImpact", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 HTTP Sync (Cloudflare Trace API) 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_HTTPSync {
+        public static string ExMBlenderRepairTool_HTTPSync {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_HTTPSync", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_HTTPSync", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Local Time 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_LocalTime {
+        public static string ExMBlenderRepairTool_LocalTime {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_LocalTime", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_LocalTime", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 No Blender plugin path configured. Please configure plugin paths in the launcher first. 的本地化字符串。
+        ///   查找类似 No Ex_M/REL Blender plugin path configured. Please configure plugin paths in the launcher first. 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_NoPluginPathConfigured {
+        public static string ExMBlenderRepairTool_NoPluginPathConfigured {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_NoPluginPathConfigured", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_NoPluginPathConfigured", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Not configured 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_NotConfigured {
+        public static string ExMBlenderRepairTool_NotConfigured {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_NotConfigured", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_NotConfigured", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 NTP Server 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_NTPServer {
+        public static string ExMBlenderRepairTool_NTPServer {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_NTPServer", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_NTPServer", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 NTP Sync 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_NTPSync {
+        public static string ExMBlenderRepairTool_NTPSync {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_NTPSync", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_NTPSync", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Partially completed: {0} succeeded, {1} failed. Check logs for details. 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_PartialSuccessMessage {
+        public static string ExMBlenderRepairTool_PartialSuccessMessage {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_PartialSuccessMessage", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_PartialSuccessMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Blender Plugin Repair Tools 的本地化字符串。
+        ///   查找类似 Ex_M/REL Blender Plugin Repair Tools 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_PluginRepairTools {
+        public static string ExMBlenderRepairTool_PluginRepairTools {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_PluginRepairTools", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_PluginRepairTools", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Refresh 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_Refresh {
+        public static string ExMBlenderRepairTool_Refresh {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_Refresh", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_Refresh", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Reset Plugin Client Target (Delete config file) 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_ResetClientTarget {
+        public static string ExMBlenderRepairTool_ResetClientTarget {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_ResetClientTarget", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_ResetClientTarget", resourceCulture);
             }
         }
         
@@ -266,36 +266,36 @@ namespace HoYoShadeHub.Language {
         ///
         ///After deletion, you need to restart the client once to let the drone re-acquire the game process root directory. 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_ResetConfirmMessage {
+        public static string ExMBlenderRepairTool_ResetConfirmMessage {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_ResetConfirmMessage", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_ResetConfirmMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Reset Plugin Client Target 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_ResetConfirmTitle {
+        public static string ExMBlenderRepairTool_ResetConfirmTitle {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_ResetConfirmTitle", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_ResetConfirmTitle", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Please select at least one game to repair. 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_SelectAtLeastOneGame {
+        public static string ExMBlenderRepairTool_SelectAtLeastOneGame {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_SelectAtLeastOneGame", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_SelectAtLeastOneGame", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Select game(s) to repair: 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_SelectGamesToRepair {
+        public static string ExMBlenderRepairTool_SelectGamesToRepair {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_SelectGamesToRepair", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_SelectGamesToRepair", resourceCulture);
             }
         }
         
@@ -303,90 +303,90 @@ namespace HoYoShadeHub.Language {
         ///   查找类似 Successfully deleted config file(s) for {0} game(s).
         ///Please re-select the client while Injector run next time. 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_SuccessMessage {
+        public static string ExMBlenderRepairTool_SuccessMessage {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_SuccessMessage", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_SuccessMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Sync Interval (minutes) 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_SyncInterval {
+        public static string ExMBlenderRepairTool_SyncInterval {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_SyncInterval", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_SyncInterval", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Sync Method 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_SyncMethod {
+        public static string ExMBlenderRepairTool_SyncMethod {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_SyncMethod", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_SyncMethod", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Sync Time Now 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_SyncTimeNow {
+        public static string ExMBlenderRepairTool_SyncTimeNow {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_SyncTimeNow", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_SyncTimeNow", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Time Synchronization 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_TimeSyncSection {
+        public static string ExMBlenderRepairTool_TimeSyncSection {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_TimeSyncSection", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_TimeSyncSection", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Trace Endpoint 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_TraceEndpoint {
+        public static string ExMBlenderRepairTool_TraceEndpoint {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_TraceEndpoint", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_TraceEndpoint", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Fix Blender renderer and screenshot tool issues 的本地化字符串。
+        ///   查找类似 Fix Ex_M/REL Blender renderer and screenshot tool issues 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_WindowSubtitle {
+        public static string ExMBlenderRepairTool_WindowSubtitle {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_WindowSubtitle", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_WindowSubtitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Blender Plugin Repair Tools 的本地化字符串。
+        ///   查找类似 Ex_M/REL Blender Plugin Repair Tools 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_WindowTitle {
+        public static string ExMBlenderRepairTool_WindowTitle {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_WindowTitle", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_WindowTitle", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Zenless Zone Zero 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_ZenlessZoneZero {
+        public static string ExMBlenderRepairTool_ZenlessZoneZero {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_ZenlessZoneZero", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_ZenlessZoneZero", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 Zenless Zone Zero (cookies.json) 的本地化字符串。
         /// </summary>
-        public static string BlenderRepairTool_ZZZCookie {
+        public static string ExMBlenderRepairTool_ZZZCookie {
             get {
-                return ResourceManager.GetString("BlenderRepairTool_ZZZCookie", resourceCulture);
+                return ResourceManager.GetString("ExMBlenderRepairTool_ZZZCookie", resourceCulture);
             }
         }
         
@@ -1156,47 +1156,47 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin again. 的本地化字符串。
+        ///   查找类似 Ex_M/REL Blender plugin injection process ({0}) is already running. Cannot launch Ex_M/REL Blender plugin again. 的本地化字符串。
         /// </summary>
-        public static string GameLauncher_BlenderPluginInjectionProcessAlreadyRunning {
+        public static string GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunning {
             get {
-                return ResourceManager.GetString("GameLauncher_BlenderPluginInjectionProcessAlreadyRunning", resourceCulture);
+                return ResourceManager.GetString("GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunning", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Blender plugin injection process ({0}) is already running. Cannot launch Blender plugin or HoYoShade/OpenHoYoShade injector. 的本地化字符串。
+        ///   查找类似 Ex_M/REL Blender plugin injection process ({0}) is already running. Cannot launch Ex_M/REL Blender plugin or HoYoShade/OpenHoYoShade injector. 的本地化字符串。
         /// </summary>
-        public static string GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader {
+        public static string GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunningWithShader {
             get {
-                return ResourceManager.GetString("GameLauncher_BlenderPluginInjectionProcessAlreadyRunningWithShader", resourceCulture);
+                return ResourceManager.GetString("GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunningWithShader", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 {0} Blender Plugin path not configured. Please configure it in settings 的本地化字符串。
+        ///   查找类似 Ex_M/REL {0} Blender Plugin path not configured. Please configure it in settings 的本地化字符串。
         /// </summary>
-        public static string GameLauncher_BlenderPluginNotConfigured {
+        public static string GameLauncher_ExMBlenderPluginNotConfigured {
             get {
-                return ResourceManager.GetString("GameLauncher_BlenderPluginNotConfigured", resourceCulture);
+                return ResourceManager.GetString("GameLauncher_ExMBlenderPluginNotConfigured", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 {0} Blender Plugin started 的本地化字符串。
+        ///   查找类似 Ex_M/REL {0} Blender Plugin started 的本地化字符串。
         /// </summary>
-        public static string GameLauncher_BlenderPluginStarted {
+        public static string GameLauncher_ExMBlenderPluginStarted {
             get {
-                return ResourceManager.GetString("GameLauncher_BlenderPluginStarted", resourceCulture);
+                return ResourceManager.GetString("GameLauncher_ExMBlenderPluginStarted", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Failed to start {0} Blender Plugin: {1} 的本地化字符串。
+        ///   查找类似 Failed to start Ex_M/REL {0} Blender Plugin: {1} 的本地化字符串。
         /// </summary>
-        public static string GameLauncher_BlenderPluginStartFailed {
+        public static string GameLauncher_ExMBlenderPluginStartFailed {
             get {
-                return ResourceManager.GetString("GameLauncher_BlenderPluginStartFailed", resourceCulture);
+                return ResourceManager.GetString("GameLauncher_ExMBlenderPluginStartFailed", resourceCulture);
             }
         }
         
@@ -1345,11 +1345,11 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Launch Genshin Impact Blender Plugin 的本地化字符串。
+        ///   查找类似 Launch Ex_M/REL Genshin Impact Blender Plugin 的本地化字符串。
         /// </summary>
-        public static string GameLauncherPage_LaunchGenshinBlenderPlugin {
+        public static string GameLauncherPage_LaunchExMGenshinBlenderPlugin {
             get {
-                return ResourceManager.GetString("GameLauncherPage_LaunchGenshinBlenderPlugin", resourceCulture);
+                return ResourceManager.GetString("GameLauncherPage_LaunchExMGenshinBlenderPlugin", resourceCulture);
             }
         }
         
@@ -1390,11 +1390,11 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Launch ZZZ Blender Plugin 的本地化字符串。
+        ///   查找类似 Launch Ex_M/REL ZZZ Blender Plugin 的本地化字符串。
         /// </summary>
-        public static string GameLauncherPage_LaunchZZZBlenderPlugin {
+        public static string GameLauncherPage_LaunchExMZZZBlenderPlugin {
             get {
-                return ResourceManager.GetString("GameLauncherPage_LaunchZZZBlenderPlugin", resourceCulture);
+                return ResourceManager.GetString("GameLauncherPage_LaunchExMZZZBlenderPlugin", resourceCulture);
             }
         }
         
@@ -3872,29 +3872,29 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Blender Plugin 的本地化字符串。
+        ///   查找类似 Ex_M/REL Blender Plugin 的本地化字符串。
         /// </summary>
-        public static string SettingPage_BlenderPlugin {
+        public static string SettingPage_ExMBlenderPlugin {
             get {
-                return ResourceManager.GetString("SettingPage_BlenderPlugin", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMBlenderPlugin", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 This plugin is only available in Mainland China/Hong Kong/Macau/Taiwan/Singapore. If you are not in the above countries and regions, the plugin developers/contributors and HoYoShade Hub developers/contributors reserve the right to refuse support. 的本地化字符串。
         /// </summary>
-        public static string SettingPage_BlenderPluginRegionRestriction {
+        public static string SettingPage_ExMBlenderPluginRegionRestriction {
             get {
-                return ResourceManager.GetString("SettingPage_BlenderPluginRegionRestriction", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMBlenderPluginRegionRestriction", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 For other usage rules and restrictions, please refer to the Blender Plugin developer&apos;s statement. 的本地化字符串。
+        ///   查找类似 For other usage rules and restrictions, please refer to the Ex_M/REL Blender Plugin developer&apos;s statement. 的本地化字符串。
         /// </summary>
-        public static string SettingPage_BlenderPluginDeveloperStatement {
+        public static string SettingPage_ExMBlenderPluginDeveloperStatement {
             get {
-                return ResourceManager.GetString("SettingPage_BlenderPluginDeveloperStatement", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMBlenderPluginDeveloperStatement", resourceCulture);
             }
         }
         
@@ -4098,29 +4098,29 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Genshin Impact Blender Plugin 的本地化字符串。
+        ///   查找类似 Ex_M/REL Genshin Impact Blender Plugin 的本地化字符串。
         /// </summary>
-        public static string SettingPage_GenshinBlenderPlugin {
+        public static string SettingPage_ExMGenshinBlenderPlugin {
             get {
-                return ResourceManager.GetString("SettingPage_GenshinBlenderPlugin", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMGenshinBlenderPlugin", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 The selected folder must contain client.exe 的本地化字符串。
         /// </summary>
-        public static string SettingPage_GenshinBlenderPluginMustContainClientExe {
+        public static string SettingPage_ExMGenshinBlenderPluginMustContainClientExe {
             get {
-                return ResourceManager.GetString("SettingPage_GenshinBlenderPluginMustContainClientExe", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMGenshinBlenderPluginMustContainClientExe", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Genshin Impact Plugin Validation Failed 的本地化字符串。
+        ///   查找类似 Ex_M/REL Genshin Impact Blender Plugin Validation Failed 的本地化字符串。
         /// </summary>
-        public static string SettingPage_GenshinBlenderPluginValidationFailed {
+        public static string SettingPage_ExMGenshinBlenderPluginValidationFailed {
             get {
-                return ResourceManager.GetString("SettingPage_GenshinBlenderPluginValidationFailed", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMGenshinBlenderPluginValidationFailed", resourceCulture);
             }
         }
         
@@ -4548,29 +4548,29 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Zenless Zone Zero Blender Plugin 的本地化字符串。
+        ///   查找类似 Ex_M/REL Zenless Zone Zero Blender Plugin 的本地化字符串。
         /// </summary>
-        public static string SettingPage_ZZZBlenderPlugin {
+        public static string SettingPage_ExMZZZBlenderPlugin {
             get {
-                return ResourceManager.GetString("SettingPage_ZZZBlenderPlugin", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMZZZBlenderPlugin", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 The selected folder must contain loader.exe 的本地化字符串。
         /// </summary>
-        public static string SettingPage_ZZZBlenderPluginMustContainLoaderExe {
+        public static string SettingPage_ExMZZZBlenderPluginMustContainLoaderExe {
             get {
-                return ResourceManager.GetString("SettingPage_ZZZBlenderPluginMustContainLoaderExe", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMZZZBlenderPluginMustContainLoaderExe", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Zenless Zone Zero Plugin Validation Failed 的本地化字符串。
+        ///   查找类似 Ex_M/REL Zenless Zone Zero Blender Plugin Validation Failed 的本地化字符串。
         /// </summary>
-        public static string SettingPage_ZZZBlenderPluginValidationFailed {
+        public static string SettingPage_ExMZZZBlenderPluginValidationFailed {
             get {
-                return ResourceManager.GetString("SettingPage_ZZZBlenderPluginValidationFailed", resourceCulture);
+                return ResourceManager.GetString("SettingPage_ExMZZZBlenderPluginValidationFailed", resourceCulture);
             }
         }
         
@@ -4692,20 +4692,20 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Blender Plugin Repair Tool 的本地化字符串。
+        ///   查找类似 Ex_M/REL Blender Plugin Repair Tool 的本地化字符串。
         /// </summary>
-        public static string ToolboxSetting_BlenderRepairTool {
+        public static string ToolboxSetting_ExMBlenderRepairTool {
             get {
-                return ResourceManager.GetString("ToolboxSetting_BlenderRepairTool", resourceCulture);
+                return ResourceManager.GetString("ToolboxSetting_ExMBlenderRepairTool", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Fix Blender Plugin issues 的本地化字符串。
+        ///   查找类似 Fix Ex_M/REL Blender Plugin issues 的本地化字符串。
         /// </summary>
-        public static string ToolboxSetting_BlenderRepairToolDescription {
+        public static string ToolboxSetting_ExMBlenderRepairToolDescription {
             get {
-                return ResourceManager.GetString("ToolboxSetting_BlenderRepairToolDescription", resourceCulture);
+                return ResourceManager.GetString("ToolboxSetting_ExMBlenderRepairToolDescription", resourceCulture);
             }
         }
         
@@ -6764,20 +6764,20 @@ namespace HoYoShadeHub.Language {
         }
 
         /// <summary>
-        ///   查找类似 Genshin Blender Plugin 的本地化字符串。
+        ///   查找类似 Ex_M/REL Genshin Blender Plugin 的本地化字符串。
         /// </summary>
-        public static string DiagnosticTool_Report_GenshinBlender {
+        public static string DiagnosticTool_Report_ExMGenshinBlender {
             get {
-                return ResourceManager.GetString("DiagnosticTool_Report_GenshinBlender", resourceCulture);
+                return ResourceManager.GetString("DiagnosticTool_Report_ExMGenshinBlender", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   查找类似 ZZZ Blender Plugin 的本地化字符串。
+        ///   查找类似 Ex_M/REL ZZZ Blender Plugin 的本地化字符串。
         /// </summary>
-        public static string DiagnosticTool_Report_ZZZBlender {
+        public static string DiagnosticTool_Report_ExMZZZBlender {
             get {
-                return ResourceManager.GetString("DiagnosticTool_Report_ZZZBlender", resourceCulture);
+                return ResourceManager.GetString("DiagnosticTool_Report_ExMZZZBlender", resourceCulture);
             }
         }
 
