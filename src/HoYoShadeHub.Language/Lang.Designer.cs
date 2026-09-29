@@ -1129,7 +1129,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Uninstall Shaders and Plugins 的本地化字符串。
+        ///   查找类似 Uninstall Shaders and Addons 的本地化字符串。
         /// </summary>
         public static string FileSettingPage_UninstallShadersAndPlugins {
             get {
@@ -3343,7 +3343,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Resetting ReShade.ini will not cause the loss of shaders, plugins, presets, and game screenshots installed in HoYoShade/OpenHoYoShade.
+        ///   查找类似 Resetting ReShade.ini will not cause the loss of shaders, Addons, presets, and game screenshots installed in HoYoShade/OpenHoYoShade.
         ///
         ///Do you want to continue with the reset operation? 的本地化字符串。
         /// </summary>
@@ -4881,7 +4881,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Are you sure you want to uninstall shaders and plugins for {0}? 的本地化字符串。
+        ///   查找类似 Are you sure you want to uninstall shaders and Addons for {0}? 的本地化字符串。
         /// </summary>
         public static string UninstallShadersDialog_Message1 {
             get {
@@ -4899,7 +4899,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Uninstall {0} shaders and plugins 的本地化字符串。
+        ///   查找类似 Uninstall {0} shaders and Addons 的本地化字符串。
         /// </summary>
         public static string UninstallShadersDialog_Title {
             get {
