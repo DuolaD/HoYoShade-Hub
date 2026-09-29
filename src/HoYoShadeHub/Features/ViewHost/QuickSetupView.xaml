@@ -87,18 +87,24 @@
                 <TextBlock FontSize="26"
                            FontWeight="SemiBold"
                            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                           Text="{x:Bind lang:Lang.QuickSetupView_Title}" />
+                           Text="{x:Bind Title, Mode=OneWay}" />
                 <TextBlock FontSize="16"
                            FontWeight="Normal"
                            Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                           Text="{x:Bind lang:Lang.QuickSetupView_Subtitle}" />
+                           Text="{x:Bind Subtitle, Mode=OneWay}" />
+                <TextBlock FontSize="13"
+                           FontStyle="Italic"
+                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                           Text="{x:Bind Epigraph, Mode=OneWay}"
+                           Visibility="{x:Bind IsUpdateMode, Mode=OneWay}"
+                           Margin="0,2,0,0" />
             </StackPanel>
 
             <!-- Description Paragraphs -->
             <StackPanel Spacing="6" Margin="0,2,0,0">
                 <TextBlock FontSize="14"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Text="{x:Bind lang:Lang.QuickSetupView_Description}"
+                           Text="{x:Bind Description, Mode=OneWay}"
                            TextWrapping="Wrap" />
 
                 <TextBlock FontSize="14"
@@ -168,6 +174,31 @@
                                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                                        TextWrapping="Wrap" />
                             <TextBlock Text="{x:Bind lang:Lang.QuickSetupView_Action2Desc}"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Action Item 3: Presets Preservation (Update Mode Only) -->
+                    <Grid Visibility="{x:Bind IsUpdateMode, Mode=OneWay}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Grid.Column="0"
+                                  FontSize="18"
+                                  Margin="0,2,14,0"
+                                  VerticalAlignment="Top"
+                                  Glyph="&#xEDE3;"
+                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <TextBlock Text="{x:Bind lang:Lang.QuickSetupView_Action3_Title}"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Text="{x:Bind lang:Lang.QuickSetupView_Action3_Desc}"
                                        FontSize="11"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        TextWrapping="Wrap" />
@@ -304,7 +335,7 @@
                         Orientation="Horizontal"
                         Spacing="10"
                         VerticalAlignment="Center">
-                <TextBlock Text="{x:Bind lang:Lang.QuickSetupView_OrCustomHint}"
+                <TextBlock Text="{x:Bind OrCustomHint, Mode=OneWay}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            FontSize="12"
                            VerticalAlignment="Center" />
@@ -313,7 +344,7 @@
                         CornerRadius="6">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon FontSize="13" Glyph="&#xE713;" />
-                        <TextBlock Text="{x:Bind lang:Lang.QuickSetupView_CustomInstall}" FontSize="12" />
+                        <TextBlock Text="{x:Bind CustomInstallButtonText, Mode=OneWay}" FontSize="12" />
                     </StackPanel>
                 </Button>
             </StackPanel>

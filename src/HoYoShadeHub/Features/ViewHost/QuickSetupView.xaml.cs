@@ -76,7 +76,20 @@ public sealed partial class QuickSetupView : UserControl
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StartButtonText))]
     [NotifyPropertyChangedFor(nameof(CanFinish))]
+    [NotifyPropertyChangedFor(nameof(Title))]
+    [NotifyPropertyChangedFor(nameof(Subtitle))]
+    [NotifyPropertyChangedFor(nameof(Epigraph))]
+    [NotifyPropertyChangedFor(nameof(Description))]
+    [NotifyPropertyChangedFor(nameof(OrCustomHint))]
+    [NotifyPropertyChangedFor(nameof(CustomInstallButtonText))]
     private bool isUpdateMode;
+
+    public string Title => IsUpdateMode ? Lang.QuickSetupView_UpdateModeTitle : Lang.QuickSetupView_Title;
+    public string Subtitle => IsUpdateMode ? Lang.QuickSetupView_UpdateModeSubtitle : Lang.QuickSetupView_Subtitle;
+    public string Epigraph => Lang.QuickSetupView_UpdateModeEpigraph;
+    public string Description => IsUpdateMode ? Lang.QuickSetupView_UpdateModeDescription : Lang.QuickSetupView_Description;
+    public string OrCustomHint => IsUpdateMode ? Lang.QuickSetupView_UpdateModeOrCustomHint : Lang.QuickSetupView_OrCustomHint;
+    public string CustomInstallButtonText => IsUpdateMode ? Lang.QuickSetupView_UpdateModeCustomInstall : Lang.QuickSetupView_CustomInstall;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanFinish))]
@@ -149,6 +162,12 @@ public sealed partial class QuickSetupView : UserControl
         HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
         this.Bindings.Update();
         OnPropertyChanged(nameof(StartButtonText));
+        OnPropertyChanged(nameof(Title));
+        OnPropertyChanged(nameof(Subtitle));
+        OnPropertyChanged(nameof(Epigraph));
+        OnPropertyChanged(nameof(Description));
+        OnPropertyChanged(nameof(OrCustomHint));
+        OnPropertyChanged(nameof(CustomInstallButtonText));
         UpdateDownloadServers();
     }
 

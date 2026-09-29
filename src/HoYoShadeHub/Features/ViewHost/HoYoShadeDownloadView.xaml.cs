@@ -81,6 +81,12 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private void OnLanguageChanged()
     {
         HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
+        this.Bindings.Update();
+        OnPropertyChanged(nameof(Title));
+        OnPropertyChanged(nameof(DownloadButtonText));
+        OnPropertyChanged(nameof(QuickSetupHintText));
+        OnPropertyChanged(nameof(QuickSetupButtonText));
+
         // Update download servers list
         UpdateDownloadServers();
         
@@ -171,6 +177,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Title))]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonText))]
+    [NotifyPropertyChangedFor(nameof(QuickSetupHintText))]
+    [NotifyPropertyChangedFor(nameof(QuickSetupButtonText))]
     [NotifyPropertyChangedFor(nameof(ShowRefreshButton))]
     [NotifyPropertyChangedFor(nameof(IsHoYoShadeSelectionEnabled))]
     [NotifyPropertyChangedFor(nameof(IsOpenHoYoShadeSelectionEnabled))]
@@ -179,6 +188,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private bool isUpdateMode;
 
     public string Title => IsUpdateMode ? Lang.HoYoShadeDownloadView_UpdateModeTitle : Lang.HoYoShadeDownloadView_Title;
+    public string QuickSetupHintText => IsUpdateMode ? Lang.HoYoShadeDownloadView_WantSimplerUpdatePrefix : Lang.HoYoShadeDownloadView_WantSimplerGoToPrefix;
+    public string QuickSetupButtonText => IsUpdateMode ? Lang.HoYoShadeDownloadView_QuickUpdate : Lang.FileSettingPage_InitializationWizard;
 
     // In normal mode: installed frameworks are checked but not selectable.
     // In update mode: keep selectable to allow reinstall/repair.
@@ -227,7 +238,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
          (IsOpenHoYoShadeSelected && (!IsOpenHoYoShadeInstalled || CanInstallVersion(SelectedVersion?.TagName, InstalledOpenHoYoShadeVersion)))) &&
         (IsUpdateMode || !IsHoYoShadeInstalled || !IsOpenHoYoShadeInstalled);
     
-    public string DownloadButtonText => _isPaused ? Lang.HoYoShadeDownloadView_Resume : Lang.HoYoShadeDownloadView_DownloadAndInstall;
+    public string DownloadButtonText => _isPaused 
+        ? Lang.HoYoShadeDownloadView_Resume 
+        : (IsUpdateMode ? Lang.UpdatePage_UpdateNow : Lang.HoYoShadeDownloadView_DownloadAndInstall);
 
     [ObservableProperty]
     private double downloadProgress;

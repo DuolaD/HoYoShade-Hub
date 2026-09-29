@@ -433,7 +433,7 @@
                 <StackPanel Orientation="Horizontal"
                             Spacing="10"
                             VerticalAlignment="Center">
-                    <TextBlock Text="{x:Bind lang:Lang.HoYoShadeDownloadView_WantSimplerGoToPrefix}"
+                    <TextBlock Text="{x:Bind QuickSetupHintText, Mode=OneWay}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                FontSize="12"
                                VerticalAlignment="Center" />
@@ -442,7 +442,7 @@
                             CornerRadius="6">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <FontIcon FontSize="13" Glyph="&#xE771;" />
-                            <TextBlock Text="{x:Bind lang:Lang.FileSettingPage_InitializationWizard}" FontSize="12" />
+                            <TextBlock Text="{x:Bind QuickSetupButtonText, Mode=OneWay}" FontSize="12" />
                         </StackPanel>
                     </Button>
                 </StackPanel>

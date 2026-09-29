@@ -1923,6 +1923,30 @@
   <data name="QuickSetupView_CustomInstall" xml:space="preserve">
     <value>自訂 / 進階安裝</value>
   </data>
+  <data name="QuickSetupView_UpdateModeTitle" xml:space="preserve">
+    <value>煥然一新？</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeSubtitle" xml:space="preserve">
+    <value>更新升級所需的一切，就這麼一氣呵成。</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeEpigraph" xml:space="preserve">
+    <value>「欲窮千里目？更上一層樓！」</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeDescription" xml:space="preserve">
+    <value>一般情況下，普通使用者只需要點選此處的「立即更新」，即可完成所有更新步驟。</value>
+  </data>
+  <data name="QuickSetupView_Action3_Title" xml:space="preserve">
+    <value>你當前的預設檔案將會被完整保留</value>
+  </data>
+  <data name="QuickSetupView_Action3_Desc" xml:space="preserve">
+    <value>啟動器將會在 Presets 資料夾中以版本號命名一個新資料夾，用於存放新版本 HoYoShade 框架的預設。</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeOrCustomHint" xml:space="preserve">
+    <value>或者，進行自訂更新</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeCustomInstall" xml:space="preserve">
+    <value>自訂 / 進階更新</value>
+  </data>
   <data name="QuickSetupView_EnterMainView" xml:space="preserve">
     <value>進入主畫面</value>
   </data>
@@ -2393,5 +2417,11 @@
   </data>
   <data name="HoYoShadeDownloadView_WantSimplerGoToPrefix" xml:space="preserve">
     <value>想要簡單一點？前往</value>
+  </data>
+  <data name="HoYoShadeDownloadView_WantSimplerUpdatePrefix" xml:space="preserve">
+    <value>只想簡單的更新 HoYoShade？前往</value>
+  </data>
+  <data name="HoYoShadeDownloadView_QuickUpdate" xml:space="preserve">
+    <value>快速更新</value>
   </data>
 </root>

@@ -71,6 +71,12 @@ public sealed partial class ReShadeDownloadView : UserControl
         // Update margin based on language
         UpdateContentMargin();
 
+        this.Bindings.Update();
+        OnPropertyChanged(nameof(Title));
+        OnPropertyChanged(nameof(UpdateHintText));
+        OnPropertyChanged(nameof(QuickSetupHintText));
+        OnPropertyChanged(nameof(QuickSetupButtonText));
+
         // Refresh status message based on current state
         if (!IsDownloading)
         {
@@ -184,6 +190,8 @@ public sealed partial class ReShadeDownloadView : UserControl
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Title))]
+    [NotifyPropertyChangedFor(nameof(QuickSetupHintText))]
+    [NotifyPropertyChangedFor(nameof(QuickSetupButtonText))]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     [NotifyPropertyChangedFor(nameof(CanInstallToHoYoShadeOnly))]
     [NotifyPropertyChangedFor(nameof(CanInstallToOpenHoYoShadeOnly))]
@@ -193,6 +201,14 @@ public sealed partial class ReShadeDownloadView : UserControl
     public string Title => IsUpdateMode ? Lang.ReShadeDownloadView_UpdateModeTitle : Lang.ReShadeDownloadView_Title;
     
     public string UpdateHintText => Lang.ReShadeDownloadView_UpdateModeHint;
+
+    public string QuickSetupHintText => IsUpdateMode 
+        ? Lang.HoYoShadeDownloadView_WantSimplerUpdatePrefix 
+        : Lang.HoYoShadeDownloadView_WantSimplerGoToPrefix;
+
+    public string QuickSetupButtonText => IsUpdateMode 
+        ? Lang.HoYoShadeDownloadView_QuickUpdate 
+        : Lang.FileSettingPage_InitializationWizard;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDownload))]

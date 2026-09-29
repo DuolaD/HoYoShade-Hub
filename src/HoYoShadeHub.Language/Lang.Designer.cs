@@ -6843,5 +6843,95 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("HoYoShadeDownloadView_WantSimplerGoToPrefix", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 A Fresh Look? 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_UpdateModeTitle {
+            get {
+                return ResourceManager.GetString("QuickSetupView_UpdateModeTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Everything needed for the upgrade, seamlessly in one step. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_UpdateModeSubtitle {
+            get {
+                return ResourceManager.GetString("QuickSetupView_UpdateModeSubtitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 “If I have seen further, it is by standing on the shoulders of giants.” 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_UpdateModeEpigraph {
+            get {
+                return ResourceManager.GetString("QuickSetupView_UpdateModeEpigraph", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Typically, simply click 'Update Now' here to complete all update steps. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_UpdateModeDescription {
+            get {
+                return ResourceManager.GetString("QuickSetupView_UpdateModeDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Your current preset files will be fully preserved 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Action3_Title {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Action3_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 The launcher will create a new folder named after the version tag inside the Presets folder to store the presets of the new HoYoShade framework. 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_Action3_Desc {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Action3_Desc", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Or, perform custom update 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_UpdateModeOrCustomHint {
+            get {
+                return ResourceManager.GetString("QuickSetupView_UpdateModeOrCustomHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Custom / Advanced Update 的本地化字符串。
+        /// </summary>
+        public static string QuickSetupView_UpdateModeCustomInstall {
+            get {
+                return ResourceManager.GetString("QuickSetupView_UpdateModeCustomInstall", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Just want to simply update HoYoShade? Go to 的本地化字符串。
+        /// </summary>
+        public static string HoYoShadeDownloadView_WantSimplerUpdatePrefix {
+            get {
+                return ResourceManager.GetString("HoYoShadeDownloadView_WantSimplerUpdatePrefix", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Quick Update 的本地化字符串。
+        /// </summary>
+        public static string HoYoShadeDownloadView_QuickUpdate {
+            get {
+                return ResourceManager.GetString("HoYoShadeDownloadView_QuickUpdate", resourceCulture);
+            }
+        }
     }
 }
