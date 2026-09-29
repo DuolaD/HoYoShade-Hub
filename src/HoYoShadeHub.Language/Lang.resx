@@ -2424,4 +2424,28 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="HoYoShadeDownloadView_QuickUpdate" xml:space="preserve">
     <value>Quick Update</value>
   </data>
+  <data name="DiagnosticTool_RetestNetwork" xml:space="preserve">
+    <value>Retest Network</value>
+  </data>
+  <data name="DiagnosticTool_RetestComplete" xml:space="preserve">
+    <value>Network retest complete and report updated!</value>
+  </data>
+  <data name="DiagnosticTool_RetestingNetwork" xml:space="preserve">
+    <value>Retesting network environment and exit info...</value>
+  </data>
+  <data name="DiagnosticTool_DohTestCompleteWithProvider" xml:space="preserve">
+    <value>DoH+ECH ({0}) test complete and report updated!</value>
+  </data>
+  <data name="DiagnosticTool_TestingWithDohProvider" xml:space="preserve">
+    <value>Testing connectivity via DoH+ECH ({0}) tunnel...</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_SuccessWithProvider" xml:space="preserve">
+    <value>Direct connection limited, successfully probed via DoH+ECH ({0})</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohManualSuccess" xml:space="preserve">
+    <value>Successfully probed exit info via DoH+ECH ({0}) encrypted tunnel.</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohRescueSuccessWithProvider" xml:space="preserve">
+    <value>Direct connection blocked/polluted, but successfully connected via DoH+ECH ({0}). Recommended to enable DoH with this provider in settings.</value>
+  </data>
 </root>

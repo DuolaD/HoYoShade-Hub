@@ -73,6 +73,8 @@ public class NetworkDiagnosticInfo
     public bool DohEchRescueAttempted { get; set; }
     public bool DohEchRescueSuccess { get; set; }
     public string DohEchRescueDetails { get; set; } = string.Empty;
+    public DohProvider? DohRescueProvider { get; set; }
+    public string DohRescueProviderName { get; set; } = string.Empty;
 
     public string DiagnosisConclusion { get; set; } = string.Empty;
 }
@@ -404,11 +406,26 @@ public static class DiagnosticService
         return report;
     }
 
+    public static string GetDohProviderDisplayName(DohProvider provider)
+    {
+        return provider switch
+        {
+            DohProvider.Aliyun => Lang.HoYoShadeDownloadView_Server_AlibabaCloud,
+            DohProvider.Tencent => Lang.HoYoShadeDownloadView_Server_TencentCloud,
+            DohProvider.OpenDns => "OpenDNS",
+            _ => provider.ToString()
+        };
+    }
+
     public static string GetDiagnosisConclusion(NetworkDiagnosticInfo? net)
     {
         if (net == null || !net.IsEnabled)
         {
             return Lang.DiagnosticTool_NetworkDisabledNotice;
+        }
+        if (!string.IsNullOrWhiteSpace(net.DiagnosisConclusion))
+        {
+            return net.DiagnosisConclusion;
         }
         if (!string.IsNullOrWhiteSpace(net.DirectConnectionError) && !net.DohEchRescueAttempted)
         {
@@ -422,26 +439,32 @@ public static class DiagnosticService
         {
             if (net.DohEchRescueSuccess)
             {
-                return Lang.DiagnosticTool_Conclusion_DohRescueSuccess;
+                string providerName = !string.IsNullOrWhiteSpace(net.DohRescueProviderName)
+                    ? net.DohRescueProviderName
+                    : (net.DohRescueProvider.HasValue ? GetDohProviderDisplayName(net.DohRescueProvider.Value) : "Cloudflare");
+                return string.Format(Lang.DiagnosticTool_Conclusion_DohRescueSuccessWithProvider, providerName);
             }
             else
             {
                 return Lang.DiagnosticTool_Conclusion_AllFailed;
             }
         }
-        return !string.IsNullOrWhiteSpace(net.DiagnosisConclusion) ? net.DiagnosisConclusion : Lang.DiagnosticTool_Conclusion_DirectSuccess;
+        return Lang.DiagnosticTool_Conclusion_DirectSuccess;
     }
 
     public static string GetDohRescueDetails(NetworkDiagnosticInfo? net)
     {
         if (net == null) return string.Empty;
+        if (!string.IsNullOrWhiteSpace(net.DohEchRescueDetails))
+        {
+            return net.DohEchRescueDetails;
+        }
         if (net.DohEchRescueSuccess)
         {
-            return Lang.DiagnosticTool_DohRescueDetails_Success;
-        }
-        if (!string.IsNullOrWhiteSpace(net.DohEchRescueDetails) && net.DohEchRescueDetails.StartsWith("Error:", StringComparison.OrdinalIgnoreCase))
-        {
-            return string.Format(Lang.DiagnosticTool_DohRescueDetails_Exception, net.DohEchRescueDetails["Error:".Length..].Trim());
+            string providerName = !string.IsNullOrWhiteSpace(net.DohRescueProviderName)
+                ? net.DohRescueProviderName
+                : (net.DohRescueProvider.HasValue ? GetDohProviderDisplayName(net.DohRescueProvider.Value) : "Cloudflare");
+            return string.Format(Lang.DiagnosticTool_DohRescueDetails_SuccessWithProvider, providerName);
         }
         return Lang.DiagnosticTool_DohRescueDetails_Failed;
     }
@@ -1868,7 +1891,7 @@ public static class DiagnosticService
         return $"{asn} {org}".Trim();
     }
 
-    public static async Task<NetworkDiagnosticInfo> CollectNetworkDiagnosticInfoAsync(bool forceDohEch = false)
+    public static async Task<NetworkDiagnosticInfo> CollectNetworkDiagnosticInfoAsync(bool forceDohEch = false, DohProvider? specificProvider = null)
     {
         var info = new NetworkDiagnosticInfo
         {
@@ -1897,7 +1920,8 @@ public static class DiagnosticService
 
         if (forceDohEch)
         {
-            await ExecuteDohEchRescueAsync(info, cts.Token);
+            var targetProvider = specificProvider ?? AppConfig.DohProvider;
+            await ExecuteDohEchRescueAsync(info, targetProvider, cts.Token, isManualRetest: true);
             return info;
         }
 
@@ -1953,8 +1977,9 @@ public static class DiagnosticService
         // Phase 2: If native direct probing failed on all tiers, test DoH + ECH rescue!
         if (!info.DirectConnectionSuccess)
         {
-            _logger.LogInformation("Network diag: all direct tiers failed. Starting DoH + ECH rescue probe...");
-            await ExecuteDohEchRescueAsync(info, cts.Token);
+            var targetProvider = specificProvider ?? AppConfig.DohProvider;
+            _logger.LogInformation("Network diag: all direct tiers failed. Starting DoH + ECH rescue probe with {Provider}...", targetProvider);
+            await ExecuteDohEchRescueAsync(info, targetProvider, cts.Token, isManualRetest: false);
         }
         else
         {
@@ -2307,9 +2332,13 @@ public static class DiagnosticService
         catch { }
     }
 
-    private static async Task ExecuteDohEchRescueAsync(NetworkDiagnosticInfo info, CancellationToken ct)
+    private static async Task ExecuteDohEchRescueAsync(NetworkDiagnosticInfo info, DohProvider provider, CancellationToken ct, bool isManualRetest = false)
     {
         info.DohEchRescueAttempted = true;
+        info.DohRescueProvider = provider;
+        string providerName = GetDohProviderDisplayName(provider);
+        info.DohRescueProviderName = providerName;
+
         bool origEnabled = DohService.Enabled;
         bool origEch = DohService.EnableEch;
         var origProvider = DohService.Provider;
@@ -2318,7 +2347,7 @@ public static class DiagnosticService
         {
             DohService.Enabled = true;
             DohService.EnableEch = true;
-            DohService.Provider = DohProvider.Cloudflare;
+            DohService.Provider = provider;
 
             using var handler = DohService.CreateSocketsHttpHandler();
             using var rescueClient = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) };
@@ -2332,8 +2361,10 @@ public static class DiagnosticService
             if (success)
             {
                 info.DohEchRescueSuccess = true;
-                info.DohEchRescueDetails = Lang.DiagnosticTool_DohRescueDetails_Success;
-                info.DiagnosisConclusion = Lang.DiagnosticTool_Conclusion_DohRescueSuccess;
+                info.DohEchRescueDetails = string.Format(Lang.DiagnosticTool_DohRescueDetails_SuccessWithProvider, providerName);
+                info.DiagnosisConclusion = isManualRetest
+                    ? string.Format(Lang.DiagnosticTool_Conclusion_DohManualSuccess, providerName)
+                    : string.Format(Lang.DiagnosticTool_Conclusion_DohRescueSuccessWithProvider, providerName);
             }
             else
             {

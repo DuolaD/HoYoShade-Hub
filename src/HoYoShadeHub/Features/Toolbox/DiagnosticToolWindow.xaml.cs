@@ -6,11 +6,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using HoYoShadeHub.Core;
+using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.Setting;
 using HoYoShadeHub.Frameworks;
 using HoYoShadeHub.Helpers;
 using HoYoShadeHub.Language;
+using HoYoShadeHub.Models;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -359,10 +362,11 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             if (SetProperty(ref _isNetworkProbing, value))
             {
                 OnPropertyChanged(nameof(NetworkProbingVisibility));
+                OnPropertyChanged(nameof(IsNotNetworkProbing));
             }
         }
     }
-    public Visibility NetworkProbingVisibility => IsNetworkProbing ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility NetworkProbingVisibility => (IsNetworkProbing || IsRetestingDoh) ? Visibility.Visible : Visibility.Collapsed;
 
     private bool _maskIpAddress = AppConfig.DiagnosticIpMasking;
     public bool MaskIpAddress
@@ -473,10 +477,69 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             if (SetProperty(ref _isRetestingDoh, value))
             {
                 OnPropertyChanged(nameof(IsNotRetestingDoh));
+                OnPropertyChanged(nameof(IsNotNetworkProbing));
+                OnPropertyChanged(nameof(NetworkProbingVisibility));
             }
         }
     }
     public bool IsNotRetestingDoh => !_isRetestingDoh;
+    public bool IsNotNetworkProbing => !_isNetworkProbing && !_isRetestingDoh;
+    public bool IsAnyNetworkProbing => _isNetworkProbing || _isRetestingDoh;
+
+    public ObservableCollection<DownloadServerItem> DohProviders { get; } = new();
+
+    private DownloadServerItem? _selectedDohItem;
+    public DownloadServerItem? SelectedDohItem
+    {
+        get => _selectedDohItem;
+        set
+        {
+            if (SetProperty(ref _selectedDohItem, value))
+            {
+                if (value != null && (DohProvider)value.ServerIndex != _selectedDohProvider)
+                {
+                    SelectedDohProvider = (DohProvider)value.ServerIndex;
+                }
+            }
+        }
+    }
+
+    private DohProvider _selectedDohProvider = AppConfig.DohProvider;
+    public DohProvider SelectedDohProvider
+    {
+        get => _selectedDohProvider;
+        set
+        {
+            if (SetProperty(ref _selectedDohProvider, value))
+            {
+                OnPropertyChanged(nameof(DohButtonLabel));
+                var match = DohProviders.FirstOrDefault(x => x.ServerIndex == (int)value);
+                if (match != null && _selectedDohItem != match)
+                {
+                    _selectedDohItem = match;
+                    OnPropertyChanged(nameof(SelectedDohItem));
+                }
+            }
+        }
+    }
+
+    public string DohButtonLabel => $"{Lang.DiagnosticTool_TestWithDoh} ({DiagnosticService.GetDohProviderDisplayName(_selectedDohProvider)})";
+
+    private void InitializeDohProviders()
+    {
+        DohProviders.Clear();
+        DohProviders.Add(new DownloadServerItem { Name = DiagnosticService.GetDohProviderDisplayName(DohProvider.Cloudflare), ServerIndex = (int)DohProvider.Cloudflare });
+        DohProviders.Add(new DownloadServerItem { Name = DiagnosticService.GetDohProviderDisplayName(DohProvider.Google), ServerIndex = (int)DohProvider.Google });
+        DohProviders.Add(new DownloadServerItem { Name = DiagnosticService.GetDohProviderDisplayName(DohProvider.CleanBrowsing), ServerIndex = (int)DohProvider.CleanBrowsing });
+        DohProviders.Add(new DownloadServerItem { Name = DiagnosticService.GetDohProviderDisplayName(DohProvider.OpenDns), ServerIndex = (int)DohProvider.OpenDns });
+        DohProviders.Add(new DownloadServerItem { Name = DiagnosticService.GetDohProviderDisplayName(DohProvider.Quad9), ServerIndex = (int)DohProvider.Quad9 });
+        DohProviders.Add(new DownloadServerItem { Name = DiagnosticService.GetDohProviderDisplayName(DohProvider.AdGuard), ServerIndex = (int)DohProvider.AdGuard });
+        DohProviders.Add(new DownloadServerItem { Name = DiagnosticService.GetDohProviderDisplayName(DohProvider.Aliyun), ServerIndex = (int)DohProvider.Aliyun });
+        DohProviders.Add(new DownloadServerItem { Name = DiagnosticService.GetDohProviderDisplayName(DohProvider.Tencent), ServerIndex = (int)DohProvider.Tencent });
+
+        _selectedDohItem = DohProviders.FirstOrDefault(x => x.ServerIndex == (int)_selectedDohProvider) ?? DohProviders.FirstOrDefault();
+        OnPropertyChanged(nameof(SelectedDohItem));
+    }
 
     private string _reportText = string.Empty;
     public string ReportText
@@ -490,9 +553,11 @@ public sealed partial class DiagnosticToolWindow : WindowEx
     public DiagnosticToolWindow()
     {
         InitializeComponent();
+        InitializeDohProviders();
         InitializeWindow();
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) => OnLanguageChanged());
         Closed += (_, _) => WeakReferenceMessenger.Default.Unregister<LanguageChangedMessage>(this);
+        _ = UpdateDohLatenciesAsync();
     }
 
     private void OnLanguageChanged()
@@ -500,6 +565,11 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         DispatcherQueue.TryEnqueue(() =>
         {
             Title = Lang.DiagnosticTool_Title;
+            OnPropertyChanged(nameof(DohButtonLabel));
+            foreach (var item in DohProviders)
+            {
+                item.Name = DiagnosticService.GetDohProviderDisplayName((DohProvider)item.ServerIndex);
+            }
             this.Bindings.Update();
             if (_currentReport != null)
             {
@@ -1090,14 +1160,61 @@ public sealed partial class DiagnosticToolWindow : WindowEx
         await RequestSetMaskIpAddressAsync(!MaskIpAddress);
     }
 
-    private async void Button_RetestWithDoh_Click(object sender, RoutedEventArgs e)
+    private async void Button_RetestNetwork_Click(object sender, RoutedEventArgs e)
     {
-        if (IsRetestingDoh || _currentReport == null) return;
+        if (IsAnyNetworkProbing || _currentReport == null) return;
+        try
+        {
+            IsNetworkProbing = true;
+            NetworkConclusionText = Lang.DiagnosticTool_RetestingNetwork;
+            var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync(forceDohEch: false);
+            netInfo.IsEnabled = true;
+            _currentReport.Network = netInfo;
+            UpdateNetworkCardDisplays(netInfo);
+            ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+            ShowStatus(InfoBarSeverity.Success, Lang.DiagnosticTool_RetestComplete);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retest network");
+            ShowStatus(InfoBarSeverity.Error, string.Format(Lang.DiagnosticTool_NetworkProbeFailed, ex.Message));
+        }
+        finally
+        {
+            IsNetworkProbing = false;
+        }
+    }
+
+    private async void Button_RetestWithDoh_Click(SplitButton sender, SplitButtonClickEventArgs args)
+    {
+        await RetestWithDohInternalAsync(_selectedDohProvider);
+    }
+
+    private void Flyout_DohProviders_Opening(object? sender, object? e)
+    {
+        _ = UpdateDohLatenciesAsync();
+    }
+
+    private async void ListView_DohProvider_ItemClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is DownloadServerItem item)
+        {
+            Flyout_DohProviders.Hide();
+            var provider = (DohProvider)item.ServerIndex;
+            SelectedDohProvider = provider;
+            await RetestWithDohInternalAsync(provider);
+        }
+    }
+
+    private async Task RetestWithDohInternalAsync(DohProvider provider)
+    {
+        if (IsAnyNetworkProbing || _currentReport == null) return;
         try
         {
             IsRetestingDoh = true;
-            NetworkConclusionText = Lang.DiagnosticTool_TestingWithDoh;
-            var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync(forceDohEch: true);
+            string providerName = DiagnosticService.GetDohProviderDisplayName(provider);
+            NetworkConclusionText = string.Format(Lang.DiagnosticTool_TestingWithDohProvider, providerName);
+            var netInfo = await DiagnosticService.CollectNetworkDiagnosticInfoAsync(forceDohEch: true, specificProvider: provider);
             netInfo.IsEnabled = true;
             if (_currentReport.Network != null)
             {
@@ -1114,16 +1231,84 @@ public sealed partial class DiagnosticToolWindow : WindowEx
             _currentReport.Network = netInfo;
             UpdateNetworkCardDisplays(netInfo);
             ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
-            ShowStatus(InfoBarSeverity.Success, Lang.DiagnosticTool_DohTestComplete);
+            ShowStatus(InfoBarSeverity.Success, string.Format(Lang.DiagnosticTool_DohTestCompleteWithProvider, providerName));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retest network with DoH+ECH");
+            _logger.LogError(ex, "Failed to retest network with DoH+ECH ({Provider})", provider);
             ShowStatus(InfoBarSeverity.Error, string.Format(Lang.DiagnosticTool_DohTestFailed, ex.Message));
         }
         finally
         {
             IsRetestingDoh = false;
+        }
+    }
+
+    private DateTimeOffset _lastLatencyCheckTime = DateTimeOffset.MinValue;
+    private bool _isUpdatingLatencies;
+
+    private async Task UpdateDohLatenciesAsync(bool force = false)
+    {
+        if (_isUpdatingLatencies) return;
+        if (!force && DateTimeOffset.UtcNow - _lastLatencyCheckTime < TimeSpan.FromSeconds(30))
+        {
+            return;
+        }
+
+        try
+        {
+            _isUpdatingLatencies = true;
+            foreach (var provider in DohProviders)
+            {
+                if (string.IsNullOrEmpty(provider.LatencyText))
+                {
+                    provider.LatencyText = "...";
+                    provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
+                }
+            }
+
+            var tasks = DohProviders.Select(async provider =>
+            {
+                try
+                {
+                    long latency = await DohService.TcpPingAsync((DohProvider)provider.ServerIndex);
+                    DispatcherQueue.TryEnqueue(() =>
+                    {
+                        if (latency >= 0)
+                        {
+                            provider.LatencyText = $"{latency}ms";
+                            if (latency <= 600)
+                            {
+                                provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.LimeGreen);
+                            }
+                            else
+                            {
+                                provider.LatencyColor = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0xC5, 0x7F, 0x0A));
+                            }
+                        }
+                        else
+                        {
+                            provider.LatencyText = "Timeout";
+                            provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to ping DoH provider {Index}", provider.ServerIndex);
+                }
+            });
+
+            await Task.WhenAll(tasks);
+            _lastLatencyCheckTime = DateTimeOffset.UtcNow;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "UpdateDohLatenciesAsync failed");
+        }
+        finally
+        {
+            _isUpdatingLatencies = false;
         }
     }
 

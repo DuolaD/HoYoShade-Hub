@@ -6933,5 +6933,77 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("HoYoShadeDownloadView_QuickUpdate", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Retest Network 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_RetestNetwork {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_RetestNetwork", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Network retest complete and report updated! 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_RetestComplete {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_RetestComplete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Retesting network environment and exit info... 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_RetestingNetwork {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_RetestingNetwork", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 DoH+ECH ({0}) test complete and report updated! 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohTestCompleteWithProvider {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohTestCompleteWithProvider", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Testing connectivity via DoH+ECH ({0}) tunnel... 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_TestingWithDohProvider {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_TestingWithDohProvider", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Direct connection limited, successfully probed via DoH+ECH ({0}) 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_DohRescueDetails_SuccessWithProvider {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_DohRescueDetails_SuccessWithProvider", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Successfully probed exit info via DoH+ECH ({0}) encrypted tunnel. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Conclusion_DohManualSuccess {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Conclusion_DohManualSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Direct connection blocked/polluted, but successfully connected via DoH+ECH ({0}). Recommended to enable DoH with this provider in settings. 的本地化字符串。
+        /// </summary>
+        public static string DiagnosticTool_Conclusion_DohRescueSuccessWithProvider {
+            get {
+                return ResourceManager.GetString("DiagnosticTool_Conclusion_DohRescueSuccessWithProvider", resourceCulture);
+            }
+        }
     }
 }

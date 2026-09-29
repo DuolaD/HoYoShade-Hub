@@ -2424,4 +2424,28 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="HoYoShadeDownloadView_QuickUpdate" xml:space="preserve">
     <value>快速更新</value>
   </data>
+  <data name="DiagnosticTool_RetestNetwork" xml:space="preserve">
+    <value>重新檢測</value>
+  </data>
+  <data name="DiagnosticTool_RetestComplete" xml:space="preserve">
+    <value>網絡重新檢測已完成並更新報告！</value>
+  </data>
+  <data name="DiagnosticTool_RetestingNetwork" xml:space="preserve">
+    <value>正在重新檢測網絡環境與出口資訊...</value>
+  </data>
+  <data name="DiagnosticTool_DohTestCompleteWithProvider" xml:space="preserve">
+    <value>DoH+ECH ({0}) 連線測試已完成並更新報告！</value>
+  </data>
+  <data name="DiagnosticTool_TestingWithDohProvider" xml:space="preserve">
+    <value>正在使用 DoH+ECH ({0}) 加密隧道測試連線並獲取網絡資訊...</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_SuccessWithProvider" xml:space="preserve">
+    <value>直連受限，但通過 DoH+ECH ({0}) 加密隧道成功獲取出口資訊</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohManualSuccess" xml:space="preserve">
+    <value>通過 DoH+ECH ({0}) 加密隧道測試成功，已成功獲取出口資訊。</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohRescueSuccessWithProvider" xml:space="preserve">
+    <value>檢測到本地直連網絡受到阻斷或 DNS 污染，但通過 DoH+ECH ({0}) 加密隧道可正常連線。建議在啟動器網絡設定中開啟該提供商的 DoH 與 ECH。</value>
+  </data>
 </root>
