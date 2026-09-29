@@ -17,6 +17,15 @@ public static class PresetsHandlingDialog
 {
     public static async Task<(bool cancelled, PresetsHandlingOption option)> ShowAsync(XamlRoot xamlRoot)
     {
+        var radioSeparateFolder = new RadioButton
+        {
+            Content = Lang.PresetsDialog_SeparateFolder,
+            Tag = PresetsHandlingOption.SeparateFolder,
+            IsChecked = true,
+            Margin = new Thickness(0, 8, 0, 0)
+        };
+        ToolTipService.SetToolTip(radioSeparateFolder, Lang.PresetsDialog_SeparateFolder_Tooltip);
+
         var radioKeepExisting = new RadioButton
         {
             Content = Lang.PresetsDialog_KeepExisting,
@@ -33,15 +42,6 @@ public static class PresetsHandlingDialog
         };
         ToolTipService.SetToolTip(radioOverwrite, Lang.PresetsDialog_Overwrite_Tooltip);
 
-        var radioSeparateFolder = new RadioButton
-        {
-            Content = Lang.PresetsDialog_SeparateFolder,
-            Tag = PresetsHandlingOption.SeparateFolder,
-            IsChecked = true,
-            Margin = new Thickness(0, 8, 0, 0)
-        };
-        ToolTipService.SetToolTip(radioSeparateFolder, Lang.PresetsDialog_SeparateFolder_Tooltip);
-
         var stackPanel = new StackPanel
         {
             Spacing = 8
@@ -56,9 +56,9 @@ public static class PresetsHandlingDialog
         };
 
         stackPanel.Children.Add(description);
+        stackPanel.Children.Add(radioSeparateFolder);
         stackPanel.Children.Add(radioKeepExisting);
         stackPanel.Children.Add(radioOverwrite);
-        stackPanel.Children.Add(radioSeparateFolder);
 
         var dialog = new ContentDialog
         {
@@ -113,12 +113,12 @@ public static class PresetsHandlingDialog
 
         // Find which radio button is checked
         PresetsHandlingOption selectedOption = PresetsHandlingOption.SeparateFolder;
-        if (radioKeepExisting.IsChecked == true)
+        if (radioSeparateFolder.IsChecked == true)
+            selectedOption = PresetsHandlingOption.SeparateFolder;
+        else if (radioKeepExisting.IsChecked == true)
             selectedOption = PresetsHandlingOption.KeepExisting;
         else if (radioOverwrite.IsChecked == true)
             selectedOption = PresetsHandlingOption.Overwrite;
-        else if (radioSeparateFolder.IsChecked == true)
-            selectedOption = PresetsHandlingOption.SeparateFolder;
 
         return (false, selectedOption);
     }
