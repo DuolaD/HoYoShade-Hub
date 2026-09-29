@@ -185,6 +185,8 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     [NotifyPropertyChangedFor(nameof(IsOpenHoYoShadeSelectionEnabled))]
     [NotifyPropertyChangedFor(nameof(CanDownload))]
     [NotifyPropertyChangedFor(nameof(CanImport))]
+    [NotifyCanExecuteChangedFor(nameof(DownloadCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ImportFromLocalCommand))]
     private bool isUpdateMode;
 
     public string Title => IsUpdateMode ? Lang.HoYoShadeDownloadView_UpdateModeTitle : Lang.HoYoShadeDownloadView_Title;
@@ -330,9 +332,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     // Can import if:
     // 1. Not currently downloading
     // 2. Versions list has been loaded
-    // 3. At least one framework is not installed (regardless of checkbox selection)
+    // 3. In update mode OR at least one framework is not installed (regardless of checkbox selection)
     public bool CanImport => !IsDownloading && Versions.Count > 0 && 
-        (!IsHoYoShadeInstalled || !IsOpenHoYoShadeInstalled);
+        (IsUpdateMode || !IsHoYoShadeInstalled || !IsOpenHoYoShadeInstalled);
 
     private bool _languageInitialized;
 
