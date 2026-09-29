@@ -17,6 +17,7 @@ using HoYoShadeHub.Features.Screenshot;
 using HoYoShadeHub.Features.Update;
 using HoYoShadeHub.Features.ViewHost;
 using HoYoShadeHub.Helpers;
+using HoYoShadeHub.RPC.HoYoShadeInstall;
 using HoYoShadeHub.RPC.Update;
 using System;
 using System.Collections.Generic;
@@ -293,6 +294,7 @@ public static class AppConfig
             sc.AddSingleton<RpcService>();
 
             sc.AddSingleton<ScreenCaptureService>();
+            sc.AddSingleton<ReShadePackageService>();
 
             _serviceProvider = sc.BuildServiceProvider();
         }

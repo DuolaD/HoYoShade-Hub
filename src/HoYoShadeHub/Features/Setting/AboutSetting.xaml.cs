@@ -222,20 +222,9 @@ public sealed partial class AboutSetting : PageBase
             UpdateErrorText = null;
             UpdateInfoText = null;
             
-            // Get proxy URL from selected server
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
-            string? proxyUrl = LauncherUpdateProxyManager.GetProxyUrl(serverIndex);
             
-            // Pass proxy URL to CheckUpdateAsync (we only check updates, Auto Select fallback for checking can just use the first available or we can modify CheckUpdateAsync to take serverIndex and do fallback)
-            // Wait, CheckUpdateAsync only checks metadata. We can just use the proxyUrl.
-            // If AutoSelect (-1), we can just try Cloudflare (1) for metadata check.
-            if (serverIndex == -1)
-            {
-                proxyUrl = LauncherUpdateProxyManager.GetProxyUrl(1); // Default to Cloudflare for metadata
-            }
-            
-            // Pass proxy URL to CheckUpdateAsync
-            var release = await AppConfig.GetService<UpdateService>().CheckUpdateAsync(true, proxyUrl);
+            var release = await AppConfig.GetService<UpdateService>().CheckUpdateAsync(true, serverIndex);
             if (release != null)
             {
                 AppConfig.LatestLauncherVersion = release.Version;
@@ -249,10 +238,25 @@ public sealed partial class AboutSetting : PageBase
                 IsUpdated = true;
             }
         }
+        catch (OperationCanceledException)
+        {
+            // Cancelled
+        }
         catch (Exception ex)
         {
-            UpdateErrorText = ex.Message;
             _logger.LogError(ex, "Check update");
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                UpdateErrorText = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                InAppToast.MainWindow?.Error(Lang.HoYoShadeDownloadView_StatusRateLimitExceeded);
+            }
+            else
+            {
+                UpdateErrorText = ex.Message;
+                InAppToast.MainWindow?.Error(string.Format(
+                    GetLangString("FileSettingPage_CheckForUpdatesFailedFormat", "Failed to check for updates: {0}"),
+                    ex.Message));
+            }
         }
     }
 

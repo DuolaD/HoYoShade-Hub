@@ -57,6 +57,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         DownloadServers = new ObservableCollection<DownloadServerItem>();
         PauseResumeButtonText = Lang.HoYoShadeDownloadView_Pause;
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
+        _updateService = new HoYoShadeUpdateService(_versionService);
         
         // Register for installation change messages from other views/windows
         WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
@@ -422,111 +423,29 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             IsLoadingVersions = true;
             StatusMessage = Lang.HoYoShadeDownloadView_StatusFetchingReleases;
             
-            using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
-            {
-                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
-            };
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
-            
-            string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
-            int[] serverSequence = serverIndex == -1
-                ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
-                : new[] { serverIndex };
+            var releases = await _updateService.GetReleasesAsync(serverIndex, true, _loadVersionsCts.Token);
 
-            GithubRelease[]? releases = null;
-            Exception? lastFallbackException = null;
-
-            foreach (var currentServerIndex in serverSequence)
+            Versions.Clear();
+            bool isFirst = true;
+            foreach (var release in releases)
             {
-                _loadVersionsCts.Token.ThrowIfCancellationRequested();
-
-                string?[] proxies = currentServerIndex == 0
-                    ? new string?[] { null }
-                    : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
-
-                if (proxies.Length == 0)
+                // Filter pre-release versions based on EnablePreviewChannel toggle
+                if (!release.Prerelease || EnablePreviewChannel)
                 {
-                    proxies = new string?[] { null };
-                }
-
-                foreach (var proxyUrl in proxies)
-                {
-                    _loadVersionsCts.Token.ThrowIfCancellationRequested();
-
-                    string currentApiUrl = string.IsNullOrWhiteSpace(proxyUrl)
-                        ? apiUrl
-                        : CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
-
-                    try
+                    // Mark the first version as latest
+                    if (isFirst)
                     {
-                        releases = await client.GetFromJsonAsync<GithubRelease[]>(currentApiUrl, _loadVersionsCts.Token);
-                        if (releases != null && releases.Length > 0)
-                        {
-                            break;
-                        }
+                        release.LatestVersionTag = Lang.HoYoShadeDownloadView_LatestVersion;
+                        isFirst = false;
                     }
-                    catch (OperationCanceledException)
-                    {
-                        throw;
-                    }
-                    catch (Exception ex)
-                    {
-                        lastFallbackException = ex;
-                        if (IsGitHubRateLimitExceeded(ex))
-                        {
-                            _logger.LogWarning(ex, "GitHub API rate limit / 403 Forbidden hit on server {ServerIndex} (proxy: {ProxyUrl}), switching to next available option.", currentServerIndex, proxyUrl ?? "Direct");
-                        }
-                        else
-                        {
-                            _logger.LogWarning(ex, "Failed to fetch releases from server {ServerIndex} (proxy: {ProxyUrl}), switching to next available option.", currentServerIndex, proxyUrl ?? "Direct");
-                        }
-                    }
-                }
-
-                if (releases != null && releases.Length > 0)
-                {
-                    break;
+                    Versions.Add(release);
                 }
             }
 
-            if (releases == null || releases.Length == 0)
+            if (Versions.Count > 0)
             {
-                throw lastFallbackException ?? new HttpRequestException("Failed to fetch release list from all fallback servers.");
-            }
-            
-            if (releases != null)
-            {
-                Versions.Clear();
-                bool isFirst = true;
-                foreach (var release in releases)
-                {
-                    // Hide known incompatible framework versions from the selection list.
-                    if (IsHiddenIncompatibleVersionTag(release.TagName))
-                    {
-                        continue;
-                    }
-
-                    // Filter: only allow V3 and above
-                    if (IsVersionV3OrAbove(release.TagName))
-                    {
-                        // Filter pre-release versions based on EnablePreviewChannel toggle
-                        if (!release.Prerelease || EnablePreviewChannel)
-                        {
-                            // Mark the first version as latest
-                            if (isFirst)
-                            {
-                                release.LatestVersionTag = Lang.HoYoShadeDownloadView_LatestVersion;
-                                isFirst = false;
-                            }
-                            Versions.Add(release);
-                        }
-                    }
-                }
-                if (Versions.Count > 0)
-                {
-                    SelectedVersion = Versions[0];
-                }
+                SelectedVersion = Versions[0];
             }
             OnPropertyChanged(nameof(CanImport));
             OnPropertyChanged(nameof(CanDownload));
@@ -698,7 +617,15 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         }
         catch (Exception ex)
         {
-            StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusError, ex.Message);
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                StatusMessage = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                InAppToast.MainWindow?.Error(Lang.HoYoShadeDownloadView_StatusRateLimitExceeded);
+            }
+            else
+            {
+                StatusMessage = string.Format(Lang.HoYoShadeDownloadView_StatusError, ex.Message);
+            }
             ServerStatusMessage = "";
             IsDownloading = false;
             IsControlButtonsVisible = false;
@@ -934,6 +861,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     private bool _isPaused;
     private bool _isStopped;
     private HoYoShadeVersionService _versionService;
+    private HoYoShadeUpdateService _updateService;
 
     [RelayCommand]
     private void PauseResume()
@@ -1257,30 +1185,11 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             {
                 Debug.WriteLine($"Found SHA256 asset: {sha256Asset.Name}");
                 
-                // Download SHA256 file and compare
-                using var httpClient = new HttpClient(DohService.CreateSocketsHttpHandler())
-                {
-                    DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
-                };
-                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
-                
+                int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
                 string sha256Url = sha256Asset.BrowserDownloadUrl;
-                
-                // Apply proxy based on selected server
-                int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
-                string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-                if (!string.IsNullOrWhiteSpace(proxyUrl))
-                {
-                    sha256Url = CloudProxyManager.ApplyProxy(sha256Url, proxyUrl);
-                }
-                
                 Debug.WriteLine($"Downloading SHA256 from: {sha256Url}");
-                
-                // Check for cancellation
-                cancellationToken.ThrowIfCancellationRequested();
-                
-                var expectedSHA256 = await httpClient.GetStringAsync(sha256Url, cancellationToken);
-                expectedSHA256 = expectedSHA256.Trim().Split(' ')[0]; // Get first part (hash only)
+
+                var expectedSHA256 = await _updateService.FetchAssetSha256Async(sha256Url, serverIndex, cancellationToken);
                 Debug.WriteLine($"Expected SHA256: {expectedSHA256}");
                 
                 if (!localSHA256.Equals(expectedSHA256, StringComparison.OrdinalIgnoreCase))
@@ -1317,7 +1226,14 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         catch (Exception ex)
         {
             Debug.WriteLine($"Validation exception: {ex}");
-            result.ErrorMessage = string.IsNullOrWhiteSpace(ex.Message) ? ex.ToString() : ex.Message;
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                result.ErrorMessage = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+            }
+            else
+            {
+                result.ErrorMessage = string.IsNullOrWhiteSpace(ex.Message) ? ex.ToString() : ex.Message;
+            }
             return result;
         }
     }

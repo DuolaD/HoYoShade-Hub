@@ -32,6 +32,7 @@ public sealed partial class ReShadeDownloadView : UserControl
 {
     private readonly ILogger<ReShadeDownloadView> _logger = AppConfig.GetLogger<ReShadeDownloadView>();
     private readonly RpcService _rpcService = AppConfig.GetService<RpcService>();
+    private readonly ReShadePackageService _packageService = AppConfig.GetService<ReShadePackageService>();
     private readonly HoYoShadeVersionService _versionService;
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -515,99 +516,31 @@ public sealed partial class ReShadeDownloadView : UserControl
         try
         {
             StatusMessage = "Fetching package lists...";
-            using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
-            {
-                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
-            };
+            int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
             
-            // Get proxy URL based on selected server
-            int serverIndex = DownloadServers.IndexOf(SelectedDownloadServer);
-            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-
-            // Fetch Effects
-            string effectsUrl = ReShadeDownloadServer.EffectPackagesUrl;
-            if (!string.IsNullOrWhiteSpace(proxyUrl))
-            {
-                effectsUrl = CloudProxyManager.ApplyProxy(effectsUrl, proxyUrl);
-            }
-            
-            using var effectsStream = await client.GetStreamAsync(effectsUrl);
-            var effectsIni = new IniFile(effectsStream);
-            _cachedEffectPackages = new List<EffectPackage>();
-
-            foreach (string packageSection in effectsIni.GetSections())
-            {
-                bool required = effectsIni.GetString(packageSection, "Required") == "1";
-                bool? enabled;
-                if (required)
-                {
-                    enabled = true;
-                }
-                else
-                {
-                    string enabledStr = effectsIni.GetString(packageSection, "Enabled", "0");
-                    enabled = enabledStr == "1";
-                }
-
-                effectsIni.GetValue(packageSection, "EffectFiles", out string[] effectFiles);
-                effectsIni.GetValue(packageSection, "DenyEffectFiles", out string[] denyEffectFiles);
-
-                var item = new EffectPackage
-                {
-                    Selected = enabled,
-                    Modifiable = !required,
-                    Name = effectsIni.GetString(packageSection, "PackageName"),
-                    Description = effectsIni.GetString(packageSection, "PackageDescription"),
-                    InstallPath = effectsIni.GetString(packageSection, "InstallPath", string.Empty),
-                    TextureInstallPath = effectsIni.GetString(packageSection, "TextureInstallPath", string.Empty),
-                    DownloadUrl = effectsIni.GetString(packageSection, "DownloadUrl"),
-                    RepositoryUrl = effectsIni.GetString(packageSection, "RepositoryUrl"),
-                    EffectFiles = effectFiles?.Where(x => denyEffectFiles == null || !denyEffectFiles.Contains(x))
-                        .Select(x => new EffectFile { FileName = x, Selected = false }).ToArray(),
-                    DenyEffectFiles = denyEffectFiles
-                };
-
-                _cachedEffectPackages.Add(item);
-            }
-
-            // Fetch Addons
-            string addonsUrl = ReShadeDownloadServer.AddonsUrl;
-            if (!string.IsNullOrWhiteSpace(proxyUrl))
-            {
-                addonsUrl = CloudProxyManager.ApplyProxy(addonsUrl, proxyUrl);
-            }
-            
-            using var addonsStream = await client.GetStreamAsync(addonsUrl);
-            var addonsIni = new IniFile(addonsStream);
-            _cachedAddons = new List<Addon>();
-
-            foreach (string addon in addonsIni.GetSections())
-            {
-                string downloadUrl = addonsIni.GetString(addon, "DownloadUrl64");
-                if (string.IsNullOrEmpty(downloadUrl))
-                {
-                    downloadUrl = addonsIni.GetString(addon, "DownloadUrl");
-                }
-
-                var item = new Addon
-                {
-                    Name = addonsIni.GetString(addon, "PackageName"),
-                    Description = addonsIni.GetString(addon, "PackageDescription"),
-                    EffectInstallPath = addonsIni.GetString(addon, "EffectInstallPath", string.Empty),
-                    DownloadUrl = downloadUrl,
-                    RepositoryUrl = addonsIni.GetString(addon, "RepositoryUrl"),
-                    Selected = false // Default to not selected for addons
-                };
-
-                _cachedAddons.Add(item);
-            }
+            var (effects, addons) = await _packageService.FetchPackagesAsync(serverIndex, _cancellationTokenSource?.Token ?? CancellationToken.None);
+            _cachedEffectPackages = effects;
+            _cachedAddons = addons;
 
             StatusMessage = Lang.ReShadeDownloadView_StatusReady;
         }
+        catch (OperationCanceledException)
+        {
+            // Cancelled
+        }
         catch (Exception ex)
         {
-            StatusMessage = $"Error fetching packages: {ex.Message}";
             _logger.LogError(ex, "Failed to fetch packages");
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                StatusMessage = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                InAppToast.MainWindow?.Error(Lang.HoYoShadeDownloadView_StatusRateLimitExceeded);
+            }
+            else
+            {
+                StatusMessage = $"Error fetching packages: {ex.Message}";
+                InAppToast.MainWindow?.Error(string.Format(Lang.ReShadeDownloadView_StatusError, ex.Message));
+            }
             _cachedEffectPackages = null;
             _cachedAddons = null;
         }
@@ -856,7 +789,15 @@ public sealed partial class ReShadeDownloadView : UserControl
 
             if (!success && !_cancellationTokenSource.IsCancellationRequested)
             {
-                StatusMessage = string.Format(Lang.ReShadeDownloadView_StatusError, lastErrorMessage ?? lastException?.Message ?? "All servers failed");
+                if (lastException != null && GitHubRateLimitHelper.IsRateLimitExceeded(lastException))
+                {
+                    StatusMessage = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                    InAppToast.MainWindow?.Error(Lang.HoYoShadeDownloadView_StatusRateLimitExceeded);
+                }
+                else
+                {
+                    StatusMessage = string.Format(Lang.ReShadeDownloadView_StatusError, lastErrorMessage ?? lastException?.Message ?? "All servers failed");
+                }
                 ServerStatusMessage = "";
             }
 
@@ -871,7 +812,15 @@ public sealed partial class ReShadeDownloadView : UserControl
         }
         catch (Exception ex)
         {
-            StatusMessage = string.Format(Lang.ReShadeDownloadView_StatusError, ex.Message);
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                StatusMessage = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                InAppToast.MainWindow?.Error(Lang.HoYoShadeDownloadView_StatusRateLimitExceeded);
+            }
+            else
+            {
+                StatusMessage = string.Format(Lang.ReShadeDownloadView_StatusError, ex.Message);
+            }
             ServerStatusMessage = "";
             IsDownloading = false;
             _logger.LogError(ex, "ReShade pack download failed");

@@ -49,6 +49,8 @@ public sealed partial class UpdateWindow : WindowEx
 
     private readonly SetupService _setupService = AppConfig.GetService<SetupService>();
 
+    private readonly HoYoShadeUpdateService _hoyoShadeUpdateService = new(new HoYoShadeVersionService(AppConfig.UserDataFolder));
+
 
     private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer _timer;
 
@@ -349,21 +351,12 @@ public sealed partial class UpdateWindow : WindowEx
             if (NewVersion == null) return;
             
             var tag = NewVersion.Version;
-            var apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{tag}";
+            int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.LauncherUpdateDownloadServer;
+            var publishTime = await _hoyoShadeUpdateService.FetchFrameworkReleaseTimeAsync(tag, serverIndex);
             
-            using var httpClient = new HttpClient(DohService.CreateSocketsHttpHandler())
+            if (publishTime.HasValue)
             {
-                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
-            };
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
-            
-            var response = await httpClient.GetStringAsync(apiUrl);
-            var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
-            
-            var publishedAt = release.GetProperty("published_at").GetString();
-            if (!string.IsNullOrEmpty(publishedAt) && DateTimeOffset.TryParse(publishedAt, out var publishTime))
-            {
-                ReleaseTimeText = publishTime.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                ReleaseTimeText = publishTime.Value.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
             }
             else
             {
@@ -517,7 +510,8 @@ public sealed partial class UpdateWindow : WindowEx
                     IsProgressBarVisible = true;
                     ProgressBar_Update.IsIndeterminate = false;
 
-                    var task = _setupService.UpdateAsync(NewVersion);
+                    int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.LauncherUpdateDownloadServer;
+                    var task = _setupService.UpdateAsync(NewVersion, serverIndex);
 
                     const double MB = 1 << 20;
                     while (!task.IsCompleted)
@@ -599,6 +593,14 @@ public sealed partial class UpdateWindow : WindowEx
         catch (Exception ex)
         {
             _logger.LogError(ex, "Update now");
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                ErrorMessage = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+            }
+            else
+            {
+                ErrorMessage = ex.Message;
+            }
             Button_UpdateNow.IsEnabled = true;
             Button_RemindLatter.IsEnabled = true;
         }
@@ -880,31 +882,46 @@ public sealed partial class UpdateWindow : WindowEx
         catch (Exception ex) when (ex is HttpRequestException or SocketException or IOException)
         {
             _logger.LogError(ex, "Load recent update content");
-            
-            // Check if this is a framework update
-            bool isFrameworkUpdate = NewVersion?.DisableAutoUpdate ?? false;
-            string tag = NewVersion?.Version ?? AppConfig.AppVersion;
-            
-            if (isFrameworkUpdate)
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
             {
-                // For framework updates, redirect to HoYoShade repository
-                webview.Source = new Uri($"https://github.com/DuolaD/HoYoShade/releases/tag/{tag}");
+                TextBlock_Error.Text = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                StackPanel_Loading.Visibility = Visibility.Collapsed;
+                StackPanel_Error.Visibility = Visibility.Visible;
             }
             else
             {
-                // For Hub updates, redirect to Hub repository
-                webview.Source = new Uri($"https://github.com/DuolaD/HoYoShade-Hub/releases/tag/{tag}");
+                // Check if this is a framework update
+                bool isFrameworkUpdate = NewVersion?.DisableAutoUpdate ?? false;
+                string tag = NewVersion?.Version ?? AppConfig.AppVersion;
+                
+                if (isFrameworkUpdate)
+                {
+                    // For framework updates, redirect to HoYoShade repository
+                    webview.Source = new Uri($"https://github.com/DuolaD/HoYoShade/releases/tag/{tag}");
+                }
+                else
+                {
+                    // For Hub updates, redirect to Hub repository
+                    webview.Source = new Uri($"https://github.com/DuolaD/HoYoShade-Hub/releases/tag/{tag}");
+                }
+                
+                webview.Visibility = Visibility.Visible;
+                StackPanel_Loading.Visibility = Visibility.Collapsed;
+                StackPanel_Error.Visibility = Visibility.Collapsed;
+                AppConfig.LastAppVersion = AppConfig.AppVersion;
             }
-            
-            webview.Visibility = Visibility.Visible;
-            StackPanel_Loading.Visibility = Visibility.Collapsed;
-            StackPanel_Error.Visibility = Visibility.Collapsed;
-            AppConfig.LastAppVersion = AppConfig.AppVersion;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Load recent update content");
-            TextBlock_Error.Text = Lang.DownloadGamePage_UnknownError;
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                TextBlock_Error.Text = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+            }
+            else
+            {
+                TextBlock_Error.Text = Lang.DownloadGamePage_UnknownError;
+            }
             StackPanel_Loading.Visibility = Visibility.Collapsed;
             StackPanel_Error.Visibility = Visibility.Visible;
         }
@@ -943,7 +960,7 @@ public sealed partial class UpdateWindow : WindowEx
         
         if (isFrameworkUpdate)
         {
-            // For framework updates, fetch the GitHub release directly
+            // For framework updates, fetch the GitHub release changelog via _hoyoShadeUpdateService
             try
             {
                 // Use the version from either NewVersion or pending update
@@ -951,31 +968,12 @@ public sealed partial class UpdateWindow : WindowEx
                 
                 if (!string.IsNullOrEmpty(tag))
                 {
-                    var frameworkMarkdown = new StringBuilder();
-                    
-                    // Fetch release from GitHub API (both frameworks are in DuolaD/HoYoShade repo)
-                    var repoOwner = "DuolaD";
-                    var repoName = "HoYoShade";
-                    
-                    // Use GitHub API to get the release
-                    var apiUrl = $"https://api.github.com/repos/{repoOwner}/{repoName}/releases/tags/{tag}";
-                    using var httpClient = new System.Net.Http.HttpClient(DohService.CreateSocketsHttpHandler())
+                    int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
+                    var frameworkMarkdown = await _hoyoShadeUpdateService.FetchFrameworkChangelogMarkdownAsync(tag, serverIndex);
+                    if (!string.IsNullOrEmpty(frameworkMarkdown))
                     {
-                        DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
-                    };
-                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
-                    
-                    var response = await httpClient.GetStringAsync(apiUrl);
-                    var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
-                    
-                    var name = release.GetProperty("name").GetString() ?? tag;
-                    var body = release.GetProperty("body").GetString() ?? "";
-                    
-                    frameworkMarkdown.AppendLine($"# {name}");
-                    frameworkMarkdown.AppendLine();
-                    frameworkMarkdown.AppendLine(body);
-                    
-                    return frameworkMarkdown.ToString();
+                        return frameworkMarkdown;
+                    }
                 }
             }
             catch (Exception ex)

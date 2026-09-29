@@ -201,7 +201,7 @@ public class CloudProxyManager
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             // Send HEAD request to avoid downloading the whole page if possible, 
             // but GET is safer for just a quick success.html
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             var request = new HttpRequestMessage(HttpMethod.Get, pingUrl);
             // Disable keep-alive to avoid connection reuse skewing the latency
             request.Headers.ConnectionClose = true;

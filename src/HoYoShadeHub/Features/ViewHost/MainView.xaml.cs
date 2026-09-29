@@ -333,7 +333,8 @@ public sealed partial class MainView : UserControl
                 return;
             }
 
-            var release = await AppConfig.GetService<UpdateService>().CheckUpdateAsync(false);
+            int serverIndex = AppConfig.LauncherUpdateDownloadServer;
+            var release = await AppConfig.GetService<UpdateService>().CheckUpdateAsync(false, serverIndex);
             if (release != null)
             {
                 AppConfig.LatestLauncherVersion = release.Version;

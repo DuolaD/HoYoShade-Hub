@@ -242,7 +242,7 @@ public static class DohService
 
             var stopwatch = Stopwatch.StartNew();
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            timeoutCts.CancelAfter(TimeSpan.FromSeconds(5));
+            timeoutCts.CancelAfter(TimeSpan.FromSeconds(10));
 
             if (await TryConnectAsync(addresses, 443, timeoutCts.Token) is not null)
             {

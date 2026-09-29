@@ -1,9 +1,12 @@
 using Microsoft.Extensions.Logging;
+using HoYoShadeHub.Core.Networking;
+using HoYoShadeHub.Helpers;
 using HoYoShadeHub.RPC.Update;
 using HoYoShadeHub.RPC.Update.Metadata;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -42,7 +45,12 @@ internal class SetupService
 
 
 
-    public async Task<string?> DownloadSetupAsync(ReleaseInfoDetail? detail, CancellationToken cancellationToken = default)
+    public Task<string?> DownloadSetupAsync(ReleaseInfoDetail? detail, CancellationToken cancellationToken = default)
+    {
+        return DownloadSetupAsync(detail, -1, cancellationToken);
+    }
+
+    public async Task<string?> DownloadSetupAsync(ReleaseInfoDetail? detail, int serverIndex, CancellationToken cancellationToken = default)
     {
         detail ??= await GetReleaseInfoDetailAsync(cancellationToken);
 
@@ -52,7 +60,7 @@ internal class SetupService
         }
 
         string setupPath = Path.Combine(AppConfig.CacheFolder, detail.Setup.FileName);
-        string url = detail.Setup.Url;
+        string rawUrl = detail.Setup.Url;
         long size = detail.Setup.Size;
         string hash = detail.Setup.Hash;
 
@@ -66,8 +74,59 @@ internal class SetupService
         }
 
         SetupTotalBytes = detail.Setup.Size;
-        await DownloadFileAsync(setupPath, url, size, hash, cancellationToken);
-        return setupPath;
+
+        int[] serverSequence = serverIndex == -1
+            ? CloudProxyManager.GetAutoSelectFallbackSequence(true) // [1, 2, 3] -> Cloudflare, Tencent, Alibaba
+            : new[] { serverIndex };
+
+        Exception? lastFallbackException = null;
+
+        foreach (var currentServerIndex in serverSequence)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string?[] proxies = currentServerIndex == 1
+                ? new string?[] { null }
+                : LauncherUpdateProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+            if (proxies.Length == 0)
+            {
+                proxies = new string?[] { null };
+            }
+
+            foreach (var proxy in proxies)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                string currentUrl = string.IsNullOrWhiteSpace(proxy)
+                    ? rawUrl
+                    : $"{proxy}/{rawUrl}";
+
+                try
+                {
+                    await DownloadFileAsync(setupPath, currentUrl, size, hash, cancellationToken);
+                    if (File.Exists(setupPath) && await CheckSHA256Async(setupPath, size, hash, cancellationToken))
+                    {
+                        return setupPath;
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    lastFallbackException = ex;
+                    _logger.LogWarning(ex, "Failed to download setup from server {ServerIndex} (proxy: {ProxyUrl}), switching to next available option.", currentServerIndex, proxy ?? "Direct");
+                    if (File.Exists(setupPath))
+                    {
+                        try { File.Delete(setupPath); } catch { }
+                    }
+                }
+            }
+        }
+
+        throw lastFallbackException ?? new HttpRequestException("Failed to download setup from all fallback servers.");
     }
 
 
@@ -153,9 +212,14 @@ internal class SetupService
     }
 
 
-    public async Task UpdateAsync(ReleaseInfoDetail detail, CancellationToken cancellationToken = default)
+    public Task UpdateAsync(ReleaseInfoDetail detail, CancellationToken cancellationToken = default)
     {
-        string? setupPath = await DownloadSetupAsync(detail, cancellationToken);
+        return UpdateAsync(detail, -1, cancellationToken);
+    }
+
+    public async Task UpdateAsync(ReleaseInfoDetail detail, int serverIndex, CancellationToken cancellationToken = default)
+    {
+        string? setupPath = await DownloadSetupAsync(detail, serverIndex, cancellationToken);
         if (setupPath is null || !File.Exists(setupPath))
         {
             throw new NotSupportedException("Update is not supported.");

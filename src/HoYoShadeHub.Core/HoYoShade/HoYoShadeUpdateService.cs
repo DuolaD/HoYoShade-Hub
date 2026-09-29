@@ -183,9 +183,12 @@ public class HoYoShadeUpdateService
     }
 
     /// <summary>
-    /// 从 GitHub 获取最新版本（支持指定下载服务器或自动选择回落）
+    /// 从 GitHub 获取发布版本列表（支持指定下载服务器或自动选择回落）
     /// </summary>
-    private async Task<GithubRelease?> GetLatestReleaseAsync(bool includePrerelease, int serverIndex, CancellationToken cancellationToken)
+    /// <param name="serverIndex">下载服务器索引（-1=自动选择，0=GitHub直连，1=Cloudflare，2=腾讯云，3=阿里云）</param>
+    /// <param name="includePrerelease">是否包含预览版</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    public async Task<List<GithubRelease>> GetReleasesAsync(int serverIndex = -1, bool includePrerelease = false, CancellationToken cancellationToken = default)
     {
         using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
         {
@@ -259,7 +262,204 @@ public class HoYoShadeUpdateService
             .OrderByDescending(r => r.PublishedAt)
             .ToList();
 
-        return validReleases.FirstOrDefault();
+        return validReleases;
+    }
+
+    /// <summary>
+    /// 从 GitHub 获取最新版本（支持指定下载服务器或自动选择回落）
+    /// </summary>
+    public async Task<GithubRelease?> GetLatestReleaseAsync(bool includePrerelease = false, int serverIndex = -1, CancellationToken cancellationToken = default)
+    {
+        var releases = await GetReleasesAsync(serverIndex, includePrerelease, cancellationToken);
+        return releases.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// 获取资源对应的 SHA256 校验码字符串（支持多代理回落与 403 规避）
+    /// </summary>
+    public async Task<string> FetchAssetSha256Async(string sha256Url, int serverIndex = -1, CancellationToken cancellationToken = default)
+    {
+        using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
+        {
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+        };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
+
+        int[] serverSequence = serverIndex == -1
+            ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
+            : new[] { serverIndex };
+
+        Exception? lastFallbackException = null;
+
+        foreach (var currentServerIndex in serverSequence)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string?[] proxies = currentServerIndex == 0
+                ? new string?[] { null }
+                : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+            if (proxies.Length == 0)
+            {
+                proxies = new string?[] { null };
+            }
+
+            foreach (var proxyUrl in proxies)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                string currentUrl = string.IsNullOrWhiteSpace(proxyUrl)
+                    ? sha256Url
+                    : CloudProxyManager.ApplyProxy(sha256Url, proxyUrl);
+
+                try
+                {
+                    var response = await client.GetStringAsync(currentUrl, cancellationToken);
+                    if (!string.IsNullOrWhiteSpace(response))
+                    {
+                        return response.Trim().Split(' ')[0];
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    lastFallbackException = ex;
+                }
+            }
+        }
+
+        throw lastFallbackException ?? new HttpRequestException("Failed to fetch SHA256 from all fallback servers.");
+    }
+
+    /// <summary>
+    /// 获取框架版本发布说明 Markdown（支持多代理回落与 403 规避）
+    /// </summary>
+    public async Task<string?> FetchFrameworkChangelogMarkdownAsync(string tagName, int serverIndex = -1, CancellationToken cancellationToken = default)
+    {
+        using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
+        {
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+        };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
+
+        string apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{tagName}";
+        int[] serverSequence = serverIndex == -1
+            ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
+            : new[] { serverIndex };
+
+        Exception? lastFallbackException = null;
+
+        foreach (var currentServerIndex in serverSequence)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string?[] proxies = currentServerIndex == 0
+                ? new string?[] { null }
+                : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+            if (proxies.Length == 0)
+            {
+                proxies = new string?[] { null };
+            }
+
+            foreach (var proxyUrl in proxies)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                string currentApiUrl = string.IsNullOrWhiteSpace(proxyUrl)
+                    ? apiUrl
+                    : CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
+
+                try
+                {
+                    var response = await client.GetStringAsync(currentApiUrl, cancellationToken);
+                    var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
+
+                    var name = release.TryGetProperty("name", out var nameProp) ? nameProp.GetString() : tagName;
+                    var body = release.TryGetProperty("body", out var bodyProp) ? bodyProp.GetString() : "";
+
+                    var sb = new System.Text.StringBuilder();
+                    sb.AppendLine($"# {name ?? tagName}");
+                    sb.AppendLine();
+                    sb.AppendLine(body ?? "");
+                    return sb.ToString();
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    lastFallbackException = ex;
+                }
+            }
+        }
+
+        throw lastFallbackException ?? new HttpRequestException($"Failed to fetch changelog for {tagName} from all fallback servers.");
+    }
+
+    /// <summary>
+    /// 获取指定 Tag 的发布时间（支持多代理回落与 403 规避）
+    /// </summary>
+    public async Task<DateTimeOffset?> FetchFrameworkReleaseTimeAsync(string tagName, int serverIndex = -1, CancellationToken cancellationToken = default)
+    {
+        using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
+        {
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+        };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
+
+        string apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{tagName}";
+        int[] serverSequence = serverIndex == -1
+            ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
+            : new[] { serverIndex };
+
+        foreach (var currentServerIndex in serverSequence)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string?[] proxies = currentServerIndex == 0
+                ? new string?[] { null }
+                : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+            if (proxies.Length == 0)
+            {
+                proxies = new string?[] { null };
+            }
+
+            foreach (var proxyUrl in proxies)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                string currentApiUrl = string.IsNullOrWhiteSpace(proxyUrl)
+                    ? apiUrl
+                    : CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
+
+                try
+                {
+                    var response = await client.GetStringAsync(currentApiUrl, cancellationToken);
+                    var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
+
+                    if (release.TryGetProperty("published_at", out var pubProp))
+                    {
+                        var pubStr = pubProp.GetString();
+                        if (!string.IsNullOrEmpty(pubStr) && DateTimeOffset.TryParse(pubStr, out var dt))
+                        {
+                            return dt;
+                        }
+                    }
+                }
+                catch
+                {
+                    // Continue to next proxy / server
+                }
+            }
+        }
+
+        return null;
     }
 
     /// <summary>

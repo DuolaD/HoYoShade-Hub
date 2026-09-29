@@ -382,6 +382,10 @@ internal class UpdateService
         if (fs.Length != releaseFile.Size)
         {
             string url = releaseManifest.UrlPrefix + releaseFile.Id;
+            if (!string.IsNullOrWhiteSpace(proxyUrl))
+            {
+                url = $"{proxyUrl}/{url}";
+            }
             using var hs = await _httpClient.GetStreamAsync(url, cancellationToken);
             fs.SetLength(0);
             using var zstdStream = new ZstdSharp.DecompressionStream(hs);

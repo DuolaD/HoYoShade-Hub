@@ -35,6 +35,7 @@ public sealed partial class QuickSetupView : UserControl
 {
     private readonly ILogger<QuickSetupView> _logger = AppConfig.GetLogger<QuickSetupView>();
     private readonly HoYoShadeVersionService _versionService;
+    private readonly HoYoShadeUpdateService _updateService;
     private CancellationTokenSource? _cancellationTokenSource;
     private bool _languageInitialized;
 
@@ -61,6 +62,7 @@ public sealed partial class QuickSetupView : UserControl
     {
         this.InitializeComponent();
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
+        _updateService = new HoYoShadeUpdateService(_versionService);
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
         WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
         WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
@@ -345,7 +347,15 @@ public sealed partial class QuickSetupView : UserControl
         {
             _logger.LogError(ex, "QuickSetup failed");
             IsDownloading = false;
-            StatusMessage = $"{ex.Message}";
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                StatusMessage = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                InAppToast.MainWindow?.Error(Lang.HoYoShadeDownloadView_StatusRateLimitExceeded);
+            }
+            else
+            {
+                StatusMessage = $"{ex.Message}";
+            }
             ServerStatusMessage = "";
             SpeedAndProgress = "";
         }
@@ -365,37 +375,10 @@ public sealed partial class QuickSetupView : UserControl
 
     private async Task<(GithubRelease? release, GithubAsset? asset)> FetchLatestStableReleaseAsync(CancellationToken cancellationToken)
     {
-        using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
-        {
-            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
-        };
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
+        int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
+        var releases = await _updateService.GetReleasesAsync(serverIndex, false, cancellationToken);
 
-        string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
-        var serverSequence = GetServerSequence();
-        GithubRelease[]? releases = null;
-
-        foreach (var currentServerIndex in serverSequence)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            string? proxyUrl = CloudProxyManager.GetProxyUrl(currentServerIndex);
-            string currentApiUrl = string.IsNullOrWhiteSpace(proxyUrl) ? apiUrl : CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
-
-            try
-            {
-                releases = await client.GetFromJsonAsync<GithubRelease[]>(currentApiUrl, cancellationToken);
-                if (releases != null && releases.Length > 0)
-                {
-                    break;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Failed to fetch releases from server {ServerIndex}", currentServerIndex);
-            }
-        }
-
-        if (releases == null)
+        if (releases == null || releases.Count == 0)
         {
             return (null, null);
         }
@@ -452,11 +435,14 @@ public sealed partial class QuickSetupView : UserControl
         {
             if (cancellationToken.IsCancellationRequested) break;
 
-            long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
-            if (ping < 0)
+            if (serverIndex == -1)
             {
-                _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
-                continue;
+                long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
+                if (ping < 0)
+                {
+                    _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
+                    continue;
+                }
             }
 
             string serverName = GetServerName(currentServerIndex);
@@ -575,11 +561,14 @@ public sealed partial class QuickSetupView : UserControl
         {
             if (cancellationToken.IsCancellationRequested) break;
 
-            long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
-            if (ping < 0)
+            if (serverIndex == -1)
             {
-                _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
-                continue;
+                long ping = await CloudProxyManager.PingServerAsync(currentServerIndex, httpClient);
+                if (ping < 0)
+                {
+                    _logger.LogWarning("Server {ServerIndex} ping failed, skipping.", currentServerIndex);
+                    continue;
+                }
             }
 
             string serverName = GetServerName(currentServerIndex);

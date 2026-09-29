@@ -675,10 +675,19 @@ public class HoYoShadeInstallService
                 WriteSearchPaths(targetDir);
             }
 
-            ReShadePackState = 3; // Finished
-            _logger.LogInformation("=== ReShade pack installation finished ===");
-            _logger.LogInformation("Successfully installed {Downloaded}/{Total} packages (Success: {Success}, Failed: {Failed}, Skipped: {Skipped})", 
-                DownloadedFiles, TotalFiles, successCount, failedCount, skippedCount);
+            if (failedCount > 0 && successCount == 0)
+            {
+                ReShadePackState = 4; // Error
+                ReShadePackErrorMessage = "Failed to download ReShade packages.";
+                _logger.LogError("All ReShade packages failed to download ({Failed}/{Total}).", failedCount, TotalFiles);
+            }
+            else
+            {
+                ReShadePackState = 3; // Finished
+                _logger.LogInformation("=== ReShade pack installation finished ===");
+                _logger.LogInformation("Successfully installed {Downloaded}/{Total} packages (Success: {Success}, Failed: {Failed}, Skipped: {Skipped})", 
+                    DownloadedFiles, TotalFiles, successCount, failedCount, skippedCount);
+            }
         }
         catch (OperationCanceledException)
         {
