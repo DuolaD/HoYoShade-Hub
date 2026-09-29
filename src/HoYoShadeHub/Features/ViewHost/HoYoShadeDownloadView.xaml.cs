@@ -556,27 +556,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     private static bool IsGitHubRateLimitExceeded(Exception ex)
     {
-        if (ex is AggregateException aggEx && aggEx.InnerExceptions.Count > 0)
-        {
-            return aggEx.InnerExceptions.Any(IsGitHubRateLimitExceeded);
-        }
-
-        if (ex.InnerException != null && IsGitHubRateLimitExceeded(ex.InnerException))
-        {
-            return true;
-        }
-
-        if (ex is HttpRequestException httpEx)
-        {
-            if (httpEx.StatusCode == HttpStatusCode.Forbidden || httpEx.StatusCode == HttpStatusCode.TooManyRequests)
-            {
-                return true;
-            }
-        }
-
-        return ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase) ||
-            ex.Message.Contains("403", StringComparison.OrdinalIgnoreCase) ||
-            ex.Message.Contains("429", StringComparison.OrdinalIgnoreCase);
+        return GitHubRateLimitHelper.IsRateLimitExceeded(ex);
     }
 
     /// <summary>

@@ -124,15 +124,10 @@ public sealed partial class MainView : UserControl
             var updateService = new HoYoShadeUpdateService(versionService);
 
             int serverIndex = AppConfig.HoYoShadeFrameworkDownloadServer;
-            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-            if (serverIndex == -1)
-            {
-                proxyUrl = CloudProxyManager.GetProxyUrl(0);
-            }
 
             if (AppConfig.AutoCheckHoYoShadeUpdateOnStartup)
             {
-                var hoYoShadeRelease = await updateService.CheckHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
+                var hoYoShadeRelease = await updateService.CheckHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, serverIndex);
                 if (hoYoShadeRelease != null)
                 {
                     AppConfig.LatestHoYoShadeVersion = hoYoShadeRelease.TagName;
@@ -147,7 +142,7 @@ public sealed partial class MainView : UserControl
 
             if (AppConfig.AutoCheckOpenHoYoShadeUpdateOnStartup)
             {
-                var openHoYoShadeRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
+                var openHoYoShadeRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(AppConfig.EnableHoYoShadePreviewChannel, serverIndex);
                 if (openHoYoShadeRelease != null)
                 {
                     AppConfig.LatestOpenHoYoShadeVersion = openHoYoShadeRelease.TagName;

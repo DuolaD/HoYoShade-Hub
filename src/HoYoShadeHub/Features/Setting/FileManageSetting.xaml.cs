@@ -8,6 +8,7 @@ using Microsoft.Windows.AppLifecycle;
 using SharpSevenZip;
 using HoYoShadeHub.Core;
 using HoYoShadeHub.Core.HoYoShade;
+using HoYoShadeHub.Core.Metadata.Github;
 using HoYoShadeHub.Core.Networking;
 using HoYoShadeHub.Features.Database;
 using HoYoShadeHub.Features.GameLauncher;
@@ -1325,18 +1326,12 @@ public sealed partial class FileManageSetting : PageBase
         {
             HoYoShadeUpdateInfo = GetLangString("FileSettingPage_CheckingForUpdates", "Checking for updates...");
             
-            // Get proxy URL from selected server
+            // Get selected server index (-1 = Auto Select)
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
-            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-            
-            if (serverIndex == -1)
-            {
-                proxyUrl = CloudProxyManager.GetProxyUrl(0); // Default to GitHub Direct for metadata check
-            }
             
             var updateService = new HoYoShadeUpdateService(_versionService);
             var latestRelease = await updateService.CheckHoYoShadeUpdateAsync(
-                AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
+                AppConfig.EnableHoYoShadePreviewChannel, serverIndex);
             
             if (latestRelease != null)
             {
@@ -1347,7 +1342,7 @@ public sealed partial class FileManageSetting : PageBase
                 _logger.LogInformation("HoYoShade update available: {Version}", latestRelease.TagName);
                 
                 // Show update dialog
-                await ShowUpdateDialogAsync("HoYoShade", latestRelease.TagName, latestRelease.Body);
+                await ShowUpdateDialogAsync("HoYoShade", latestRelease.TagName, latestRelease.Body, latestRelease);
             }
             else
             {
@@ -1359,14 +1354,26 @@ public sealed partial class FileManageSetting : PageBase
                     "HoYoShade"));
             }
         }
+        catch (OperationCanceledException)
+        {
+            // Cancelled
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Check HoYoShade update");
-            var checkUpdateError = string.Format(
-                GetLangString("FileSettingPage_CheckForUpdatesFailedFormat", "Failed to check for updates: {0}"),
-                ex.Message);
-            HoYoShadeUpdateInfo = checkUpdateError;
-            InAppToast.MainWindow?.Error(checkUpdateError);
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                HoYoShadeUpdateInfo = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                InAppToast.MainWindow?.Error(Lang.HoYoShadeDownloadView_StatusRateLimitExceeded);
+            }
+            else
+            {
+                var checkUpdateError = string.Format(
+                    GetLangString("FileSettingPage_CheckForUpdatesFailedFormat", "Failed to check for updates: {0}"),
+                    ex.Message);
+                HoYoShadeUpdateInfo = checkUpdateError;
+                InAppToast.MainWindow?.Error(checkUpdateError);
+            }
         }
     }
     
@@ -1380,18 +1387,12 @@ public sealed partial class FileManageSetting : PageBase
         {
             OpenHoYoShadeUpdateInfo = GetLangString("FileSettingPage_CheckingForUpdates", "Checking for updates...");
             
-            // Get proxy URL from selected server
+            // Get selected server index (-1 = Auto Select)
             int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
-            string? proxyUrl = CloudProxyManager.GetProxyUrl(serverIndex);
-            
-            if (serverIndex == -1)
-            {
-                proxyUrl = CloudProxyManager.GetProxyUrl(0); // Default to GitHub Direct for metadata check
-            }
             
             var updateService = new HoYoShadeUpdateService(_versionService);
             var latestRelease = await updateService.CheckOpenHoYoShadeUpdateAsync(
-                AppConfig.EnableHoYoShadePreviewChannel, proxyUrl);
+                AppConfig.EnableHoYoShadePreviewChannel, serverIndex);
             
             if (latestRelease != null)
             {
@@ -1402,7 +1403,7 @@ public sealed partial class FileManageSetting : PageBase
                 _logger.LogInformation("OpenHoYoShade update available: {Version}", latestRelease.TagName);
                 
                 // Show update dialog
-                await ShowUpdateDialogAsync("OpenHoYoShade", latestRelease.TagName, latestRelease.Body);
+                await ShowUpdateDialogAsync("OpenHoYoShade", latestRelease.TagName, latestRelease.Body, latestRelease);
             }
             else
             {
@@ -1414,21 +1415,33 @@ public sealed partial class FileManageSetting : PageBase
                     "OpenHoYoShade"));
             }
         }
+        catch (OperationCanceledException)
+        {
+            // Cancelled
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Check OpenHoYoShade update");
-            var checkUpdateError = string.Format(
-                GetLangString("FileSettingPage_CheckForUpdatesFailedFormat", "Failed to check for updates: {0}"),
-                ex.Message);
-            OpenHoYoShadeUpdateInfo = checkUpdateError;
-            InAppToast.MainWindow?.Error(checkUpdateError);
+            if (GitHubRateLimitHelper.IsRateLimitExceeded(ex))
+            {
+                OpenHoYoShadeUpdateInfo = Lang.HoYoShadeDownloadView_StatusRateLimitExceeded;
+                InAppToast.MainWindow?.Error(Lang.HoYoShadeDownloadView_StatusRateLimitExceeded);
+            }
+            else
+            {
+                var checkUpdateError = string.Format(
+                    GetLangString("FileSettingPage_CheckForUpdatesFailedFormat", "Failed to check for updates: {0}"),
+                    ex.Message);
+                OpenHoYoShadeUpdateInfo = checkUpdateError;
+                InAppToast.MainWindow?.Error(checkUpdateError);
+            }
         }
     }
     
     /// <summary>
     /// 显示更新对话框
     /// </summary>
-    private async Task ShowUpdateDialogAsync(string frameworkName, string newVersion, string releaseNotes)
+    private async Task ShowUpdateDialogAsync(string frameworkName, string newVersion, string releaseNotes, GithubRelease? releaseInfo = null)
     {
         try
         {
@@ -1445,42 +1458,97 @@ public sealed partial class FileManageSetting : PageBase
                 currentVersion = currentInfo?.Version ?? "0.0.0";
             }
             
-            // Fetch GitHub Release to get download URL and package size
+            // Find download URL and package size from releaseInfo, or fallback to fetching
             string? packageDownloadUrl = null;
             long packageSize = 0;
-            
-            try
+            string assetNamePattern = frameworkName == "HoYoShade" 
+                ? "HoYoShade-" 
+                : "OpenHoYoShade-";
+
+            if (releaseInfo?.Assets != null && releaseInfo.Assets.Count > 0)
             {
-                var apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{newVersion}";
-                using var httpClient = new System.Net.Http.HttpClient(DohService.CreateSocketsHttpHandler())
+                var matchedAsset = releaseInfo.Assets.FirstOrDefault(a => 
+                    a.Name != null &&
+                    a.Name.StartsWith(assetNamePattern, StringComparison.OrdinalIgnoreCase) && 
+                    a.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase));
+
+                if (matchedAsset != null)
                 {
-                    DefaultVersionPolicy = System.Net.Http.HttpVersionPolicy.RequestVersionOrHigher,
-                };
-                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
-                
-                var response = await httpClient.GetStringAsync(apiUrl);
-                var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
-                
-                // Find the correct asset based on framework name
-                var assets = release.GetProperty("assets");
-                string assetNamePattern = frameworkName == "HoYoShade" 
-                    ? "HoYoShade-" 
-                    : "OpenHoYoShade-";
-                
-                foreach (var asset in assets.EnumerateArray())
-                {
-                    var assetName = asset.GetProperty("name").GetString() ?? "";
-                    if (assetName.StartsWith(assetNamePattern) && assetName.EndsWith(".zip"))
-                    {
-                        packageDownloadUrl = asset.GetProperty("browser_download_url").GetString();
-                        packageSize = asset.GetProperty("size").GetInt64();
-                        break;
-                    }
+                    packageDownloadUrl = matchedAsset.BrowserDownloadUrl;
+                    packageSize = matchedAsset.Size;
                 }
             }
-            catch (Exception ex)
+
+            if (packageDownloadUrl == null)
             {
-                _logger.LogError(ex, "Failed to fetch GitHub release assets for {FrameworkName}", frameworkName);
+                try
+                {
+                    int serverIndex = SelectedDownloadServer?.ServerIndex ?? -1;
+                    int[] serverSequence = serverIndex == -1
+                        ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
+                        : new[] { serverIndex };
+
+                    string apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{newVersion}";
+                    using var httpClient = new System.Net.Http.HttpClient(DohService.CreateSocketsHttpHandler())
+                    {
+                        DefaultVersionPolicy = System.Net.Http.HttpVersionPolicy.RequestVersionOrHigher,
+                    };
+                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub/1.0");
+
+                    foreach (var currentServerIndex in serverSequence)
+                    {
+                        string?[] proxies = currentServerIndex == 0
+                            ? new string?[] { null }
+                            : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+                        if (proxies.Length == 0)
+                        {
+                            proxies = new string?[] { null };
+                        }
+
+                        foreach (var proxy in proxies)
+                        {
+                            try
+                            {
+                                string currentApiUrl = string.IsNullOrWhiteSpace(proxy) ? apiUrl : CloudProxyManager.ApplyProxy(apiUrl, proxy);
+                                var response = await httpClient.GetStringAsync(currentApiUrl);
+                                var release = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(response);
+
+                                if (release.TryGetProperty("assets", out var assets) && assets.ValueKind == System.Text.Json.JsonValueKind.Array)
+                                {
+                                    foreach (var asset in assets.EnumerateArray())
+                                    {
+                                        var assetName = asset.GetProperty("name").GetString() ?? "";
+                                        if (assetName.StartsWith(assetNamePattern, StringComparison.OrdinalIgnoreCase) && assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            packageDownloadUrl = asset.GetProperty("browser_download_url").GetString();
+                                            packageSize = asset.GetProperty("size").GetInt64();
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (packageDownloadUrl != null)
+                                {
+                                    break;
+                                }
+                            }
+                            catch
+                            {
+                                // Continue to next proxy
+                            }
+                        }
+
+                        if (packageDownloadUrl != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to fetch GitHub release assets for {FrameworkName}", frameworkName);
+                }
             }
             
             // Create a ReleaseInfoDetail-like object for the framework update

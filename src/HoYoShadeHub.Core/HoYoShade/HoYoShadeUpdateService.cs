@@ -1,7 +1,9 @@
 using HoYoShadeHub.Core.Metadata.Github;
 using HoYoShadeHub.Core.Networking;
+using HoYoShadeHub.Helpers;
 using NuGet.Versioning;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -17,154 +19,283 @@ public class HoYoShadeUpdateService
 {
     private readonly HoYoShadeVersionService _versionService;
 
+    private static readonly HashSet<string> HiddenIncompatibleVersionTags = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "3.0.0-beta.1",
+        "3.0.0-beta.2",
+    };
+
     public HoYoShadeUpdateService(HoYoShadeVersionService versionService)
     {
         _versionService = versionService;
     }
 
     /// <summary>
-    /// 检查 HoYoShade 更新
+    /// 检查 HoYoShade 更新（使用默认自动选择回落）
     /// </summary>
     /// <param name="includePrerelease">是否包含预览版</param>
     /// <param name="cancellationToken">取消令牌</param>
     /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
     public async Task<GithubRelease?> CheckHoYoShadeUpdateAsync(bool includePrerelease = false, CancellationToken cancellationToken = default)
     {
-        return await CheckHoYoShadeUpdateAsync(includePrerelease, null, cancellationToken);
+        return await CheckHoYoShadeUpdateAsync(includePrerelease, -1, cancellationToken);
+    }
+
+    /// <summary>
+    /// 检查 HoYoShade 更新（支持指定下载服务器或自动选择回落）
+    /// </summary>
+    /// <param name="includePrerelease">是否包含预览版</param>
+    /// <param name="serverIndex">下载服务器索引（-1=自动选择，0=GitHub直连，1=Cloudflare，2=腾讯云，3=阿里云）</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
+    public async Task<GithubRelease?> CheckHoYoShadeUpdateAsync(bool includePrerelease, int serverIndex, CancellationToken cancellationToken = default)
+    {
+        var currentVersion = await _versionService.GetHoYoShadeVersionAsync();
+        if (currentVersion == null)
+        {
+            return null;
+        }
+
+        var latestRelease = await GetLatestReleaseAsync(includePrerelease, serverIndex, cancellationToken);
+        if (latestRelease == null)
+        {
+            return null;
+        }
+
+        // Compare versions
+        if (CompareVersions(latestRelease.TagName, currentVersion.Version) > 0)
+        {
+            return latestRelease;
+        }
+
+        return null;
     }
 
     /// <summary>
     /// 检查 HoYoShade 更新（使用指定的代理URL）
     /// </summary>
     /// <param name="includePrerelease">是否包含预览版</param>
-    /// <param name="proxyUrl">代理URL（如果为null则使用GitHub直连）</param>
+    /// <param name="proxyUrl">代理URL（如果为null则使用自动选择回落）</param>
     /// <param name="cancellationToken">取消令牌</param>
     /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
-    public async Task<GithubRelease?> CheckHoYoShadeUpdateAsync(bool includePrerelease = false, string? proxyUrl = null, CancellationToken cancellationToken = default)
+    public async Task<GithubRelease?> CheckHoYoShadeUpdateAsync(bool includePrerelease, string? proxyUrl, CancellationToken cancellationToken = default)
     {
-        try
+        if (string.IsNullOrWhiteSpace(proxyUrl))
         {
-            var currentVersion = await _versionService.GetHoYoShadeVersionAsync();
-            if (currentVersion == null)
-            {
-                return null;
-            }
-
-            var latestRelease = await GetLatestReleaseAsync(includePrerelease, proxyUrl, cancellationToken);
-            if (latestRelease == null)
-            {
-                return null;
-            }
-
-            // Compare versions
-            if (CompareVersions(latestRelease.TagName, currentVersion.Version) > 0)
-            {
-                return latestRelease;
-            }
-
-            return null;
+            return await CheckHoYoShadeUpdateAsync(includePrerelease, -1, cancellationToken);
         }
-        catch (Exception)
+
+        var currentVersion = await _versionService.GetHoYoShadeVersionAsync();
+        if (currentVersion == null)
         {
             return null;
         }
+
+        var latestRelease = await GetLatestReleaseAsync(includePrerelease, proxyUrl, cancellationToken);
+        if (latestRelease == null)
+        {
+            return null;
+        }
+
+        // Compare versions
+        if (CompareVersions(latestRelease.TagName, currentVersion.Version) > 0)
+        {
+            return latestRelease;
+        }
+
+        return null;
     }
 
     /// <summary>
-    /// 检查 OpenHoYoShade 更新
+    /// 检查 OpenHoYoShade 更新（使用默认自动选择回落）
     /// </summary>
     /// <param name="includePrerelease">是否包含预览版</param>
     /// <param name="cancellationToken">取消令牌</param>
     /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
     public async Task<GithubRelease?> CheckOpenHoYoShadeUpdateAsync(bool includePrerelease = false, CancellationToken cancellationToken = default)
     {
-        return await CheckOpenHoYoShadeUpdateAsync(includePrerelease, null, cancellationToken);
+        return await CheckOpenHoYoShadeUpdateAsync(includePrerelease, -1, cancellationToken);
+    }
+
+    /// <summary>
+    /// 检查 OpenHoYoShade 更新（支持指定下载服务器或自动选择回落）
+    /// </summary>
+    /// <param name="includePrerelease">是否包含预览版</param>
+    /// <param name="serverIndex">下载服务器索引（-1=自动选择，0=GitHub直连，1=Cloudflare，2=腾讯云，3=阿里云）</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
+    public async Task<GithubRelease?> CheckOpenHoYoShadeUpdateAsync(bool includePrerelease, int serverIndex, CancellationToken cancellationToken = default)
+    {
+        var currentVersion = await _versionService.GetOpenHoYoShadeVersionAsync();
+        if (currentVersion == null)
+        {
+            return null;
+        }
+
+        var latestRelease = await GetLatestReleaseAsync(includePrerelease, serverIndex, cancellationToken);
+        if (latestRelease == null)
+        {
+            return null;
+        }
+
+        // Compare versions
+        if (CompareVersions(latestRelease.TagName, currentVersion.Version) > 0)
+        {
+            return latestRelease;
+        }
+
+        return null;
     }
 
     /// <summary>
     /// 检查 OpenHoYoShade 更新（使用指定的代理URL）
     /// </summary>
     /// <param name="includePrerelease">是否包含预览版</param>
-    /// <param name="proxyUrl">代理URL（如果为null则使用GitHub直连）</param>
+    /// <param name="proxyUrl">代理URL（如果为null则使用自动选择回落）</param>
     /// <param name="cancellationToken">取消令牌</param>
     /// <returns>如果有更新则返回最新版本信息，否则返回 null</returns>
-    public async Task<GithubRelease?> CheckOpenHoYoShadeUpdateAsync(bool includePrerelease = false, string? proxyUrl = null, CancellationToken cancellationToken = default)
+    public async Task<GithubRelease?> CheckOpenHoYoShadeUpdateAsync(bool includePrerelease, string? proxyUrl, CancellationToken cancellationToken = default)
     {
-        try
+        if (string.IsNullOrWhiteSpace(proxyUrl))
         {
-            var currentVersion = await _versionService.GetOpenHoYoShadeVersionAsync();
-            if (currentVersion == null)
-            {
-                return null;
-            }
-
-            var latestRelease = await GetLatestReleaseAsync(includePrerelease, proxyUrl, cancellationToken);
-            if (latestRelease == null)
-            {
-                return null;
-            }
-
-            // Compare versions
-            if (CompareVersions(latestRelease.TagName, currentVersion.Version) > 0)
-            {
-                return latestRelease;
-            }
-
-            return null;
+            return await CheckOpenHoYoShadeUpdateAsync(includePrerelease, -1, cancellationToken);
         }
-        catch (Exception)
+
+        var currentVersion = await _versionService.GetOpenHoYoShadeVersionAsync();
+        if (currentVersion == null)
         {
             return null;
         }
+
+        var latestRelease = await GetLatestReleaseAsync(includePrerelease, proxyUrl, cancellationToken);
+        if (latestRelease == null)
+        {
+            return null;
+        }
+
+        // Compare versions
+        if (CompareVersions(latestRelease.TagName, currentVersion.Version) > 0)
+        {
+            return latestRelease;
+        }
+
+        return null;
     }
 
     /// <summary>
-    /// 从 GitHub 获取最新版本（使用指定的代理URL）
+    /// 从 GitHub 获取最新版本（支持指定下载服务器或自动选择回落）
     /// </summary>
-    private async Task<GithubRelease?> GetLatestReleaseAsync(bool includePrerelease, string? proxyUrl, CancellationToken cancellationToken)
+    private async Task<GithubRelease?> GetLatestReleaseAsync(bool includePrerelease, int serverIndex, CancellationToken cancellationToken)
     {
-        try
+        using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
         {
-            using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
-            {
-                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
-            };
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+        };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
 
-            string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
-            
-            // Apply proxy if provided
-            if (!string.IsNullOrWhiteSpace(proxyUrl))
+        string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
+        int[] serverSequence = serverIndex == -1
+            ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
+            : new[] { serverIndex };
+
+        GithubRelease[]? releases = null;
+        Exception? lastFallbackException = null;
+
+        foreach (var currentServerIndex in serverSequence)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string?[] proxies = currentServerIndex == 0
+                ? new string?[] { null }
+                : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+            if (proxies.Length == 0)
             {
-                apiUrl = $"{proxyUrl}/{apiUrl}";
+                proxies = new string?[] { null };
             }
-            
-            var releases = await client.GetFromJsonAsync<GithubRelease[]>(apiUrl, cancellationToken);
 
-            if (releases == null || releases.Length == 0)
+            foreach (var proxyUrl in proxies)
             {
-                return null;
+                cancellationToken.ThrowIfCancellationRequested();
+
+                string currentApiUrl = string.IsNullOrWhiteSpace(proxyUrl)
+                    ? apiUrl
+                    : CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
+
+                try
+                {
+                    releases = await client.GetFromJsonAsync<GithubRelease[]>(currentApiUrl, cancellationToken);
+                    if (releases != null && releases.Length > 0)
+                    {
+                        break;
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    lastFallbackException = ex;
+                    // Proceed to next proxy / server
+                }
             }
 
-            // Filter and find latest version
-            var validReleases = releases
-                .Where(r => IsVersionV3OrAbove(r.TagName))
-                .Where(r => includePrerelease || !r.Prerelease)
-                .OrderByDescending(r => r.PublishedAt)
-                .ToList();
-
-            return validReleases.FirstOrDefault();
+            if (releases != null && releases.Length > 0)
+            {
+                break;
+            }
         }
-        catch (Exception)
+
+        if (releases == null || releases.Length == 0)
+        {
+            throw lastFallbackException ?? new HttpRequestException("Failed to fetch release list from all fallback servers.");
+        }
+
+        var validReleases = releases
+            .Where(r => IsVersionV3OrAbove(r.TagName))
+            .Where(r => !IsHiddenIncompatibleVersionTag(r.TagName))
+            .Where(r => includePrerelease || !r.Prerelease)
+            .OrderByDescending(r => r.PublishedAt)
+            .ToList();
+
+        return validReleases.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// 从 GitHub 获取最新版本（使用指定的单个代理URL）
+    /// </summary>
+    private async Task<GithubRelease?> GetLatestReleaseAsync(bool includePrerelease, string proxyUrl, CancellationToken cancellationToken)
+    {
+        using var client = new HttpClient(DohService.CreateSocketsHttpHandler())
+        {
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+        };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
+
+        string apiUrl = "https://api.github.com/repos/DuolaD/HoYoShade/releases";
+        apiUrl = CloudProxyManager.ApplyProxy(apiUrl, proxyUrl);
+
+        var releases = await client.GetFromJsonAsync<GithubRelease[]>(apiUrl, cancellationToken);
+        if (releases == null || releases.Length == 0)
         {
             return null;
         }
+
+        var validReleases = releases
+            .Where(r => IsVersionV3OrAbove(r.TagName))
+            .Where(r => !IsHiddenIncompatibleVersionTag(r.TagName))
+            .Where(r => includePrerelease || !r.Prerelease)
+            .OrderByDescending(r => r.PublishedAt)
+            .ToList();
+
+        return validReleases.FirstOrDefault();
     }
 
     /// <summary>
     /// 检查版本是否为 V3 或以上
     /// </summary>
-    private bool IsVersionV3OrAbove(string tagName)
+    public static bool IsVersionV3OrAbove(string tagName)
     {
         if (string.IsNullOrWhiteSpace(tagName))
         {
@@ -179,6 +310,25 @@ public class HoYoShadeUpdateService
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 检查是否为已知不兼容的隐藏版本
+    /// </summary>
+    public static bool IsHiddenIncompatibleVersionTag(string? tagName)
+    {
+        if (string.IsNullOrWhiteSpace(tagName))
+        {
+            return false;
+        }
+
+        string normalizedTag = tagName.Trim();
+        if (normalizedTag.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+        {
+            normalizedTag = normalizedTag[1..];
+        }
+
+        return HiddenIncompatibleVersionTags.Contains(normalizedTag);
     }
 
     /// <summary>
