@@ -39,6 +39,10 @@ public sealed partial class WelcomeView : UserControl
         this.InitializeComponent();
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
+        this.Unloaded += (s, e) =>
+        {
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+        };
     }
 
 
@@ -226,6 +230,7 @@ public sealed partial class WelcomeView : UserControl
 
     private void OnLanguageChanged()
     {
+        HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
         OnPropertyChanged(nameof(DohRecommendationText));
         // Re-check write permission to update error messages in current language
         _ = CheckWritePermissionAsync();

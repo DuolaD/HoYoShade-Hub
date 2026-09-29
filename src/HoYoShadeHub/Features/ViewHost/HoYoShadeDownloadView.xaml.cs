@@ -68,10 +68,18 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             ImportFromLocalCommand.NotifyCanExecuteChanged();
         };
         UpdateDownloadServers();
+        this.Unloaded += (s, e) =>
+        {
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+            _loadVersionsCts?.Cancel();
+            _downloadCts?.Cancel();
+            _validationCts?.Cancel();
+        };
     }
 
     private void OnLanguageChanged()
     {
+        HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
         // Update download servers list
         UpdateDownloadServers();
         

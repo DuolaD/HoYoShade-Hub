@@ -52,6 +52,7 @@ public sealed partial class GameSelector : UserControl
         this.InitializeComponent();
         InitializeGameSelector();
         this.Loaded += GameSelector_Loaded;
+        this.Unloaded += GameSelector_Unloaded;
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, OnLanguageChanged);
         WeakReferenceMessenger.Default.Register<MainWindowStateChangedMessage>(this, OnMainWindowStateChanged);
         WeakReferenceMessenger.Default.Register<MainWindowDragRectAdaptToGameIconMessage>(this, OnMainWindowStateChanged);
@@ -131,6 +132,17 @@ public sealed partial class GameSelector : UserControl
         this.XamlRoot.Changed += XamlRoot_Changed;
         await Task.Delay(1000);
         await UpdateGameInfoAsync();
+    }
+
+
+    private void GameSelector_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (this.XamlRoot is not null)
+        {
+            this.XamlRoot.Changed -= XamlRoot_Changed;
+        }
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        _initializeInstalledGamesCancellationTokenSource?.Cancel();
     }
 
 

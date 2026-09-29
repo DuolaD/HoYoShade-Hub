@@ -64,6 +64,11 @@ public sealed partial class QuickSetupView : UserControl
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
         WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
         WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
+        this.Unloaded += (s, e) =>
+        {
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+            _cancellationTokenSource?.Cancel();
+        };
     }
 
     [ObservableProperty]
@@ -127,6 +132,7 @@ public sealed partial class QuickSetupView : UserControl
     private void OnLanguageChanged()
     {
         Lang.Culture = CultureInfo.CurrentUICulture;
+        HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
         this.Bindings.Update();
         OnPropertyChanged(nameof(StartButtonText));
         UpdateDownloadServers();

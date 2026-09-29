@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using Windows.Storage.Streams;
 using Windows.UI;
 using WinRT;
+using HoYoShadeHub.Features.ViewHost;
 
 namespace HoYoShadeHub.Features.Background;
 
@@ -110,6 +111,12 @@ internal static class AccentColorHelper
     public static void ChangeAppAccentColor(Color? color)
     {
         if (color is null)
+        {
+            return;
+        }
+
+        // Do not overwrite theme color if user is on a wizard/setup view (WelcomeView, QuickSetupView, HoYoShadeDownloadView, ReShadeDownloadView)
+        if (MainWindow.Current?.IsCurrentViewWizard == true)
         {
             return;
         }

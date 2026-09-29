@@ -42,6 +42,7 @@ public sealed partial class AppBackground : UserControl
     {
         Current = this;
         this.InitializeComponent();
+        BackgroundImageSource = new BitmapImage(new Uri("ms-appx:///Assets/Image/UI_CutScene_1130320101A.png"));
         WeakReferenceMessenger.Default.Register<BackgroundChangedMessage>(this, OnBackgroundChanged);
         WeakReferenceMessenger.Default.Register<MainWindowStateChangedMessage>(this, OnMainWindowStateChanged);
         WeakReferenceMessenger.Default.Register<VideoBgVolumeChangedMessage>(this, OnVideoBgVolumeChanged);
@@ -50,22 +51,43 @@ public sealed partial class AppBackground : UserControl
     }
 
 
+    private bool _isUnloaded;
+    private bool _isCurrentGameIdInitialized;
+
     private void AppBackground_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _isUnloaded = false;
         this.XamlRoot.Changed -= XamlRoot_Changed;
         this.XamlRoot.Changed += XamlRoot_Changed;
+        if (BackgroundImageSource is null)
+        {
+            InitializeBackgroundImage();
+        }
     }
 
 
     private void AppBackground_Unloaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        _isUnloaded = true;
+        updateBackgroundCts?.Cancel();
         DisposeVideoResource();
-        this.XamlRoot?.Changed -= XamlRoot_Changed;
+        if (this.XamlRoot is not null)
+        {
+            this.XamlRoot.Changed -= XamlRoot_Changed;
+        }
         WeakReferenceMessenger.Default.UnregisterAll(this);
+        if (Current == this)
+        {
+            Current = null;
+        }
     }
 
     private void XamlRoot_Changed(Microsoft.UI.Xaml.XamlRoot sender, Microsoft.UI.Xaml.XamlRootChangedEventArgs args)
     {
+        if (_isUnloaded)
+        {
+            return;
+        }
         if (_lastScale != sender.RasterizationScale)
         {
             _ = UpdateBackgroundAsync();
@@ -78,13 +100,17 @@ public sealed partial class AppBackground : UserControl
     {
         get; set
         {
-            if (field is null)
+            if (_isCurrentGameIdInitialized && field == value)
             {
-                field = value;
-                InitializeBackgroundImage();
+                return;
             }
+            _isCurrentGameIdInitialized = true;
             field = value;
-            _ = UpdateBackgroundAsync();
+            InitializeBackgroundImage();
+            if (!_isUnloaded)
+            {
+                _ = UpdateBackgroundAsync();
+            }
         }
     }
 
@@ -153,6 +179,10 @@ public sealed partial class AppBackground : UserControl
 
     public async Task UpdateBackgroundAsync(GameBackground? background = null)
     {
+        if (_isUnloaded)
+        {
+            return;
+        }
         try
         {
             IsUpdateBackgroundRunning = true;
@@ -206,7 +236,7 @@ public sealed partial class AppBackground : UserControl
                     filePath = BackgroundService.GetFallbackBackgroundImage(CurrentGameId);
                     _logger.LogError(ex, "Update background image");
                 }
-                if (cancellationToken.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested || _isUnloaded)
                 {
                     return;
                 }

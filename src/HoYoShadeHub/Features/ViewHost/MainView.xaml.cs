@@ -48,6 +48,7 @@ public sealed partial class MainView : UserControl
     private void InitializeMainView()
     {
         this.Loaded += MainView_Loaded;
+        this.Unloaded += MainView_Unloaded;
         GameId? gameId = GameSelector.CurrentGameId;
         if (gameId?.GameBiz == GameBiz.bh3_global)
         {
@@ -75,6 +76,12 @@ public sealed partial class MainView : UserControl
         _ = CheckUpdateOrShowRecentUpdateContentAsync();
         _ = CheckFrameworkUpdatesOnStartupAsync();
         AppConfig.GetService<RpcService>().TrySetEnviromentAsync();
+    }
+
+
+    private void MainView_Unloaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
 

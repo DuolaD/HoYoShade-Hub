@@ -51,12 +51,18 @@ public sealed partial class ReShadeDownloadView : UserControl
         
         // Register for ECH settings change messages
         WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
+        this.Unloaded += (s, e) =>
+        {
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+            _cancellationTokenSource?.Cancel();
+        };
     }
 
     private void OnLanguageChanged()
     {
         // Ensure Lang uses the current culture (fix for async methods capturing old culture)
         Lang.Culture = CultureInfo.CurrentUICulture;
+        HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
 
         // Update download servers list
         UpdateDownloadServers();

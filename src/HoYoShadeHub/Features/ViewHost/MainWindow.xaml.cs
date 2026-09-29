@@ -44,6 +44,9 @@ public sealed partial class MainWindow : WindowEx
     private ContentControl _nextPresenter = null!;
     private CompositionScopedBatch? _activeTransitionBatch;
 
+    public bool IsWizardViewActive { get; private set; }
+    public bool IsCurrentViewWizard => IsWizardViewActive;
+
 
     public MainWindow()
     {
@@ -141,6 +144,7 @@ public sealed partial class MainWindow : WindowEx
     private void NavigateToView(UIElement newContent, ViewTransitionType transitionType)
     {
         bool isWizardView = newContent is WelcomeView or HoYoShadeDownloadView or ReShadeDownloadView or QuickSetupView;
+        IsWizardViewActive = isWizardView;
 
         if (transitionType == ViewTransitionType.None || !AreAnimationsEnabled() || _currentPresenter.Content == null)
         {
