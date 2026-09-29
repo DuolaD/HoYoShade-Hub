@@ -323,7 +323,7 @@
                     Height="40"
                     BorderThickness="0"
                     Command="{x:Bind FinishCommand}"
-                    IsEnabled="{x:Bind IsCompleted, Mode=OneWay}"
+                    IsEnabled="{x:Bind CanFinish, Mode=OneWay}"
                     Style="{ThemeResource AccentButtonStyle}"
                     CornerRadius="8,20,20,8">
                 <StackPanel Orientation="Horizontal" Spacing="6" Margin="6,0,6,0">

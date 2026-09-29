@@ -324,7 +324,10 @@ public sealed partial class MainWindow : WindowEx
         var transitionType = (m.SlideFromLeft || _currentPresenter.Content is HoYoShadeDownloadView or ReShadeDownloadView)
             ? ViewTransitionType.SlideFromLeft
             : ViewTransitionType.SlideFromRight;
-        NavigateToView(new QuickSetupView(), transitionType);
+        NavigateToView(new QuickSetupView
+        {
+            IsUpdateMode = m.IsUpdateMode
+        }, transitionType);
     }
 
 

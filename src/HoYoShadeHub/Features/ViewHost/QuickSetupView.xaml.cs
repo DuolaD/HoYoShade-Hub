@@ -74,9 +74,16 @@ public sealed partial class QuickSetupView : UserControl
     }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StartButtonText))]
+    [NotifyPropertyChangedFor(nameof(CanFinish))]
+    private bool isUpdateMode;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanFinish))]
     private bool isHoYoShadeInstalled;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanFinish))]
     private bool isOpenHoYoShadeInstalled;
 
     [ObservableProperty]
@@ -94,6 +101,7 @@ public sealed partial class QuickSetupView : UserControl
     [NotifyPropertyChangedFor(nameof(CanStartInstall))]
     [NotifyPropertyChangedFor(nameof(CanNavigateToCustom))]
     [NotifyPropertyChangedFor(nameof(StartButtonText))]
+    [NotifyPropertyChangedFor(nameof(CanFinish))]
     private bool isDownloading;
 
     [ObservableProperty]
@@ -101,14 +109,18 @@ public sealed partial class QuickSetupView : UserControl
     [NotifyPropertyChangedFor(nameof(CanStartInstall))]
     [NotifyPropertyChangedFor(nameof(CanNavigateToCustom))]
     [NotifyPropertyChangedFor(nameof(StartButtonText))]
+    [NotifyPropertyChangedFor(nameof(CanFinish))]
     private bool isCompleted;
 
     public bool IsNotCompleted => !IsCompleted;
     public bool CanStartInstall => !IsDownloading && !IsCompleted;
     public bool CanNavigateToCustom => !IsDownloading;
+    public bool CanFinish => !IsDownloading && (IsCompleted || (IsUpdateMode && (IsHoYoShadeInstalled || IsOpenHoYoShadeInstalled)));
     public string StartButtonText => IsDownloading
         ? Lang.QuickSetupView_Installing
-        : (IsCompleted ? Lang.QuickSetupView_Completed : Lang.HoYoShadeDownloadView_DownloadAndInstall);
+        : (IsCompleted 
+            ? Lang.QuickSetupView_Completed 
+            : (IsUpdateMode ? Lang.UpdatePage_UpdateNow : Lang.HoYoShadeDownloadView_DownloadAndInstall));
 
     [ObservableProperty]
     private double overallProgress;
@@ -262,7 +274,7 @@ public sealed partial class QuickSetupView : UserControl
     [RelayCommand]
     private void NavigateToCustom()
     {
-        WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage());
+        WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage(IsUpdateMode));
     }
 
     [RelayCommand]
@@ -426,6 +438,17 @@ public sealed partial class QuickSetupView : UserControl
     private async Task InstallFrameworkAsync(GithubRelease release, GithubAsset asset, CancellationToken cancellationToken)
     {
         var targetPath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+        var presetsPath = Path.Combine(targetPath, "Presets");
+        bool hasExistingPresets = Directory.Exists(presetsPath);
+
+        // In QuickSetup, preset handling defaults to SeparateFolder (2) in update mode or when presets already exist
+        int presetsHandling = (IsUpdateMode || hasExistingPresets)
+            ? (int)PresetsHandlingOption.SeparateFolder
+            : (int)PresetsHandlingOption.Overwrite;
+
+        _logger.LogInformation("QuickSetup framework install: TargetPath={TargetPath}, PresetsHandling={PresetsHandling}, IsUpdateMode={IsUpdateMode}, HasExistingPresets={HasExistingPresets}",
+            targetPath, presetsHandling, IsUpdateMode, hasExistingPresets);
+
         var serverSequence = GetServerSequence();
         var httpClient = AppConfig.GetService<HttpClient>();
         bool success = false;
@@ -470,7 +493,7 @@ public sealed partial class QuickSetupView : UserControl
                     {
                         DownloadUrl = tryUrl,
                         TargetPath = targetPath,
-                        PresetsHandling = 0, // Overwrite
+                        PresetsHandling = presetsHandling,
                         VersionTag = release.TagName,
                         EnableEch = AppConfig.EnableEch,
                         DohUrl = AppConfig.EnableEch ? DohService.GetCurrentDohUrl() : "",

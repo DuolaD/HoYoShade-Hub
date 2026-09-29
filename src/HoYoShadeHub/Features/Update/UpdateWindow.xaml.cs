@@ -479,20 +479,31 @@ public sealed partial class UpdateWindow : WindowEx
                 // Framework update: navigate to download page instead of downloading
                 _logger.LogInformation("Framework update detected, navigating to download page");
                 
+                string frameworkName = DetermineFrameworkName();
                 // Store the framework update info to show changelog later
                 if (ShowUpdateContentAfterFrameworkUpdate)
                 {
                     AppConfig.SetValue(NewVersion.Version, "PendingFrameworkUpdateVersion");
                     // Store the framework name to fetch correct changelog later
                     // Determine framework name from package URL or use CurrentFrameworkVersion
-                    string frameworkName = DetermineFrameworkName();
                     AppConfig.SetValue(frameworkName, "PendingFrameworkUpdateName");
                     _logger.LogInformation("Stored pending framework update: {Version} ({Framework})", 
                         NewVersion.Version, frameworkName);
                 }
                 
-                // Send message to navigate to download page
-                WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage(true));
+                // Send message to navigate to appropriate update page
+                if (string.Equals(frameworkName, "HoYoShade", StringComparison.OrdinalIgnoreCase))
+                {
+                    // HoYoShade framework updates default to QuickSetupView in Update Mode
+                    _logger.LogInformation("Navigating to QuickSetupView in update mode for HoYoShade update");
+                    WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage { IsUpdateMode = true });
+                }
+                else
+                {
+                    // Other framework updates (e.g. OpenHoYoShade) go to normal download page in update mode
+                    _logger.LogInformation("Navigating to HoYoShadeDownloadView in update mode for {Framework} update", frameworkName);
+                    WeakReferenceMessenger.Default.Send(new NavigateToDownloadPageMessage(true));
+                }
                 
                 // Close the update window
                 this.Close();

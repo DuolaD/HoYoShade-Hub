@@ -1387,7 +1387,11 @@ public sealed partial class ReShadeDownloadView : UserControl
             return;
         }
 
-        WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage { SlideFromLeft = true });
+        WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage 
+        { 
+            SlideFromLeft = true,
+            IsUpdateMode = IsUpdateMode
+        });
     }
 }
 

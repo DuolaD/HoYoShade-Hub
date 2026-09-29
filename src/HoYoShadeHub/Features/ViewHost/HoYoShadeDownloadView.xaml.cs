@@ -1838,7 +1838,11 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         }
 
         _loadVersionsCts?.Cancel();
-        WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage { SlideFromLeft = true });
+        WeakReferenceMessenger.Default.Send(new NavigateToQuickSetupPageMessage 
+        { 
+            SlideFromLeft = true,
+            IsUpdateMode = IsUpdateMode
+        });
     }
 }
 
