@@ -111,6 +111,8 @@ public sealed partial class AboutSetting : PageBase
             server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
         }
 
+        await Task.Delay(400);
+
         var tasks = serversToUpdate.Select(async server =>
         {
             long latency = await CloudProxyManager.PingServerAsync(server.ServerIndex, httpClient);

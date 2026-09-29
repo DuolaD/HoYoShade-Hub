@@ -185,7 +185,7 @@ public class CloudProxyManager
         string pingUrl;
         if (serverIndex == 0) // GitHub Direct
         {
-            pingUrl = "https://github.com/";
+            pingUrl = "https://github.com/favicon.ico";
         }
         else
         {
