@@ -127,10 +127,10 @@
     <value>Published Time:</value>
   </data>
   <data name="HoYoShadeDownloadView_UpdateModeTitle" xml:space="preserve">
-    <value>Download and install HoYoShade framework</value>
+    <value>Let's update the HoYoShade framework</value>
   </data>
   <data name="ReShadeDownloadView_UpdateModeTitle" xml:space="preserve">
-    <value>Download and install ReShade shaders &amp; plugins</value>
+    <value>Next, let's update ReShade shaders &amp; Addons</value>
   </data>
   <data name="ReShadeDownloadView_UpdateModeHint" xml:space="preserve">
     <value>Updating may involve ReShade version changes; choose components to install.</value>

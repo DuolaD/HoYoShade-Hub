@@ -127,10 +127,10 @@
     <value>發佈時間：</value>
   </data>
   <data name="HoYoShadeDownloadView_UpdateModeTitle" xml:space="preserve">
-    <value>下載並安裝 HoYoShade 框架</value>
+    <value>讓我們更新 HoYoShade 框架</value>
   </data>
   <data name="ReShadeDownloadView_UpdateModeTitle" xml:space="preserve">
-    <value>下載並安裝 ReShade 著色器與外掛</value>
+    <value>接下來，讓我們更新 ReShade 著色器與外掛</value>
   </data>
   <data name="ReShadeDownloadView_UpdateModeHint" xml:space="preserve">
     <value>更新可能涉及 ReShade 版本變動，請選擇要安裝的元件。</value>

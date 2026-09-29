@@ -2534,7 +2534,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Download and install HoYoShade framework 的本地化字符串。
+        ///   查找类似 Let's update the HoYoShade framework 的本地化字符串。
         /// </summary>
         public static string HoYoShadeDownloadView_UpdateModeTitle {
             get {
@@ -3619,7 +3619,7 @@ namespace HoYoShadeHub.Language {
         }
         
         /// <summary>
-        ///   查找类似 Download and install ReShade shaders &amp; plugins 的本地化字符串。
+        ///   查找类似 Next, let's update ReShade shaders &amp; Addons 的本地化字符串。
         /// </summary>
         public static string ReShadeDownloadView_UpdateModeTitle {
             get {
