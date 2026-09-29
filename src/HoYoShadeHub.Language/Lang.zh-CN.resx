@@ -127,10 +127,10 @@
     <value>发布时间：</value>
   </data>
   <data name="HoYoShadeDownloadView_UpdateModeTitle" xml:space="preserve">
-    <value>下载并安装 HoYoShade 框架</value>
+    <value>让我们更新 HoYoShade 框架</value>
   </data>
   <data name="ReShadeDownloadView_UpdateModeTitle" xml:space="preserve">
-    <value>下载并安装 ReShade 着色器和插件</value>
+    <value>接下来，让我们更新 ReShade 着色器和插件</value>
   </data>
   <data name="ReShadeDownloadView_UpdateModeHint" xml:space="preserve">
     <value>更新可能涉及 ReShade 版本变动，请选择要安装的组件。</value>
@@ -1912,6 +1912,30 @@
   <data name="QuickSetupView_CustomInstall" xml:space="preserve">
     <value>自定义 / 高级安装</value>
   </data>
+  <data name="QuickSetupView_UpdateModeTitle" xml:space="preserve">
+    <value>焕然一新？</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeSubtitle" xml:space="preserve">
+    <value>更新升级所需的一切，就这么一气呵成。</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeEpigraph" xml:space="preserve">
+    <value>“欲穷千里目？更上一层楼！”</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeDescription" xml:space="preserve">
+    <value>一般情况下，普通用户只需要点击此处的“立即更新”，即可完成所有更新步骤。</value>
+  </data>
+  <data name="QuickSetupView_Action3_Title" xml:space="preserve">
+    <value>你当前的预设文件将会被完整保留</value>
+  </data>
+  <data name="QuickSetupView_Action3_Desc" xml:space="preserve">
+    <value>启动器将会在 Presets 文件夹中以版本号命名一个新文件夹，用于存放新版本 HoYoShade 框架的预设。</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeOrCustomHint" xml:space="preserve">
+    <value>或者，进行自定义更新</value>
+  </data>
+  <data name="QuickSetupView_UpdateModeCustomInstall" xml:space="preserve">
+    <value>自定义 / 高级更新</value>
+  </data>
   <data name="QuickSetupView_EnterMainView" xml:space="preserve">
     <value>进入主界面</value>
   </data>
@@ -2382,5 +2406,11 @@
   </data>
   <data name="HoYoShadeDownloadView_WantSimplerGoToPrefix" xml:space="preserve">
     <value>想要简单一点？前往</value>
+  </data>
+  <data name="HoYoShadeDownloadView_WantSimplerUpdatePrefix" xml:space="preserve">
+    <value>只想简单的更新 HoYoShade？前往</value>
+  </data>
+  <data name="HoYoShadeDownloadView_QuickUpdate" xml:space="preserve">
+    <value>快速更新</value>
   </data>
 </root>
