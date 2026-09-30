@@ -2535,6 +2535,12 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="BackupRestoreDialog_ConflictSeparateFolder" xml:space="preserve">
     <value>分開資料夾保留現有預設 (推薦)</value>
   </data>
+  <data name="BackupRestoreDialog_ConflictSkip" xml:space="preserve">
+    <value>不還原預設檔案</value>
+  </data>
+  <data name="BackupRestoreDialog_ConflictSkip_Tooltip" xml:space="preserve">
+    <value>跳過預設檔案嘅還原，保留而家嘅預設不變。</value>
+  </data>
   <data name="BackupRestoreDialog_ConflictOverwrite" xml:space="preserve">
     <value>直接覆蓋同名預設</value>
   </data>

@@ -21,9 +21,14 @@ public enum PresetConflictResolution
     SeparateFolder = 0,
 
     /// <summary>
+    /// 不还原预设文件（保留现有预设不变）
+    /// </summary>
+    Skip = 1,
+
+    /// <summary>
     /// 直接覆盖同名文件
     /// </summary>
-    Overwrite = 1
+    Overwrite = 2
 }
 
 /// <summary>
@@ -505,58 +510,61 @@ public static class ShadeBackupRestoreService
             }
 
             // 5. 还原 Presets 预设
-            string sourcePresets = Path.Combine(sourceRoot, "Presets");
-            string destPresets = Path.Combine(destinationShadePath, "Presets");
-            Directory.CreateDirectory(destPresets);
-
-            string targetPresetsDir = destPresets;
-            if (options.ConflictResolution == PresetConflictResolution.SeparateFolder)
+            if (options.ConflictResolution != PresetConflictResolution.Skip)
             {
-                string folderName = Path.GetFileNameWithoutExtension(archiveFilePath);
-                while (folderName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
-                       folderName.EndsWith(".7z", StringComparison.OrdinalIgnoreCase))
+                string sourcePresets = Path.Combine(sourceRoot, "Presets");
+                string destPresets = Path.Combine(destinationShadePath, "Presets");
+                Directory.CreateDirectory(destPresets);
+
+                string targetPresetsDir = destPresets;
+                if (options.ConflictResolution == PresetConflictResolution.SeparateFolder)
                 {
-                    folderName = Path.GetFileNameWithoutExtension(folderName);
-                }
-
-                if (string.IsNullOrWhiteSpace(folderName))
-                {
-                    folderName = $"Backup_{DateTime.Now:yyyyMMdd_HHmmss}";
-                }
-
-                folderName = SanitizeFolderName(folderName);
-                targetPresetsDir = GetUniqueDirectoryPath(destPresets, folderName);
-                Directory.CreateDirectory(targetPresetsDir);
-            }
-
-            if (Directory.Exists(sourcePresets))
-            {
-                var presetFiles = Directory.GetFiles(sourcePresets, "*", SearchOption.AllDirectories);
-                foreach (var file in presetFiles)
-                {
-                    string relPath = Path.GetRelativePath(sourcePresets, file);
-                    string targetFile = Path.Combine(targetPresetsDir, relPath);
-
-                    string? dir = Path.GetDirectoryName(targetFile);
-                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                    string folderName = Path.GetFileNameWithoutExtension(archiveFilePath);
+                    while (folderName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
+                           folderName.EndsWith(".7z", StringComparison.OrdinalIgnoreCase))
                     {
-                        Directory.CreateDirectory(dir);
+                        folderName = Path.GetFileNameWithoutExtension(folderName);
                     }
 
+                    if (string.IsNullOrWhiteSpace(folderName))
+                    {
+                        folderName = $"Backup_{DateTime.Now:yyyyMMdd_HHmmss}";
+                    }
+
+                    folderName = SanitizeFolderName(folderName);
+                    targetPresetsDir = GetUniqueDirectoryPath(destPresets, folderName);
+                    Directory.CreateDirectory(targetPresetsDir);
+                }
+
+                if (Directory.Exists(sourcePresets))
+                {
+                    var presetFiles = Directory.GetFiles(sourcePresets, "*", SearchOption.AllDirectories);
+                    foreach (var file in presetFiles)
+                    {
+                        string relPath = Path.GetRelativePath(sourcePresets, file);
+                        string targetFile = Path.Combine(targetPresetsDir, relPath);
+
+                        string? dir = Path.GetDirectoryName(targetFile);
+                        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                        {
+                            Directory.CreateDirectory(dir);
+                        }
+
+                        File.Copy(file, targetFile, true);
+                        progress?.Report((100, Path.GetFileName(file)));
+                    }
+                }
+
+                // 兼顾直接放在根目录的 .ini 预设
+                var rootIniFiles = Directory.GetFiles(sourceRoot, "*.ini", SearchOption.TopDirectoryOnly);
+                foreach (var file in rootIniFiles)
+                {
+                    if (Path.GetFileName(file).Equals("ReShade.ini", StringComparison.OrdinalIgnoreCase)) continue;
+
+                    string targetFile = Path.Combine(targetPresetsDir, Path.GetFileName(file));
                     File.Copy(file, targetFile, true);
                     progress?.Report((100, Path.GetFileName(file)));
                 }
-            }
-
-            // 兼顾直接放在根目录的 .ini 预设
-            var rootIniFiles = Directory.GetFiles(sourceRoot, "*.ini", SearchOption.TopDirectoryOnly);
-            foreach (var file in rootIniFiles)
-            {
-                if (Path.GetFileName(file).Equals("ReShade.ini", StringComparison.OrdinalIgnoreCase)) continue;
-
-                string targetFile = Path.Combine(targetPresetsDir, Path.GetFileName(file));
-                File.Copy(file, targetFile, true);
-                progress?.Report((100, Path.GetFileName(file)));
             }
 
             // 6. 还原 reshade-shaders

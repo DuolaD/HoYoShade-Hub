@@ -283,6 +283,8 @@
                                   IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
                         <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSeparateFolder}"
                                      ToolTipService.ToolTip="{x:Bind lang:Lang.PresetsDialog_SeparateFolder_Tooltip}" />
+                        <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSkip}"
+                                     ToolTipService.ToolTip="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSkip_Tooltip}" />
                         <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictOverwrite}"
                                      ToolTipService.ToolTip="{x:Bind lang:Lang.PresetsDialog_Overwrite_Tooltip}" />
                     </RadioButtons>

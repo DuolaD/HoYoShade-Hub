@@ -7155,6 +7155,16 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("BackupRestoreDialog_ConflictSeparateFolder", resourceCulture);
             }
         }
+        public static string BackupRestoreDialog_ConflictSkip {
+            get {
+                return ResourceManager.GetString("BackupRestoreDialog_ConflictSkip", resourceCulture);
+            }
+        }
+        public static string BackupRestoreDialog_ConflictSkip_Tooltip {
+            get {
+                return ResourceManager.GetString("BackupRestoreDialog_ConflictSkip_Tooltip", resourceCulture);
+            }
+        }
         public static string BackupRestoreDialog_ConflictOverwrite {
             get {
                 return ResourceManager.GetString("BackupRestoreDialog_ConflictOverwrite", resourceCulture);

@@ -2524,6 +2524,12 @@
   <data name="BackupRestoreDialog_ConflictSeparateFolder" xml:space="preserve">
     <value>分开文件夹保留现有预设 (推荐)</value>
   </data>
+  <data name="BackupRestoreDialog_ConflictSkip" xml:space="preserve">
+    <value>不还原预设文件</value>
+  </data>
+  <data name="BackupRestoreDialog_ConflictSkip_Tooltip" xml:space="preserve">
+    <value>跳过预设文件的还原，保留当前现有预设不变。</value>
+  </data>
   <data name="BackupRestoreDialog_ConflictOverwrite" xml:space="preserve">
     <value>直接覆盖同名预设</value>
   </data>

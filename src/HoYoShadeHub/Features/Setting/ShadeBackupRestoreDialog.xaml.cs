@@ -434,9 +434,12 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
 
             var options = new ShadeRestoreOptions
             {
-                ConflictResolution = ConflictResolutionIndex == 1
-                    ? PresetConflictResolution.Overwrite
-                    : PresetConflictResolution.SeparateFolder,
+                ConflictResolution = ConflictResolutionIndex switch
+                {
+                    1 => PresetConflictResolution.Skip,
+                    2 => PresetConflictResolution.Overwrite,
+                    _ => PresetConflictResolution.SeparateFolder
+                },
                 RestoreReShadeIni = RestoreReShadeIni && SelectedManifest?.IncludesReShadeIni == true,
                 CreateSafetySnapshot = CreateSafetySnapshot,
                 BackupBaseFolder = AppConfig.UserDataFolder
