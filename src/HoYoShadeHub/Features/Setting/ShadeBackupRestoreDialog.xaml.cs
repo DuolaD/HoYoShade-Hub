@@ -210,7 +210,8 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
             string? destinationPath = await FileDialogHelper.OpenSaveFileDialogAsync(
                 this.XamlRoot,
                 suggestedFileName,
-                (Lang.BackupRestoreDialog_ZipFilterName, ".zip"));
+                (Lang.BackupRestoreDialog_ZipFilterName, ".zip"),
+                (Lang.BackupRestoreDialog_SevenZipFilterName, ".7z"));
 
             if (string.IsNullOrWhiteSpace(destinationPath))
             {
@@ -389,7 +390,8 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
         {
             string? filePath = await FileDialogHelper.PickSingleFileAsync(
                 this.XamlRoot,
-                (Lang.BackupRestoreDialog_ZipFilterName, ".zip"));
+                (Lang.BackupRestoreDialog_ZipFilterName, ".zip"),
+                (Lang.BackupRestoreDialog_SevenZipFilterName, ".7z"));
 
             if (string.IsNullOrWhiteSpace(filePath))
             {

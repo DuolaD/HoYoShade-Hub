@@ -7235,5 +7235,15 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("BackupRestoreDialog_PackageScreenshotsFormat", resourceCulture);
             }
         }
+        public static string BackupRestoreDialog_SevenZipFilterName {
+            get {
+                return ResourceManager.GetString("BackupRestoreDialog_SevenZipFilterName", resourceCulture);
+            }
+        }
+        public static string BackupRestoreDialog_AllSupportedFilterName {
+            get {
+                return ResourceManager.GetString("BackupRestoreDialog_AllSupportedFilterName", resourceCulture);
+            }
+        }
     }
 }

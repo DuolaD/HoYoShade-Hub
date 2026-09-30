@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
 	<!-- 
     Microsoft ResX Schema 
@@ -2503,10 +2503,10 @@ When the content provider supports ECH, the program will preferentially attempt 
     <value>Open in Explorer</value>
   </data>
   <data name="BackupRestoreDialog_SelectFileButton" xml:space="preserve">
-    <value>Choose Backup File (*.zip)...</value>
+    <value>Choose Backup File (*.zip; *.7z)...</value>
   </data>
   <data name="BackupRestoreDialog_NoFileSelected" xml:space="preserve">
-    <value>Please choose a .zip backup file to restore.</value>
+    <value>Please choose a .zip or .7z backup file to restore.</value>
   </data>
   <data name="BackupRestoreDialog_PackageDetails" xml:space="preserve">
     <value>Backup Archive Details</value>
@@ -2569,7 +2569,7 @@ When the content provider supports ECH, the program will preferentially attempt 
     <value>Operation failed: {0}</value>
   </data>
   <data name="BackupRestoreDialog_BackupFilterName" xml:space="preserve">
-    <value>HoYoShade Backup Package (*.zip;*.hysbak)</value>
+    <value>HoYoShade Backup Package (*.zip;*.7z)</value>
   </data>
   <data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
     <value>ZIP Archive (*.zip)</value>
@@ -2585,5 +2585,11 @@ When the content provider supports ECH, the program will preferentially attempt 
   </data>
   <data name="BackupRestoreDialog_PackageScreenshotsFormat" xml:space="preserve">
     <value>Includes Screenshots: {0}</value>
+  </data>
+  <data name="BackupRestoreDialog_SevenZipFilterName" xml:space="preserve">
+    <value>7-Zip Archive (*.7z)</value>
+  </data>
+  <data name="BackupRestoreDialog_AllSupportedFilterName" xml:space="preserve">
+    <value>HoYoShade Backup Archives (*.zip;*.7z)</value>
   </data>
 </root>

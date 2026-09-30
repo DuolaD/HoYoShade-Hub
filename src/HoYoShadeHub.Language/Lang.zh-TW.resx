@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2503,10 +2503,10 @@
     <value>在檔案總管中開啟</value>
   </data>
   <data name="BackupRestoreDialog_SelectFileButton" xml:space="preserve">
-    <value>選擇備份檔案 (*.zip)...</value>
+    <value>選擇備份檔案 (*.zip; *.7z)...</value>
   </data>
   <data name="BackupRestoreDialog_NoFileSelected" xml:space="preserve">
-    <value>請選擇要匯入還原的 .zip 備份檔案。</value>
+    <value>請選擇要匯入還原的 .zip 或 .7z 備份檔案。</value>
   </data>
   <data name="BackupRestoreDialog_PackageDetails" xml:space="preserve">
     <value>備份檔案詳情</value>
@@ -2569,7 +2569,7 @@
     <value>操作失敗：{0}</value>
   </data>
   <data name="BackupRestoreDialog_BackupFilterName" xml:space="preserve">
-    <value>HoYoShade 備份檔案 (*.zip;*.hysbak)</value>
+    <value>HoYoShade 備份包 (*.zip;*.7z)</value>
   </data>
   <data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
     <value>ZIP 壓縮檔 (*.zip)</value>
@@ -2585,5 +2585,11 @@
   </data>
   <data name="BackupRestoreDialog_PackageScreenshotsFormat" xml:space="preserve">
     <value>包含截圖：{0}</value>
+  </data>
+  <data name="BackupRestoreDialog_SevenZipFilterName" xml:space="preserve">
+    <value>7-Zip 壓縮檔 (*.7z)</value>
+  </data>
+  <data name="BackupRestoreDialog_AllSupportedFilterName" xml:space="preserve">
+    <value>HoYoShade 備份檔案 (*.zip;*.7z)</value>
   </data>
 </root>

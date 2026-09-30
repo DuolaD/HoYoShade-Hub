@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using SharpSevenZip;
 
 namespace HoYoShadeHub.Core.HoYoShade;
 
@@ -124,14 +124,14 @@ public class ShadeBackupManifest
     public bool IncludesScreenshots { get; set; }
 
     /// <summary>
-    /// 备份包内部是否有可识别的配置/预设
+    /// 备份包内部是否有可识别的配置/预设/资源
     /// </summary>
     [JsonIgnore]
     public bool IsValid => IncludesPresets || IncludesReShadeIni || IncludesShaders || IncludesScreenshots;
 }
 
 /// <summary>
-/// HoYoShade & OpenHoYoShade 备份与还原核心服务
+/// HoYoShade & OpenHoYoShade 备份与还原服务 (基于 7-Zip / SharpSevenZip)
 /// </summary>
 public static class ShadeBackupRestoreService
 {
@@ -142,12 +142,12 @@ public static class ShadeBackupRestoreService
     };
 
     /// <summary>
-    /// 导出备份到指定 zip 文件
+    /// 导出备份到指定压缩文件 (.zip 或 .7z)
     /// </summary>
     public static async Task ExportBackupAsync(
         string shadePath,
         string shadeName,
-        string destinationZipPath,
+        string destinationArchivePath,
         ShadeBackupOptions options,
         IProgress<(double Progress, string Status)>? progress = null,
         CancellationToken cancellationToken = default)
@@ -157,157 +157,144 @@ public static class ShadeBackupRestoreService
             throw new DirectoryNotFoundException($"Shade directory does not exist: {shadePath}");
         }
 
-        string? destDir = Path.GetDirectoryName(destinationZipPath);
+        string? destDir = Path.GetDirectoryName(destinationArchivePath);
         if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
         {
             Directory.CreateDirectory(destDir);
         }
 
-        // 临时文件，避免中途失败留下残缺压缩包
-        string tempZipPath = destinationZipPath + ".tmp_" + Guid.NewGuid().ToString("N");
+        // 创建暂存目录组织打包结构
+        string stagingDir = Path.Combine(Path.GetTempPath(), $"HYS_BackupStaging_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(stagingDir);
 
-        await Task.Run(() =>
+        try
         {
-            try
+            int presetCount = 0;
+            bool hasPresets = false;
+            bool hasReShadeIni = false;
+            bool hasShaders = false;
+            bool hasScreenshots = false;
+
+            // 1. Presets
+            if (options.BackupPresets)
             {
-                var filesToZip = new List<(string FullPath, string RelativePath)>();
-
-                // 1. Presets 预设
-                int presetCount = 0;
-                if (options.BackupPresets)
+                string srcPresets = Path.Combine(shadePath, "Presets");
+                if (Directory.Exists(srcPresets))
                 {
-                    string presetsDir = Path.Combine(shadePath, "Presets");
-                    if (Directory.Exists(presetsDir))
-                    {
-                        var presetFiles = Directory.GetFiles(presetsDir, "*", SearchOption.AllDirectories);
-                        foreach (var file in presetFiles)
-                        {
-                            string rel = Path.GetRelativePath(shadePath, file);
-                            filesToZip.Add((file, rel));
-                            if (Path.GetExtension(file).Equals(".ini", StringComparison.OrdinalIgnoreCase))
-                            {
-                                presetCount++;
-                            }
-                        }
-                    }
+                    string destPresets = Path.Combine(stagingDir, "Presets");
+                    CopyDirectory(srcPresets, destPresets);
+                    var presetFiles = Directory.GetFiles(destPresets, "*.ini", SearchOption.AllDirectories);
+                    presetCount = presetFiles.Length;
+                    hasPresets = presetCount > 0;
                 }
+            }
 
-                // 2. ReShade.ini
-                bool hasReShadeIni = false;
-                if (options.BackupReShadeIni)
+            // 2. ReShade.ini
+            if (options.BackupReShadeIni)
+            {
+                string srcIni = Path.Combine(shadePath, "ReShade.ini");
+                if (File.Exists(srcIni))
                 {
-                    string iniPath = Path.Combine(shadePath, "ReShade.ini");
-                    if (File.Exists(iniPath))
-                    {
-                        filesToZip.Add((iniPath, "ReShade.ini"));
-                        hasReShadeIni = true;
-                    }
+                    File.Copy(srcIni, Path.Combine(stagingDir, "ReShade.ini"), true);
+                    hasReShadeIni = true;
                 }
+            }
 
-                // 3. Shaders
-                bool hasShaders = false;
-                if (options.BackupShaders)
+            // 3. Shaders
+            if (options.BackupShaders)
+            {
+                string srcShaders = Path.Combine(shadePath, "reshade-shaders");
+                if (Directory.Exists(srcShaders))
                 {
-                    string shadersDir = Path.Combine(shadePath, "reshade-shaders");
-                    if (Directory.Exists(shadersDir))
-                    {
-                        var shaderFiles = Directory.GetFiles(shadersDir, "*", SearchOption.AllDirectories);
-                        foreach (var file in shaderFiles)
-                        {
-                            string rel = Path.GetRelativePath(shadePath, file);
-                            filesToZip.Add((file, rel));
-                        }
-                        hasShaders = shaderFiles.Length > 0;
-                    }
+                    string destShaders = Path.Combine(stagingDir, "reshade-shaders");
+                    CopyDirectory(srcShaders, destShaders);
+                    hasShaders = Directory.EnumerateFileSystemEntries(destShaders).Any();
                 }
+            }
 
-                // 4. Screenshots
-                bool hasScreenshots = false;
-                if (options.BackupScreenshots)
+            // 4. Screenshots
+            if (options.BackupScreenshots)
+            {
+                string srcScreenshots = Path.Combine(shadePath, "Screenshots");
+                if (Directory.Exists(srcScreenshots))
                 {
-                    string screenshotsDir = Path.Combine(shadePath, "Screenshots");
-                    if (Directory.Exists(screenshotsDir))
-                    {
-                        var screenshotFiles = Directory.GetFiles(screenshotsDir, "*", SearchOption.AllDirectories);
-                        foreach (var file in screenshotFiles)
-                        {
-                            string rel = Path.GetRelativePath(shadePath, file);
-                            filesToZip.Add((file, rel));
-                        }
-                        hasScreenshots = screenshotFiles.Length > 0;
-                    }
+                    string destScreenshots = Path.Combine(stagingDir, "Screenshots");
+                    CopyDirectory(srcScreenshots, destScreenshots);
+                    hasScreenshots = Directory.EnumerateFileSystemEntries(destScreenshots).Any();
                 }
+            }
 
-                if (filesToZip.Count == 0 && !hasReShadeIni)
-                {
-                    throw new InvalidOperationException("No components selected or found to back up.");
-                }
+            if (!hasPresets && !hasReShadeIni && !hasShaders && !hasScreenshots)
+            {
+                throw new InvalidOperationException("No components selected or found to back up.");
+            }
 
-                // 构造清单
-                var manifest = new ShadeBackupManifest
+            // 写入 manifest.json
+            var manifest = new ShadeBackupManifest
+            {
+                ManifestVersion = 1,
+                SourceFramework = shadeName,
+                FrameworkVersion = options.FrameworkVersion,
+                ReShadeVersion = options.ReShadeVersion,
+                CreatedAt = DateTime.Now,
+                IncludesPresets = hasPresets,
+                PresetCount = presetCount,
+                IncludesReShadeIni = hasReShadeIni,
+                IncludesShaders = hasShaders,
+                IncludesScreenshots = hasScreenshots
+            };
+
+            string manifestPath = Path.Combine(stagingDir, "manifest.json");
+            await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(manifest, JsonOptions), cancellationToken);
+
+            // 判断输出格式 (.7z 或 .zip)
+            bool is7z = Path.GetExtension(destinationArchivePath).Equals(".7z", StringComparison.OrdinalIgnoreCase);
+            var format = is7z ? OutArchiveFormat.SevenZip : OutArchiveFormat.Zip;
+
+            // 压缩输出
+            await Task.Run(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var compressor = new SharpSevenZipCompressor
                 {
-                    ManifestVersion = 1,
-                    SourceFramework = shadeName,
-                    FrameworkVersion = options.FrameworkVersion,
-                    ReShadeVersion = options.ReShadeVersion,
-                    CreatedAt = DateTime.Now,
-                    IncludesPresets = options.BackupPresets && presetCount > 0,
-                    PresetCount = presetCount,
-                    IncludesReShadeIni = hasReShadeIni,
-                    IncludesShaders = hasShaders,
-                    IncludesScreenshots = hasScreenshots
+                    ArchiveFormat = format,
+                    CompressionLevel = SharpSevenZip.CompressionLevel.Normal
                 };
 
-                // 创建并写入 Zip
-                using (var zipStream = new FileStream(tempZipPath, FileMode.Create, FileAccess.Write, FileShare.None))
-                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, false))
+                compressor.Compressing += (s, e) =>
                 {
-                    // 写入 manifest.json
-                    var manifestEntry = archive.CreateEntry("manifest.json", CompressionLevel.Optimal);
-                    using (var entryStream = manifestEntry.Open())
-                    {
-                        JsonSerializer.Serialize(entryStream, manifest, JsonOptions);
-                    }
+                    progress?.Report((e.PercentDone, ""));
+                };
 
-                    int total = filesToZip.Count;
-                    int current = 0;
+                compressor.FileCompressionStarted += (s, e) =>
+                {
+                    progress?.Report((e.PercentDone, e.FileName));
+                };
 
-                    foreach (var (fullPath, relativePath) in filesToZip)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        string entryName = relativePath.Replace('\\', '/');
-                        archive.CreateEntryFromFile(fullPath, entryName, CompressionLevel.Optimal);
-
-                        current++;
-                        double pct = total > 0 ? (double)current / total * 100.0 : 100.0;
-                        progress?.Report((pct, Path.GetFileName(fullPath)));
-                    }
+                if (File.Exists(destinationArchivePath))
+                {
+                    File.Delete(destinationArchivePath);
                 }
 
-                // 替换或覆盖最终目标文件
-                if (File.Exists(destinationZipPath))
-                {
-                    File.Delete(destinationZipPath);
-                }
-                File.Move(tempZipPath, destinationZipPath);
-            }
-            finally
+                compressor.CompressDirectory(stagingDir, destinationArchivePath);
+            }, cancellationToken);
+        }
+        finally
+        {
+            if (Directory.Exists(stagingDir))
             {
-                if (File.Exists(tempZipPath))
-                {
-                    try { File.Delete(tempZipPath); } catch { }
-                }
+                try { Directory.Delete(stagingDir, true); } catch { }
             }
-        }, cancellationToken);
+        }
     }
 
     /// <summary>
-    /// 解析并检测备份包内容
+    /// 解析并检测备份包内容 (支持 .zip 与 .7z)
     /// </summary>
-    public static async Task<ShadeBackupManifest?> InspectBackupPackageAsync(string zipFilePath)
+    public static async Task<ShadeBackupManifest?> InspectBackupPackageAsync(string archiveFilePath)
     {
-        if (!File.Exists(zipFilePath))
+        if (!File.Exists(archiveFilePath))
         {
             return null;
         }
@@ -316,55 +303,58 @@ public static class ShadeBackupRestoreService
         {
             try
             {
-                using var archive = ZipFile.OpenRead(zipFilePath);
+                using var archive = new SharpSevenZipExtractor(archiveFilePath);
 
-                // 1. 尝试直接从 manifest.json 读取
-                var manifestEntry = archive.GetEntry("manifest.json");
-                if (manifestEntry != null)
+                // 1. 尝试直接查找并提取 manifest.json
+                string? manifestFileName = archive.ArchiveFileNames
+                    .FirstOrDefault(f => Path.GetFileName(f).Equals("manifest.json", StringComparison.OrdinalIgnoreCase));
+
+                if (!string.IsNullOrEmpty(manifestFileName))
                 {
-                    using var stream = manifestEntry.Open();
-                    var manifest = JsonSerializer.Deserialize<ShadeBackupManifest>(stream, JsonOptions);
+                    using var ms = new MemoryStream();
+                    archive.ExtractFile(manifestFileName, ms);
+                    ms.Position = 0;
+                    var manifest = JsonSerializer.Deserialize<ShadeBackupManifest>(ms, JsonOptions);
                     if (manifest != null)
                     {
                         return manifest;
                     }
                 }
 
-                // 2. 没有 manifest.json，智能扫描 zip 内部结构
+                // 2. 没有 manifest.json，智能扫描内部文件结构
                 bool hasPresets = false;
                 bool hasConfig = false;
                 bool hasShaders = false;
                 bool hasScreenshots = false;
                 int presetCount = 0;
 
-                foreach (var entry in archive.Entries)
+                foreach (var fileName in archive.ArchiveFileNames)
                 {
-                    string name = entry.FullName.Replace('\\', '/');
+                    string norm = fileName.Replace('\\', '/');
 
-                    if (name.StartsWith("Presets/", StringComparison.OrdinalIgnoreCase))
+                    if (norm.Contains("Presets/", StringComparison.OrdinalIgnoreCase) ||
+                        norm.StartsWith("Presets/", StringComparison.OrdinalIgnoreCase))
                     {
                         hasPresets = true;
-                        if (name.EndsWith(".ini", StringComparison.OrdinalIgnoreCase))
+                        if (norm.EndsWith(".ini", StringComparison.OrdinalIgnoreCase))
                         {
                             presetCount++;
                         }
                     }
-                    else if (name.Equals("ReShade.ini", StringComparison.OrdinalIgnoreCase) ||
-                             name.EndsWith("/ReShade.ini", StringComparison.OrdinalIgnoreCase))
+                    else if (Path.GetFileName(norm).Equals("ReShade.ini", StringComparison.OrdinalIgnoreCase))
                     {
                         hasConfig = true;
                     }
-                    else if (name.StartsWith("reshade-shaders/", StringComparison.OrdinalIgnoreCase))
+                    else if (norm.Contains("reshade-shaders/", StringComparison.OrdinalIgnoreCase))
                     {
                         hasShaders = true;
                     }
-                    else if (name.StartsWith("Screenshots/", StringComparison.OrdinalIgnoreCase))
+                    else if (norm.Contains("Screenshots/", StringComparison.OrdinalIgnoreCase))
                     {
                         hasScreenshots = true;
                     }
-                    else if (!name.Contains('/') && name.EndsWith(".ini", StringComparison.OrdinalIgnoreCase))
+                    else if (!norm.Contains('/') && norm.EndsWith(".ini", StringComparison.OrdinalIgnoreCase))
                     {
-                        // 根目录的 ini 预设
                         presetCount++;
                         hasPresets = true;
                     }
@@ -372,14 +362,14 @@ public static class ShadeBackupRestoreService
 
                 if (!hasPresets && !hasConfig && !hasShaders && !hasScreenshots)
                 {
-                    return null; // 不是合法的备份包
+                    return null;
                 }
 
                 return new ShadeBackupManifest
                 {
                     ManifestVersion = 1,
                     SourceFramework = "Compatible Backup",
-                    CreatedAt = File.GetLastWriteTime(zipFilePath),
+                    CreatedAt = File.GetLastWriteTime(archiveFilePath),
                     IncludesPresets = hasPresets,
                     PresetCount = presetCount,
                     IncludesReShadeIni = hasConfig,
@@ -410,7 +400,7 @@ public static class ShadeBackupRestoreService
             string snapshotFolder = Path.Combine(baseFolder, "Backup", "AutoSnapshots");
             Directory.CreateDirectory(snapshotFolder);
 
-            string fileName = $"{shadeName}_AutoSnapshot_{DateTime.Now:yyyyMMdd_HHmmss}.zip";
+            string fileName = $"{shadeName}_AutoSnapshot_{DateTime.Now:yyyyMMdd_HHmmss}.7z";
             string snapshotPath = Path.Combine(snapshotFolder, fileName);
 
             var options = new ShadeBackupOptions
@@ -418,6 +408,7 @@ public static class ShadeBackupRestoreService
                 BackupPresets = true,
                 BackupReShadeIni = true,
                 BackupShaders = false,
+                BackupScreenshots = false,
                 FrameworkVersion = "AutoSnapshot"
             };
 
@@ -431,19 +422,19 @@ public static class ShadeBackupRestoreService
     }
 
     /// <summary>
-    /// 从备份包还原数据到目标框架目录
+    /// 从备份包还原数据到目标框架目录 (支持 .zip 与 .7z)
     /// </summary>
     public static async Task RestoreBackupAsync(
-        string zipFilePath,
+        string archiveFilePath,
         string destinationShadePath,
         string shadeName,
         ShadeRestoreOptions options,
         IProgress<(double Progress, string Status)>? progress = null,
         CancellationToken cancellationToken = default)
     {
-        if (!File.Exists(zipFilePath))
+        if (!File.Exists(archiveFilePath))
         {
-            throw new FileNotFoundException("Backup archive not found", zipFilePath);
+            throw new FileNotFoundException("Backup archive not found", archiveFilePath);
         }
 
         if (!Directory.Exists(destinationShadePath))
@@ -458,111 +449,140 @@ public static class ShadeBackupRestoreService
             await CreateAutoSnapshotAsync(destinationShadePath, shadeName, options.BackupBaseFolder);
         }
 
-        await Task.Run(() =>
+        string tempExtractPath = Path.Combine(Path.GetTempPath(), $"HYS_Restore_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempExtractPath);
+
+        try
         {
-            using var archive = ZipFile.OpenRead(zipFilePath);
-            var entries = archive.Entries.Where(e => !string.IsNullOrEmpty(e.Name)).ToList();
-            int total = entries.Count;
-            int current = 0;
-
-            string presetsDir = Path.Combine(destinationShadePath, "Presets");
-            string shadersDir = Path.Combine(destinationShadePath, "reshade-shaders");
-
-            foreach (var entry in entries)
+            // 2. 使用 SharpSevenZipExtractor 解压整个压缩包
+            await Task.Run(() =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                string normName = entry.FullName.Replace('\\', '/');
-
-                // 跳过清单文件
-                if (normName.Equals("manifest.json", StringComparison.OrdinalIgnoreCase))
+                using var archive = new SharpSevenZipExtractor(archiveFilePath);
+                archive.Extracting += (s, e) =>
                 {
-                    current++;
-                    continue;
-                }
-
-                // 1. ReShade.ini
-                if (normName.Equals("ReShade.ini", StringComparison.OrdinalIgnoreCase) ||
-                    normName.EndsWith("/ReShade.ini", StringComparison.OrdinalIgnoreCase))
+                    progress?.Report((e.FinishPercent * 100.0, ""));
+                };
+                archive.FileExtractionStarted += (s, e) =>
                 {
-                    if (options.RestoreReShadeIni)
-                    {
-                        string targetPath = Path.Combine(destinationShadePath, "ReShade.ini");
-                        ExtractEntry(entry, targetPath, true);
-                    }
-                    current++;
-                    progress?.Report((total > 0 ? (double)current / total * 100 : 100, "ReShade.ini"));
-                    continue;
-                }
+                    progress?.Report((0, e.FileInfo.FileName));
+                };
 
-                // 2. Presets 目录下的预设
-                if (normName.StartsWith("Presets/", StringComparison.OrdinalIgnoreCase))
+                archive.ExtractArchive(tempExtractPath);
+            }, cancellationToken);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            // 3. 寻找实际根目录（防止有些压缩包外层多套了一层根文件夹）
+            string sourceRoot = tempExtractPath;
+            if (!File.Exists(Path.Combine(sourceRoot, "manifest.json")) &&
+                !Directory.Exists(Path.Combine(sourceRoot, "Presets")) &&
+                !File.Exists(Path.Combine(sourceRoot, "ReShade.ini")))
+            {
+                var subDirs = Directory.GetDirectories(tempExtractPath);
+                if (subDirs.Length == 1)
                 {
-                    string subRel = normName.Substring("Presets/".Length);
-                    string targetFile = Path.Combine(presetsDir, subRel.Replace('/', Path.DirectorySeparatorChar));
-
-                    if (File.Exists(targetFile) && options.ConflictResolution == PresetConflictResolution.Rename)
-                    {
-                        targetFile = GetUniqueFilePath(targetFile);
-                    }
-
-                    ExtractEntry(entry, targetFile, true);
-                    current++;
-                    progress?.Report((total > 0 ? (double)current / total * 100 : 100, entry.Name));
-                    continue;
+                    sourceRoot = subDirs[0];
                 }
-
-                // 3. 根目录下的 .ini 预设（兼容没有规范放在 Presets 文件夹的压缩包）
-                if (!normName.Contains('/') && normName.EndsWith(".ini", StringComparison.OrdinalIgnoreCase))
-                {
-                    string targetFile = Path.Combine(presetsDir, entry.Name);
-                    if (File.Exists(targetFile) && options.ConflictResolution == PresetConflictResolution.Rename)
-                    {
-                        targetFile = GetUniqueFilePath(targetFile);
-                    }
-
-                    ExtractEntry(entry, targetFile, true);
-                    current++;
-                    progress?.Report((total > 0 ? (double)current / total * 100 : 100, entry.Name));
-                    continue;
-                }
-
-                // 4. 着色器与材质 (reshade-shaders)
-                if (normName.StartsWith("reshade-shaders/", StringComparison.OrdinalIgnoreCase))
-                {
-                    string subRel = normName.Substring("reshade-shaders/".Length);
-                    string targetFile = Path.Combine(shadersDir, subRel.Replace('/', Path.DirectorySeparatorChar));
-                    ExtractEntry(entry, targetFile, true);
-                    current++;
-                    progress?.Report((total > 0 ? (double)current / total * 100 : 100, entry.Name));
-                    continue;
-                }
-
-                // 5. 游戏截图 (Screenshots)
-                if (normName.StartsWith("Screenshots/", StringComparison.OrdinalIgnoreCase))
-                {
-                    string subRel = normName.Substring("Screenshots/".Length);
-                    string targetFile = Path.Combine(destinationShadePath, "Screenshots", subRel.Replace('/', Path.DirectorySeparatorChar));
-                    ExtractEntry(entry, targetFile, true);
-                    current++;
-                    progress?.Report((total > 0 ? (double)current / total * 100 : 100, entry.Name));
-                    continue;
-                }
-
-                current++;
             }
-        }, cancellationToken);
+
+            // 4. 还原 ReShade.ini
+            string sourceIni = Path.Combine(sourceRoot, "ReShade.ini");
+            if (File.Exists(sourceIni) && options.RestoreReShadeIni)
+            {
+                string targetIni = Path.Combine(destinationShadePath, "ReShade.ini");
+                File.Copy(sourceIni, targetIni, true);
+                progress?.Report((100, "ReShade.ini"));
+            }
+
+            // 5. 还原 Presets 预设
+            string sourcePresets = Path.Combine(sourceRoot, "Presets");
+            string destPresets = Path.Combine(destinationShadePath, "Presets");
+            Directory.CreateDirectory(destPresets);
+
+            if (Directory.Exists(sourcePresets))
+            {
+                var presetFiles = Directory.GetFiles(sourcePresets, "*", SearchOption.AllDirectories);
+                foreach (var file in presetFiles)
+                {
+                    string relPath = Path.GetRelativePath(sourcePresets, file);
+                    string targetFile = Path.Combine(destPresets, relPath);
+
+                    if (File.Exists(targetFile) && options.ConflictResolution == PresetConflictResolution.Rename)
+                    {
+                        targetFile = GetUniqueFilePath(targetFile);
+                    }
+
+                    string? dir = Path.GetDirectoryName(targetFile);
+                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+
+                    File.Copy(file, targetFile, true);
+                    progress?.Report((100, Path.GetFileName(file)));
+                }
+            }
+
+            // 兼顾直接放在根目录的 .ini 预设
+            var rootIniFiles = Directory.GetFiles(sourceRoot, "*.ini", SearchOption.TopDirectoryOnly);
+            foreach (var file in rootIniFiles)
+            {
+                if (Path.GetFileName(file).Equals("ReShade.ini", StringComparison.OrdinalIgnoreCase)) continue;
+
+                string targetFile = Path.Combine(destPresets, Path.GetFileName(file));
+                if (File.Exists(targetFile) && options.ConflictResolution == PresetConflictResolution.Rename)
+                {
+                    targetFile = GetUniqueFilePath(targetFile);
+                }
+
+                File.Copy(file, targetFile, true);
+                progress?.Report((100, Path.GetFileName(file)));
+            }
+
+            // 6. 还原 reshade-shaders
+            string sourceShaders = Path.Combine(sourceRoot, "reshade-shaders");
+            if (Directory.Exists(sourceShaders))
+            {
+                string destShaders = Path.Combine(destinationShadePath, "reshade-shaders");
+                CopyDirectory(sourceShaders, destShaders);
+                progress?.Report((100, "reshade-shaders"));
+            }
+
+            // 7. 还原 Screenshots
+            string sourceScreenshots = Path.Combine(sourceRoot, "Screenshots");
+            if (Directory.Exists(sourceScreenshots))
+            {
+                string destScreenshots = Path.Combine(destinationShadePath, "Screenshots");
+                CopyDirectory(sourceScreenshots, destScreenshots);
+                progress?.Report((100, "Screenshots"));
+            }
+        }
+        finally
+        {
+            if (Directory.Exists(tempExtractPath))
+            {
+                try { Directory.Delete(tempExtractPath, true); } catch { }
+            }
+        }
     }
 
-    private static void ExtractEntry(ZipArchiveEntry entry, string destinationPath, bool overwrite)
+    private static void CopyDirectory(string sourceDir, string destDir)
     {
-        string? dir = Path.GetDirectoryName(destinationPath);
-        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+        Directory.CreateDirectory(destDir);
+
+        foreach (var file in Directory.GetFiles(sourceDir))
         {
-            Directory.CreateDirectory(dir);
+            string destFile = Path.Combine(destDir, Path.GetFileName(file));
+            File.Copy(file, destFile, true);
         }
 
-        entry.ExtractToFile(destinationPath, overwrite);
+        foreach (var dir in Directory.GetDirectories(sourceDir))
+        {
+            string destSubDir = Path.Combine(destDir, Path.GetFileName(dir));
+            CopyDirectory(dir, destSubDir);
+        }
     }
 
     private static string GetUniqueFilePath(string filePath)
