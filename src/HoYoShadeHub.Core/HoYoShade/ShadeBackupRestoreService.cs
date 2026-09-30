@@ -77,10 +77,6 @@ public class ShadeRestoreOptions
     /// </summary>
     public PresetConflictResolution ConflictResolution { get; set; } = PresetConflictResolution.SeparateFolder;
 
-    /// <summary>
-    /// 是否还原 ReShade.ini
-    /// </summary>
-    public bool RestoreReShadeIni { get; set; } = true;
 
     /// <summary>
     /// 是否在还原前自动创建安全快照
@@ -498,15 +494,6 @@ public static class ShadeBackupRestoreService
                 {
                     sourceRoot = subDirs[0];
                 }
-            }
-
-            // 4. 还原 ReShade.ini
-            string sourceIni = Path.Combine(sourceRoot, "ReShade.ini");
-            if (File.Exists(sourceIni) && options.RestoreReShadeIni)
-            {
-                string targetIni = Path.Combine(destinationShadePath, "ReShade.ini");
-                File.Copy(sourceIni, targetIni, true);
-                progress?.Report((100, "ReShade.ini"));
             }
 
             // 5. 还原 Presets 预设

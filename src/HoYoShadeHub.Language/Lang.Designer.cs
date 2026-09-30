@@ -7170,11 +7170,6 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("BackupRestoreDialog_ConflictOverwrite", resourceCulture);
             }
         }
-        public static string BackupRestoreDialog_RestoreConfig {
-            get {
-                return ResourceManager.GetString("BackupRestoreDialog_RestoreConfig", resourceCulture);
-            }
-        }
         public static string BackupRestoreDialog_CreateSnapshot {
             get {
                 return ResourceManager.GetString("BackupRestoreDialog_CreateSnapshot", resourceCulture);

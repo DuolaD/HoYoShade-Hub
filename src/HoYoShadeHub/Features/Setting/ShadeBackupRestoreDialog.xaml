@@ -291,12 +291,6 @@
 
                     <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,4" />
 
-                    <!-- 还原 ReShade.ini -->
-                    <CheckBox IsChecked="{x:Bind RestoreReShadeIni, Mode=TwoWay}"
-                              IsEnabled="{x:Bind CanRestoreReShadeIni, Mode=OneWay}">
-                        <TextBlock FontSize="13" Text="{x:Bind lang:Lang.BackupRestoreDialog_RestoreConfig}" />
-                    </CheckBox>
-
                     <!-- 创建安全快照 -->
                     <CheckBox IsChecked="{x:Bind CreateSafetySnapshot, Mode=TwoWay}"
                               IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">

@@ -2544,9 +2544,6 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="BackupRestoreDialog_ConflictOverwrite" xml:space="preserve">
     <value>Overwrite existing presets directly</value>
   </data>
-  <data name="BackupRestoreDialog_RestoreConfig" xml:space="preserve">
-    <value>Restore ReShade.ini Configuration</value>
-  </data>
   <data name="BackupRestoreDialog_CreateSnapshot" xml:space="preserve">
     <value>Automatically create a safety snapshot before restoring (Recommended)</value>
   </data>

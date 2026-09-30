@@ -2533,9 +2533,6 @@
   <data name="BackupRestoreDialog_ConflictOverwrite" xml:space="preserve">
     <value>直接覆盖同名预设</value>
   </data>
-  <data name="BackupRestoreDialog_RestoreConfig" xml:space="preserve">
-    <value>还原 ReShade.ini 全局配置</value>
-  </data>
   <data name="BackupRestoreDialog_CreateSnapshot" xml:space="preserve">
     <value>导入前自动创建当前配置的安全快照 (推荐)</value>
   </data>

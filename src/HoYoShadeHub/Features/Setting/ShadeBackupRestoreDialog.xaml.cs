@@ -328,7 +328,6 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
                 OnPropertyChanged(nameof(PackageShadersText));
                 OnPropertyChanged(nameof(PackageConfigText));
                 OnPropertyChanged(nameof(PackageScreenshotsText));
-                OnPropertyChanged(nameof(CanRestoreReShadeIni));
             }
         }
     }
@@ -349,14 +348,6 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
         set => SetProperty(ref _conflictResolutionIndex, value);
     }
 
-    private bool _restoreReShadeIni = true;
-    public bool RestoreReShadeIni
-    {
-        get => _restoreReShadeIni;
-        set => SetProperty(ref _restoreReShadeIni, value);
-    }
-
-    public bool CanRestoreReShadeIni => IsOperatingNot && SelectedManifest?.IncludesReShadeIni == true;
 
     private bool _createSafetySnapshot = true;
     public bool CreateSafetySnapshot
@@ -440,7 +431,6 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
                     2 => PresetConflictResolution.Overwrite,
                     _ => PresetConflictResolution.SeparateFolder
                 },
-                RestoreReShadeIni = RestoreReShadeIni && SelectedManifest?.IncludesReShadeIni == true,
                 CreateSafetySnapshot = CreateSafetySnapshot,
                 BackupBaseFolder = AppConfig.UserDataFolder
             };
@@ -493,7 +483,6 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
                 OnPropertyChanged(nameof(IsOperatingNot));
                 OnPropertyChanged(nameof(CanExecuteBackup));
                 OnPropertyChanged(nameof(CanExecuteRestore));
-                OnPropertyChanged(nameof(CanRestoreReShadeIni));
             }
         }
     }
