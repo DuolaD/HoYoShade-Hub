@@ -14,6 +14,7 @@
     <ContentDialog.Resources>
         <x:Double x:Key="ContentDialogMinWidth">540</x:Double>
         <x:Double x:Key="ContentDialogMaxWidth">600</x:Double>
+        <x:Double x:Key="ContentDialogMaxHeight">580</x:Double>
     </ContentDialog.Resources>
 
     <Grid Width="500">
@@ -30,7 +31,7 @@
 
         <!-- 顶部 Tab 切换按钮条 -->
         <Border Grid.Row="0"
-                Margin="0,0,0,16"
+                Margin="0,0,0,12"
                 Padding="4"
                 HorizontalAlignment="Stretch"
                 Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
@@ -73,253 +74,261 @@
             </Grid>
         </Border>
 
-        <!-- 主内容区域：导出备份视图 -->
-        <StackPanel Grid.Row="1"
-                    Spacing="12"
-                    Visibility="{x:Bind IsBackupTabVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-            <!-- 路径信息 -->
-            <TextBlock FontSize="12"
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       Text="{x:Bind CurrentPathText, Mode=OneWay}"
-                       TextTrimming="CharacterEllipsis" />
-
-            <!-- 备份选项卡片 -->
-            <Border Padding="16,12"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8">
-                <StackPanel Spacing="10">
-                    <TextBlock FontSize="14"
-                               FontWeight="SemiBold"
-                               Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupOptions}" />
-
-                    <!-- 预设配置 (Presets) -->
-                    <CheckBox IsChecked="{x:Bind BackupPresets, Mode=TwoWay}"
-                              IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
-                        <StackPanel Margin="0,2,0,0">
-                            <TextBlock FontWeight="Medium" Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupPresets}" />
-                            <TextBlock FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupPresetsDesc}" />
-                        </StackPanel>
-                    </CheckBox>
-
-                    <!-- ReShade.ini -->
-                    <CheckBox IsChecked="{x:Bind BackupReShadeIni, Mode=TwoWay}"
-                              IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
-                        <StackPanel Margin="0,2,0,0">
-                            <TextBlock FontWeight="Medium" Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupReShadeIni}" />
-                            <TextBlock FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupReShadeIniDesc}" />
-                        </StackPanel>
-                    </CheckBox>
-
-                    <!-- 着色器及材质 (reshade-shaders) -->
-                    <CheckBox IsChecked="{x:Bind BackupShaders, Mode=TwoWay}"
-                              IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
-                        <StackPanel Margin="0,2,0,0">
-                            <TextBlock FontWeight="Medium" Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupShaders}" />
-                            <TextBlock FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupShadersDesc}" />
-                        </StackPanel>
-                    </CheckBox>
-
-                    <!-- 游戏截图 (Screenshots) -->
-                    <CheckBox IsChecked="{x:Bind BackupScreenshots, Mode=TwoWay}"
-                              IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
-                        <StackPanel Margin="0,2,0,0">
-                            <TextBlock FontWeight="Medium" Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupScreenshots}" />
-                            <TextBlock FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupScreenshotsDesc}" />
-                        </StackPanel>
-                    </CheckBox>
-                </StackPanel>
-            </Border>
-
-            <!-- 导出成功提示 -->
-            <Border Padding="12,10"
-                    Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
-                    BorderBrush="{ThemeResource SystemFillColorSuccessBrush}"
-                    BorderThickness="1"
-                    CornerRadius="6"
-                    Visibility="{x:Bind IsBackupSuccess, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                <Grid ColumnSpacing="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <FontIcon Grid.Column="0"
-                              FontSize="16"
-                              Foreground="{ThemeResource SystemFillColorSuccessBrush}"
-                              Glyph="&#xE73E;" />
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock FontSize="13"
-                                   FontWeight="SemiBold"
-                                   Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupSuccess}" />
-                        <TextBlock FontSize="11"
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                   Text="{x:Bind LastBackupSavedPath, Mode=OneWay}"
-                                   TextTrimming="CharacterEllipsis" />
-                    </StackPanel>
-                    <Button Grid.Column="2"
-                            Height="30"
-                            Padding="8,0"
-                            Command="{x:Bind OpenLastBackupFolderCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="4">
-                            <FontIcon FontSize="12" Glyph="&#xE8DA;" />
-                            <TextBlock FontSize="12" Text="{x:Bind lang:Lang.BackupRestoreDialog_OpenBackupFolder}" />
-                        </StackPanel>
-                    </Button>
-                </Grid>
-            </Border>
-        </StackPanel>
-
-        <!-- 主内容区域：导入还原视图 -->
-        <StackPanel Grid.Row="1"
-                    Spacing="12"
-                    Visibility="{x:Bind IsRestoreTabVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-            <!-- 选取文件卡片 -->
-            <Border Padding="16,12"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8">
-                <Grid RowSpacing="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <Button Grid.Row="0"
-                            Height="36"
-                            HorizontalAlignment="Left"
-                            Command="{x:Bind SelectBackupFileCommand}"
-                            IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <FontIcon FontSize="14" Glyph="&#xED25;" />
-                            <TextBlock Text="{x:Bind lang:Lang.BackupRestoreDialog_SelectFileButton}" />
-                        </StackPanel>
-                    </Button>
-
-                    <!-- 未选文件提示 -->
-                    <TextBlock Grid.Row="1"
-                               FontSize="12"
+        <!-- 主内容区域（带滚动与最大高度限制，防止超出主窗口） -->
+        <ScrollViewer Grid.Row="1"
+                      MaxHeight="380"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <!-- 主内容区域：导出备份视图 -->
+                <StackPanel Spacing="10"
+                            Padding="0,0,4,0"
+                            Visibility="{x:Bind IsBackupTabVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <!-- 路径信息 -->
+                    <TextBlock FontSize="12"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind lang:Lang.BackupRestoreDialog_NoFileSelected}"
-                               Visibility="{x:Bind HasSelectedFileNot, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                               Text="{x:Bind CurrentPathText, Mode=OneWay}"
+                               TextTrimming="CharacterEllipsis" />
 
-                    <!-- 已选文件详情卡片 -->
-                    <StackPanel Grid.Row="1"
-                                Spacing="6"
-                                Visibility="{x:Bind HasSelectedFile, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <TextBlock FontSize="13"
-                                   FontWeight="SemiBold"
-                                   Text="{x:Bind SelectedFileName, Mode=OneWay}"
-                                   TextTrimming="CharacterEllipsis" />
+                    <!-- 备份选项卡片 -->
+                    <Border Padding="14,10"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                        <StackPanel Spacing="8">
+                            <TextBlock FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupOptions}" />
 
-                        <Grid ColumnSpacing="16" RowSpacing="4">
+                            <!-- 预设配置 (Presets) -->
+                            <CheckBox IsChecked="{x:Bind BackupPresets, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
+                                <StackPanel Margin="0,2,0,0">
+                                    <TextBlock FontWeight="Medium" Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupPresets}" />
+                                    <TextBlock FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupPresetsDesc}" />
+                                </StackPanel>
+                            </CheckBox>
+
+                            <!-- ReShade.ini -->
+                            <CheckBox IsChecked="{x:Bind BackupReShadeIni, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
+                                <StackPanel Margin="0,2,0,0">
+                                    <TextBlock FontWeight="Medium" Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupReShadeIni}" />
+                                    <TextBlock FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupReShadeIniDesc}" />
+                                </StackPanel>
+                            </CheckBox>
+
+                            <!-- 着色器及材质 (reshade-shaders) -->
+                            <CheckBox IsChecked="{x:Bind BackupShaders, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
+                                <StackPanel Margin="0,2,0,0">
+                                    <TextBlock FontWeight="Medium" Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupShaders}" />
+                                    <TextBlock FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupShadersDesc}" />
+                                </StackPanel>
+                            </CheckBox>
+
+                            <!-- 游戏截图 (Screenshots) -->
+                            <CheckBox IsChecked="{x:Bind BackupScreenshots, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
+                                <StackPanel Margin="0,2,0,0">
+                                    <TextBlock FontWeight="Medium" Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupScreenshots}" />
+                                    <TextBlock FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupScreenshotsDesc}" />
+                                </StackPanel>
+                            </CheckBox>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 导出成功提示 -->
+                    <Border Padding="12,8"
+                            Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
+                            BorderBrush="{ThemeResource SystemFillColorSuccessBrush}"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Visibility="{x:Bind IsBackupSuccess, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
+                            <FontIcon Grid.Column="0"
+                                      FontSize="16"
+                                      Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                      Glyph="&#xE73E;" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Text="{x:Bind lang:Lang.BackupRestoreDialog_BackupSuccess}" />
+                                <TextBlock FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           Text="{x:Bind LastBackupSavedPath, Mode=OneWay}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <Button Grid.Column="2"
+                                    Height="30"
+                                    Padding="8,0"
+                                    Command="{x:Bind OpenLastBackupFolderCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <FontIcon FontSize="12" Glyph="&#xE8DA;" />
+                                    <TextBlock FontSize="12" Text="{x:Bind lang:Lang.BackupRestoreDialog_OpenBackupFolder}" />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- 主内容区域：导入还原视图 -->
+                <StackPanel Spacing="10"
+                            Padding="0,0,4,0"
+                            Visibility="{x:Bind IsRestoreTabVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <!-- 选取文件卡片 -->
+                    <Border Padding="14,10"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                        <Grid RowSpacing="8">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0"
+                            <Button Grid.Row="0"
+                                    Height="36"
+                                    HorizontalAlignment="Left"
+                                    Command="{x:Bind SelectBackupFileCommand}"
+                                    IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon FontSize="14" Glyph="&#xED25;" />
+                                    <TextBlock Text="{x:Bind lang:Lang.BackupRestoreDialog_SelectFileButton}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!-- 未选文件提示 -->
+                            <TextBlock Grid.Row="1"
                                        FontSize="12"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind PackageSourceText, Mode=OneWay}" />
-                            <TextBlock Grid.Row="0" Grid.Column="1"
-                                       FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind PackageCreatedText, Mode=OneWay}" />
-                            <TextBlock Grid.Row="1" Grid.Column="0"
-                                       FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind PackagePresetsText, Mode=OneWay}" />
-                            <TextBlock Grid.Row="1" Grid.Column="1"
-                                       FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind PackageShadersText, Mode=OneWay}" />
-                            <TextBlock Grid.Row="2" Grid.Column="0"
-                                       FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind PackageConfigText, Mode=OneWay}" />
-                            <TextBlock Grid.Row="2" Grid.Column="1"
-                                       FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Text="{x:Bind PackageScreenshotsText, Mode=OneWay}" />
+                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_NoFileSelected}"
+                                       Visibility="{x:Bind HasSelectedFileNot, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                            <!-- 已选文件详情卡片 -->
+                            <StackPanel Grid.Row="1"
+                                        Spacing="6"
+                                        Visibility="{x:Bind HasSelectedFile, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <TextBlock FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Text="{x:Bind SelectedFileName, Mode=OneWay}"
+                                           TextTrimming="CharacterEllipsis" />
+
+                                <Grid ColumnSpacing="16" RowSpacing="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind PackageSourceText, Mode=OneWay}" />
+                                    <TextBlock Grid.Row="0" Grid.Column="1"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind PackageCreatedText, Mode=OneWay}" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind PackagePresetsText, Mode=OneWay}" />
+                                    <TextBlock Grid.Row="1" Grid.Column="1"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind PackageShadersText, Mode=OneWay}" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind PackageConfigText, Mode=OneWay}" />
+                                    <TextBlock Grid.Row="2" Grid.Column="1"
+                                               FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Text="{x:Bind PackageScreenshotsText, Mode=OneWay}" />
+                                </Grid>
+                            </StackPanel>
                         </Grid>
-                    </StackPanel>
-                </Grid>
-            </Border>
+                    </Border>
 
-            <!-- 还原选项卡片 -->
-            <Border Padding="16,12"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Visibility="{x:Bind HasValidPackage, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                <StackPanel Spacing="10">
-                    <TextBlock FontSize="14"
-                               FontWeight="SemiBold"
-                               Text="{x:Bind lang:Lang.BackupRestoreDialog_RestoreOptions}" />
+                    <!-- 还原选项卡片 -->
+                    <Border Padding="14,10"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Visibility="{x:Bind HasValidPackage, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel Spacing="8">
+                            <TextBlock FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_RestoreOptions}" />
 
-                    <!-- 冲突处理 -->
-                    <TextBlock FontSize="12"
-                               FontWeight="Medium"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="{x:Bind lang:Lang.BackupRestoreDialog_ConflictResolution}" />
-                    <RadioButtons SelectedIndex="{x:Bind ConflictResolutionIndex, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
-                        <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSeparateFolder}"
-                                     ToolTipService.ToolTip="{x:Bind lang:Lang.PresetsDialog_SeparateFolder_Tooltip}" />
-                        <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSkip}"
-                                     ToolTipService.ToolTip="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSkip_Tooltip}" />
-                        <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictOverwrite}"
-                                     ToolTipService.ToolTip="{x:Bind lang:Lang.PresetsDialog_Overwrite_Tooltip}" />
-                    </RadioButtons>
+                            <!-- 冲突处理 -->
+                            <TextBlock FontSize="12"
+                                       FontWeight="Medium"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_ConflictResolution}" />
+                            <RadioButtons SelectedIndex="{x:Bind ConflictResolutionIndex, Mode=TwoWay}"
+                                          IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
+                                <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSeparateFolder}"
+                                             ToolTipService.ToolTip="{x:Bind lang:Lang.PresetsDialog_SeparateFolder_Tooltip}" />
+                                <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSkip}"
+                                             ToolTipService.ToolTip="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSkip_Tooltip}" />
+                                <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictOverwrite}"
+                                             ToolTipService.ToolTip="{x:Bind lang:Lang.PresetsDialog_Overwrite_Tooltip}" />
+                            </RadioButtons>
 
-                    <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,4" />
+                            <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,2" />
 
-                    <!-- 创建安全快照 -->
-                    <CheckBox IsChecked="{x:Bind CreateSafetySnapshot, Mode=TwoWay}"
-                              IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
-                        <TextBlock FontSize="13" Text="{x:Bind lang:Lang.BackupRestoreDialog_CreateSnapshot}" />
-                    </CheckBox>
+                            <!-- 创建安全快照 -->
+                            <CheckBox IsChecked="{x:Bind CreateSafetySnapshot, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
+                                <TextBlock FontSize="13" Text="{x:Bind lang:Lang.BackupRestoreDialog_CreateSnapshot}" />
+                            </CheckBox>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 导入成功提示 -->
+                    <Border Padding="12,8"
+                            Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
+                            BorderBrush="{ThemeResource SystemFillColorSuccessBrush}"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Visibility="{x:Bind IsRestoreSuccess, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon FontSize="16"
+                                      Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                      Glyph="&#xE73E;" />
+                            <TextBlock FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Text="{x:Bind lang:Lang.BackupRestoreDialog_RestoreSuccess}" />
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
-            </Border>
-
-            <!-- 导入成功提示 -->
-            <Border Padding="12,10"
-                    Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}"
-                    BorderBrush="{ThemeResource SystemFillColorSuccessBrush}"
-                    BorderThickness="1"
-                    CornerRadius="6"
-                    Visibility="{x:Bind IsRestoreSuccess, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon FontSize="16"
-                              Foreground="{ThemeResource SystemFillColorSuccessBrush}"
-                              Glyph="&#xE73E;" />
-                    <TextBlock FontSize="13"
-                               FontWeight="SemiBold"
-                               Text="{x:Bind lang:Lang.BackupRestoreDialog_RestoreSuccess}" />
-                </StackPanel>
-            </Border>
-        </StackPanel>
+            </Grid>
+        </ScrollViewer>
 
         <!-- 进度条与状态文字 -->
         <StackPanel Grid.Row="2"
-                    Margin="0,16,0,0"
+                    Margin="0,12,0,0"
                     Spacing="6"
                     Visibility="{x:Bind IsOperating, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <ProgressBar Maximum="100"
@@ -332,7 +341,7 @@
         </StackPanel>
 
         <!-- 底部按钮栏 -->
-        <Grid Grid.Row="3" Margin="0,20,0,0">
+        <Grid Grid.Row="3" Margin="0,16,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
