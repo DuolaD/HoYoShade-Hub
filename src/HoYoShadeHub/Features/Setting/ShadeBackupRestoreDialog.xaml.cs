@@ -206,7 +206,7 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
 
         try
         {
-            string suggestedFileName = $"{ShadeName}_Backup_{DateTime.Now:yyyyMMdd_HHmmss}.zip";
+            string suggestedFileName = $"{ShadeName}_Backup_{DateTime.Now:yyyyMMdd_HHmmss}";
             string? destinationPath = await FileDialogHelper.OpenSaveFileDialogAsync(
                 this.XamlRoot,
                 suggestedFileName,
@@ -436,7 +436,7 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
             {
                 ConflictResolution = ConflictResolutionIndex == 1
                     ? PresetConflictResolution.Overwrite
-                    : PresetConflictResolution.Rename,
+                    : PresetConflictResolution.SeparateFolder,
                 RestoreReShadeIni = RestoreReShadeIni && SelectedManifest?.IncludesReShadeIni == true,
                 CreateSafetySnapshot = CreateSafetySnapshot,
                 BackupBaseFolder = AppConfig.UserDataFolder

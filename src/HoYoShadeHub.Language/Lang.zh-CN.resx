@@ -2521,8 +2521,8 @@
   <data name="BackupRestoreDialog_ConflictResolution" xml:space="preserve">
     <value>同名预设冲突处理</value>
   </data>
-  <data name="BackupRestoreDialog_ConflictRename" xml:space="preserve">
-    <value>保留现有预设，为冲突预设自动重命名 (推荐)</value>
+  <data name="BackupRestoreDialog_ConflictSeparateFolder" xml:space="preserve">
+    <value>分开文件夹保留现有预设 (推荐)</value>
   </data>
   <data name="BackupRestoreDialog_ConflictOverwrite" xml:space="preserve">
     <value>直接覆盖同名预设</value>

@@ -2532,11 +2532,11 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="BackupRestoreDialog_ConflictResolution" xml:space="preserve">
     <value>Preset Conflict Resolution</value>
   </data>
-  <data name="BackupRestoreDialog_ConflictRename" xml:space="preserve">
-    <value>Keep existing presets and auto-rename imported files (Recommended)</value>
+  <data name="BackupRestoreDialog_ConflictSeparateFolder" xml:space="preserve">
+    <value>Keep existing presets in separate folder (Recommended)</value>
   </data>
   <data name="BackupRestoreDialog_ConflictOverwrite" xml:space="preserve">
-    <value>Overwrite existing presets with backup files</value>
+    <value>Overwrite existing presets directly</value>
   </data>
   <data name="BackupRestoreDialog_RestoreConfig" xml:space="preserve">
     <value>Restore ReShade.ini Configuration</value>

@@ -509,14 +509,17 @@
                         </Border>
 
                         <!-- 工具栏与卸载操作 -->
-                        <Grid Margin="0,2,0,0">
+                        <Grid Margin="0,2,0,0" ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <!-- 左侧：日常维护工具 -->
-                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                            <cwc:WrapPanel Grid.Column="0"
+                                           Orientation="Horizontal"
+                                           HorizontalSpacing="8"
+                                           VerticalSpacing="8">
                                 <Button Height="34"
                                         Padding="12,0"
                                         Command="{x:Bind ResetHoYoShadeReShadeIniCommand}"
@@ -546,34 +549,39 @@
                                         <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_BackupAndRestore}" />
                                     </StackPanel>
                                 </Button>
-                            </StackPanel>
+                            </cwc:WrapPanel>
 
-                            <!-- 右侧：卸载与清理 -->
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-                                <Button Height="34"
-                                        Padding="12,0"
-                                        Command="{x:Bind UninstallHoYoShadeShadersCommand}"
-                                        CornerRadius="6">
+                            <!-- 右侧：卸载与清理下拉菜单 -->
+                            <DropDownButton Grid.Column="1"
+                                            Height="34"
+                                            Padding="12,0"
+                                            VerticalAlignment="Top"
+                                            CornerRadius="6">
+                                <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                         <FontIcon FontSize="13"
                                                   Foreground="{ThemeResource SystemFillColorCautionBrush}"
                                                   Glyph="&#xE74D;" />
-                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}" />
+                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.UninstallShadeDialog_Uninstall}" />
                                     </StackPanel>
-                                </Button>
-
-                                <Button Height="34"
-                                        Padding="12,0"
-                                        Command="{x:Bind UninstallHoYoShadeCommand}"
-                                        CornerRadius="6">
-                                    <StackPanel Orientation="Horizontal" Spacing="6">
-                                        <FontIcon FontSize="13"
-                                                  Foreground="{ThemeResource SystemFillColorCautionBrush}"
-                                                  Glyph="&#xE74D;" />
-                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_UninstallHoYoShade}" />
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
+                                </DropDownButton.Content>
+                                <DropDownButton.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                        <MenuFlyoutItem Command="{x:Bind UninstallHoYoShadeShadersCommand}"
+                                                        Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE74D;" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Command="{x:Bind UninstallHoYoShadeCommand}"
+                                                        Text="{x:Bind lang:Lang.FileSettingPage_UninstallHoYoShade}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE74D;" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
@@ -812,14 +820,17 @@
                         </Border>
 
                         <!-- 工具栏与卸载操作 -->
-                        <Grid Margin="0,2,0,0">
+                        <Grid Margin="0,2,0,0" ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <!-- 左侧：日常维护工具 -->
-                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                            <cwc:WrapPanel Grid.Column="0"
+                                           Orientation="Horizontal"
+                                           HorizontalSpacing="8"
+                                           VerticalSpacing="8">
                                 <Button Height="34"
                                         Padding="12,0"
                                         Command="{x:Bind ResetOpenHoYoShadeReShadeIniCommand}"
@@ -849,34 +860,39 @@
                                         <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_BackupAndRestore}" />
                                     </StackPanel>
                                 </Button>
-                            </StackPanel>
+                            </cwc:WrapPanel>
 
-                            <!-- 右侧：卸载与清理 -->
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-                                <Button Height="34"
-                                        Padding="12,0"
-                                        Command="{x:Bind UninstallOpenHoYoShadeShadersCommand}"
-                                        CornerRadius="6">
+                            <!-- 右侧：卸载与清理下拉菜单 -->
+                            <DropDownButton Grid.Column="1"
+                                            Height="34"
+                                            Padding="12,0"
+                                            VerticalAlignment="Top"
+                                            CornerRadius="6">
+                                <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                         <FontIcon FontSize="13"
                                                   Foreground="{ThemeResource SystemFillColorCautionBrush}"
                                                   Glyph="&#xE74D;" />
-                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}" />
+                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.UninstallShadeDialog_Uninstall}" />
                                     </StackPanel>
-                                </Button>
-
-                                <Button Height="34"
-                                        Padding="12,0"
-                                        Command="{x:Bind UninstallOpenHoYoShadeCommand}"
-                                        CornerRadius="6">
-                                    <StackPanel Orientation="Horizontal" Spacing="6">
-                                        <FontIcon FontSize="13"
-                                                  Foreground="{ThemeResource SystemFillColorCautionBrush}"
-                                                  Glyph="&#xE74D;" />
-                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_UninstallOpenHoYoShade}" />
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
+                                </DropDownButton.Content>
+                                <DropDownButton.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                        <MenuFlyoutItem Command="{x:Bind UninstallOpenHoYoShadeShadersCommand}"
+                                                        Text="{x:Bind lang:Lang.FileSettingPage_UninstallShadersAndPlugins}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE74D;" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Command="{x:Bind UninstallOpenHoYoShadeCommand}"
+                                                        Text="{x:Bind lang:Lang.FileSettingPage_UninstallOpenHoYoShade}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE74D;" Foreground="{ThemeResource SystemFillColorCautionBrush}" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
                         </Grid>
                     </StackPanel>
                 </StackPanel>

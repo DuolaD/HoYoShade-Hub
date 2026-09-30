@@ -16,9 +16,9 @@ namespace HoYoShadeHub.Core.HoYoShade;
 public enum PresetConflictResolution
 {
     /// <summary>
-    /// 重命名导入文件（保留现有文件，推荐）
+    /// 分开文件夹保留现有预设（将备份预设放入独立文件夹，推荐）
     /// </summary>
-    Rename = 0,
+    SeparateFolder = 0,
 
     /// <summary>
     /// 直接覆盖同名文件
@@ -70,7 +70,7 @@ public class ShadeRestoreOptions
     /// <summary>
     /// 同名预设冲突策略
     /// </summary>
-    public PresetConflictResolution ConflictResolution { get; set; } = PresetConflictResolution.Rename;
+    public PresetConflictResolution ConflictResolution { get; set; } = PresetConflictResolution.SeparateFolder;
 
     /// <summary>
     /// 是否还原 ReShade.ini
@@ -501,18 +501,33 @@ public static class ShadeBackupRestoreService
             string destPresets = Path.Combine(destinationShadePath, "Presets");
             Directory.CreateDirectory(destPresets);
 
+            string targetPresetsDir = destPresets;
+            if (options.ConflictResolution == PresetConflictResolution.SeparateFolder)
+            {
+                string folderName = Path.GetFileNameWithoutExtension(archiveFilePath);
+                while (folderName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
+                       folderName.EndsWith(".7z", StringComparison.OrdinalIgnoreCase))
+                {
+                    folderName = Path.GetFileNameWithoutExtension(folderName);
+                }
+
+                if (string.IsNullOrWhiteSpace(folderName))
+                {
+                    folderName = $"Backup_{DateTime.Now:yyyyMMdd_HHmmss}";
+                }
+
+                folderName = SanitizeFolderName(folderName);
+                targetPresetsDir = GetUniqueDirectoryPath(destPresets, folderName);
+                Directory.CreateDirectory(targetPresetsDir);
+            }
+
             if (Directory.Exists(sourcePresets))
             {
                 var presetFiles = Directory.GetFiles(sourcePresets, "*", SearchOption.AllDirectories);
                 foreach (var file in presetFiles)
                 {
                     string relPath = Path.GetRelativePath(sourcePresets, file);
-                    string targetFile = Path.Combine(destPresets, relPath);
-
-                    if (File.Exists(targetFile) && options.ConflictResolution == PresetConflictResolution.Rename)
-                    {
-                        targetFile = GetUniqueFilePath(targetFile);
-                    }
+                    string targetFile = Path.Combine(targetPresetsDir, relPath);
 
                     string? dir = Path.GetDirectoryName(targetFile);
                     if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
@@ -531,12 +546,7 @@ public static class ShadeBackupRestoreService
             {
                 if (Path.GetFileName(file).Equals("ReShade.ini", StringComparison.OrdinalIgnoreCase)) continue;
 
-                string targetFile = Path.Combine(destPresets, Path.GetFileName(file));
-                if (File.Exists(targetFile) && options.ConflictResolution == PresetConflictResolution.Rename)
-                {
-                    targetFile = GetUniqueFilePath(targetFile);
-                }
-
+                string targetFile = Path.Combine(targetPresetsDir, Path.GetFileName(file));
                 File.Copy(file, targetFile, true);
                 progress?.Report((100, Path.GetFileName(file)));
             }
@@ -585,21 +595,27 @@ public static class ShadeBackupRestoreService
         }
     }
 
-    private static string GetUniqueFilePath(string filePath)
+    private static string GetUniqueDirectoryPath(string parentDir, string dirName)
     {
-        string? dir = Path.GetDirectoryName(filePath);
-        string filenameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-        string ext = Path.GetExtension(filePath);
-
-        int counter = 1;
-        string newPath = Path.Combine(dir ?? "", $"{filenameWithoutExt} (Imported){ext}");
-
-        while (File.Exists(newPath))
+        string fullPath = Path.Combine(parentDir, dirName);
+        if (!Directory.Exists(fullPath))
         {
-            counter++;
-            newPath = Path.Combine(dir ?? "", $"{filenameWithoutExt} (Imported {counter}){ext}");
+            return fullPath;
         }
 
-        return newPath;
+        int counter = 1;
+        while (Directory.Exists(Path.Combine(parentDir, $"{dirName} ({counter})")))
+        {
+            counter++;
+        }
+
+        return Path.Combine(parentDir, $"{dirName} ({counter})");
+    }
+
+    private static string SanitizeFolderName(string name)
+    {
+        var invalidChars = Path.GetInvalidFileNameChars();
+        var clean = new string(name.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray());
+        return string.IsNullOrWhiteSpace(clean) ? "Backup_Presets" : clean.Trim();
     }
 }

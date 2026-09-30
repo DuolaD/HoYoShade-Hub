@@ -281,8 +281,10 @@
                                Text="{x:Bind lang:Lang.BackupRestoreDialog_ConflictResolution}" />
                     <RadioButtons SelectedIndex="{x:Bind ConflictResolutionIndex, Mode=TwoWay}"
                                   IsEnabled="{x:Bind IsOperatingNot, Mode=OneWay}">
-                        <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictRename}" />
-                        <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictOverwrite}" />
+                        <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictSeparateFolder}"
+                                     ToolTipService.ToolTip="{x:Bind lang:Lang.PresetsDialog_SeparateFolder_Tooltip}" />
+                        <RadioButton Content="{x:Bind lang:Lang.BackupRestoreDialog_ConflictOverwrite}"
+                                     ToolTipService.ToolTip="{x:Bind lang:Lang.PresetsDialog_Overwrite_Tooltip}" />
                     </RadioButtons>
 
                     <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,4" />
