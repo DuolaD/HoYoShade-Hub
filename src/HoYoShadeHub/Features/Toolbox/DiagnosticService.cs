@@ -1656,10 +1656,14 @@ public static class DiagnosticService
                 presets = await GetFolderSizeLongAsync(presetsPath);
             }
 
-            string screenshotsPath = Path.Combine(fullPath, "Screenshots");
-            if (Directory.Exists(screenshotsPath))
+            var checkedScreenshotDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var dirName in new[] { "ScreenShot", "Screenshots" })
             {
-                screenshots = await GetFolderSizeLongAsync(screenshotsPath);
+                string p = Path.Combine(fullPath, dirName);
+                if (Directory.Exists(p) && checkedScreenshotDirs.Add(Path.GetFullPath(p)))
+                {
+                    screenshots += await GetFolderSizeLongAsync(p);
+                }
             }
 
             long other = Math.Max(0, total - shaders - presets - screenshots);

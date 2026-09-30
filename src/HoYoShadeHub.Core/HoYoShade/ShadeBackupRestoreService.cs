@@ -212,15 +212,22 @@ public static class ShadeBackupRestoreService
                 }
             }
 
-            // 4. Screenshots
+            // 4. Screenshots (兼容 ScreenShot 与 Screenshots 文件夹)
             if (options.BackupScreenshots)
             {
-                string srcScreenshots = Path.Combine(shadePath, "Screenshots");
-                if (Directory.Exists(srcScreenshots))
+                string[] screenshotFolderNames = ["ScreenShot", "Screenshots"];
+                foreach (var dirName in screenshotFolderNames)
                 {
-                    string destScreenshots = Path.Combine(stagingDir, "Screenshots");
-                    CopyDirectory(srcScreenshots, destScreenshots);
-                    hasScreenshots = Directory.EnumerateFileSystemEntries(destScreenshots).Any();
+                    string srcScreenshots = Path.Combine(shadePath, dirName);
+                    if (Directory.Exists(srcScreenshots))
+                    {
+                        string destScreenshots = Path.Combine(stagingDir, dirName);
+                        CopyDirectory(srcScreenshots, destScreenshots);
+                        if (Directory.EnumerateFileSystemEntries(destScreenshots).Any())
+                        {
+                            hasScreenshots = true;
+                        }
+                    }
                 }
             }
 
@@ -349,7 +356,8 @@ public static class ShadeBackupRestoreService
                     {
                         hasShaders = true;
                     }
-                    else if (norm.Contains("Screenshots/", StringComparison.OrdinalIgnoreCase))
+                    else if (norm.Contains("ScreenShot/", StringComparison.OrdinalIgnoreCase) ||
+                             norm.Contains("Screenshots/", StringComparison.OrdinalIgnoreCase))
                     {
                         hasScreenshots = true;
                     }
@@ -560,13 +568,24 @@ public static class ShadeBackupRestoreService
                 progress?.Report((100, "reshade-shaders"));
             }
 
-            // 7. 还原 Screenshots
-            string sourceScreenshots = Path.Combine(sourceRoot, "Screenshots");
-            if (Directory.Exists(sourceScreenshots))
+            // 7. 还原 Screenshots (兼容 ScreenShot 与 Screenshots 目录)
+            string destScreenshotDirName = "ScreenShot";
+            if (Directory.Exists(Path.Combine(destinationShadePath, "Screenshots")) &&
+                !Directory.Exists(Path.Combine(destinationShadePath, "ScreenShot")))
             {
-                string destScreenshots = Path.Combine(destinationShadePath, "Screenshots");
-                CopyDirectory(sourceScreenshots, destScreenshots);
-                progress?.Report((100, "Screenshots"));
+                destScreenshotDirName = "Screenshots";
+            }
+            string destScreenshots = Path.Combine(destinationShadePath, destScreenshotDirName);
+
+            string[] candidateScreenshotDirs = ["ScreenShot", "Screenshots"];
+            foreach (var dirName in candidateScreenshotDirs)
+            {
+                string srcScreenshots = Path.Combine(sourceRoot, dirName);
+                if (Directory.Exists(srcScreenshots))
+                {
+                    CopyDirectory(srcScreenshots, destScreenshots);
+                    progress?.Report((100, dirName));
+                }
             }
         }
         finally

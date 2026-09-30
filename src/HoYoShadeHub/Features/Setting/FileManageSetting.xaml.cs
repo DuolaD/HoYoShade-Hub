@@ -19,6 +19,7 @@ using HoYoShadeHub.Language;
 using HoYoShadeHub.Models;
 using Microsoft.UI.Xaml.Media;
 using System;
+using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -650,13 +651,17 @@ public sealed partial class FileManageSetting : PageBase
                     _logger.LogInformation("HoYoShade presets directory size: {Size} bytes", hoYoShadePresetSize);
                 }
                 
-                // 计算截图占用 (Screenshots文件夹)
-                string screenshotsPath = Path.Combine(hoYoShadePath, "Screenshots");
-                if (Directory.Exists(screenshotsPath))
+                // 计算截图占用 (兼容 ScreenShot 与 Screenshots 文件夹)
+                var checkedHoYoShadeScreenshotDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var dirName in new[] { "ScreenShot", "Screenshots" })
                 {
-                    hoYoShadeScreenshotSize = await GetFolderSizeLongAsync(screenshotsPath);
-                    _logger.LogInformation("HoYoShade screenshots directory size: {Size} bytes", hoYoShadeScreenshotSize);
+                    string p = Path.Combine(hoYoShadePath, dirName);
+                    if (Directory.Exists(p) && checkedHoYoShadeScreenshotDirs.Add(Path.GetFullPath(p)))
+                    {
+                        hoYoShadeScreenshotSize += await GetFolderSizeLongAsync(p);
+                    }
                 }
+                _logger.LogInformation("HoYoShade screenshots directory size: {Size} bytes", hoYoShadeScreenshotSize);
                 
                 // 读取 ReShade64.dll 产品版本
                 string reshade64DllPath = Path.Combine(hoYoShadePath, "ReShade64.dll");
@@ -692,13 +697,17 @@ public sealed partial class FileManageSetting : PageBase
                     _logger.LogInformation("OpenHoYoShade presets directory size: {Size} bytes", openHoYoShadePresetSize);
                 }
                 
-                // 计算截图占用
-                string openScreenshotsPath = Path.Combine(openHoYoShadePath, "Screenshots");
-                if (Directory.Exists(openScreenshotsPath))
+                // 计算截图占用 (兼容 ScreenShot 与 Screenshots 文件夹)
+                var checkedOpenScreenshotDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var dirName in new[] { "ScreenShot", "Screenshots" })
                 {
-                    openHoYoShadeScreenshotSize = await GetFolderSizeLongAsync(openScreenshotsPath);
-                    _logger.LogInformation("OpenHoYoShade screenshots directory size: {Size} bytes", openHoYoShadeScreenshotSize);
+                    string p = Path.Combine(openHoYoShadePath, dirName);
+                    if (Directory.Exists(p) && checkedOpenScreenshotDirs.Add(Path.GetFullPath(p)))
+                    {
+                        openHoYoShadeScreenshotSize += await GetFolderSizeLongAsync(p);
+                    }
                 }
+                _logger.LogInformation("OpenHoYoShade screenshots directory size: {Size} bytes", openHoYoShadeScreenshotSize);
                 
                 // 读取 ReShade64.dll 产品版本
                 string openReshade64DllPath = Path.Combine(openHoYoShadePath, "ReShade64.dll");
