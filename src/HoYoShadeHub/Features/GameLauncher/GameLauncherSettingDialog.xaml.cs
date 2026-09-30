@@ -129,6 +129,10 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         {
             if (args.InvokedItemContainer?.Tag is string index && int.TryParse(index, out int target))
             {
+                if (target == 3)
+                {
+                    _ = InitializeThirdPartyIntegrationAsync();
+                }
                 int steps = target - FlipView_Settings.SelectedIndex;
                 if (steps > 0)
                 {
@@ -152,15 +156,15 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
 
 
 
-    private async void GameLauncherSettingDialog_Loaded(object sender, RoutedEventArgs e)
+    private void GameLauncherSettingDialog_Loaded(object sender, RoutedEventArgs e)
     {
         CurrentGameBiz = CurrentGameId?.GameBiz ?? GameBiz.None;
         CheckCanRepairGame();
-        await InitializeBasicInfoAsync();
-        await InitializeGameInstallPathsAsync();
+        _ = InitializeBasicInfoAsync();
+        _ = InitializeGameInstallPathsAsync();
         InitializeStartArgument();
         InitializeCustomBg();
-        await InitializeThirdPartyIntegrationAsync();
+        _ = InitializeThirdPartyIntegrationAsync();
     }
 
 
@@ -980,44 +984,91 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
             string hoYoShadeCommand = "";
             string openHoYoShadeCommand = "";
 
-            // Get game exe name
-            string gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+            string hoYoShadeDllPath = "";
+            string openHoYoShadeDllPath = "";
+            bool hoYoShadeDllExists = false;
+            bool openHoYoShadeDllExists = false;
 
-            // Check HoYoShade installation
-            string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
-            if (Directory.Exists(hoYoShadePath))
+            // Safe fallback for game exe name
+            string gameExeName = CurrentGameBiz.Game switch
             {
-                string injectExePath = Path.Combine(hoYoShadePath, "inject.exe");
-                if (File.Exists(injectExePath))
+                GameBiz.hk4e => CurrentGameBiz.IsGlobalServer() ? "GenshinImpact.exe" : "YuanShen.exe",
+                GameBiz.hkrpg => "StarRail.exe",
+                GameBiz.bh3 => "BH3.exe",
+                GameBiz.nap => "ZenlessZoneZero.exe",
+                _ => "Game.exe"
+            };
+
+            try
+            {
+                if (CurrentGameId != null)
                 {
-                    hoYoShadeInstalled = true;
-                    hoYoShadeCommand = $"\"{injectExePath}\" {gameExeName}";
+                    string? name = GameLauncherService.GetGameExeName(CurrentGameId.GameBiz);
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        gameExeName = name;
+                    }
+                    else
+                    {
+                        gameExeName = await _gameLauncherService.GetGameExeNameAsync(CurrentGameId);
+                    }
                 }
             }
-
-            // Check OpenHoYoShade installation
-            string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
-            if (Directory.Exists(openHoYoShadePath))
+            catch (Exception ex)
             {
-                string injectExePath = Path.Combine(openHoYoShadePath, "inject.exe");
-                if (File.Exists(injectExePath))
+                _logger.LogWarning(ex, "Failed to resolve exact game exe name for {GameId}, falling back to {ExeName}", CurrentGameId, gameExeName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(AppConfig.UserDataFolder))
+            {
+                // Check HoYoShade installation
+                string hoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "HoYoShade");
+                if (Directory.Exists(hoYoShadePath))
                 {
-                    openHoYoShadeInstalled = true;
-                    openHoYoShadeCommand = $"\"{injectExePath}\" {gameExeName}";
+                    string injectExePath = Path.Combine(hoYoShadePath, "inject.exe");
+                    if (File.Exists(injectExePath))
+                    {
+                        hoYoShadeInstalled = true;
+                        hoYoShadeCommand = $"\"{injectExePath}\" {gameExeName}";
+                    }
+
+                    string dllPath = Path.Combine(hoYoShadePath, "ReShade64.dll");
+                    if (File.Exists(dllPath))
+                    {
+                        hoYoShadeDllExists = true;
+                        hoYoShadeDllPath = dllPath;
+                    }
+                }
+
+                // Check OpenHoYoShade installation
+                string openHoYoShadePath = Path.Combine(AppConfig.UserDataFolder, "OpenHoYoShade");
+                if (Directory.Exists(openHoYoShadePath))
+                {
+                    string injectExePath = Path.Combine(openHoYoShadePath, "inject.exe");
+                    if (File.Exists(injectExePath))
+                    {
+                        openHoYoShadeInstalled = true;
+                        openHoYoShadeCommand = $"\"{injectExePath}\" {gameExeName}";
+                    }
+
+                    string dllPath = Path.Combine(openHoYoShadePath, "ReShade64.dll");
+                    if (File.Exists(dllPath))
+                    {
+                        openHoYoShadeDllExists = true;
+                        openHoYoShadeDllPath = dllPath;
+                    }
                 }
             }
 
             // Update UI based on installation status
             if (!hoYoShadeInstalled && !openHoYoShadeInstalled)
             {
-                // No framework installed - show warning
                 InfoBar_NoFrameworkInstalled.IsOpen = true;
                 StackPanel_HoYoShade.Visibility = Visibility.Collapsed;
                 StackPanel_OpenHoYoShade.Visibility = Visibility.Collapsed;
             }
             else
             {
-                // At least one framework installed
                 InfoBar_NoFrameworkInstalled.IsOpen = false;
 
                 if (hoYoShadeInstalled)
@@ -1041,8 +1092,38 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
                 }
             }
 
-            _logger.LogInformation("Third-party integration initialized. HoYoShade: {HoYoShade}, OpenHoYoShade: {OpenHoYoShade}",
-                hoYoShadeInstalled, openHoYoShadeInstalled);
+            // DLL integration expander
+            if (hoYoShadeDllExists || openHoYoShadeDllExists)
+            {
+                Expander_DllIntegration.Visibility = Visibility.Visible;
+
+                if (hoYoShadeDllExists)
+                {
+                    StackPanel_HoYoShadeDll.Visibility = Visibility.Visible;
+                    TextBox_HoYoShadeDllPath.Text = hoYoShadeDllPath;
+                }
+                else
+                {
+                    StackPanel_HoYoShadeDll.Visibility = Visibility.Collapsed;
+                }
+
+                if (openHoYoShadeDllExists)
+                {
+                    StackPanel_OpenHoYoShadeDll.Visibility = Visibility.Visible;
+                    TextBox_OpenHoYoShadeDllPath.Text = openHoYoShadeDllPath;
+                }
+                else
+                {
+                    StackPanel_OpenHoYoShadeDll.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                Expander_DllIntegration.Visibility = Visibility.Collapsed;
+            }
+
+            _logger.LogInformation("Third-party integration initialized. HoYoShade: {HoYoShade}, OpenHoYoShade: {OpenHoYoShade}, HoYoShadeDll: {HoYoShadeDll}, OpenHoYoShadeDll: {OpenHoYoShadeDll}",
+                hoYoShadeInstalled, openHoYoShadeInstalled, hoYoShadeDllExists, openHoYoShadeDllExists);
         }
         catch (Exception ex)
         {
@@ -1060,6 +1141,18 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
     {
         CopyCommandToClipboard(TextBox_OpenHoYoShadeCommand.Text, "OpenHoYoShade");
         await ShowCopySuccessAsync(sender as Button, TextBlock_OpenHoYoShadeCopySuccess);
+    }
+
+    private async void Button_CopyHoYoShadeDllPath_Click(object sender, RoutedEventArgs e)
+    {
+        CopyCommandToClipboard(TextBox_HoYoShadeDllPath.Text, "HoYoShade ReShade64.dll");
+        await ShowCopySuccessAsync(sender as Button, TextBlock_HoYoShadeDllCopySuccess);
+    }
+
+    private async void Button_CopyOpenHoYoShadeDllPath_Click(object sender, RoutedEventArgs e)
+    {
+        CopyCommandToClipboard(TextBox_OpenHoYoShadeDllPath.Text, "OpenHoYoShade ReShade64.dll");
+        await ShowCopySuccessAsync(sender as Button, TextBlock_OpenHoYoShadeDllCopySuccess);
     }
 
     private async Task ShowCopySuccessAsync(Button? button, TextBlock? successTextBlock)

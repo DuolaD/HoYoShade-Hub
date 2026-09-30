@@ -1586,6 +1586,52 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("GameLauncherSettingDialog_LinkOpenHoYoShade", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 Advanced: Third-party program only supports specifying DLL file path? 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_AdvancedDllIntegration {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_AdvancedDllIntegration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Direct DLL injection lacks important features and carries potential risks 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_DllIntegrationWarningTitle {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_DllIntegrationWarningTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Unless necessary, please prefer the recommended launch commands above... 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_DllIntegrationWarningDesc {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_DllIntegrationWarningDesc", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 HoYoShade ReShade64.dll Path 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_HoYoShadeDllPath {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_HoYoShadeDllPath", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 OpenHoYoShade ReShade64.dll Path 的本地化字符串。
+        /// </summary>
+        public static string GameLauncherSettingDialog_OpenHoYoShadeDllPath {
+            get {
+                return ResourceManager.GetString("GameLauncherSettingDialog_OpenHoYoShadeDllPath", resourceCulture);
+            }
+        }
+
         
         /// <summary>
         ///   查找类似 Multi-Game Directory 的本地化字符串。

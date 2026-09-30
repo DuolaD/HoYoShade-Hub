@@ -1775,6 +1775,21 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="GameLauncherSettingDialog_LinkOpenHoYoShade" xml:space="preserve">
     <value>連動 OpenHoYoShade</value>
   </data>
+  <data name="GameLauncherSettingDialog_AdvancedDllIntegration" xml:space="preserve">
+    <value>進階選項：第三方程式淨係支援指定 DLL 檔案路徑？</value>
+  </data>
+  <data name="GameLauncherSettingDialog_DllIntegrationWarningTitle" xml:space="preserve">
+    <value>直接指定 DLL 注入存在功能缺失同埋潛在風險</value>
+  </data>
+  <data name="GameLauncherSettingDialog_DllIntegrationWarningDesc" xml:space="preserve">
+    <value>如非必要，請優先用上面推薦嘅啟動命令。如果用第三方程式直接注入 ReShade64.dll，將會冇咗獨立注入器嘅增強特性：&#10;• 路徑修正缺失：設定同預設擺喺 Hub 數據目錄，直接載入可能讀唔到著色器同預設，甚至喺遊戲目錄留低殘留設定檔。&#10;• 深度資訊缺失：冇辦法自動修正遊戲嘅深度緩衝區（Depth Buffer），景深、環境光遮蔽等特效將無法正常運作。&#10;• 防反作弊保護缺失：缺少獨立注入器嘅生命週期保護同防反作弊標記檔案清理機制，可能會增加畀遊戲反作弊偵測到嘅風險。</value>
+  </data>
+  <data name="GameLauncherSettingDialog_HoYoShadeDllPath" xml:space="preserve">
+    <value>HoYoShade ReShade64.dll 路徑</value>
+  </data>
+  <data name="GameLauncherSettingDialog_OpenHoYoShadeDllPath" xml:space="preserve">
+    <value>OpenHoYoShade ReShade64.dll 路徑</value>
+  </data>
   <data name="GameLauncherSettingDialog_LinkDescription" xml:space="preserve">
     <value>你可以用呢個介面顯示嘅命令，設定第三方程式啟動遊戲之前執行呢個命令，就可以無縫啟動 HoYoShade/OpenHoYoShade 框架。</value>
   </data>

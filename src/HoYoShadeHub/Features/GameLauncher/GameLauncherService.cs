@@ -284,6 +284,7 @@ internal partial class GameLauncherService
             GameBiz.abc_cbt1 => "NexusAnima.exe",
             _ => gameBiz.Game switch
             {
+                GameBiz.hk4e => gameBiz.IsGlobalServer() ? "GenshinImpact.exe" : "YuanShen.exe",
                 GameBiz.hkrpg => "StarRail.exe",
                 GameBiz.bh3 => "BH3.exe",
                 GameBiz.nap => "ZenlessZoneZero.exe",

@@ -1775,6 +1775,21 @@ Please scan QR code while Injector run next time to login again.</value>
   <data name="GameLauncherSettingDialog_LinkOpenHoYoShade" xml:space="preserve">
     <value>Integrate with OpenHoYoShade</value>
   </data>
+  <data name="GameLauncherSettingDialog_AdvancedDllIntegration" xml:space="preserve">
+    <value>Advanced: Third-party program only supports specifying DLL file path?</value>
+  </data>
+  <data name="GameLauncherSettingDialog_DllIntegrationWarningTitle" xml:space="preserve">
+    <value>Direct DLL injection lacks important features and carries potential risks</value>
+  </data>
+  <data name="GameLauncherSettingDialog_DllIntegrationWarningDesc" xml:space="preserve">
+    <value>Unless necessary, please prefer the recommended launch commands above. Directly injecting ReShade64.dll via third-party programs will miss enhanced features of the standalone injector:&#10;• Path Correction Missing: Configurations and presets are stored in Hub's data directory. Direct injection may fail to locate shaders/presets or leave residual config files in game directory.&#10;• Depth Buffer Correction Missing: Cannot automatically fix game depth buffer, causing depth-based effects (DOF, SSAO, etc.) to malfunction.&#10;• Anti-cheat Protection Missing: Lacks standalone injector lifecycle management and anti-cheat marker file cleanup, potentially increasing detection risks.</value>
+  </data>
+  <data name="GameLauncherSettingDialog_HoYoShadeDllPath" xml:space="preserve">
+    <value>HoYoShade ReShade64.dll Path</value>
+  </data>
+  <data name="GameLauncherSettingDialog_OpenHoYoShadeDllPath" xml:space="preserve">
+    <value>OpenHoYoShade ReShade64.dll Path</value>
+  </data>
   <data name="GameLauncherSettingDialog_LinkDescription" xml:space="preserve">
     <value>You can use the command shown here to set the third-party program to run this command before launching the game client, enabling seamless launch of HoYoShade/OpenHoYoShade framework.</value>
   </data>
