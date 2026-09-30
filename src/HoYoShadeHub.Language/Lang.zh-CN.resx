@@ -2413,4 +2413,28 @@
   <data name="HoYoShadeDownloadView_QuickUpdate" xml:space="preserve">
     <value>快速更新</value>
   </data>
+  <data name="DiagnosticTool_RetestNetwork" xml:space="preserve">
+    <value>重新检测</value>
+  </data>
+  <data name="DiagnosticTool_RetestComplete" xml:space="preserve">
+    <value>网络重新检测已完成并更新报告！</value>
+  </data>
+  <data name="DiagnosticTool_RetestingNetwork" xml:space="preserve">
+    <value>正在重新检测网络环境与出口信息...</value>
+  </data>
+  <data name="DiagnosticTool_DohTestCompleteWithProvider" xml:space="preserve">
+    <value>DoH+ECH ({0}) 连通性测试已完成并更新报告！</value>
+  </data>
+  <data name="DiagnosticTool_TestingWithDohProvider" xml:space="preserve">
+    <value>正在使用 DoH+ECH ({0}) 加密隧道测试连通性并获取网络信息...</value>
+  </data>
+  <data name="DiagnosticTool_DohRescueDetails_SuccessWithProvider" xml:space="preserve">
+    <value>直连受限，但通过 DoH+ECH ({0}) 加密隧道成功获取出口信息</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohManualSuccess" xml:space="preserve">
+    <value>通过 DoH+ECH ({0}) 加密隧道测试成功，已成功获取出口信息。</value>
+  </data>
+  <data name="DiagnosticTool_Conclusion_DohRescueSuccessWithProvider" xml:space="preserve">
+    <value>检测到本地直连网络受到阻断或 DNS 污染，但通过 DoH+ECH ({0}) 加密隧道可正常连通。建议在启动器网络设置中开启该提供商的 DoH 与 ECH。</value>
+  </data>
 </root>
