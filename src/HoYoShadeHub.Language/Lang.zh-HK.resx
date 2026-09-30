@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -2447,5 +2447,143 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   </data>
   <data name="DiagnosticTool_Conclusion_DohRescueSuccessWithProvider" xml:space="preserve">
     <value>檢測到本地直連網絡受到阻斷或 DNS 污染，但通過 DoH+ECH ({0}) 加密隧道可正常連線。建議在啟動器網絡設定中開啟該提供商的 DoH 與 ECH。</value>
+  </data>
+  <data name="FileSettingPage_BackupAndRestore" xml:space="preserve">
+    <value>備份與還原</value>
+  </data>
+  <data name="BackupRestoreDialog_TitleFormat" xml:space="preserve">
+    <value>{0} - 備份與還原</value>
+  </data>
+  <data name="BackupRestoreDialog_TabBackup" xml:space="preserve">
+    <value>匯出備份</value>
+  </data>
+  <data name="BackupRestoreDialog_TabRestore" xml:space="preserve">
+    <value>匯入還原</value>
+  </data>
+  <data name="BackupRestoreDialog_CurrentPathFormat" xml:space="preserve">
+    <value>目前框架路徑：{0}</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupOptions" xml:space="preserve">
+    <value>備份內容選擇</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupPresets" xml:space="preserve">
+    <value>預設設定 (Presets)</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupPresetsDesc" xml:space="preserve">
+    <value>包含所有調色預設 (.ini) 檔案及子資料夾</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupReShadeIni" xml:space="preserve">
+    <value>ReShade 全域設定 (ReShade.ini)</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupReShadeIniDesc" xml:space="preserve">
+    <value>包含快捷鍵、載入路徑及全域參數等設定</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupShaders" xml:space="preserve">
+    <value>著色器及材質 (reshade-shaders)</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupShadersDesc" xml:space="preserve">
+    <value>包含已安裝或自訂的著色器與材質紋理（體積較大）</value>
+  </data>
+  <data name="BackupRestoreDialog_ExcludeScreenshotsNote" xml:space="preserve">
+    <value>提示：遊戲截圖（Screenshots）已自動排除，以節省備份體積。</value>
+  </data>
+  <data name="BackupRestoreDialog_StartBackup" xml:space="preserve">
+    <value>選擇路徑並匯出備份...</value>
+  </data>
+  <data name="BackupRestoreDialog_BackingUp" xml:space="preserve">
+    <value>正在匯出備份...</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupSuccess" xml:space="preserve">
+    <value>備份匯出成功！</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupSuccessDetail" xml:space="preserve">
+    <value>備份檔案已儲存至：{0}</value>
+  </data>
+  <data name="BackupRestoreDialog_OpenBackupFolder" xml:space="preserve">
+    <value>在檔案總管中開啟</value>
+  </data>
+  <data name="BackupRestoreDialog_SelectFileButton" xml:space="preserve">
+    <value>選擇備份檔案 (*.zip)...</value>
+  </data>
+  <data name="BackupRestoreDialog_NoFileSelected" xml:space="preserve">
+    <value>請選擇要匯入還原的 .zip 備份檔案。</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageDetails" xml:space="preserve">
+    <value>備份檔案詳情</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageSourceFormat" xml:space="preserve">
+    <value>來源框架：{0}</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageCreatedFormat" xml:space="preserve">
+    <value>備份時間：{0}</value>
+  </data>
+  <data name="BackupRestoreDialog_PackagePresetsFormat" xml:space="preserve">
+    <value>包含預設：共 {0} 個檔案</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageShadersFormat" xml:space="preserve">
+    <value>包含著色器：{0}</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageConfigFormat" xml:space="preserve">
+    <value>包含 ReShade.ini：{0}</value>
+  </data>
+  <data name="BackupRestoreDialog_RestoreOptions" xml:space="preserve">
+    <value>還原選項</value>
+  </data>
+  <data name="BackupRestoreDialog_ConflictResolution" xml:space="preserve">
+    <value>同名預設衝突處理</value>
+  </data>
+  <data name="BackupRestoreDialog_ConflictRename" xml:space="preserve">
+    <value>保留現有預設，為衝突預設自動重新命名 (推薦)</value>
+  </data>
+  <data name="BackupRestoreDialog_ConflictOverwrite" xml:space="preserve">
+    <value>直接覆蓋同名預設</value>
+  </data>
+  <data name="BackupRestoreDialog_RestoreConfig" xml:space="preserve">
+    <value>還原 ReShade.ini 全域設定</value>
+  </data>
+  <data name="BackupRestoreDialog_CreateSnapshot" xml:space="preserve">
+    <value>匯入前自動建立目前設定的安全快照 (推薦)</value>
+  </data>
+  <data name="BackupRestoreDialog_StartRestore" xml:space="preserve">
+    <value>開始匯入還原</value>
+  </data>
+  <data name="BackupRestoreDialog_Restoring" xml:space="preserve">
+    <value>正在匯入還原...</value>
+  </data>
+  <data name="BackupRestoreDialog_RestoreSuccess" xml:space="preserve">
+    <value>匯入還原成功！</value>
+  </data>
+  <data name="BackupRestoreDialog_InvalidPackage" xml:space="preserve">
+    <value>所選檔案不是有效的 HoYoShade 或 ReShade 備份檔案。</value>
+  </data>
+  <data name="BackupRestoreDialog_NoComponentsSelected" xml:space="preserve">
+    <value>請至少選擇一項要備份的內容。</value>
+  </data>
+  <data name="BackupRestoreDialog_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="BackupRestoreDialog_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="BackupRestoreDialog_ErrorFormat" xml:space="preserve">
+    <value>操作失敗：{0}</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupFilterName" xml:space="preserve">
+    <value>HoYoShade 備份檔案 (*.zip;*.hysbak)</value>
+  </data>
+  <data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
+    <value>ZIP 壓縮檔 (*.zip)</value>
+  </data>
+  <data name="Common_No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupScreenshots" xml:space="preserve">
+    <value>遊戲截圖 (Screenshots)</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupScreenshotsDesc" xml:space="preserve">
+    <value>包含遊戲截圖圖片（體積可能較大）</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageScreenshotsFormat" xml:space="preserve">
+    <value>包含截圖：{0}</value>
   </data>
 </root>

@@ -1119,6 +1119,60 @@ public sealed partial class FileManageSetting : PageBase
         }
     }
 
+    [RelayCommand]
+    private async Task BackupRestoreHoYoShadeAsync()
+    {
+        try
+        {
+            var dialog = new ShadeBackupRestoreDialog
+            {
+                ShadePath = HoYoShadePath,
+                ShadeName = "HoYoShade",
+                FrameworkVersion = HoYoShadeVersion,
+                ReShadeVersion = HoYoShadeReShadeVersion,
+                XamlRoot = this.XamlRoot,
+            };
+
+            await dialog.ShowAsync();
+
+            if (dialog.DidRestore)
+            {
+                await UpdateHoYoShadeSizeAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Backup/Restore HoYoShade");
+        }
+    }
+
+    [RelayCommand]
+    private async Task BackupRestoreOpenHoYoShadeAsync()
+    {
+        try
+        {
+            var dialog = new ShadeBackupRestoreDialog
+            {
+                ShadePath = OpenHoYoShadePath,
+                ShadeName = "OpenHoYoShade",
+                FrameworkVersion = OpenHoYoShadeVersion,
+                ReShadeVersion = OpenHoYoShadeReShadeVersion,
+                XamlRoot = this.XamlRoot,
+            };
+
+            await dialog.ShowAsync();
+
+            if (dialog.DidRestore)
+            {
+                await UpdateHoYoShadeSizeAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Backup/Restore OpenHoYoShade");
+        }
+    }
+
 
     private async Task StartShaderInjectorAsync(string shadePath, string shadeName, string processName)
     {

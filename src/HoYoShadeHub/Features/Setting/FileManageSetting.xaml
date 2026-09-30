@@ -536,6 +536,16 @@
                                         <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_CustomInject}" />
                                     </StackPanel>
                                 </Button>
+
+                                <Button Height="34"
+                                        Padding="12,0"
+                                        Command="{x:Bind BackupRestoreHoYoShadeCommand}"
+                                        CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xEA35;" />
+                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_BackupAndRestore}" />
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
 
                             <!-- 右侧：卸载与清理 -->
@@ -827,6 +837,16 @@
                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                         <FontIcon FontSize="13" Glyph="&#xE73F;" />
                                         <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_CustomInject}" />
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Height="34"
+                                        Padding="12,0"
+                                        Command="{x:Bind BackupRestoreOpenHoYoShadeCommand}"
+                                        CornerRadius="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="13" Glyph="&#xEA35;" />
+                                        <TextBlock FontSize="12" Text="{x:Bind lang:Lang.FileSettingPage_BackupAndRestore}" />
                                     </StackPanel>
                                 </Button>
                             </StackPanel>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
 	<!-- 
     Microsoft ResX Schema 
@@ -2447,5 +2447,143 @@ When the content provider supports ECH, the program will preferentially attempt 
   </data>
   <data name="DiagnosticTool_Conclusion_DohRescueSuccessWithProvider" xml:space="preserve">
     <value>Direct connection blocked/polluted, but successfully connected via DoH+ECH ({0}). Recommended to enable DoH with this provider in settings.</value>
+  </data>
+  <data name="FileSettingPage_BackupAndRestore" xml:space="preserve">
+    <value>Backup &amp; Restore</value>
+  </data>
+  <data name="BackupRestoreDialog_TitleFormat" xml:space="preserve">
+    <value>{0} - Backup &amp; Restore</value>
+  </data>
+  <data name="BackupRestoreDialog_TabBackup" xml:space="preserve">
+    <value>Export Backup</value>
+  </data>
+  <data name="BackupRestoreDialog_TabRestore" xml:space="preserve">
+    <value>Import &amp; Restore</value>
+  </data>
+  <data name="BackupRestoreDialog_CurrentPathFormat" xml:space="preserve">
+    <value>Framework Path: {0}</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupOptions" xml:space="preserve">
+    <value>Backup Components</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupPresets" xml:space="preserve">
+    <value>Preset Profiles (Presets)</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupPresetsDesc" xml:space="preserve">
+    <value>Includes all preset (.ini) files and subfolders</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupReShadeIni" xml:space="preserve">
+    <value>ReShade Configuration (ReShade.ini)</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupReShadeIniDesc" xml:space="preserve">
+    <value>Includes hotkeys, search paths, and global settings</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupShaders" xml:space="preserve">
+    <value>Shaders and Textures (reshade-shaders)</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupShadersDesc" xml:space="preserve">
+    <value>Includes installed and custom shaders and textures (large file size)</value>
+  </data>
+  <data name="BackupRestoreDialog_ExcludeScreenshotsNote" xml:space="preserve">
+    <value>Note: Game screenshots (Screenshots) are excluded by default to save storage space.</value>
+  </data>
+  <data name="BackupRestoreDialog_StartBackup" xml:space="preserve">
+    <value>Select Path and Export Backup...</value>
+  </data>
+  <data name="BackupRestoreDialog_BackingUp" xml:space="preserve">
+    <value>Exporting backup...</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupSuccess" xml:space="preserve">
+    <value>Backup exported successfully!</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupSuccessDetail" xml:space="preserve">
+    <value>Backup archive saved to: {0}</value>
+  </data>
+  <data name="BackupRestoreDialog_OpenBackupFolder" xml:space="preserve">
+    <value>Open in Explorer</value>
+  </data>
+  <data name="BackupRestoreDialog_SelectFileButton" xml:space="preserve">
+    <value>Choose Backup File (*.zip)...</value>
+  </data>
+  <data name="BackupRestoreDialog_NoFileSelected" xml:space="preserve">
+    <value>Please choose a .zip backup file to restore.</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageDetails" xml:space="preserve">
+    <value>Backup Archive Details</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageSourceFormat" xml:space="preserve">
+    <value>Source Framework: {0}</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageCreatedFormat" xml:space="preserve">
+    <value>Created At: {0}</value>
+  </data>
+  <data name="BackupRestoreDialog_PackagePresetsFormat" xml:space="preserve">
+    <value>Presets: {0} files found</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageShadersFormat" xml:space="preserve">
+    <value>Includes Shaders: {0}</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageConfigFormat" xml:space="preserve">
+    <value>Includes ReShade.ini: {0}</value>
+  </data>
+  <data name="BackupRestoreDialog_RestoreOptions" xml:space="preserve">
+    <value>Restore Options</value>
+  </data>
+  <data name="BackupRestoreDialog_ConflictResolution" xml:space="preserve">
+    <value>Preset Conflict Resolution</value>
+  </data>
+  <data name="BackupRestoreDialog_ConflictRename" xml:space="preserve">
+    <value>Keep existing presets and auto-rename imported files (Recommended)</value>
+  </data>
+  <data name="BackupRestoreDialog_ConflictOverwrite" xml:space="preserve">
+    <value>Overwrite existing presets with backup files</value>
+  </data>
+  <data name="BackupRestoreDialog_RestoreConfig" xml:space="preserve">
+    <value>Restore ReShade.ini Configuration</value>
+  </data>
+  <data name="BackupRestoreDialog_CreateSnapshot" xml:space="preserve">
+    <value>Automatically create a safety snapshot before restoring (Recommended)</value>
+  </data>
+  <data name="BackupRestoreDialog_StartRestore" xml:space="preserve">
+    <value>Start Restore</value>
+  </data>
+  <data name="BackupRestoreDialog_Restoring" xml:space="preserve">
+    <value>Restoring backup...</value>
+  </data>
+  <data name="BackupRestoreDialog_RestoreSuccess" xml:space="preserve">
+    <value>Restore completed successfully!</value>
+  </data>
+  <data name="BackupRestoreDialog_InvalidPackage" xml:space="preserve">
+    <value>The selected file is not a valid HoYoShade or ReShade backup package.</value>
+  </data>
+  <data name="BackupRestoreDialog_NoComponentsSelected" xml:space="preserve">
+    <value>Please select at least one component to back up.</value>
+  </data>
+  <data name="BackupRestoreDialog_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="BackupRestoreDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="BackupRestoreDialog_ErrorFormat" xml:space="preserve">
+    <value>Operation failed: {0}</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupFilterName" xml:space="preserve">
+    <value>HoYoShade Backup Package (*.zip;*.hysbak)</value>
+  </data>
+  <data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
+    <value>ZIP Archive (*.zip)</value>
+  </data>
+  <data name="Common_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupScreenshots" xml:space="preserve">
+    <value>Game Screenshots (Screenshots)</value>
+  </data>
+  <data name="BackupRestoreDialog_BackupScreenshotsDesc" xml:space="preserve">
+    <value>Includes game screenshot images (may result in larger backup size)</value>
+  </data>
+  <data name="BackupRestoreDialog_PackageScreenshotsFormat" xml:space="preserve">
+    <value>Includes Screenshots: {0}</value>
   </data>
 </root>
