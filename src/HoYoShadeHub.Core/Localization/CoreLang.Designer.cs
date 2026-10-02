@@ -60,185 +60,25 @@ namespace HoYoShadeHub.Core.Localization {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Cannot parse the warp record URL. 的本地化字符串。
-        /// </summary>
-        public static string Gacha_CannotParseTheWarpRecordURL {
-            get {
-                return ResourceManager.GetString("Gacha_CannotParseTheWarpRecordURL", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Cannot parse the wish record URL. 的本地化字符串。
-        /// </summary>
-        public static string Gacha_CannotParseTheWishRecordURL {
-            get {
-                return ResourceManager.GetString("Gacha_CannotParseTheWishRecordURL", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Bangboo Channel 的本地化字符串。
-        /// </summary>
-        public static string GachaType_BangbooChannel {
-            get {
-                return ResourceManager.GetString("GachaType_BangbooChannel", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Character Collaboration Warp 的本地化字符串。
-        /// </summary>
-        public static string GachaType_CharacterCollaborationWarp {
-            get {
-                return ResourceManager.GetString("GachaType_CharacterCollaborationWarp", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Character Event Warp 的本地化字符串。
-        /// </summary>
-        public static string GachaType_CharacterEventWarp {
-            get {
-                return ResourceManager.GetString("GachaType_CharacterEventWarp", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Character Event Wish 的本地化字符串。
-        /// </summary>
-        public static string GachaType_CharacterEventWish {
-            get {
-                return ResourceManager.GetString("GachaType_CharacterEventWish", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Character Event Wish - 2 的本地化字符串。
-        /// </summary>
-        public static string GachaType_CharacterEventWish_2 {
-            get {
-                return ResourceManager.GetString("GachaType_CharacterEventWish_2", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Chronicled Wish 的本地化字符串。
-        /// </summary>
-        public static string GachaType_ChronicledWish {
-            get {
-                return ResourceManager.GetString("GachaType_ChronicledWish", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Departure Warp 的本地化字符串。
-        /// </summary>
-        public static string GachaType_DepartureWarp {
-            get {
-                return ResourceManager.GetString("GachaType_DepartureWarp", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Event Ode 的本地化字符串。
-        /// </summary>
-        public static string GachaType_EventOde {
-            get {
-                return ResourceManager.GetString("GachaType_EventOde", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Exclusive Channel 的本地化字符串。
-        /// </summary>
-        public static string GachaType_ExclusiveChannel {
-            get {
-                return ResourceManager.GetString("GachaType_ExclusiveChannel", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Light Cone Collaboration Warp 的本地化字符串。
-        /// </summary>
-        public static string GachaType_LightConeCollaborationWarp {
-            get {
-                return ResourceManager.GetString("GachaType_LightConeCollaborationWarp", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Light Cone Event Warp 的本地化字符串。
-        /// </summary>
-        public static string GachaType_LightConeEventWarp {
-            get {
-                return ResourceManager.GetString("GachaType_LightConeEventWarp", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Novice Wish 的本地化字符串。
-        /// </summary>
-        public static string GachaType_NoviceWish {
-            get {
-                return ResourceManager.GetString("GachaType_NoviceWish", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Permanent Wish 的本地化字符串。
-        /// </summary>
-        public static string GachaType_PermanentWish {
-            get {
-                return ResourceManager.GetString("GachaType_PermanentWish", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Standard Channel 的本地化字符串。
-        /// </summary>
-        public static string GachaType_StandardChannel {
-            get {
-                return ResourceManager.GetString("GachaType_StandardChannel", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Standard Ode 的本地化字符串。
-        /// </summary>
-        public static string GachaType_StandardOde {
-            get {
-                return ResourceManager.GetString("GachaType_StandardOde", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Stellar Warp 的本地化字符串。
-        /// </summary>
-        public static string GachaType_StellarWarp {
-            get {
-                return ResourceManager.GetString("GachaType_StellarWarp", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Weapon Event Wish 的本地化字符串。
-        /// </summary>
-        public static string GachaType_WeaponEventWish {
-            get {
-                return ResourceManager.GetString("GachaType_WeaponEventWish", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 W-Engine Channel 的本地化字符串。
-        /// </summary>
-        public static string GachaType_WEngineChannel {
-            get {
-                return ResourceManager.GetString("GachaType_WEngineChannel", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Genshin Impact 的本地化字符串。
@@ -330,14 +170,6 @@ namespace HoYoShadeHub.Core.Localization {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Bilibili Server 的本地化字符串。
-        /// </summary>
-        public static string GameServer_BilibiliServer {
-            get {
-                return ResourceManager.GetString("GameServer_BilibiliServer", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 First Closed Beta Test 的本地化字符串。
@@ -348,32 +180,8 @@ namespace HoYoShadeHub.Core.Localization {
             }
         }
         
-        /// <summary>
-        ///   查找类似 China Cloud 的本地化字符串。
-        /// </summary>
-        public static string GameServer_ChinaCloud {
-            get {
-                return ResourceManager.GetString("GameServer_ChinaCloud", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 China Cloud Server 的本地化字符串。
-        /// </summary>
-        public static string GameServer_ChinaCloudServer {
-            get {
-                return ResourceManager.GetString("GameServer_ChinaCloudServer", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 China Official 的本地化字符串。
-        /// </summary>
-        public static string GameServer_ChinaOfficial {
-            get {
-                return ResourceManager.GetString("GameServer_ChinaOfficial", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 China Server 的本地化字符串。
@@ -393,32 +201,8 @@ namespace HoYoShadeHub.Core.Localization {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Europe &amp; Americas 的本地化字符串。
-        /// </summary>
-        public static string GameServer_EuropeAmericas {
-            get {
-                return ResourceManager.GetString("GameServer_EuropeAmericas", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Europe &amp; Americas Servers 的本地化字符串。
-        /// </summary>
-        public static string GameServer_EuropeAmericasServers {
-            get {
-                return ResourceManager.GetString("GameServer_EuropeAmericasServers", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Global Official 的本地化字符串。
-        /// </summary>
-        public static string GameServer_GlobalOfficial {
-            get {
-                return ResourceManager.GetString("GameServer_GlobalOfficial", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Global Server 的本地化字符串。
@@ -429,41 +213,9 @@ namespace HoYoShadeHub.Core.Localization {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Japan 的本地化字符串。
-        /// </summary>
-        public static string GameServer_Japan {
-            get {
-                return ResourceManager.GetString("GameServer_Japan", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Japan Server 的本地化字符串。
-        /// </summary>
-        public static string GameServer_JapanServer {
-            get {
-                return ResourceManager.GetString("GameServer_JapanServer", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Korea 的本地化字符串。
-        /// </summary>
-        public static string GameServer_Korea {
-            get {
-                return ResourceManager.GetString("GameServer_Korea", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Korea Server 的本地化字符串。
-        /// </summary>
-        public static string GameServer_KoreaServer {
-            get {
-                return ResourceManager.GetString("GameServer_KoreaServer", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 OS Beta / Creator Experience Client 的本地化字符串。
@@ -474,50 +226,10 @@ namespace HoYoShadeHub.Core.Localization {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Southeast Asia Server 的本地化字符串。
-        /// </summary>
-        public static string GameServer_SEAServer {
-            get {
-                return ResourceManager.GetString("GameServer_SEAServer", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Southeast Asia 的本地化字符串。
-        /// </summary>
-        public static string GameServer_SoutheastAsia {
-            get {
-                return ResourceManager.GetString("GameServer_SoutheastAsia", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Traditional Chinese 的本地化字符串。
-        /// </summary>
-        public static string GameServer_TraditionalChinese {
-            get {
-                return ResourceManager.GetString("GameServer_TraditionalChinese", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Traditional Chinese Server 的本地化字符串。
-        /// </summary>
-        public static string GameServer_TraditionalChineseServer {
-            get {
-                return ResourceManager.GetString("GameServer_TraditionalChineseServer", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 CBT3 的本地化字符串。
-        /// </summary>
-        public static string GameServer_ZZZCBT3 {
-            get {
-                return ResourceManager.GetString("GameServer_ZZZCBT3", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Artifacts 的本地化字符串。
@@ -564,32 +276,8 @@ namespace HoYoShadeHub.Core.Localization {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Events 的本地化字符串。
-        /// </summary>
-        public static string PostType_Activity {
-            get {
-                return ResourceManager.GetString("PostType_Activity", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Notices 的本地化字符串。
-        /// </summary>
-        public static string PostType_Announcement {
-            get {
-                return ResourceManager.GetString("PostType_Announcement", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Info 的本地化字符串。
-        /// </summary>
-        public static string PostType_Information {
-            get {
-                return ResourceManager.GetString("PostType_Information", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Light Cone 的本地化字符串。

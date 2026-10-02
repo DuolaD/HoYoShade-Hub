@@ -121,7 +121,7 @@
     <value>Chinese</value>
   </data>
   <data name="UpdateWindow_Title" xml:space="preserve">
-    <value>HoYoShadeHub - Update</value>
+    <value>HoYoShade Hub - Update</value>
   </data>
   <data name="UpdateWindow_ReleaseTime" xml:space="preserve">
     <value>Published Time:</value>
@@ -159,31 +159,7 @@
   <data name="PresetsDialog_SeparateFolder_Tooltip" xml:space="preserve">
     <value>Store new version presets in a separate folder; safest option.</value>
   </data>
-  <data name="ThirdPartyIntegrationDialog_Intro" xml:space="preserve">
-    <value>This dialog provides commands to integrate HoYoShade/OpenHoYoShade with third-party launchers to auto-inject when starting the game.</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_NoFrameworkWarning" xml:space="preserve">
-    <value>No framework is installed. Please download and install HoYoShade/OpenHoYoShade first.</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_Copy" xml:space="preserve">
-    <value>Copy</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_HoYoShadeDesc" xml:space="preserve">
-    <value>Example: add this command to your launcher; HoYoShade will be auto-registered when starting the game.</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_OpenHoYoShadeDesc" xml:space="preserve">
-    <value>Example: add this command to your launcher; OpenHoYoShade will be auto-registered when starting the game.</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_ErrorFormat" xml:space="preserve">
-    <value>Initialization failed: {0}</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_CopySuccessFormat" xml:space="preserve">
-    <value>{0} command copied to clipboard</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_CopyErrorFormat" xml:space="preserve">
-    <value>Copy failed: {0}</value>
-  </data>
- <data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
+<data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
         <value>You are running the latest version</value>
     </data>
     <data name="FileSettingPage_FrameworkUpToDateToastFormat" xml:space="preserve">
@@ -225,10 +201,7 @@
 	<data name="SelectDirectoryPage_NoWritePermission" xml:space="preserve">
     <value>No write permission</value>
   </data>
-	<data name="DownloadGamePage_Close" xml:space="preserve">
-    <value>Close</value>
-  </data>
-	<data name="Common_Cancel" xml:space="preserve">
+<data name="Common_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
 	<data name="Common_Confirm" xml:space="preserve">
@@ -435,10 +408,7 @@
 	<data name="UpdatePage_UpdateNow" xml:space="preserve">
     <value>Update Now</value>
   </data>
-	<data name="UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage" xml:space="preserve">
-    <value>You need to manually download the new version package</value>
-  </data>
-	<data name="UpdatePage_PreviewChannel" xml:space="preserve">
+<data name="UpdatePage_PreviewChannel" xml:space="preserve">
     <value>Preview Channel</value>
   </data>
 	<data name="UpdatePage_StableChannel" xml:space="preserve">
@@ -507,10 +477,7 @@
 	<data name="ImageViewPage_ZoomIn" xml:space="preserve">
     <value>Zoom in</value>
   </data>
-	<data name="ImageViewPage_Rotate" xml:space="preserve">
-    <value>Rotate</value>
-  </data>
-	<data name="Common_Copy" xml:space="preserve">
+<data name="Common_Copy" xml:space="preserve">
     <value>Copy</value>
   </data>
 	<data name="Common_Open" xml:space="preserve">
@@ -591,10 +558,7 @@
 	<data name="FileSettingPage_GameResource" xml:space="preserve">
     <value>Game Resource</value>
   </data>
-	<data name="GameResourcePage_LatestVersion" xml:space="preserve">
-    <value>Latest Version</value>
-  </data>
-	<data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
+<data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
     <value>Recently Updated Content</value>
   </data>
 	<data name="GameBizSelector_AutoSearch" xml:space="preserve">
@@ -764,10 +728,7 @@
 	<data name="SettingPage_Toolbox" xml:space="preserve">
     <value>Toolbox</value>
   </data>
-	<data name="GachaImportAndExportWindow_Import" xml:space="preserve">
-    <value>Import</value>
-  </data>
-	<data name="GameSettingPage_EnableHDR" xml:space="preserve">
+<data name="GameSettingPage_EnableHDR" xml:space="preserve">
     <value>Enable HDR</value>
   </data>
 	<data name="Common_RestoreDefaults" xml:space="preserve">
@@ -821,10 +782,7 @@
 	<data name="WelcomeView_OpenWindowsSecurity" xml:space="preserve">
     <value>Open Windows Security</value>
   </data>
-	<data name="WelcomeView_LearnMore" xml:space="preserve">
-    <value>Learn More</value>
-  </data>
-	<data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
+<data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
     <value>Network error. You can continue using HoYoShade Hub, but you won't receive future updates.</value>
   </data>
 	<data name="MainView_CheckSystemProxy_SystemProxyIsEnabled" xml:space="preserve">
@@ -1103,10 +1061,7 @@
 	<data name="HoYoShadeDownloadView_StatusRateLimitExceeded" xml:space="preserve">
     <value>Failed to load versions: GitHub API rate limit reached (403/429). Please switch the download server or try again later.</value>
   </data>
-	<data name="HoYoShadeDownloadView_StatusInitializing" xml:space="preserve">
-    <value>Initializing download...</value>
-  </data>
-	<data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
+<data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
     <value>Asset not found for selected options.</value>
   </data>
 	<data name="HoYoShadeDownloadView_StatusStartingRPC" xml:space="preserve">
@@ -1133,10 +1088,7 @@
 	<data name="HoYoShadeDownloadView_Resume" xml:space="preserve">
     <value>Resume</value>
   </data>
-	<data name="HoYoShadeDownloadView_Stop" xml:space="preserve">
-    <value>Stop</value>
-  </data>
-	<data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
+<data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
     <value>HoYoShade</value>
   </data>
 	<data name="HoYoShadeDownloadView_Option_OpenHoYoShade" xml:space="preserve">
@@ -1145,10 +1097,7 @@
 	<data name="HoYoShadeDownloadView_Server_GithubDirect" xml:space="preserve">
     <value>GitHub</value>
   </data>
-	<data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
-    <value>GitHub (Proxy)</value>
-  </data>
-	<data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
+<data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
     <value>Cloudflare</value>
   </data>
 	<data name="HoYoShadeDownloadView_Server_TencentCloud" xml:space="preserve">
@@ -1160,10 +1109,7 @@
   <data name="HoYoShadeDownloadView_Server_AutoSelect" xml:space="preserve">
     <value>Auto Select</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusDownloadingFromServer" xml:space="preserve">
-    <value>{0} - Downloading from {1}...</value>
-  </data>
-	<data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
+<data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
     <value>{0}/s - {1}%</value>
   </data>
 	<data name="HoYoShadeDownloadView_HoYoShade_Description" xml:space="preserve">
@@ -1211,10 +1157,7 @@
 	<data name="ReShadeDownloadView_Title" xml:space="preserve">
     <value>Next, let's download and install ReShade shaders and addons</value>
   </data>
-	<data name="ReShadeDownloadView_UpdateHint" xml:space="preserve">
-    <value>If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons.</value>
-  </data>
-	<data name="ReShadeDownloadView_Description" xml:space="preserve">
+<data name="ReShadeDownloadView_Description" xml:space="preserve">
     <value>Shaders and addons are required for HoYoShade to work properly, but can be skipped if you only installed OpenHoYoShade.
 The list is synchronized with official ReShade; missing effects can be manually imported after setup. If unsure, installing all is recommended.</value>
   </data>
@@ -1263,25 +1206,13 @@ The list is synchronized with official ReShade; missing effects can be manually 
 	<data name="ReShadeDownloadView_StatusDownloading" xml:space="preserve">
     <value>Downloading...</value>
   </data>
-	<data name="ReShadeDownloadView_StatusInstalling" xml:space="preserve">
-    <value>Installing...</value>
-  </data>
-	<data name="ReShadeDownloadView_StatusFinished" xml:space="preserve">
+<data name="ReShadeDownloadView_StatusFinished" xml:space="preserve">
     <value>Installation completed!</value>
   </data>
 	<data name="ReShadeDownloadView_StatusError" xml:space="preserve">
     <value>Error: {0}</value>
   </data>
-	<data name="Common_Shader" xml:space="preserve">
-    <value>Shader</value>
-  </data>
-	<data name="Common_Addon" xml:space="preserve">
-    <value>Addon</value>
-  </data>
-	<data name="HoYoShadeDownloadView_PackageAlreadyInstalled" xml:space="preserve">
-    <value>Cannot install: {0} is already installed.</value>
-  </data>
-	<data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
+<data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
     <value>Shaders</value>
   </data>
 	<data name="ReShadeDownloadView_TypeAddons" xml:space="preserve">
@@ -1311,10 +1242,7 @@ The list is synchronized with official ReShade; missing effects can be manually 
 	<data name="FileSettingPage_InstallReShadeShadersAndAddons" xml:space="preserve">
     <value>Install Shaders &amp; Addons</value>
   </data>
-	<data name="FileSettingPage_InstallStatus" xml:space="preserve">
-    <value>Install Status</value>
-  </data>
-    <data name="FileSettingPage_FrameworkVersion" xml:space="preserve">
+<data name="FileSettingPage_FrameworkVersion" xml:space="preserve">
     <value>Version</value>
   </data>
     <data name="FileSettingPage_ReShadeVersion" xml:space="preserve">
@@ -1345,7 +1273,7 @@ The list is synchronized with official ReShade; missing effects can be manually 
     <value>Are you sure you want to uninstall {0}?</value>
   </data>
 	<data name="UninstallShadeDialog_WarningMessage1" xml:space="preserve">
-    <value>This will delete all installed {0} shaders, addons, presets, and game screenshots. Once uninstalled, these data cannot be recovered.</value>
+    <value>This will delete all installed {0} shaders, addons, presets, and game screenshots. Once uninstalled, this data cannot be recovered.</value>
   </data>
 	<data name="UninstallShadeDialog_WarningMessage2" xml:space="preserve">
     <value>If you have important data that has not been backed up, please back up before uninstalling.</value>
@@ -1418,37 +1346,13 @@ Do you want to continue with the reset operation?</value>
 	<data name="ResetReShadeIniDialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-	<data name="ResetReShadeIniDialog_Close" xml:space="preserve">
-    <value>Close</value>
-  </data>
-	<data name="ResetReShadeIniDialog_Resetting" xml:space="preserve">
-    <value>Resetting ReShade.ini...</value>
-  </data>
-	<data name="ResetReShadeIniDialog_ResetCompleted" xml:space="preserve">
-    <value>Reset completed</value>
-  </data>
-	<data name="ResetReShadeIniDialog_ResetFailed" xml:space="preserve">
-    <value>Reset failed</value>
-  </data>
-	<data name="ResetReShadeIniDialog_ShadePathNotFound" xml:space="preserve">
-    <value>Shade path not found</value>
-  </data>
-	<data name="ResetReShadeIniDialog_ReShadeIniNotFound" xml:space="preserve">
-    <value>ReShade.ini file not found</value>
-  </data>
-	<data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
+<data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
     <value>Reset ReShade.ini</value>
   </data>
 	<data name="SettingPage_Integration" xml:space="preserve">
     <value>Integration</value>
   </data>
-	<data name="SettingPage_IntegrationDescription" xml:space="preserve">
-    <value>This page is for configuring integrations with other Mods and applications.</value>
-  </data>
-	<data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
-    <value>Integration features coming soon...</value>
-  </data>
-	<data name="SettingPage_ExMBlenderPlugin" xml:space="preserve">
+<data name="SettingPage_ExMBlenderPlugin" xml:space="preserve">
     <value>Ex_M/REL Blender Plugin</value>
   </data>
 	<data name="SettingPage_ExMGenshinBlenderPlugin" xml:space="preserve">
@@ -1517,16 +1421,10 @@ Do you want to continue with the reset operation?</value>
 	<data name="GameLauncher_ExMBlenderPluginStartFailed" xml:space="preserve">
     <value>Failed to start Ex_M/REL {0} Blender Plugin: {1}</value>
   </data>
-	<data name="GameLauncher_GameNotStartedKillingInjector" xml:space="preserve">
-    <value>Game not started, HoYoShade/OpenHoYoShade injector process terminated</value>
-  </data>
-	<data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
+<data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
     <value>Game launch failed</value>
   </data>
-	<data name="GameLauncher_GameNotFound" xml:space="preserve">
-    <value>Game install path not found</value>
-  </data>
-	<data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
+<data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
     <value>Launched game with {0}</value>
   </data>
 	<data name="GameLauncher_LaunchWithShaderFailed" xml:space="preserve">
@@ -1676,10 +1574,7 @@ After deletion, you need to restart the client once to let the drone re-acquire 
     <value>Successfully deleted config file(s) for {0} game(s).
 Please re-select the client while Injector run next time.</value>
   </data>
-	<data name="ExMBlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
-    <value>Partially completed: {0} succeeded, {1} failed. Check logs for details.</value>
-  </data>
-	<data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
+<data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
     <value>All operations failed. Check logs for details.</value>
   </data>
 	<data name="ExMBlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
@@ -1805,13 +1700,7 @@ Please scan QR code while Injector run next time to login again.</value>
   <data name="GameLauncherSettingDialog_Note3" xml:space="preserve">
     <value>If the third-party program does not support running commands for integration, it is recommended to request support for custom launch commands from its developer.</value>
   </data>
-  <data name="GameLauncherSettingDialog_Note4" xml:space="preserve">
-    <value>Not all third-party programs support third-party program integration. Please refer to the third-party program documentation for details.</value>
-  </data>
-  <data name="GameLauncherSettingDialog_Note5" xml:space="preserve">
-    <value>Not all third-party programs support integration via commands. HoYoShade contributors will not adapt to third-party programs that only allow users to launch with their included injector.</value>
-  </data>
-  <data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
+<data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
     <value>Multi-Game Directory</value>
   </data>
   <data name="GameLauncherSettingDialog_MultiGameDirectoryDesc" xml:space="preserve">
@@ -1962,10 +1851,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="QuickSetupView_UpdateModeCustomInstall" xml:space="preserve">
     <value>Custom / Advanced Update</value>
   </data>
-  <data name="QuickSetupView_EnterMainView" xml:space="preserve">
-    <value>Enter Main View</value>
-  </data>
-  <data name="QuickSetupView_StatusPreparing" xml:space="preserve">
+<data name="QuickSetupView_StatusPreparing" xml:space="preserve">
     <value>[1/2] Preparing install service and fetching version...</value>
   </data>
   <data name="QuickSetupView_StatusFetchingRelease" xml:space="preserve">
@@ -2100,10 +1986,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="DiagnosticTool_Permissions" xml:space="preserve">
     <value>Permissions</value>
   </data>
-  <data name="DiagnosticTool_FrameworkVer" xml:space="preserve">
-    <value>HoYoShade Core</value>
-  </data>
-  <data name="DiagnosticTool_RpcState" xml:space="preserve">
+<data name="DiagnosticTool_RpcState" xml:space="preserve">
     <value>RPC Background Service</value>
   </data>
   <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
@@ -2112,10 +1995,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="DiagnosticTool_Motherboard" xml:space="preserve">
     <value>Motherboard</value>
   </data>
-  <data name="DiagnosticTool_MemorySticks" xml:space="preserve">
-    <value>Memory Slots</value>
-  </data>
-  <data name="DiagnosticTool_Disks" xml:space="preserve">
+<data name="DiagnosticTool_Disks" xml:space="preserve">
     <value>Disks &amp; Volumes</value>
   </data>
   <data name="DiagnosticTool_Monitors" xml:space="preserve">
@@ -2217,10 +2097,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="DiagnosticTool_Off" xml:space="preserve">
     <value>Off</value>
   </data>
-  <data name="DiagnosticTool_Direct" xml:space="preserve">
-    <value>Direct</value>
-  </data>
-  <data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
+<data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
     <value>Not detected / No IPv6 outbound</value>
   </data>
   <data name="DiagnosticTool_ProxyEnabled" xml:space="preserve">
@@ -2313,13 +2190,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="DiagnosticTool_Report_DisksDrives" xml:space="preserve">
     <value>Storage Disks &amp; Drive Letters:</value>
   </data>
-  <data name="DiagnosticTool_Report_Audio" xml:space="preserve">
-    <value>Audio Devices:</value>
-  </data>
-  <data name="DiagnosticTool_Report_NetworkAdapters" xml:space="preserve">
-    <value>Network Adapters:</value>
-  </data>
-  <data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
+<data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
     <value>Architecture: System {0} / Process {1}</value>
   </data>
   <data name="DiagnosticTool_Report_RunningMode" xml:space="preserve">
@@ -2499,10 +2370,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="BackupRestoreDialog_BackupShadersDesc" xml:space="preserve">
     <value>Includes installed and custom shaders and textures (large file size)</value>
   </data>
-  <data name="BackupRestoreDialog_ExcludeScreenshotsNote" xml:space="preserve">
-    <value>Note: Game screenshots (Screenshots) are excluded by default to save storage space.</value>
-  </data>
-  <data name="BackupRestoreDialog_StartBackup" xml:space="preserve">
+<data name="BackupRestoreDialog_StartBackup" xml:space="preserve">
     <value>Select Path and Export Backup...</value>
   </data>
   <data name="BackupRestoreDialog_BackingUp" xml:space="preserve">
@@ -2511,10 +2379,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="BackupRestoreDialog_BackupSuccess" xml:space="preserve">
     <value>Backup exported successfully!</value>
   </data>
-  <data name="BackupRestoreDialog_BackupSuccessDetail" xml:space="preserve">
-    <value>Backup archive saved to: {0}</value>
-  </data>
-  <data name="BackupRestoreDialog_OpenBackupFolder" xml:space="preserve">
+<data name="BackupRestoreDialog_OpenBackupFolder" xml:space="preserve">
     <value>Open in Explorer</value>
   </data>
   <data name="BackupRestoreDialog_SelectFileButton" xml:space="preserve">
@@ -2523,10 +2388,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="BackupRestoreDialog_NoFileSelected" xml:space="preserve">
     <value>Please choose a .zip or .7z backup file to restore.</value>
   </data>
-  <data name="BackupRestoreDialog_PackageDetails" xml:space="preserve">
-    <value>Backup Archive Details</value>
-  </data>
-  <data name="BackupRestoreDialog_PackageSourceFormat" xml:space="preserve">
+<data name="BackupRestoreDialog_PackageSourceFormat" xml:space="preserve">
     <value>Source Framework: {0}</value>
   </data>
   <data name="BackupRestoreDialog_PackageCreatedFormat" xml:space="preserve">
@@ -2586,10 +2448,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="BackupRestoreDialog_ErrorFormat" xml:space="preserve">
     <value>Operation failed: {0}</value>
   </data>
-  <data name="BackupRestoreDialog_BackupFilterName" xml:space="preserve">
-    <value>HoYoShade Backup Package (*.zip;*.7z)</value>
-  </data>
-  <data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
+<data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
     <value>ZIP Archive (*.zip)</value>
   </data>
   <data name="Common_No" xml:space="preserve">
@@ -2607,10 +2466,7 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="BackupRestoreDialog_SevenZipFilterName" xml:space="preserve">
     <value>7-Zip Archive (*.7z)</value>
   </data>
-  <data name="BackupRestoreDialog_AllSupportedFilterName" xml:space="preserve">
-    <value>HoYoShade Backup Archives (*.zip;*.7z)</value>
-  </data>
-  <data name="StartGameButton_UpdatePlugin" xml:space="preserve">
+<data name="StartGameButton_UpdatePlugin" xml:space="preserve">
     <value>Update Plugins</value>
   </data>
   <data name="StartGameButton_ComingSoon" xml:space="preserve">
@@ -2633,5 +2489,18 @@ When the content provider supports ECH, the program will preferentially attempt 
   </data>
   <data name="TestUrlProtocol_StartupArguments" xml:space="preserve">
     <value>Startup arguments:</value>
+  </data>
+  <data name="QuickSetupView_Error_FetchReleaseFailed" xml:space="preserve">
+    <value>Failed to retrieve available HoYoShade stable framework packages.</value>
+  </data>
+  <data name="QuickSetupView_Error_InstallFrameworkFailed" xml:space="preserve">
+    <value>Failed to download and install the HoYoShade framework.</value>
+  </data>
+  <data name="QuickSetupView_Error_InstallShadersFailed" xml:space="preserve">
+    <value>Failed to download and install ReShade shaders and addons.</value>
+  </data>
+  <data name="QuickSetupView_Error_StartRpcFailed" xml:space="preserve">
+    <value>Unable to start the installation service. Please check administrator privileges or antivirus software.
+Log directory: {0}</value>
   </data>
 </root>

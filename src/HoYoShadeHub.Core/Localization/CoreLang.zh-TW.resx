@@ -117,49 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GachaType_CharacterEventWarp" xml:space="preserve">
-    <value>角色活動躍遷</value>
-  </data>
-  <data name="GachaType_CharacterEventWish" xml:space="preserve">
-    <value>角色活動祈願</value>
-  </data>
-  <data name="GachaType_CharacterEventWish_2" xml:space="preserve">
-    <value>角色活動祈願-2</value>
-  </data>
-  <data name="GachaType_DepartureWarp" xml:space="preserve">
-    <value>始發躍遷</value>
-  </data>
-  <data name="GachaType_LightConeEventWarp" xml:space="preserve">
-    <value>光錐活動躍遷</value>
-  </data>
-  <data name="GachaType_NoviceWish" xml:space="preserve">
-    <value>新手祈願</value>
-  </data>
-  <data name="GachaType_PermanentWish" xml:space="preserve">
-    <value>常駐祈願</value>
-  </data>
-  <data name="GachaType_StellarWarp" xml:space="preserve">
-    <value>群星躍遷</value>
-  </data>
-  <data name="GachaType_WeaponEventWish" xml:space="preserve">
-    <value>武器活動祈願</value>
-  </data>
-  <data name="Gacha_CannotParseTheWarpRecordURL" xml:space="preserve">
-    <value>無法解析躍遷記錄的URL</value>
-  </data>
-  <data name="Gacha_CannotParseTheWishRecordURL" xml:space="preserve">
-    <value>無法解析祈願記錄的URL</value>
-  </data>
-  <data name="PostType_Activity" xml:space="preserve">
-    <value>活動</value>
-  </data>
-  <data name="PostType_Announcement" xml:space="preserve">
-    <value>公告</value>
-  </data>
-  <data name="PostType_Information" xml:space="preserve">
-    <value>資訊</value>
-  </data>
-  <data name="Game_GenshinImpact" xml:space="preserve">
+<data name="Game_GenshinImpact" xml:space="preserve">
     <value>原神</value>
   </data>
   <data name="Game_HonkaiStarRail" xml:space="preserve">
@@ -174,26 +132,7 @@
   <data name="GameServer_GlobalServer" xml:space="preserve">
     <value>國際伺服器</value>
   </data>
-  <data name="GameServer_ChinaCloudServer" xml:space="preserve">
-    <value>中國雲端伺服器</value>
-  </data>
-  <data name="GameServer_EuropeAmericasServers" xml:space="preserve">
-    <value>歐美伺服器</value>
-  </data>
-  <data name="GameServer_JapanServer" xml:space="preserve">
-    <value>日本伺服器</value>
-  </data>
-  <data name="GameServer_KoreaServer" xml:space="preserve">
-    <value>韓國伺服器</value>
-  </data>
-  <data name="GameServer_SEAServer" xml:space="preserve">
-    <value>東南亞伺服器</value>
-    <comment>Southeast Asia and Australia Server</comment>
-  </data>
-  <data name="GameServer_TraditionalChineseServer" xml:space="preserve">
-    <value>繁體中文伺服器</value>
-  </data>
-  <data name="GenshinQueryType_GenesisCrystal" xml:space="preserve">
+<data name="GenshinQueryType_GenesisCrystal" xml:space="preserve">
     <value>創世結晶</value>
   </data>
   <data name="GenshinQueryType_Primogem" xml:space="preserve">
@@ -223,13 +162,7 @@
   <data name="StarRailQueryType_TrailblazePower" xml:space="preserve">
     <value>開拓力</value>
   </data>
-  <data name="GameServer_BilibiliServer" xml:space="preserve">
-    <value>Bilibili 伺服器</value>
-  </data>
-  <data name="GachaType_ChronicledWish" xml:space="preserve">
-    <value>集錄祈願</value>
-  </data>
-  <data name="Game_ZZZ" xml:space="preserve">
+<data name="Game_ZZZ" xml:space="preserve">
     <value>絕區零</value>
   </data>
   <data name="Game_PetitPlanet" xml:space="preserve">
@@ -238,19 +171,7 @@
   <data name="Game_NexusAnima" xml:space="preserve">
     <value>崩壞：因緣精靈</value>
   </data>
-  <data name="GameServer_ZZZCBT3" xml:space="preserve">
-    <value>喧響測試</value>
-  </data>
-  <data name="GameServer_ChinaOfficial" xml:space="preserve">
-    <value>中國官方</value>
-  </data>
-  <data name="GameServer_GlobalOfficial" xml:space="preserve">
-    <value>國際官方</value>
-  </data>
-  <data name="GameServer_ChinaCloud" xml:space="preserve">
-    <value>中國雲端</value>
-  </data>
-  <data name="GameServer_Bilibili" xml:space="preserve">
+<data name="GameServer_Bilibili" xml:space="preserve">
     <value>Bilibili</value>
   </data>
   <data name="GameServer_BetaPreBeta" xml:space="preserve">
@@ -265,34 +186,7 @@
   <data name="GameServer_OSBeta" xml:space="preserve">
     <value>國際伺服器 內測/創作者體驗服</value>
   </data>
-  <data name="GameServer_EuropeAmericas" xml:space="preserve">
-    <value>歐美伺服器</value>
-  </data>
-  <data name="GameServer_Japan" xml:space="preserve">
-    <value>日本伺服器</value>
-  </data>
-  <data name="GameServer_Korea" xml:space="preserve">
-    <value>韓國伺服器</value>
-  </data>
-  <data name="GameServer_SoutheastAsia" xml:space="preserve">
-    <value>東南亞伺服器</value>
-  </data>
-  <data name="GameServer_TraditionalChinese" xml:space="preserve">
-    <value>正體中文</value>
-  </data>
-  <data name="GachaType_StandardChannel" xml:space="preserve">
-    <value>常駐頻道</value>
-  </data>
-  <data name="GachaType_ExclusiveChannel" xml:space="preserve">
-    <value>獨家頻道</value>
-  </data>
-  <data name="GachaType_WEngineChannel" xml:space="preserve">
-    <value>音擎頻道</value>
-  </data>
-  <data name="GachaType_BangbooChannel" xml:space="preserve">
-    <value>邦布頻道</value>
-  </data>
-  <data name="ZZZQueryType_Monochrome" xml:space="preserve">
+<data name="ZZZQueryType_Monochrome" xml:space="preserve">
     <value>菲林底片</value>
   </data>
   <data name="ZZZQueryType_Ploychrome" xml:space="preserve">
@@ -310,19 +204,7 @@
   <data name="ZZZQueryType_DriveDisc" xml:space="preserve">
     <value>驅動光碟</value>
   </data>
-  <data name="GachaType_CharacterCollaborationWarp" xml:space="preserve">
-    <value>角色聯動躍遷</value>
-  </data>
-  <data name="GachaType_LightConeCollaborationWarp" xml:space="preserve">
-    <value>光錐聯動躍遷</value>
-  </data>
-  <data name="GachaType_StandardOde" xml:space="preserve">
-    <value>Standard Ode</value>
-  </data>
-  <data name="GachaType_EventOde" xml:space="preserve">
-    <value>Event Ode</value>
-  </data>
-  <data name="GameServer_Beta" xml:space="preserve">
+<data name="GameServer_Beta" xml:space="preserve">
     <value>內測/創作者體驗服</value>
   </data>
   <data name="GameServer_CBT1" xml:space="preserve">

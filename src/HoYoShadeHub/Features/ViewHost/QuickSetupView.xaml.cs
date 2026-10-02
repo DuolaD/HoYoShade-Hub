@@ -371,7 +371,7 @@ public sealed partial class QuickSetupView : UserControl
             var (release, asset) = await FetchLatestStableReleaseAsync(ct);
             if (release == null || asset == null || string.IsNullOrWhiteSpace(asset.BrowserDownloadUrl))
             {
-                throw new Exception("未能获取到可用的 HoYoShade 稳定版框架安装包。");
+                throw new Exception(Lang.QuickSetupView_Error_FetchReleaseFailed);
             }
 
             _logger.LogInformation("Selected release: {TagName}, Asset: {AssetName}", release.TagName, asset.Name);
@@ -616,7 +616,7 @@ public sealed partial class QuickSetupView : UserControl
 
         if (!success)
         {
-            throw lastException ?? new Exception("下载并安装 HoYoShade 框架失败。");
+            throw lastException ?? new Exception(Lang.QuickSetupView_Error_InstallFrameworkFailed);
         }
     }
 
@@ -711,7 +711,7 @@ public sealed partial class QuickSetupView : UserControl
 
         if (!success)
         {
-            throw lastException ?? new Exception("下载并安装 ReShade 着色器与插件失败。");
+            throw lastException ?? new Exception(Lang.QuickSetupView_Error_InstallShadersFailed);
         }
     }
 
@@ -777,7 +777,7 @@ public sealed partial class QuickSetupView : UserControl
         if (!RpcClientFactory.CheckRpcServerRunning())
         {
             var logPath = Path.Combine(AppConfig.CacheFolder, "log");
-            string errorMsg = $"无法启动安装服务。请确认管理员权限或检查杀毒软件是否拦截。\n日志目录：{logPath}";
+            string errorMsg = string.Format(Lang.QuickSetupView_Error_StartRpcFailed, logPath);
             throw new Exception(errorMsg);
         }
     }

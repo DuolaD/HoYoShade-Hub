@@ -225,14 +225,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Partially completed: {0} succeeded, {1} failed. Check logs for details. 的本地化字符串。
-        /// </summary>
-        public static string ExMBlenderRepairTool_PartialSuccessMessage {
-            get {
-                return ResourceManager.GetString("ExMBlenderRepairTool_PartialSuccessMessage", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Ex_M/REL Blender Plugin Repair Tools 的本地化字符串。
@@ -399,14 +391,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Addon 的本地化字符串。
-        /// </summary>
-        public static string Common_Addon {
-            get {
-                return ResourceManager.GetString("Common_Addon", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Apply 的本地化字符串。
@@ -588,14 +572,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Shader 的本地化字符串。
-        /// </summary>
-        public static string Common_Shader {
-            get {
-                return ResourceManager.GetString("Common_Shader", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Success 的本地化字符串。
@@ -678,14 +654,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Close 的本地化字符串。
-        /// </summary>
-        public static string DownloadGamePage_Close {
-            get {
-                return ResourceManager.GetString("DownloadGamePage_Close", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Decompressing 的本地化字符串。
@@ -1002,14 +970,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Install Status 的本地化字符串。
-        /// </summary>
-        public static string FileSettingPage_InstallStatus {
-            get {
-                return ResourceManager.GetString("FileSettingPage_InstallStatus", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Launcher Log 的本地化字符串。
@@ -1137,14 +1097,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Import 的本地化字符串。
-        /// </summary>
-        public static string GachaImportAndExportWindow_Import {
-            get {
-                return ResourceManager.GetString("GachaImportAndExportWindow_Import", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Auto Search 的本地化字符串。
@@ -1218,23 +1170,7 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Game install path not found 的本地化字符串。
-        /// </summary>
-        public static string GameLauncher_GameNotFound {
-            get {
-                return ResourceManager.GetString("GameLauncher_GameNotFound", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Game not started, HoYoShade/OpenHoYoShade injector process terminated 的本地化字符串。
-        /// </summary>
-        public static string GameLauncher_GameNotStartedKillingInjector {
-            get {
-                return ResourceManager.GetString("GameLauncher_GameNotStartedKillingInjector", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 inject.exe not found in {0} 的本地化字符串。
@@ -1696,23 +1632,7 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Not all third-party programs support third-party program integration. Please refer to the third-party program documentation for details. 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_Note4 {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_Note4", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Not all third-party programs support integration via commands. HoYoShade contributors will not adapt to third-party programs that only allow users to launch with their included injector. 的本地化字符串。
-        /// </summary>
-        public static string GameLauncherSettingDialog_Note5 {
-            get {
-                return ResourceManager.GetString("GameLauncherSettingDialog_Note5", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Relocate Game 的本地化字符串。
@@ -1777,14 +1697,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Latest Version 的本地化字符串。
-        /// </summary>
-        public static string GameResourcePage_LatestVersion {
-            get {
-                return ResourceManager.GetString("GameResourcePage_LatestVersion", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Actual Size of Installed Games 的本地化字符串。
@@ -2282,14 +2194,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Cannot install: {0} is already installed. 的本地化字符串。
-        /// </summary>
-        public static string HoYoShadeDownloadView_PackageAlreadyInstalled {
-            get {
-                return ResourceManager.GetString("HoYoShadeDownloadView_PackageAlreadyInstalled", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Invalid package: {0} 的本地化字符串。
@@ -2435,14 +2339,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 GitHub (Proxy) 的本地化字符串。
-        /// </summary>
-        public static string HoYoShadeDownloadView_Server_GithubProxy {
-            get {
-                return ResourceManager.GetString("HoYoShadeDownloadView_Server_GithubProxy", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Tencent Cloud 的本地化字符串。
@@ -2471,14 +2367,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 {0} - Downloading from {1}... 的本地化字符串。
-        /// </summary>
-        public static string HoYoShadeDownloadView_StatusDownloadingFromServer {
-            get {
-                return ResourceManager.GetString("HoYoShadeDownloadView_StatusDownloadingFromServer", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Error: {0} 的本地化字符串。
@@ -2534,14 +2422,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Initializing download... 的本地化字符串。
-        /// </summary>
-        public static string HoYoShadeDownloadView_StatusInitializing {
-            get {
-                return ResourceManager.GetString("HoYoShadeDownloadView_StatusInitializing", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Ready to download. 的本地化字符串。
@@ -2561,14 +2441,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Stop 的本地化字符串。
-        /// </summary>
-        public static string HoYoShadeDownloadView_Stop {
-            get {
-                return ResourceManager.GetString("HoYoShadeDownloadView_Stop", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 First, let&apos;s download and install the HoYoShade framework 的本地化字符串。
@@ -2696,14 +2568,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Rotate 的本地化字符串。
-        /// </summary>
-        public static string ImageViewPage_Rotate {
-            get {
-                return ResourceManager.GetString("ImageViewPage_Rotate", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Zoom in 的本地化字符串。
@@ -3300,14 +3164,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Close 的本地化字符串。
-        /// </summary>
-        public static string ResetReShadeIniDialog_Close {
-            get {
-                return ResourceManager.GetString("ResetReShadeIniDialog_Close", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Reset 的本地化字符串。
@@ -3318,50 +3174,10 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Reset completed 的本地化字符串。
-        /// </summary>
-        public static string ResetReShadeIniDialog_ResetCompleted {
-            get {
-                return ResourceManager.GetString("ResetReShadeIniDialog_ResetCompleted", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Reset failed 的本地化字符串。
-        /// </summary>
-        public static string ResetReShadeIniDialog_ResetFailed {
-            get {
-                return ResourceManager.GetString("ResetReShadeIniDialog_ResetFailed", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Resetting ReShade.ini... 的本地化字符串。
-        /// </summary>
-        public static string ResetReShadeIniDialog_Resetting {
-            get {
-                return ResourceManager.GetString("ResetReShadeIniDialog_Resetting", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 ReShade.ini file not found 的本地化字符串。
-        /// </summary>
-        public static string ResetReShadeIniDialog_ReShadeIniNotFound {
-            get {
-                return ResourceManager.GetString("ResetReShadeIniDialog_ReShadeIniNotFound", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Shade path not found 的本地化字符串。
-        /// </summary>
-        public static string ResetReShadeIniDialog_ShadePathNotFound {
-            get {
-                return ResourceManager.GetString("ResetReShadeIniDialog_ShadePathNotFound", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Reset ReShade.ini 的本地化字符串。
@@ -3601,14 +3417,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Installing... 的本地化字符串。
-        /// </summary>
-        public static string ReShadeDownloadView_StatusInstalling {
-            get {
-                return ResourceManager.GetString("ReShadeDownloadView_StatusInstalling", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Ready to download. 的本地化字符串。
@@ -3646,14 +3454,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons. 的本地化字符串。
-        /// </summary>
-        public static string ReShadeDownloadView_UpdateHint {
-            get {
-                return ResourceManager.GetString("ReShadeDownloadView_UpdateHint", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Updating may involve ReShade version changes; choose components to install. 的本地化字符串。
@@ -4179,23 +3979,7 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Integration features coming soon... 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_IntegrationComingSoon {
-            get {
-                return ResourceManager.GetString("SettingPage_IntegrationComingSoon", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 This page is for configuring integrations with other Mods and applications. 的本地化字符串。
-        /// </summary>
-        public static string SettingPage_IntegrationDescription {
-            get {
-                return ResourceManager.GetString("SettingPage_IntegrationDescription", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Join Preview Release Channel 的本地化字符串。
@@ -4665,77 +4449,13 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Copy 的本地化字符串。
-        /// </summary>
-        public static string ThirdPartyIntegrationDialog_Copy {
-            get {
-                return ResourceManager.GetString("ThirdPartyIntegrationDialog_Copy", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Copy failed: {0} 的本地化字符串。
-        /// </summary>
-        public static string ThirdPartyIntegrationDialog_CopyErrorFormat {
-            get {
-                return ResourceManager.GetString("ThirdPartyIntegrationDialog_CopyErrorFormat", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 {0} command copied to clipboard 的本地化字符串。
-        /// </summary>
-        public static string ThirdPartyIntegrationDialog_CopySuccessFormat {
-            get {
-                return ResourceManager.GetString("ThirdPartyIntegrationDialog_CopySuccessFormat", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Initialization failed: {0} 的本地化字符串。
-        /// </summary>
-        public static string ThirdPartyIntegrationDialog_ErrorFormat {
-            get {
-                return ResourceManager.GetString("ThirdPartyIntegrationDialog_ErrorFormat", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Example: add this command to your launcher; HoYoShade will be auto-registered when starting the game. 的本地化字符串。
-        /// </summary>
-        public static string ThirdPartyIntegrationDialog_HoYoShadeDesc {
-            get {
-                return ResourceManager.GetString("ThirdPartyIntegrationDialog_HoYoShadeDesc", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 This dialog provides commands to integrate HoYoShade/OpenHoYoShade with third-party launchers to auto-inject when starting the game. 的本地化字符串。
-        /// </summary>
-        public static string ThirdPartyIntegrationDialog_Intro {
-            get {
-                return ResourceManager.GetString("ThirdPartyIntegrationDialog_Intro", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 No framework is installed. Please download and install HoYoShade/OpenHoYoShade first. 的本地化字符串。
-        /// </summary>
-        public static string ThirdPartyIntegrationDialog_NoFrameworkWarning {
-            get {
-                return ResourceManager.GetString("ThirdPartyIntegrationDialog_NoFrameworkWarning", resourceCulture);
-            }
-        }
         
-        /// <summary>
-        ///   查找类似 Example: add this command to your launcher; OpenHoYoShade will be auto-registered when starting the game. 的本地化字符串。
-        /// </summary>
-        public static string ThirdPartyIntegrationDialog_OpenHoYoShadeDesc {
-            get {
-                return ResourceManager.GetString("ThirdPartyIntegrationDialog_OpenHoYoShadeDesc", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Ex_M/REL Blender Plugin Repair Tool 的本地化字符串。
@@ -5070,14 +4790,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 You need to manually download the new version package 的本地化字符串。
-        /// </summary>
-        public static string UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage {
-            get {
-                return ResourceManager.GetString("UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Cannot update automatically 的本地化字符串。
@@ -5215,14 +4927,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Learn More 的本地化字符串。
-        /// </summary>
-        public static string WelcomeView_LearnMore {
-            get {
-                return ResourceManager.GetString("WelcomeView_LearnMore", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Network error. You can continue using HoYoShade Hub, but you won&apos;t receive future updates. 的本地化字符串。
@@ -5477,14 +5181,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Enter Main View 的本地化字符串。
-        /// </summary>
-        public static string QuickSetupView_EnterMainView {
-            get {
-                return ResourceManager.GetString("QuickSetupView_EnterMainView", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 [1/2] Preparing install service and fetching version... 的本地化字符串。
@@ -5891,14 +5587,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 HoYoShade Core 的本地化字符串。
-        /// </summary>
-        public static string DiagnosticTool_FrameworkVer {
-            get {
-                return ResourceManager.GetString("DiagnosticTool_FrameworkVer", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 RPC Background Service 的本地化字符串。
@@ -5927,14 +5615,6 @@ namespace HoYoShadeHub.Language {
             }
         }
         
-        /// <summary>
-        ///   查找类似 Memory Slots 的本地化字符串。
-        /// </summary>
-        public static string DiagnosticTool_MemorySticks {
-            get {
-                return ResourceManager.GetString("DiagnosticTool_MemorySticks", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   查找类似 Disks &amp; Volumes 的本地化字符串。
@@ -6242,14 +5922,6 @@ namespace HoYoShadeHub.Language {
             }
         }
 
-        /// <summary>
-        ///   查找类似 Direct 的本地化字符串。
-        /// </summary>
-        public static string DiagnosticTool_Direct {
-            get {
-                return ResourceManager.GetString("DiagnosticTool_Direct", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   查找类似 Not detected / No IPv6 outbound 的本地化字符串。
@@ -6530,23 +6202,7 @@ namespace HoYoShadeHub.Language {
             }
         }
 
-        /// <summary>
-        ///   查找类似 Audio Devices: 的本地化字符串。
-        /// </summary>
-        public static string DiagnosticTool_Report_Audio {
-            get {
-                return ResourceManager.GetString("DiagnosticTool_Report_Audio", resourceCulture);
-            }
-        }
 
-        /// <summary>
-        ///   查找类似 Network Adapters: 的本地化字符串。
-        /// </summary>
-        public static string DiagnosticTool_Report_NetworkAdapters {
-            get {
-                return ResourceManager.GetString("DiagnosticTool_Report_NetworkAdapters", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   查找类似 Architecture: System {0} / Process {1} 的本地化字符串。
@@ -7116,11 +6772,6 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("BackupRestoreDialog_BackupShadersDesc", resourceCulture);
             }
         }
-        public static string BackupRestoreDialog_ExcludeScreenshotsNote {
-            get {
-                return ResourceManager.GetString("BackupRestoreDialog_ExcludeScreenshotsNote", resourceCulture);
-            }
-        }
         public static string BackupRestoreDialog_StartBackup {
             get {
                 return ResourceManager.GetString("BackupRestoreDialog_StartBackup", resourceCulture);
@@ -7136,11 +6787,6 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("BackupRestoreDialog_BackupSuccess", resourceCulture);
             }
         }
-        public static string BackupRestoreDialog_BackupSuccessDetail {
-            get {
-                return ResourceManager.GetString("BackupRestoreDialog_BackupSuccessDetail", resourceCulture);
-            }
-        }
         public static string BackupRestoreDialog_OpenBackupFolder {
             get {
                 return ResourceManager.GetString("BackupRestoreDialog_OpenBackupFolder", resourceCulture);
@@ -7154,11 +6800,6 @@ namespace HoYoShadeHub.Language {
         public static string BackupRestoreDialog_NoFileSelected {
             get {
                 return ResourceManager.GetString("BackupRestoreDialog_NoFileSelected", resourceCulture);
-            }
-        }
-        public static string BackupRestoreDialog_PackageDetails {
-            get {
-                return ResourceManager.GetString("BackupRestoreDialog_PackageDetails", resourceCulture);
             }
         }
         public static string BackupRestoreDialog_PackageSourceFormat {
@@ -7261,11 +6902,6 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("BackupRestoreDialog_ErrorFormat", resourceCulture);
             }
         }
-        public static string BackupRestoreDialog_BackupFilterName {
-            get {
-                return ResourceManager.GetString("BackupRestoreDialog_BackupFilterName", resourceCulture);
-            }
-        }
         public static string BackupRestoreDialog_ZipFilterName {
             get {
                 return ResourceManager.GetString("BackupRestoreDialog_ZipFilterName", resourceCulture);
@@ -7289,11 +6925,6 @@ namespace HoYoShadeHub.Language {
         public static string BackupRestoreDialog_SevenZipFilterName {
             get {
                 return ResourceManager.GetString("BackupRestoreDialog_SevenZipFilterName", resourceCulture);
-            }
-        }
-        public static string BackupRestoreDialog_AllSupportedFilterName {
-            get {
-                return ResourceManager.GetString("BackupRestoreDialog_AllSupportedFilterName", resourceCulture);
             }
         }
         public static string StartGameButton_UpdatePlugin {
@@ -7334,6 +6965,26 @@ namespace HoYoShadeHub.Language {
         public static string TestUrlProtocol_StartupArguments {
             get {
                 return ResourceManager.GetString("TestUrlProtocol_StartupArguments", resourceCulture);
+            }
+        }
+        public static string QuickSetupView_Error_FetchReleaseFailed {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Error_FetchReleaseFailed", resourceCulture);
+            }
+        }
+        public static string QuickSetupView_Error_InstallFrameworkFailed {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Error_InstallFrameworkFailed", resourceCulture);
+            }
+        }
+        public static string QuickSetupView_Error_InstallShadersFailed {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Error_InstallShadersFailed", resourceCulture);
+            }
+        }
+        public static string QuickSetupView_Error_StartRpcFailed {
+            get {
+                return ResourceManager.GetString("QuickSetupView_Error_StartRpcFailed", resourceCulture);
             }
         }
     }

@@ -117,49 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GachaType_CharacterEventWarp" xml:space="preserve">
-    <value>Character Event Warp</value>
-  </data>
-  <data name="GachaType_CharacterEventWish" xml:space="preserve">
-    <value>Character Event Wish</value>
-  </data>
-  <data name="GachaType_CharacterEventWish_2" xml:space="preserve">
-    <value>Character Event Wish - 2</value>
-  </data>
-  <data name="GachaType_DepartureWarp" xml:space="preserve">
-    <value>Departure Warp</value>
-  </data>
-  <data name="GachaType_LightConeEventWarp" xml:space="preserve">
-    <value>Light Cone Event Warp</value>
-  </data>
-  <data name="GachaType_NoviceWish" xml:space="preserve">
-    <value>Novice Wish</value>
-  </data>
-  <data name="GachaType_PermanentWish" xml:space="preserve">
-    <value>Permanent Wish</value>
-  </data>
-  <data name="GachaType_StellarWarp" xml:space="preserve">
-    <value>Stellar Warp</value>
-  </data>
-  <data name="GachaType_WeaponEventWish" xml:space="preserve">
-    <value>Weapon Event Wish</value>
-  </data>
-  <data name="Gacha_CannotParseTheWarpRecordURL" xml:space="preserve">
-    <value>Cannot parse the warp record URL.</value>
-  </data>
-  <data name="Gacha_CannotParseTheWishRecordURL" xml:space="preserve">
-    <value>Cannot parse the wish record URL.</value>
-  </data>
-  <data name="PostType_Activity" xml:space="preserve">
-    <value>Events</value>
-  </data>
-  <data name="PostType_Announcement" xml:space="preserve">
-    <value>Notices</value>
-  </data>
-  <data name="PostType_Information" xml:space="preserve">
-    <value>Info</value>
-  </data>
-  <data name="Game_GenshinImpact" xml:space="preserve">
+<data name="Game_GenshinImpact" xml:space="preserve">
     <value>Genshin Impact</value>
   </data>
   <data name="Game_HonkaiStarRail" xml:space="preserve">
@@ -174,26 +132,7 @@
   <data name="GameServer_GlobalServer" xml:space="preserve">
     <value>Global Server</value>
   </data>
-  <data name="GameServer_ChinaCloudServer" xml:space="preserve">
-    <value>China Cloud Server</value>
-  </data>
-  <data name="GameServer_EuropeAmericasServers" xml:space="preserve">
-    <value>Europe &amp; Americas Servers</value>
-  </data>
-  <data name="GameServer_JapanServer" xml:space="preserve">
-    <value>Japan Server</value>
-  </data>
-  <data name="GameServer_KoreaServer" xml:space="preserve">
-    <value>Korea Server</value>
-  </data>
-  <data name="GameServer_SEAServer" xml:space="preserve">
-    <value>Southeast Asia Server</value>
-    <comment>Southeast Asia and Australia Server</comment>
-  </data>
-  <data name="GameServer_TraditionalChineseServer" xml:space="preserve">
-    <value>Traditional Chinese Server</value>
-  </data>
-  <data name="GenshinQueryType_GenesisCrystal" xml:space="preserve">
+<data name="GenshinQueryType_GenesisCrystal" xml:space="preserve">
     <value>Genesis Crystals</value>
   </data>
   <data name="GenshinQueryType_Primogem" xml:space="preserve">
@@ -223,13 +162,7 @@
   <data name="StarRailQueryType_TrailblazePower" xml:space="preserve">
     <value>Trailblaze Power</value>
   </data>
-  <data name="GameServer_BilibiliServer" xml:space="preserve">
-    <value>Bilibili Server</value>
-  </data>
-  <data name="GachaType_ChronicledWish" xml:space="preserve">
-    <value>Chronicled Wish</value>
-  </data>
-  <data name="Game_ZZZ" xml:space="preserve">
+<data name="Game_ZZZ" xml:space="preserve">
     <value>Zenless Zone Zero</value>
   </data>
   <data name="Game_PetitPlanet" xml:space="preserve">
@@ -238,19 +171,7 @@
   <data name="Game_NexusAnima" xml:space="preserve">
     <value>Honkai: Nexus Anima</value>
   </data>
-  <data name="GameServer_ZZZCBT3" xml:space="preserve">
-    <value>CBT3</value>
-  </data>
-  <data name="GameServer_ChinaOfficial" xml:space="preserve">
-    <value>China Official</value>
-  </data>
-  <data name="GameServer_GlobalOfficial" xml:space="preserve">
-    <value>Global Official</value>
-  </data>
-  <data name="GameServer_ChinaCloud" xml:space="preserve">
-    <value>China Cloud</value>
-  </data>
-  <data name="GameServer_Bilibili" xml:space="preserve">
+<data name="GameServer_Bilibili" xml:space="preserve">
     <value>Bilibili</value>
   </data>
   <data name="GameServer_BetaPreBeta" xml:space="preserve">
@@ -265,34 +186,7 @@
   <data name="GameServer_OSBeta" xml:space="preserve">
     <value>OS Beta / Creator Experience Client</value>
   </data>
-  <data name="GameServer_EuropeAmericas" xml:space="preserve">
-    <value>Europe &amp; Americas</value>
-  </data>
-  <data name="GameServer_Japan" xml:space="preserve">
-    <value>Japan</value>
-  </data>
-  <data name="GameServer_Korea" xml:space="preserve">
-    <value>Korea</value>
-  </data>
-  <data name="GameServer_SoutheastAsia" xml:space="preserve">
-    <value>Southeast Asia</value>
-  </data>
-  <data name="GameServer_TraditionalChinese" xml:space="preserve">
-    <value>Traditional Chinese</value>
-  </data>
-  <data name="GachaType_StandardChannel" xml:space="preserve">
-    <value>Standard Channel</value>
-  </data>
-  <data name="GachaType_ExclusiveChannel" xml:space="preserve">
-    <value>Exclusive Channel</value>
-  </data>
-  <data name="GachaType_WEngineChannel" xml:space="preserve">
-    <value>W-Engine Channel</value>
-  </data>
-  <data name="GachaType_BangbooChannel" xml:space="preserve">
-    <value>Bangboo Channel</value>
-  </data>
-  <data name="ZZZQueryType_Monochrome" xml:space="preserve">
+<data name="ZZZQueryType_Monochrome" xml:space="preserve">
     <value>Monochrome</value>
   </data>
   <data name="ZZZQueryType_Ploychrome" xml:space="preserve">
@@ -310,19 +204,7 @@
   <data name="ZZZQueryType_DriveDisc" xml:space="preserve">
     <value>Drive Disc</value>
   </data>
-  <data name="GachaType_CharacterCollaborationWarp" xml:space="preserve">
-    <value>Character Collaboration Warp</value>
-  </data>
-  <data name="GachaType_LightConeCollaborationWarp" xml:space="preserve">
-    <value>Light Cone Collaboration Warp</value>
-  </data>
-  <data name="GachaType_StandardOde" xml:space="preserve">
-    <value>Standard Ode</value>
-  </data>
-  <data name="GachaType_EventOde" xml:space="preserve">
-    <value>Event Ode</value>
-  </data>
-  <data name="GameServer_Beta" xml:space="preserve">
+<data name="GameServer_Beta" xml:space="preserve">
     <value>Beta / Creator Experience Client</value>
   </data>
   <data name="GameServer_CBT1" xml:space="preserve">

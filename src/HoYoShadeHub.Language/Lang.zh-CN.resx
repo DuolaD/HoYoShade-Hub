@@ -121,7 +121,7 @@
     <value>汉语</value>
   </data>
   <data name="UpdateWindow_Title" xml:space="preserve">
-    <value>HoYoShadeHub - 更新</value>
+    <value>HoYoShade Hub - 更新</value>
   </data>
   <data name="UpdateWindow_ReleaseTime" xml:space="preserve">
     <value>发布时间：</value>
@@ -159,31 +159,7 @@
   <data name="PresetsDialog_SeparateFolder_Tooltip" xml:space="preserve">
     <value>将新版本预设存放在单独文件夹，是最安全的选项。</value>
   </data>
-  <data name="ThirdPartyIntegrationDialog_Intro" xml:space="preserve">
-    <value>此对话框提供指令以在第三方启动器中集成 HoYoShade/OpenHoYoShade，启动游戏时自动注入。</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_NoFrameworkWarning" xml:space="preserve">
-    <value>未安装任何框架。请先下载并安装 HoYoShade/OpenHoYoShade。</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_Copy" xml:space="preserve">
-    <value>复制</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_HoYoShadeDesc" xml:space="preserve">
-    <value>示例：将该指令添加到你的启动器中，启动游戏时会自动注册 HoYoShade。</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_OpenHoYoShadeDesc" xml:space="preserve">
-    <value>示例：将该指令添加到你的启动器中，启动游戏时会自动注册 OpenHoYoShade。</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_ErrorFormat" xml:space="preserve">
-    <value>初始化失败：{0}</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_CopySuccessFormat" xml:space="preserve">
-    <value>{0} 指令已复制到剪贴板</value>
-  </data>
-  <data name="ThirdPartyIntegrationDialog_CopyErrorFormat" xml:space="preserve">
-    <value>复制失败：{0}</value>
-  </data>
-  <data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
+<data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
         <value>当前已是最新版本</value>
     </data>
   <data name="FileSettingPage_FrameworkUpToDateToastFormat" xml:space="preserve">
@@ -225,10 +201,7 @@
   <data name="SelectDirectoryPage_NoWritePermission" xml:space="preserve">
     <value>没有写入权限</value>
   </data>
-  <data name="DownloadGamePage_Close" xml:space="preserve">
-    <value>关闭</value>
-  </data>
-  <data name="Common_Cancel" xml:space="preserve">
+<data name="Common_Cancel" xml:space="preserve">
     <value>取消</value>
   </data>
   <data name="Common_Confirm" xml:space="preserve">
@@ -435,10 +408,7 @@
   <data name="UpdatePage_UpdateNow" xml:space="preserve">
     <value>现在更新</value>
   </data>
-  <data name="UpdatePage_YouNeedToManuallyDownloadTheNewVersionPackage" xml:space="preserve">
-    <value>你需要手动下载新版本安装包</value>
-  </data>
-  <data name="UpdatePage_PreviewChannel" xml:space="preserve">
+<data name="UpdatePage_PreviewChannel" xml:space="preserve">
     <value>预览版</value>
   </data>
   <data name="UpdatePage_StableChannel" xml:space="preserve">
@@ -507,10 +477,7 @@
   <data name="ImageViewPage_ZoomIn" xml:space="preserve">
     <value>放大</value>
   </data>
-  <data name="ImageViewPage_Rotate" xml:space="preserve">
-    <value>旋转</value>
-  </data>
-  <data name="Common_Copy" xml:space="preserve">
+<data name="Common_Copy" xml:space="preserve">
     <value>复制</value>
   </data>
   <data name="Common_Open" xml:space="preserve">
@@ -591,10 +558,7 @@
   <data name="FileSettingPage_GameResource" xml:space="preserve">
     <value>游戏资源</value>
   </data>
-  <data name="GameResourcePage_LatestVersion" xml:space="preserve">
-    <value>最新版本</value>
-  </data>
-  <data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
+<data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
     <value>最近更新内容</value>
   </data>
   <data name="GameBizSelector_AutoSearch" xml:space="preserve">
@@ -619,7 +583,7 @@
     <value>可移除存储设备未连接。</value>
   </data>
   <data name="StartGameButton_ResumeDownload" xml:space="preserve">
-    <value>Resume Download</value>
+    <value>继续下载</value>
   </data>
   <data name="StartGameButton_Waiting" xml:space="preserve">
     <value>等待中</value>
@@ -764,10 +728,7 @@
   <data name="SettingPage_Toolbox" xml:space="preserve">
     <value>工具箱</value>
   </data>
-  <data name="GachaImportAndExportWindow_Import" xml:space="preserve">
-    <value>导入</value>
-  </data>
-  <data name="GameSettingPage_EnableHDR" xml:space="preserve">
+<data name="GameSettingPage_EnableHDR" xml:space="preserve">
     <value>启用 HDR</value>
   </data>
   <data name="Common_RestoreDefaults" xml:space="preserve">
@@ -821,10 +782,7 @@
   <data name="WelcomeView_OpenWindowsSecurity" xml:space="preserve">
     <value>打开 Windows 安全中心</value>
   </data>
-  <data name="WelcomeView_LearnMore" xml:space="preserve">
-    <value>了解更多</value>
-  </data>
-  <data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
+<data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
     <value>网络错误，您仍可继续使用 HoYoShade Hub，但无法接收到后续更新。</value>
   </data>
   <data name="MainView_CheckSystemProxy_SystemProxyIsEnabled" xml:space="preserve">
@@ -1077,7 +1035,7 @@
     <value>禁用自动播放视频背景</value>
   </data>
   <data name="HoYoShadeDownloadView_Title" xml:space="preserve">
-    <value>首先，让我们先下载并安装 HoYoShade 框架</value>
+    <value>首先，让我们下载并安装 HoYoShade 框架</value>
   </data>
   <data name="HoYoShadeDownloadView_SelectVersion" xml:space="preserve">
     <value>选择版本</value>
@@ -1103,10 +1061,7 @@
   <data name="HoYoShadeDownloadView_StatusRateLimitExceeded" xml:space="preserve">
     <value>获取版本列表失败：触发了 GitHub 访问频率限制 (403/429)，请尝试切换下载服务器或稍后重试。</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusInitializing" xml:space="preserve">
-    <value>正在初始化下载...</value>
-  </data>
-  <data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
+<data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
     <value>未找到匹配的安装包。</value>
   </data>
   <data name="HoYoShadeDownloadView_StatusStartingRPC" xml:space="preserve">
@@ -1133,10 +1088,7 @@
   <data name="HoYoShadeDownloadView_Resume" xml:space="preserve">
     <value>继续</value>
   </data>
-  <data name="HoYoShadeDownloadView_Stop" xml:space="preserve">
-    <value>停止</value>
-  </data>
-  <data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
+<data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
     <value>HoYoShade</value>
   </data>
   <data name="HoYoShadeDownloadView_Option_OpenHoYoShade" xml:space="preserve">
@@ -1145,10 +1097,7 @@
   <data name="HoYoShadeDownloadView_Server_GithubDirect" xml:space="preserve">
     <value>GitHub</value>
   </data>
-  <data name="HoYoShadeDownloadView_Server_GithubProxy" xml:space="preserve">
-    <value>GitHub (代理)</value>
-  </data>
-  <data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
+<data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
     <value>Cloudflare</value>
   </data>
   <data name="HoYoShadeDownloadView_Server_TencentCloud" xml:space="preserve">
@@ -1160,10 +1109,7 @@
   <data name="HoYoShadeDownloadView_Server_AutoSelect" xml:space="preserve">
     <value>自动选择</value>
   </data>
-  <data name="HoYoShadeDownloadView_StatusDownloadingFromServer" xml:space="preserve">
-    <value>{0} - 正在从 {1} 中下载...</value>
-  </data>
-  <data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
+<data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
     <value>{0}/s - {1}%</value>
   </data>
   <data name="HoYoShadeDownloadView_HoYoShade_Description" xml:space="preserve">
@@ -1211,10 +1157,7 @@
   <data name="ReShadeDownloadView_Title" xml:space="preserve">
     <value>接下来，让我们下载并安装 ReShade 着色器和插件</value>
   </data>
-  <data name="ReShadeDownloadView_UpdateHint" xml:space="preserve">
-    <value>If this update involves a ReShade version upgrade, we recommend you update all installed shaders and addons.</value>
-  </data>
-  <data name="ReShadeDownloadView_Description" xml:space="preserve">
+<data name="ReShadeDownloadView_Description" xml:space="preserve">
     <value>着色器与插件是 HoYoShade 正常工作的必要组件；但若您仅安装了 OpenHoYoShade，建议直接跳过此步。
 安装列表与 ReShade 官方同步；如遇部分着色器与插件缺失，可在安装后手动导入补全。若不确定如何选择，推荐直接勾选「安装全部」。</value>
   </data>
@@ -1263,25 +1206,13 @@
   <data name="ReShadeDownloadView_StatusDownloading" xml:space="preserve">
     <value>正在下载...</value>
   </data>
-  <data name="ReShadeDownloadView_StatusInstalling" xml:space="preserve">
-    <value>正在安装...</value>
-  </data>
-  <data name="ReShadeDownloadView_StatusFinished" xml:space="preserve">
+<data name="ReShadeDownloadView_StatusFinished" xml:space="preserve">
     <value>安装完成！</value>
   </data>
   <data name="ReShadeDownloadView_StatusError" xml:space="preserve">
     <value>错误：{0}</value>
   </data>
-  <data name="Common_Shader" xml:space="preserve">
-    <value>着色器</value>
-  </data>
-  <data name="Common_Addon" xml:space="preserve">
-    <value>插件</value>
-  </data>
-  <data name="HoYoShadeDownloadView_PackageAlreadyInstalled" xml:space="preserve">
-    <value>无法安装：{0} 已安装。</value>
-  </data>
-  <data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
+<data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
     <value>着色器</value>
   </data>
   <data name="ReShadeDownloadView_TypeAddons" xml:space="preserve">
@@ -1311,10 +1242,7 @@
   <data name="FileSettingPage_InstallReShadeShadersAndAddons" xml:space="preserve">
     <value>安装ReShade着色器和插件</value>
   </data>
-  <data name="FileSettingPage_InstallStatus" xml:space="preserve">
-    <value>安装状态</value>
-  </data>
-  <data name="FileSettingPage_FrameworkVersion" xml:space="preserve">
+<data name="FileSettingPage_FrameworkVersion" xml:space="preserve">
     <value>框架版本</value>
   </data>
   <data name="FileSettingPage_ReShadeVersion" xml:space="preserve">
@@ -1396,7 +1324,7 @@
     <value>你确定要继续重置ReShade.ini吗？</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningMessage1" xml:space="preserve">
-    <value>正常情况下，重置ReShade.ini的操作是全自动检测并后台运行的。也就是说，通常情况下你都不需要再手动进行重置ReShade.ini。一般只有以下两种情况，你才需要重置ReShade.ini配置文件：· Releases界面中明确写明了必须/建议重置ReShade.ini配置文件，以此开启新功能/修复Bug。· HoYoShade开发者/贡献者明确要求你进行这个操作。除此之外，一般情况下你都不需要进行重置ReShade.ini操作。重置完毕后，你需要重新删除已经复制到游戏进程根目录下的ReShade.ini配置文件，否则HoYoShade/OpenHoYoShade将无法按照预期正常工作。</value>
+    <value>正常情况下，重置ReShade.ini的操作是全自动检测并后台运行的。也就是说，通常情况下你都不需要再手动进行重置ReShade.ini。一般只有以下两种情况，你才需要重置ReShade.ini配置文件：· Releases界面中明确写明了必须/建议重置ReShade.ini配置文件，以此开启新功能/修复Bug。· HoYoShade开发者/贡献者明确要求你进行这个操作。除此之外，一般情况下你都不需要进行重置ReShade.ini操作。重置完毕后，你需要重新删除已经复制到游戏根目录下的ReShade.ini配置文件，否则HoYoShade/OpenHoYoShade将无法按照预期正常工作。</value>
   </data>
   <data name="ResetReShadeIniDialog_WarningMessage2" xml:space="preserve">
     <value>重置ReShade.ini并不会导致你安装在HoYoShade/OpenHoYoShade的着色器，插件，预设及游戏截图丢失。 是否继续重置操作？</value>
@@ -1407,37 +1335,13 @@
   <data name="ResetReShadeIniDialog_Cancel" xml:space="preserve">
     <value>取消</value>
   </data>
-  <data name="ResetReShadeIniDialog_Close" xml:space="preserve">
-    <value>关闭</value>
-  </data>
-  <data name="ResetReShadeIniDialog_Resetting" xml:space="preserve">
-    <value>正在重置ReShade.ini...</value>
-  </data>
-  <data name="ResetReShadeIniDialog_ResetCompleted" xml:space="preserve">
-    <value>重置完成</value>
-  </data>
-  <data name="ResetReShadeIniDialog_ResetFailed" xml:space="preserve">
-    <value>重置失败</value>
-  </data>
-  <data name="ResetReShadeIniDialog_ShadePathNotFound" xml:space="preserve">
-    <value>未找到Shade路径</value>
-  </data>
-  <data name="ResetReShadeIniDialog_ReShadeIniNotFound" xml:space="preserve">
-    <value>未找到ReShade.ini文件</value>
-  </data>
-  <data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
+<data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
     <value>重置ReShade.ini</value>
   </data>
   <data name="SettingPage_Integration" xml:space="preserve">
     <value>联动</value>
   </data>
-  <data name="SettingPage_IntegrationDescription" xml:space="preserve">
-    <value>此页面用于配置与其他Mod和应用的联动设置。</value>
-  </data>
-  <data name="SettingPage_IntegrationComingSoon" xml:space="preserve">
-    <value>联动功能即将推出，敬请期待...</value>
-  </data>
-  <data name="SettingPage_ExMBlenderPlugin" xml:space="preserve">
+<data name="SettingPage_ExMBlenderPlugin" xml:space="preserve">
     <value>Ex_M/REL Blender/留影机插件</value>
   </data>
   <data name="SettingPage_ExMGenshinBlenderPlugin" xml:space="preserve">
@@ -1506,16 +1410,10 @@
   <data name="GameLauncher_ExMBlenderPluginStartFailed" xml:space="preserve">
     <value>启动 Ex_M/REL {0}Blender/留影机插件失败: {1}</value>
   </data>
-  <data name="GameLauncher_GameNotStartedKillingInjector" xml:space="preserve">
-    <value>游戏未启动，已终止HoYoShade/OpenHoYoShade注入器进程</value>
-  </data>
-  <data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
+<data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
     <value>游戏启动失败</value>
   </data>
-  <data name="GameLauncher_GameNotFound" xml:space="preserve">
-    <value>未找到游戏安装路径</value>
-  </data>
-  <data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
+<data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
     <value>已使用 {0} 启动游戏</value>
   </data>
   <data name="GameLauncher_LaunchWithShaderFailed" xml:space="preserve">
@@ -1665,10 +1563,7 @@
     <value>已成功删除 {0} 个游戏的 config 文件。
 请在注入器启动后重新指定客户端。</value>
   </data>
-  <data name="ExMBlenderRepairTool_PartialSuccessMessage" xml:space="preserve">
-    <value>部分完成：{0} 个成功，{1} 个失败。请查看日志了解详情。</value>
-  </data>
-  <data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
+<data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
     <value>所有操作均失败。请查看日志了解详情。</value>
   </data>
   <data name="ExMBlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
@@ -1771,7 +1666,7 @@
     <value>使用须知</value>
   </data>
   <data name="GameLauncherSettingDialog_DllIntegrationWarningDesc" xml:space="preserve">
-    <value>在第三方直接注入dll前，请至少使用 HoYoShade Hub 启动一次目标游戏客户端及 HoYoShade/OpenHoYoShade 。直接注入dll可能会发生未知问题，如遇问题，请优先联系第三方程序开发者。</value>
+    <value>在第三方直接注入dll前，请至少使用 HoYoShade Hub 启动一次目标游戏客户端及 HoYoShade/OpenHoYoShade。直接注入dll可能会发生未知问题，如遇问题，请优先联系第三方程序开发者。</value>
   </data>
   <data name="GameLauncherSettingDialog_HoYoShadeDllPath" xml:space="preserve">
     <value>HoYoShade ReShade64.dll 路径</value>
@@ -1794,13 +1689,7 @@
   <data name="GameLauncherSettingDialog_Note3" xml:space="preserve">
     <value>若第三方程序不支持运行命令进行联动，建议优先向其开发者反馈支持自定义启动命令。</value>
   </data>
-  <data name="GameLauncherSettingDialog_Note4" xml:space="preserve">
-    <value>并非所有第三方程序均支持调用第三方程序，详情请查看第三方程序相关说明。</value>
-  </data>
-  <data name="GameLauncherSettingDialog_Note5" xml:space="preserve">
-    <value>并非所有第三方程序均支持调用命令进行联动，HoYoShade 贡献者将不对仅允许用户使用其随附的注入器进行启动的第三方程序的适配。</value>
-  </data>
-  <data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
+<data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
     <value>多游戏目录</value>
   </data>
   <data name="GameLauncherSettingDialog_MultiGameDirectoryDesc" xml:space="preserve">
@@ -1951,10 +1840,7 @@
   <data name="QuickSetupView_UpdateModeCustomInstall" xml:space="preserve">
     <value>自定义 / 高级更新</value>
   </data>
-  <data name="QuickSetupView_EnterMainView" xml:space="preserve">
-    <value>进入主界面</value>
-  </data>
-  <data name="QuickSetupView_StatusPreparing" xml:space="preserve">
+<data name="QuickSetupView_StatusPreparing" xml:space="preserve">
     <value>[1/2] 正在准备安装服务与获取版本...</value>
   </data>
   <data name="QuickSetupView_StatusFetchingRelease" xml:space="preserve">
@@ -2089,10 +1975,7 @@
   <data name="DiagnosticTool_Permissions" xml:space="preserve">
     <value>进程权限</value>
   </data>
-  <data name="DiagnosticTool_FrameworkVer" xml:space="preserve">
-    <value>HoYoShade 核心</value>
-  </data>
-  <data name="DiagnosticTool_RpcState" xml:space="preserve">
+<data name="DiagnosticTool_RpcState" xml:space="preserve">
     <value>RPC 后台服务</value>
   </data>
   <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
@@ -2101,10 +1984,7 @@
   <data name="DiagnosticTool_Motherboard" xml:space="preserve">
     <value>主板型号</value>
   </data>
-  <data name="DiagnosticTool_MemorySticks" xml:space="preserve">
-    <value>内存槽位</value>
-  </data>
-  <data name="DiagnosticTool_Disks" xml:space="preserve">
+<data name="DiagnosticTool_Disks" xml:space="preserve">
     <value>磁盘与对应盘符</value>
   </data>
   <data name="DiagnosticTool_Monitors" xml:space="preserve">
@@ -2206,10 +2086,7 @@
   <data name="DiagnosticTool_Off" xml:space="preserve">
     <value>关闭</value>
   </data>
-  <data name="DiagnosticTool_Direct" xml:space="preserve">
-    <value>直连</value>
-  </data>
-  <data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
+<data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
     <value>未检测到 / 无 IPv6 出口</value>
   </data>
   <data name="DiagnosticTool_ProxyEnabled" xml:space="preserve">
@@ -2302,13 +2179,7 @@
   <data name="DiagnosticTool_Report_DisksDrives" xml:space="preserve">
     <value>存储磁盘与对应盘符:</value>
   </data>
-  <data name="DiagnosticTool_Report_Audio" xml:space="preserve">
-    <value>声卡设备:</value>
-  </data>
-  <data name="DiagnosticTool_Report_NetworkAdapters" xml:space="preserve">
-    <value>网卡设备:</value>
-  </data>
-  <data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
+<data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
     <value>架构规格: 系统 {0} / 进程 {1}</value>
   </data>
   <data name="DiagnosticTool_Report_RunningMode" xml:space="preserve">
@@ -2488,10 +2359,7 @@
   <data name="BackupRestoreDialog_BackupShadersDesc" xml:space="preserve">
     <value>包含已安装或自定义的着色器与材质纹理（体积较大）</value>
   </data>
-  <data name="BackupRestoreDialog_ExcludeScreenshotsNote" xml:space="preserve">
-    <value>提示：游戏截图（Screenshots）已自动排除，以节省备份体积。</value>
-  </data>
-  <data name="BackupRestoreDialog_StartBackup" xml:space="preserve">
+<data name="BackupRestoreDialog_StartBackup" xml:space="preserve">
     <value>选择路径并导出备份...</value>
   </data>
   <data name="BackupRestoreDialog_BackingUp" xml:space="preserve">
@@ -2500,10 +2368,7 @@
   <data name="BackupRestoreDialog_BackupSuccess" xml:space="preserve">
     <value>备份导出成功！</value>
   </data>
-  <data name="BackupRestoreDialog_BackupSuccessDetail" xml:space="preserve">
-    <value>备份文件已保存至：{0}</value>
-  </data>
-  <data name="BackupRestoreDialog_OpenBackupFolder" xml:space="preserve">
+<data name="BackupRestoreDialog_OpenBackupFolder" xml:space="preserve">
     <value>在资源管理器中打开</value>
   </data>
   <data name="BackupRestoreDialog_SelectFileButton" xml:space="preserve">
@@ -2512,10 +2377,7 @@
   <data name="BackupRestoreDialog_NoFileSelected" xml:space="preserve">
     <value>请选择要导入还原的 .zip 或 .7z 备份包。</value>
   </data>
-  <data name="BackupRestoreDialog_PackageDetails" xml:space="preserve">
-    <value>备份包详情</value>
-  </data>
-  <data name="BackupRestoreDialog_PackageSourceFormat" xml:space="preserve">
+<data name="BackupRestoreDialog_PackageSourceFormat" xml:space="preserve">
     <value>来源框架：{0}</value>
   </data>
   <data name="BackupRestoreDialog_PackageCreatedFormat" xml:space="preserve">
@@ -2575,10 +2437,7 @@
   <data name="BackupRestoreDialog_ErrorFormat" xml:space="preserve">
     <value>操作失败：{0}</value>
   </data>
-  <data name="BackupRestoreDialog_BackupFilterName" xml:space="preserve">
-    <value>HoYoShade 备份包 (*.zip;*.7z)</value>
-  </data>
-  <data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
+<data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
     <value>ZIP 压缩包 (*.zip)</value>
   </data>
   <data name="Common_No" xml:space="preserve">
@@ -2596,10 +2455,7 @@
   <data name="BackupRestoreDialog_SevenZipFilterName" xml:space="preserve">
     <value>7-Zip 压缩包 (*.7z)</value>
   </data>
-  <data name="BackupRestoreDialog_AllSupportedFilterName" xml:space="preserve">
-    <value>HoYoShade 备份包 (*.zip;*.7z)</value>
-  </data>
-  <data name="StartGameButton_UpdatePlugin" xml:space="preserve">
+<data name="StartGameButton_UpdatePlugin" xml:space="preserve">
     <value>更新插件</value>
   </data>
   <data name="StartGameButton_ComingSoon" xml:space="preserve">
@@ -2622,5 +2478,18 @@
   </data>
   <data name="TestUrlProtocol_StartupArguments" xml:space="preserve">
     <value>启动参数：</value>
+  </data>
+  <data name="QuickSetupView_Error_FetchReleaseFailed" xml:space="preserve">
+    <value>未能获取到可用的 HoYoShade 稳定版框架安装包。</value>
+  </data>
+  <data name="QuickSetupView_Error_InstallFrameworkFailed" xml:space="preserve">
+    <value>下载并安装 HoYoShade 框架失败。</value>
+  </data>
+  <data name="QuickSetupView_Error_InstallShadersFailed" xml:space="preserve">
+    <value>下载并安装 ReShade 着色器与插件失败。</value>
+  </data>
+  <data name="QuickSetupView_Error_StartRpcFailed" xml:space="preserve">
+    <value>无法启动安装服务。请确认管理员权限或检查杀毒软件是否拦截。
+日志目录：{0}</value>
   </data>
 </root>
