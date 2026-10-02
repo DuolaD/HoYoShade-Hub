@@ -1768,10 +1768,10 @@
     <value>高级选项：第三方程序仅支持指定 DLL 文件路径？</value>
   </data>
   <data name="GameLauncherSettingDialog_DllIntegrationWarningTitle" xml:space="preserve">
-    <value>直接指定 DLL 注入存在功能缺失与潜在风险</value>
+    <value>使用须知</value>
   </data>
   <data name="GameLauncherSettingDialog_DllIntegrationWarningDesc" xml:space="preserve">
-    <value>若非必要，请优先使用上方推荐的启动命令。若使用第三方程序直接注入 ReShade64.dll，将缺失独立注入器的增强特性：&#10;• 路径修正缺失：配置与预设存放在 Hub 数据目录，直接加载可能无法读取着色器与预设，甚至在游戏目录产生残留配置文件。&#10;• 深度信息缺失：无法自动修正游戏的深度缓冲区（Depth Buffer），景深、环境光遮蔽等特效将无法正常工作。&#10;• 防反作弊保护缺失：缺少独立注入器的生命周期保护与防反作弊标记文件清理机制，可能会增加被游戏反作弊检测的风险。</value>
+    <value>在第三方直接注入dll前，请至少使用 HoYoShade Hub 启动一次目标游戏客户端及 HoYoShade/OpenHoYoShade 。直接注入dll可能会发生未知问题，如遇问题，请优先联系第三方程序开发者。</value>
   </data>
   <data name="GameLauncherSettingDialog_HoYoShadeDllPath" xml:space="preserve">
     <value>HoYoShade ReShade64.dll 路径</value>
@@ -1786,13 +1786,13 @@
     <value>注意：</value>
   </data>
   <data name="GameLauncherSettingDialog_Note1" xml:space="preserve">
-    <value>不同游戏/客户端所使用的命令可能会有所不同，你可能需要在目标游戏客户端的游戏设置界面中，获取适用于当前客户端的的命令。</value>
+    <value>命令与当前游戏客户端及框架路径绑定，若安装路径发生变化，需返回此界面重新获取。</value>
   </data>
   <data name="GameLauncherSettingDialog_Note2" xml:space="preserve">
-    <value>如果 HoYoShade 框架/OpenHoYoShade 框架/启动器路径发生变化，你需要返回此界面获取新的命令。</value>
+    <value>不同第三方启动器的调用格式可能不同，请根据第三方程序的相关说明调整调用参数。</value>
   </data>
   <data name="GameLauncherSettingDialog_Note3" xml:space="preserve">
-    <value>部分第三方程序可能不支持调用此处显示的命令进行联动，你可能需要对命令进行更改，才能在你所使用的第三方程序进行调用。详情请查看第三方程序相关说明。</value>
+    <value>若第三方程序不支持运行命令进行联动，建议优先向其开发者反馈支持自定义启动命令。</value>
   </data>
   <data name="GameLauncherSettingDialog_Note4" xml:space="preserve">
     <value>并非所有第三方程序均支持调用第三方程序，详情请查看第三方程序相关说明。</value>

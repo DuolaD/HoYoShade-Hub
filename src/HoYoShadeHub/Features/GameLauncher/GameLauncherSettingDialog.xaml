@@ -929,38 +929,6 @@
                                                    Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note3}"
                                                    TextWrapping="Wrap" />
                                     </Grid>
-
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Margin="0,0,8,0"
-                                                   FontSize="12"
-                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="•" />
-                                        <TextBlock Grid.Column="1"
-                                                   FontSize="12"
-                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note4}"
-                                                   TextWrapping="Wrap" />
-                                    </Grid>
-
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Margin="0,0,8,0"
-                                                   FontSize="12"
-                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="•" />
-                                        <TextBlock Grid.Column="1"
-                                                   FontSize="12"
-                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                   Text="{x:Bind lang:Lang.GameLauncherSettingDialog_Note5}"
-                                                   TextWrapping="Wrap" />
-                                    </Grid>
                                 </StackPanel>
                             </StackPanel>
 

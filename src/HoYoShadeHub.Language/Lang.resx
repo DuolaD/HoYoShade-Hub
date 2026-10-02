@@ -1779,10 +1779,10 @@ Please scan QR code while Injector run next time to login again.</value>
     <value>Advanced: Third-party program only supports specifying DLL file path?</value>
   </data>
   <data name="GameLauncherSettingDialog_DllIntegrationWarningTitle" xml:space="preserve">
-    <value>Direct DLL injection lacks important features and carries potential risks</value>
+    <value>Notice</value>
   </data>
   <data name="GameLauncherSettingDialog_DllIntegrationWarningDesc" xml:space="preserve">
-    <value>Unless necessary, please prefer the recommended launch commands above. Directly injecting ReShade64.dll via third-party programs will miss enhanced features of the standalone injector:&#10;• Path Correction Missing: Configurations and presets are stored in Hub's data directory. Direct injection may fail to locate shaders/presets or leave residual config files in game directory.&#10;• Depth Buffer Correction Missing: Cannot automatically fix game depth buffer, causing depth-based effects (DOF, SSAO, etc.) to malfunction.&#10;• Anti-cheat Protection Missing: Lacks standalone injector lifecycle management and anti-cheat marker file cleanup, potentially increasing detection risks.</value>
+    <value>Before directly injecting the DLL via a third-party program, please launch the target game client and HoYoShade/OpenHoYoShade with HoYoShade Hub at least once. Directly injecting the DLL may cause unexpected issues; if any problem occurs, please contact the third-party program developer first.</value>
   </data>
   <data name="GameLauncherSettingDialog_HoYoShadeDllPath" xml:space="preserve">
     <value>HoYoShade ReShade64.dll Path</value>
@@ -1797,13 +1797,13 @@ Please scan QR code while Injector run next time to login again.</value>
     <value>Note:</value>
   </data>
   <data name="GameLauncherSettingDialog_Note1" xml:space="preserve">
-    <value>Commands may vary for different games/clients. You may need to obtain the appropriate command for the current client in the game settings interface of the target game client.</value>
+    <value>Commands are bound to the current game client and framework path. If the installation path changes, you need to return to this interface to get the new command.</value>
   </data>
   <data name="GameLauncherSettingDialog_Note2" xml:space="preserve">
-    <value>If the HoYoShade/OpenHoYoShade framework or launcher path changes, you need to return to this interface to get the new command.</value>
+    <value>Command call formats may vary between different third-party programs. Please adjust the arguments according to their documentation.</value>
   </data>
   <data name="GameLauncherSettingDialog_Note3" xml:space="preserve">
-    <value>Some third-party programs may not support calling the command shown here for integration. You may need to modify the command to use it in your third-party program. Please refer to the third-party program documentation for details.</value>
+    <value>If the third-party program does not support running commands for integration, it is recommended to request support for custom launch commands from its developer.</value>
   </data>
   <data name="GameLauncherSettingDialog_Note4" xml:space="preserve">
     <value>Not all third-party programs support third-party program integration. Please refer to the third-party program documentation for details.</value>
