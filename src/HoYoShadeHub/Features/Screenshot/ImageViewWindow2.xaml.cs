@@ -112,6 +112,11 @@ public sealed partial class ImageViewWindow2 : Window
             ScreenshotCollection = null;
             CurrentScreenshot = null;
 
+            if (Content?.XamlRoot is not null)
+            {
+                Content.XamlRoot.Changed -= XamlRoot_Changed;
+            }
+
             RootGrid.Loaded -= RootGrid_Loaded;
             RootGrid.KeyDown -= RootGrid_KeyDown;
             RootGrid.Unloaded -= RootGrid_Unloaded;

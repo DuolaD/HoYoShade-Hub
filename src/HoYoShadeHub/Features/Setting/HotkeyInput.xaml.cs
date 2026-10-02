@@ -37,12 +37,12 @@ public sealed partial class HotkeyInput : UserControl
     public VirtualKey Key { get; private set; }
 
 
-    public HoykeyInputState State
+    public HotkeyInputState State
     {
         get; set
         {
             field = value;
-            if (value is HoykeyInputState.None)
+            if (value is HotkeyInputState.None)
             {
                 TextBlock_EditingText.Visibility = Visibility.Collapsed;
                 TextBlock_HotkeyText_Warning.Visibility = Visibility.Collapsed;
@@ -61,7 +61,7 @@ public sealed partial class HotkeyInput : UserControl
                     Button_DeleteHotkey.Visibility = Visibility.Visible;
                 }
             }
-            else if (value is HoykeyInputState.Edit)
+            else if (value is HotkeyInputState.Edit)
             {
                 TextBlock_ClickToSetHotkey.Visibility = Visibility.Collapsed;
                 TextBlock_HotkeyText.Visibility = Visibility.Collapsed;
@@ -71,7 +71,7 @@ public sealed partial class HotkeyInput : UserControl
                 Button_DeleteHotkey.Visibility = Visibility.Collapsed;
                 Button_CancelEdit.Visibility = Visibility.Visible;
             }
-            else if (value is HoykeyInputState.Success)
+            else if (value is HotkeyInputState.Success)
             {
                 TextBlock_ClickToSetHotkey.Visibility = Visibility.Collapsed;
                 TextBlock_HotkeyText.Visibility = Visibility.Visible;
@@ -81,7 +81,7 @@ public sealed partial class HotkeyInput : UserControl
                 Button_DeleteHotkey.Visibility = Visibility.Collapsed;
                 Button_CancelEdit.Visibility = Visibility.Collapsed;
             }
-            else if (value is HoykeyInputState.Warning)
+            else if (value is HotkeyInputState.Warning)
             {
                 TextBlock_ClickToSetHotkey.Visibility = Visibility.Collapsed;
                 TextBlock_HotkeyText.Visibility = Visibility.Collapsed;
@@ -110,7 +110,7 @@ public sealed partial class HotkeyInput : UserControl
             Modifiers = modifiers;
             Key = key;
             UpdateText();
-            State = HoykeyInputState.None;
+            State = HotkeyInputState.None;
             return true;
         }
         else
@@ -138,7 +138,7 @@ public sealed partial class HotkeyInput : UserControl
         _pressedKeys.Clear();
         _editingModifiers = VirtualKeyModifiers.None;
         _editingKey = VirtualKey.None;
-        State = HoykeyInputState.Edit;
+        State = HotkeyInputState.Edit;
         UpdateText();
     }
 
@@ -146,7 +146,7 @@ public sealed partial class HotkeyInput : UserControl
     private void Grid_EditHotkey_LostFocus(object sender, RoutedEventArgs e)
     {
         _pressedKeys.Clear();
-        if (State is HoykeyInputState.Edit)
+        if (State is HotkeyInputState.Edit)
         {
             OnHotkeyEditFinished();
         }
@@ -161,7 +161,7 @@ public sealed partial class HotkeyInput : UserControl
             {
                 return;
             }
-            State = HoykeyInputState.Edit;
+            State = HotkeyInputState.Edit;
             if (!_pressedKeys.Contains(e.Key))
             {
                 _pressedKeys.Add(e.Key);
@@ -230,7 +230,7 @@ public sealed partial class HotkeyInput : UserControl
         _editingModifiers = VirtualKeyModifiers.None;
         _editingKey = VirtualKey.None;
         UpdateText();
-        State = HoykeyInputState.None;
+        State = HotkeyInputState.None;
         HotkeyDeleted?.Invoke(this, new HotkeyInputEventArg
         {
             WindowHandle = WindowHandle,
@@ -390,7 +390,7 @@ public sealed partial class HotkeyInput : UserControl
             Modifiers = _editingModifiers;
             Key = _editingKey;
             UpdateText();
-            State = HoykeyInputState.None;
+            State = HotkeyInputState.None;
             HotkeyEditFinished?.Invoke(this, e);
         }
         else
@@ -406,7 +406,7 @@ public sealed partial class HotkeyInput : UserControl
                 HotkeyChanged = false,
             };
             UpdateText();
-            State = HoykeyInputState.None;
+            State = HotkeyInputState.None;
             HotkeyEditFinished?.Invoke(this, e);
         }
 
@@ -523,7 +523,7 @@ public sealed partial class HotkeyInput : UserControl
 
 
 
-public enum HoykeyInputState
+public enum HotkeyInputState
 {
     None = 0,
     Edit = 1,

@@ -2617,4 +2617,10 @@
   <data name="ImageBatchConvertWindow_Import" xml:space="preserve">
     <value>导入</value>
   </data>
+  <data name="TestUrlProtocol_ExecutablePath" xml:space="preserve">
+    <value>可执行文件路径：</value>
+  </data>
+  <data name="TestUrlProtocol_StartupArguments" xml:space="preserve">
+    <value>启动参数：</value>
+  </data>
 </root>

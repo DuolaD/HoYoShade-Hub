@@ -69,7 +69,7 @@ public sealed partial class HotkeySetting : PageBase
                 Win32Error error = HotkeyManager.RegisterHotkey(e.WindowHandle, e.HotkeyId, (User32.HotKeyModifiers)e.fsModifiers, (User32.VK)e.Key);
                 if (error.Succeeded && e.HotkeyChanged)
                 {
-                    ((HotkeyInput)sender).State = HoykeyInputState.Success;
+                    ((HotkeyInput)sender).State = HotkeyInputState.Success;
                 }
                 else
                 {
@@ -84,14 +84,14 @@ public sealed partial class HotkeySetting : PageBase
                         {
                             InAppToast.MainWindow?.Warning(null, string.Format(Lang.HotkeyManager_FailedToRegisterTheShortcutKeys0, hotkey));
                         }
-                        ((HotkeyInput)sender).State = HoykeyInputState.Warning;
+                        ((HotkeyInput)sender).State = HotkeyInputState.Warning;
                     }
                     else
                     {
                         var info = HotkeyManager.GetHotkeyInfo(e.HotkeyId);
                         if (info?.Error.Failed ?? false)
                         {
-                            ((HotkeyInput)sender).State = HoykeyInputState.Warning;
+                            ((HotkeyInput)sender).State = HotkeyInputState.Warning;
                         }
                     }
 

@@ -126,7 +126,7 @@ internal static class HotkeyManager
         if (GetHotkeyInfo(hotkeyInput.HotkeyId) is HotkeyInfo info)
         {
             hotkeyInput.SetHotkey((uint)info.Modifiers, (uint)info.Key);
-            hotkeyInput.State = info.Error.Succeeded ? HoykeyInputState.None : HoykeyInputState.Warning;
+            hotkeyInput.State = info.Error.Succeeded ? HotkeyInputState.None : HotkeyInputState.Warning;
         }
     }
 

@@ -38,8 +38,6 @@ public sealed partial class WelcomeView : UserControl
     public WelcomeView()
     {
         this.InitializeComponent();
-        // Register for language change messages
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
         this.Unloaded += (s, e) =>
         {
             WeakReferenceMessenger.Default.UnregisterAll(this);
@@ -138,6 +136,9 @@ public sealed partial class WelcomeView : UserControl
 
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
+
         InitializeLanguageSelector();
         IsWin11 = Environment.OSVersion.Version >= new Version(10, 0, 22000);
         InitializeDefaultUserDataFolder();

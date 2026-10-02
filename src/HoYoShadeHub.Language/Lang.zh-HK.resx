@@ -2628,4 +2628,10 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
   <data name="ImageBatchConvertWindow_Import" xml:space="preserve">
     <value>匯入</value>
   </data>
+  <data name="TestUrlProtocol_ExecutablePath" xml:space="preserve">
+    <value>可執行檔路徑：</value>
+  </data>
+  <data name="TestUrlProtocol_StartupArguments" xml:space="preserve">
+    <value>啟動參數：</value>
+  </data>
 </root>

@@ -47,16 +47,16 @@ public sealed partial class IntegrationSetting : PageBase
     public IntegrationSetting()
     {
         this.InitializeComponent();
-        
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
-        {
-            OnPropertyChanged(nameof(LocationText));
-        });
     }
 
 
     protected override void OnLoaded()
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
+        {
+            OnPropertyChanged(nameof(LocationText));
+        });
         InitializeBlenderPluginPaths();
         InitializeStarwardLauncherSettings();
         _ = FetchLocationAsync();

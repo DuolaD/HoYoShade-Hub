@@ -17,8 +17,6 @@ public partial class App : Application
 
     private readonly DispatcherQueue _uiDispatcherQueue;
 
-    private readonly Timer _gcTimer = new(TimeSpan.FromSeconds(60));
-
     public static new App Current => (App)Application.Current;
 
 
@@ -28,7 +26,6 @@ public partial class App : Application
         RequestedTheme = ApplicationTheme.Dark;
         _uiDispatcherQueue = DispatcherQueue.GetForCurrentThread();
         UnhandledException += App_UnhandledException;
-        _gcTimer.Elapsed += (_, _) => GC.Collect();
         _ = AppConfig.Language;
     }
 
@@ -141,7 +138,7 @@ public partial class App : Application
     public new void Exit()
     {
         m_MainWindow?.Close();
-        m_SystemTrayWindow?.Close();
+        m_SystemTrayWindow?.CloseForExit();
         Application.Current.Exit();
     }
 

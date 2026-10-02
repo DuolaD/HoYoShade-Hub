@@ -41,7 +41,7 @@ public sealed partial class SystemTrayWindow : WindowEx
         }).TrySetAcrylic(true);
 
         AppWindow.IsShownInSwitchers = false;
-        AppWindow.Closing += (s, e) => e.Cancel = true;
+        AppWindow.Closing += (s, e) => { if (!_isAppExiting) e.Cancel = true; };
         this.Activated += SystemTrayWindow_Activated;
         if (AppWindow.Presenter is OverlappedPresenter presenter)
         {
@@ -129,6 +129,23 @@ public sealed partial class SystemTrayWindow : WindowEx
         App.Current.Exit();
     }
 
+
+    private bool _isAppExiting;
+
+    public void CloseForExit()
+    {
+        _isAppExiting = true;
+        try
+        {
+            trayIcon?.Dispose();
+        }
+        catch { }
+        try
+        {
+            Close();
+        }
+        catch { }
+    }
 
     private void WindowEx_Closed(object sender, WindowEventArgs args)
     {

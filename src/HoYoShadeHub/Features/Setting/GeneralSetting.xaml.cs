@@ -54,17 +54,17 @@ public sealed partial class GeneralSetting : PageBase
     {
         this.InitializeComponent();
         DohProviders = new ObservableCollection<DownloadServerItem>();
-        
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
-        {
-            OnPropertyChanged(nameof(LocationText));
-        });
     }
 
 
 
     protected override void OnLoaded()
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
+        {
+            OnPropertyChanged(nameof(LocationText));
+        });
         InitializeLanguageSelector();
         InitializeCloseWindowOption();
         InitializeDohProviders();

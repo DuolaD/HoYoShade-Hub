@@ -43,9 +43,6 @@ public sealed partial class AppBackground : UserControl
         Current = this;
         this.InitializeComponent();
         BackgroundImageSource = new BitmapImage(new Uri("ms-appx:///Assets/Image/UI_CutScene_1130320101A.png"));
-        WeakReferenceMessenger.Default.Register<BackgroundChangedMessage>(this, OnBackgroundChanged);
-        WeakReferenceMessenger.Default.Register<MainWindowStateChangedMessage>(this, OnMainWindowStateChanged);
-        WeakReferenceMessenger.Default.Register<VideoBgVolumeChangedMessage>(this, OnVideoBgVolumeChanged);
         this.Loaded += AppBackground_Loaded;
         this.Unloaded += AppBackground_Unloaded;
     }
@@ -56,9 +53,14 @@ public sealed partial class AppBackground : UserControl
 
     private void AppBackground_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        Current = this;
         _isUnloaded = false;
         this.XamlRoot.Changed -= XamlRoot_Changed;
         this.XamlRoot.Changed += XamlRoot_Changed;
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<BackgroundChangedMessage>(this, OnBackgroundChanged);
+        WeakReferenceMessenger.Default.Register<MainWindowStateChangedMessage>(this, OnMainWindowStateChanged);
+        WeakReferenceMessenger.Default.Register<VideoBgVolumeChangedMessage>(this, OnVideoBgVolumeChanged);
         if (BackgroundImageSource is null)
         {
             InitializeBackgroundImage();

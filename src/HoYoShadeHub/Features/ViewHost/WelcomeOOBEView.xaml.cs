@@ -21,6 +21,7 @@ public sealed partial class WelcomeOOBEView : UserControl
     public WelcomeOOBEView()
     {
         this.InitializeComponent();
+        this.Unloaded += (s, e) => _cts.Cancel();
     }
 
     private async void Grid_Loaded(object sender, RoutedEventArgs e)

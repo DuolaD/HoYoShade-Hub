@@ -7326,5 +7326,15 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("ImageBatchConvertWindow_Import", resourceCulture);
             }
         }
+        public static string TestUrlProtocol_ExecutablePath {
+            get {
+                return ResourceManager.GetString("TestUrlProtocol_ExecutablePath", resourceCulture);
+            }
+        }
+        public static string TestUrlProtocol_StartupArguments {
+            get {
+                return ResourceManager.GetString("TestUrlProtocol_StartupArguments", resourceCulture);
+            }
+        }
     }
 }
