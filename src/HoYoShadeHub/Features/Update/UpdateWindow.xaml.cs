@@ -150,7 +150,7 @@ public sealed partial class UpdateWindow : WindowEx
             }
             else
             {
-                server.LatencyText = "Timeout";
+                server.LatencyText = Lang.FileSettingPage_ServerLatencyTimeout;
                 server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
             }
         });
@@ -571,12 +571,17 @@ public sealed partial class UpdateWindow : WindowEx
                             }
                         }
 
-                        string[] proxies = currentServerIndex == 1 ? new string[] { null } : LauncherUpdateProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+                        string?[] proxies = currentServerIndex == 1 ? new string?[] { null } : LauncherUpdateProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+                        if (proxies.Length == 0)
+                        {
+                            proxies = new string?[] { null };
+                        }
 
                         foreach (var proxyUrl in proxies)
                         {
                             try
                             {
+                                ErrorMessage = null;
                                 if (!_timer.IsRunning) _timer.Start();
                                 await _updateService.StartUpdateAsync(NewVersion, proxyUrl);
                                 

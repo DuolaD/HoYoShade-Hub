@@ -5,20 +5,21 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using HoYoShadeHub.Core.Networking;
 
 namespace HoYoShadeHub.Features.Toolbox;
 
 /// <summary>
-/// HTTP Ê±¼äÍ¬²½·şÎñ£¨Ê¹ÓÃ Cloudflare CDN trace API£©
+/// HTTP æ—¶é—´åŒæ­¥æœåŠ¡ï¼ˆä½¿ç”¨ Cloudflare CDN trace APIï¼‰
 /// </summary>
 public class HttpTimeSyncService
 {
-    private static readonly HttpClient _httpClient = new()
+    private static readonly HttpClient _httpClient = new(DohService.CreateSocketsHttpHandler())
     {
         Timeout = TimeSpan.FromSeconds(10)
     };
 
-    // Win32 API ½á¹¹Ìå£¬ÓÃÓÚÉèÖÃÏµÍ³Ê±¼ä
+    // Win32 API ç»“æ„ä½“ï¼Œç”¨äºè®¾ç½®ç³»ç»Ÿæ—¶é—´
     [StructLayout(LayoutKind.Sequential)]
     private struct SYSTEMTIME
     {
@@ -32,12 +33,12 @@ public class HttpTimeSyncService
         public ushort wMilliseconds;
     }
 
-    // µ¼Èë Win32 API º¯Êı£¬ÓÃÓÚÉèÖÃÏµÍ³Ê±¼ä
+    // å¯¼å…¥ Win32 API å‡½æ•°ï¼Œç”¨äºè®¾ç½®ç³»ç»Ÿæ—¶é—´
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern bool SetSystemTime(ref SYSTEMTIME time);
 
     /// <summary>
-    /// ³£ÓÃµÄ Cloudflare trace API ¶ËµãÁĞ±í
+    /// å¸¸ç”¨çš„ Cloudflare trace API ç«¯ç‚¹åˆ—è¡¨
     /// </summary>
     public static readonly string[] TraceEndpoints = new[]
     {
@@ -47,16 +48,16 @@ public class HttpTimeSyncService
     };
 
     /// <summary>
-    /// ´Ó Cloudflare trace API »ñÈ¡ÍøÂçÊ±¼ä
+    /// ä» Cloudflare trace API è·å–ç½‘ç»œæ—¶é—´
     /// </summary>
-    /// <param name="endpoint">trace API ¶Ëµã</param>
-    /// <param name="cancellationToken">È¡ÏûÁîÅÆ</param>
-    /// <returns>»ñÈ¡µ½µÄÍøÂçÊ±¼ä£¨UTC£©</returns>
+    /// <param name="endpoint">trace API ç«¯ç‚¹</param>
+    /// <param name="cancellationToken">å–æ¶ˆä»¤ç‰Œ</param>
+    /// <returns>è·å–åˆ°çš„ç½‘ç»œæ—¶é—´ï¼ˆUTCï¼‰</returns>
     public static async Task<DateTime> GetNetworkTimeAsync(string endpoint, CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.GetStringAsync(endpoint, cancellationToken);
         
-        // ½âÎöÏìÓ¦£¬²éÕÒ ts= ĞĞ
+        // è§£æå“åº”ï¼ŒæŸ¥æ‰¾ ts= è¡Œ
         var lines = response.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         var tsLine = lines.FirstOrDefault(line => line.StartsWith("ts="));
         
@@ -65,24 +66,24 @@ public class HttpTimeSyncService
             throw new InvalidOperationException("Failed to parse timestamp from trace API response");
         }
 
-        // ÌáÈ¡Ê±¼ä´ÁÖµ£¨¸ñÊ½£ºts=1767344320.000£©
-        var tsValue = tsLine.Substring(3); // ÒÆ³ı "ts="
+        // æå–æ—¶é—´æˆ³å€¼ï¼ˆæ ¼å¼ï¼šts=1767344320.000ï¼‰
+        var tsValue = tsLine.Substring(3); // ç§»é™¤ "ts="
         
         if (!double.TryParse(tsValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double unixTimestamp))
         {
             throw new InvalidOperationException($"Failed to parse timestamp value: {tsValue}");
         }
 
-        // ½« Unix Ê±¼ä´Á×ª»»Îª DateTime£¨UTC£©
+        // å°† Unix æ—¶é—´æˆ³è½¬æ¢ä¸º DateTimeï¼ˆUTCï¼‰
         var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         return epoch.AddSeconds(unixTimestamp);
     }
 
     /// <summary>
-    /// ÉèÖÃÏµÍ³Ê±¼ä
+    /// è®¾ç½®ç³»ç»Ÿæ—¶é—´
     /// </summary>
-    /// <param name="newTime">ÒªÉèÖÃµÄĞÂÊ±¼ä£¨UTC£©</param>
-    /// <returns>ÊÇ·ñÉèÖÃ³É¹¦</returns>
+    /// <param name="newTime">è¦è®¾ç½®çš„æ–°æ—¶é—´ï¼ˆUTCï¼‰</param>
+    /// <returns>æ˜¯å¦è®¾ç½®æˆåŠŸ</returns>
     public static bool SetSystemTimeUtc(DateTime newTime)
     {
         DateTime utcTime = newTime.ToUniversalTime();
@@ -102,11 +103,11 @@ public class HttpTimeSyncService
     }
 
     /// <summary>
-    /// Í¬²½ÏµÍ³Ê±¼ä£¨Ê¹ÓÃ HTTP trace API£©
+    /// åŒæ­¥ç³»ç»Ÿæ—¶é—´ï¼ˆä½¿ç”¨ HTTP trace APIï¼‰
     /// </summary>
-    /// <param name="endpoint">trace API ¶Ëµã</param>
-    /// <param name="cancellationToken">È¡ÏûÁîÅÆ</param>
-    /// <returns>Í¬²½ºóµÄ±¾µØÊ±¼ä</returns>
+    /// <param name="endpoint">trace API ç«¯ç‚¹</param>
+    /// <param name="cancellationToken">å–æ¶ˆä»¤ç‰Œ</param>
+    /// <returns>åŒæ­¥åçš„æœ¬åœ°æ—¶é—´</returns>
     public static async Task<DateTime> SyncSystemTimeAsync(string endpoint, CancellationToken cancellationToken = default)
     {
         var httpTime = await GetNetworkTimeAsync(endpoint, cancellationToken);
@@ -120,10 +121,10 @@ public class HttpTimeSyncService
     }
 
     /// <summary>
-    /// ³¢ÊÔ´Ó¶à¸ö¶Ëµã»ñÈ¡Ê±¼ä£¨×Ô¶¯»ØÍË£©
+    /// å°è¯•ä»å¤šä¸ªç«¯ç‚¹è·å–æ—¶é—´ï¼ˆè‡ªåŠ¨å›é€€ï¼‰
     /// </summary>
-    /// <param name="cancellationToken">È¡ÏûÁîÅÆ</param>
-    /// <returns>»ñÈ¡µ½µÄÍøÂçÊ±¼ä£¨UTC£©</returns>
+    /// <param name="cancellationToken">å–æ¶ˆä»¤ç‰Œ</param>
+    /// <returns>è·å–åˆ°çš„ç½‘ç»œæ—¶é—´ï¼ˆUTCï¼‰</returns>
     public static async Task<DateTime> GetNetworkTimeWithFallbackAsync(CancellationToken cancellationToken = default)
     {
         Exception? lastException = null;
@@ -137,7 +138,7 @@ public class HttpTimeSyncService
             catch (Exception ex)
             {
                 lastException = ex;
-                // ¼ÌĞø³¢ÊÔÏÂÒ»¸ö¶Ëµã
+                // ç»§ç»­å°è¯•ä¸‹ä¸€ä¸ªç«¯ç‚¹
             }
         }
 
@@ -147,10 +148,10 @@ public class HttpTimeSyncService
     }
 
     /// <summary>
-    /// Í¬²½ÏµÍ³Ê±¼ä£¨×Ô¶¯»ØÍËµ½¶à¸ö¶Ëµã£©
+    /// åŒæ­¥ç³»ç»Ÿæ—¶é—´ï¼ˆè‡ªåŠ¨å›é€€åˆ°å¤šä¸ªç«¯ç‚¹ï¼‰
     /// </summary>
-    /// <param name="cancellationToken">È¡ÏûÁîÅÆ</param>
-    /// <returns>Í¬²½ºóµÄ±¾µØÊ±¼ä</returns>
+    /// <param name="cancellationToken">å–æ¶ˆä»¤ç‰Œ</param>
+    /// <returns>åŒæ­¥åçš„æœ¬åœ°æ—¶é—´</returns>
     public static async Task<DateTime> SyncSystemTimeWithFallbackAsync(CancellationToken cancellationToken = default)
     {
         var httpTime = await GetNetworkTimeWithFallbackAsync(cancellationToken);

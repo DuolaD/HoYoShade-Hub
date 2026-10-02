@@ -161,7 +161,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             }
             else
             {
-                server.LatencyText = "Timeout";
+                server.LatencyText = Lang.FileSettingPage_ServerLatencyTimeout;
                 server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
             }
          });
@@ -735,6 +735,9 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         Exception? lastException = null;
         var httpClient = AppConfig.GetService<HttpClient>();
 
+        // Ensure fresh RPC server is running once before attempting downloads
+        await EnsureFreshRpcServerAsync(_downloadCts.Token);
+
         foreach (var currentServerIndex in serverSequence)
         {
             if (_downloadCts.IsCancellationRequested) break;
@@ -774,7 +777,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
                 try
                 {
-                    await EnsureFreshRpcServerAsync(_downloadCts.Token);
+                    await EnsureRpcServerRunningAsync(_downloadCts.Token);
 
                     var client = RpcService.CreateRpcClient<HoYoShadeInstaller.HoYoShadeInstallerClient>();
                     var request = new InstallHoYoShadeRequest
@@ -1573,6 +1576,36 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         }
     }
 
+    private async Task EnsureRpcServerRunningAsync(CancellationToken cancellationToken)
+    {
+        if (RpcClientFactory.CheckRpcServerRunning()) return;
+
+        StatusMessage = Lang.HoYoShadeDownloadView_StatusStartingRPC;
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = AppConfig.HoYoShadeHubExecutePath,
+            Verb = "runas",
+            UseShellExecute = true,
+            CreateNoWindow = true,
+            Arguments = $"rpc {RpcClientFactory.StartupMagic} {Environment.ProcessId}",
+        });
+
+        for (int i = 0; i < 10; i++)
+        {
+            await Task.Delay(500, cancellationToken);
+            if (RpcClientFactory.CheckRpcServerRunning()) break;
+        }
+
+        if (!RpcClientFactory.CheckRpcServerRunning())
+        {
+            var logPath = System.IO.Path.Combine(AppConfig.CacheFolder, "log");
+            string errorMsg = $"Failed to start RPC server. The process may have been blocked or crashed.\n" +
+                              $"You can check the logs in: {logPath}\n" +
+                              $"Also, ensure that your antivirus software is not blocking 'HoYoShadeHub.RPC.exe' or 'HoYoShadeHub.exe'.";
+            throw new Exception(errorMsg);
+        }
+    }
+
     private async Task EnsureFreshRpcServerAsync(CancellationToken cancellationToken)
     {
         if (RpcClientFactory.CheckRpcServerRunning())
@@ -1594,33 +1627,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             }
         }
 
-        if (!RpcClientFactory.CheckRpcServerRunning())
-        {
-            StatusMessage = Lang.HoYoShadeDownloadView_StatusStartingRPC;
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = AppConfig.HoYoShadeHubExecutePath,
-                Verb = "runas",
-                UseShellExecute = true,
-                CreateNoWindow = true,
-                Arguments = $"rpc {RpcClientFactory.StartupMagic} {Environment.ProcessId}",
-            });
-
-            for (int i = 0; i < 10; i++)
-            {
-                await Task.Delay(500, cancellationToken);
-                if (RpcClientFactory.CheckRpcServerRunning()) break;
-            }
-        }
-
-        if (!RpcClientFactory.CheckRpcServerRunning())
-        {
-            var logPath = System.IO.Path.Combine(AppConfig.CacheFolder, "log");
-            string errorMsg = $"Failed to start RPC server. The process may have been blocked or crashed.\n" +
-                              $"You can check the logs in: {logPath}\n" +
-                              $"Also, ensure that your antivirus software is not blocking 'HoYoShadeHub.RPC.exe' or 'HoYoShadeHub.exe'.";
-            throw new Exception(errorMsg);
-        }
+        await EnsureRpcServerRunningAsync(cancellationToken);
     }
     
     private class PackageValidationResult

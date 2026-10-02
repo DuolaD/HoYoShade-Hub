@@ -124,7 +124,7 @@ public sealed partial class AboutSetting : PageBase
             }
             else
             {
-                server.LatencyText = "Timeout";
+                server.LatencyText = Lang.FileSettingPage_ServerLatencyTimeout;
                 server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
             }
         });

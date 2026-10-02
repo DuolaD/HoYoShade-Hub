@@ -219,13 +219,17 @@ public class SelfQueryClient
     public async Task<List<StarRailQueryItem>> GetStarRailQueryItemsAsync(StarRailQueryType type, long endId, int size = 20, DateTime? beginTime = null, DateTime? endTime = null, CancellationToken cancellationToken = default)
     {
         EnsureInitialized();
+        string beginTimeStr = beginTime?.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) ?? "";
+        string endTimeStr = endTime?.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) ?? "";
+        string timeParams = $"&begin_time={Uri.EscapeDataString(beginTimeStr)}&end_time={Uri.EscapeDataString(endTimeStr)}";
+
         string url = type switch
         {
-            StarRailQueryType.Stellar => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Stellar/GetList{authQuery}&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            StarRailQueryType.Dreams => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Dreams/GetList{authQuery}&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            StarRailQueryType.Relic => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Relic/GetList{authQuery}&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            StarRailQueryType.Cone => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Cone/GetList{authQuery}&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            StarRailQueryType.Power => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Power/GetList{authQuery}&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
+            StarRailQueryType.Stellar => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Stellar/GetList{authQuery}&end_id={endId}&size={size}{timeParams}",
+            StarRailQueryType.Dreams => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Dreams/GetList{authQuery}&end_id={endId}&size={size}{timeParams}",
+            StarRailQueryType.Relic => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Relic/GetList{authQuery}&end_id={endId}&size={size}{timeParams}",
+            StarRailQueryType.Cone => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Cone/GetList{authQuery}&end_id={endId}&size={size}{timeParams}",
+            StarRailQueryType.Power => $"{prefixUrl}/common/hkrpg_self_help_inquiry/Power/GetList{authQuery}&end_id={endId}&size={size}{timeParams}",
             _ => throw new ArgumentOutOfRangeException(nameof(type), $"Unknown query type ({type})"),
         };
         var wrapper = await CommonGetAsync<SelfQueryListWrapper<StarRailQueryItem>>(url, cancellationToken);
@@ -262,15 +266,19 @@ public class SelfQueryClient
     public async Task<List<ZZZQueryItem>> GetZZZQueryItemsAsync(ZZZQueryType type, long endId, int size = 20, DateTime? beginTime = null, DateTime? endTime = null, CancellationToken cancellationToken = default)
     {
         EnsureInitialized();
+        string beginTimeStr = beginTime?.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) ?? "";
+        string endTimeStr = endTime?.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) ?? "";
+        string timeParams = $"&begin_time={Uri.EscapeDataString(beginTimeStr)}&end_time={Uri.EscapeDataString(endTimeStr)}";
+
         string url = type switch
         {
-            ZZZQueryType.Monochrome => $"{prefixUrl}/common/nap_self_help_query/Coin/GetList{authQuery}&coin_type=monochrome_film&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            ZZZQueryType.Ploychrome => $"{prefixUrl}/common/nap_self_help_query/Coin/GetList{authQuery}&coin_type=film&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            ZZZQueryType.PurchaseGift => $"{prefixUrl}/common/nap_self_help_query/Coin/GetList{authQuery}&coin_type=purchase_gift&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            ZZZQueryType.Battery => $"{prefixUrl}/common/nap_self_help_query/Battery/GetList{authQuery}&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            ZZZQueryType.Engine => $"{prefixUrl}/common/nap_self_help_query/Engine/GetList{authQuery}&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            ZZZQueryType.Disk => $"{prefixUrl}/common/nap_self_help_query/Disk/GetList{authQuery}&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
-            ZZZQueryType.BattlePass => $"{prefixUrl}/common/nap_self_help_query/Coin/GetList{authQuery}&coin_type=battle_pass&end_id={endId}&size={size}&begin_time={beginTime}&end_time={endTime}",
+            ZZZQueryType.Monochrome => $"{prefixUrl}/common/nap_self_help_query/Coin/GetList{authQuery}&coin_type=monochrome_film&end_id={endId}&size={size}{timeParams}",
+            ZZZQueryType.Ploychrome => $"{prefixUrl}/common/nap_self_help_query/Coin/GetList{authQuery}&coin_type=film&end_id={endId}&size={size}{timeParams}",
+            ZZZQueryType.PurchaseGift => $"{prefixUrl}/common/nap_self_help_query/Coin/GetList{authQuery}&coin_type=purchase_gift&end_id={endId}&size={size}{timeParams}",
+            ZZZQueryType.Battery => $"{prefixUrl}/common/nap_self_help_query/Battery/GetList{authQuery}&end_id={endId}&size={size}{timeParams}",
+            ZZZQueryType.Engine => $"{prefixUrl}/common/nap_self_help_query/Engine/GetList{authQuery}&end_id={endId}&size={size}{timeParams}",
+            ZZZQueryType.Disk => $"{prefixUrl}/common/nap_self_help_query/Disk/GetList{authQuery}&end_id={endId}&size={size}{timeParams}",
+            ZZZQueryType.BattlePass => $"{prefixUrl}/common/nap_self_help_query/Coin/GetList{authQuery}&coin_type=battle_pass&end_id={endId}&size={size}{timeParams}",
             _ => throw new ArgumentOutOfRangeException(nameof(type), $"Unknown query type ({type})"),
         };
         var wrapper = await CommonGetAsync<SelfQueryListWrapper<ZZZQueryItem>>(url, cancellationToken);

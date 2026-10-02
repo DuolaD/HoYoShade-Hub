@@ -490,21 +490,18 @@ public abstract class CacheBase<T>
 
         long bytesRecieved = 0;
 
-        using var hs = await response.Content.ReadAsStreamAsync(cancellationToken);
+        using var hs = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+        using var fs = await baseFile.OpenStreamForWriteAsync().ConfigureAwait(false);
+        fs.SetLength(0);
 
         byte[] buffer = new byte[bufferSize];
-
-        var ms = new MemoryStream();
-
-        int read = 0;
-
+        int read;
         var sw = Stopwatch.StartNew();
         long lastMs = 0;
 
-        do
+        while ((read = await hs.ReadAsync(buffer.AsMemory(0, bufferSize), cancellationToken).ConfigureAwait(false)) > 0)
         {
-            read = await hs.ReadAsync(buffer, 0, bufferSize).ConfigureAwait(false);
-            await ms.WriteAsync(buffer, 0, read).ConfigureAwait(false);
+            await fs.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
             bytesRecieved += read;
             var nowMs = sw.ElapsedMilliseconds;
             if (nowMs - lastMs > 100)
@@ -512,18 +509,10 @@ public abstract class CacheBase<T>
                 progress?.Report(new DownloadProgress(DownloadState.Downloading, bytesRecieved, contentLength));
                 lastMs = nowMs;
             }
-        } while (read > 0);
+        }
 
         sw.Stop();
-
-        await ms.FlushAsync().ConfigureAwait(false);
-        ms.Position = 0;
-
-        progress?.Report(new DownloadProgress(DownloadState.Downloading, bytesRecieved, contentLength));
-
-        using var fs = await baseFile.OpenStreamForWriteAsync();
-        await ms.CopyToAsync(fs, cancellationToken).ConfigureAwait(false);
-        await fs.FlushAsync().ConfigureAwait(false);
+        await fs.FlushAsync(cancellationToken).ConfigureAwait(false);
 
         progress?.Report(new DownloadProgress(DownloadState.Completed, bytesRecieved, contentLength));
 

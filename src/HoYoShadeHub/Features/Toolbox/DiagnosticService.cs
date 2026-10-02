@@ -2343,17 +2343,9 @@ public static class DiagnosticService
         string providerName = GetDohProviderDisplayName(provider);
         info.DohRescueProviderName = providerName;
 
-        bool origEnabled = DohService.Enabled;
-        bool origEch = DohService.EnableEch;
-        var origProvider = DohService.Provider;
-
         try
         {
-            DohService.Enabled = true;
-            DohService.EnableEch = true;
-            DohService.Provider = provider;
-
-            using var handler = DohService.CreateSocketsHttpHandler();
+            using var handler = DohService.CreateSocketsHttpHandler(provider: provider, enabled: true, enableEch: true);
             using var rescueClient = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) };
 
             bool success = await TryTier1CloudflareMetaAsync(rescueClient, info, ct);
@@ -2382,12 +2374,6 @@ public static class DiagnosticService
             info.DohEchRescueSuccess = false;
             info.DohEchRescueDetails = string.Format(Lang.DiagnosticTool_DohRescueDetails_Exception, ex.Message);
             info.DiagnosisConclusion = string.Format(Lang.DiagnosticTool_Conclusion_Exception, ex.Message);
-        }
-        finally
-        {
-            DohService.Enabled = origEnabled;
-            DohService.EnableEch = origEch;
-            DohService.Provider = origProvider;
         }
     }
 

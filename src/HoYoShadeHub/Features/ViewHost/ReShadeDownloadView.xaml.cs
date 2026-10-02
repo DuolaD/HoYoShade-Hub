@@ -149,7 +149,7 @@ public sealed partial class ReShadeDownloadView : UserControl
             }
             else
             {
-                server.LatencyText = "Timeout";
+                server.LatencyText = Lang.FileSettingPage_ServerLatencyTimeout;
                 server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
             }
         });

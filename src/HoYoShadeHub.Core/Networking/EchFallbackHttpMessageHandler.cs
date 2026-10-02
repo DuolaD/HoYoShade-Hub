@@ -11,20 +11,31 @@ namespace HoYoShadeHub.Core.Networking;
 
 public class EchFallbackHttpMessageHandler : DelegatingHandler
 {
+    private readonly bool? _enableEchOverride;
+    private readonly DohProvider? _dohProviderOverride;
+
     public EchFallbackHttpMessageHandler(HttpMessageHandler innerHandler)
         : base(innerHandler)
     {
     }
 
+    public EchFallbackHttpMessageHandler(HttpMessageHandler innerHandler, bool? enableEch, DohProvider? dohProvider)
+        : base(innerHandler)
+    {
+        _enableEchOverride = enableEch;
+        _dohProviderOverride = dohProvider;
+    }
+
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (DohService.EnableEch && request.RequestUri != null)
+        bool enableEch = _enableEchOverride ?? DohService.EnableEch;
+        if (enableEch && request.RequestUri != null)
         {
             var host = request.RequestUri.Host;
             bool isEchSupported = false;
             try
             {
-                isEchSupported = await DohService.DetectEchSupportAsync(host, cancellationToken);
+                isEchSupported = await DohService.DetectEchSupportAsync(host, cancellationToken, _dohProviderOverride, enableEch);
             }
             catch (OperationCanceledException)
             {
@@ -71,7 +82,9 @@ public class EchFallbackHttpMessageHandler : DelegatingHandler
         }
 
         var url = request.RequestUri!.ToString();
-        var dohUrl = DohService.GetCurrentDohUrl();
+        var dohUrl = _dohProviderOverride.HasValue
+            ? DohService.GetProviderEndpointUrl(_dohProviderOverride.Value)
+            : DohService.GetCurrentDohUrl();
         var startInfo = new ProcessStartInfo
         {
             FileName = curlPath,

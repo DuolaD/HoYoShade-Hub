@@ -144,7 +144,7 @@ public static class DohService
             }
 
             _enabled = value;
-            ClearDnsCache(flushSystemDnsCache: true);
+            ClearDnsCache(flushSystemDnsCache: false);
             if (value)
             {
                 _ = RefreshDohServerAddressesAsync();
@@ -184,7 +184,7 @@ public static class DohService
             {
                 _dohServerAddresses = [];
             }
-            ClearDnsCache(flushSystemDnsCache: true);
+            ClearDnsCache(flushSystemDnsCache: false);
             if (_enabled)
             {
                 _ = RefreshDohServerAddressesAsync();
@@ -196,14 +196,19 @@ public static class DohService
 
     public static HttpMessageHandler CreateSocketsHttpHandler()
     {
+        return CreateSocketsHttpHandler(provider: null, enabled: null, enableEch: null);
+    }
+
+    public static HttpMessageHandler CreateSocketsHttpHandler(DohProvider? provider = null, bool? enabled = null, bool? enableEch = null)
+    {
         return new EchFallbackHttpMessageHandler(new SocketsHttpHandler
         {
             AutomaticDecompression = DecompressionMethods.All,
             EnableMultipleHttp2Connections = true,
             EnableMultipleHttp3Connections = true,
-            ConnectCallback = ConnectWithDohAsync,
+            ConnectCallback = (context, cancellationToken) => ConnectWithDohAsync(context, cancellationToken, provider, enabled),
             PooledConnectionIdleTimeout = TimeSpan.FromSeconds(15),
-        });
+        }, enableEch, provider);
     }
 
 
@@ -305,6 +310,11 @@ public static class DohService
         return _providerEndpoints[DohProvider.Cloudflare];
     }
 
+    public static string GetProviderEndpointUrl(DohProvider provider)
+    {
+        return GetProviderEndpoint(provider).DohEndpoint;
+    }
+
     public static string GetCurrentDohUrl()
     {
         return GetProviderEndpoint(_provider).DohEndpoint;
@@ -312,10 +322,10 @@ public static class DohService
 
 
 
-    private static async ValueTask<Stream> ConnectWithDohAsync(SocketsHttpConnectionContext context, CancellationToken cancellationToken)
+    private static async ValueTask<Stream> ConnectWithDohAsync(SocketsHttpConnectionContext context, CancellationToken cancellationToken, DohProvider? providerOverride = null, bool? enabledOverride = null)
     {
         string host = context.DnsEndPoint.Host;
-        var addresses = await ResolveHostAddressesAsync(host, cancellationToken);
+        var addresses = await ResolveHostAddressesAsync(host, cancellationToken, providerOverride, enabledOverride);
         addresses = OrderAddressesByPreference(addresses);
 
         if (await TryConnectAsync(addresses, context.DnsEndPoint.Port, cancellationToken) is Stream primaryStream)
@@ -323,7 +333,7 @@ public static class DohService
             return primaryStream;
         }
 
-        var fallbackFamilyAddresses = await ResolveFallbackFamilyAddressesAsync(host, addresses, cancellationToken);
+        var fallbackFamilyAddresses = await ResolveFallbackFamilyAddressesAsync(host, addresses, cancellationToken, providerOverride, enabledOverride);
         fallbackFamilyAddresses = OrderAddressesByPreference(fallbackFamilyAddresses);
 
         if (await TryConnectAsync(fallbackFamilyAddresses, context.DnsEndPoint.Port, cancellationToken) is Stream fallbackStream)
@@ -397,24 +407,25 @@ public static class DohService
 
 
 
-    private static async Task<IPAddress[]> ResolveHostAddressesAsync(string host, CancellationToken cancellationToken)
+    private static async Task<IPAddress[]> ResolveHostAddressesAsync(string host, CancellationToken cancellationToken, DohProvider? providerOverride = null, bool? enabledOverride = null)
     {
         if (IPAddress.TryParse(host, out var ipAddress))
         {
             return [ipAddress];
         }
 
-        if (!_enabled)
+        bool isEnabled = enabledOverride ?? _enabled;
+        if (!isEnabled)
         {
             return OrderAddressesByPreference(await Dns.GetHostAddressesAsync(host, cancellationToken));
         }
 
-        if (_dnsCache.TryGetValue(host, out var cacheItem) && cacheItem.ExpireAt > DateTimeOffset.UtcNow)
+        if (providerOverride == null && _dnsCache.TryGetValue(host, out var cacheItem) && cacheItem.ExpireAt > DateTimeOffset.UtcNow)
         {
             return cacheItem.Addresses;
         }
 
-        var endpoint = GetProviderEndpoint(_provider);
+        var endpoint = GetProviderEndpoint(providerOverride ?? _provider);
 
         IPAddress[] addresses;
         TimeSpan ttl;
@@ -426,12 +437,15 @@ public static class DohService
                 addresses = _dohServerAddresses;
             }
 
-            if (addresses.Length == 0)
+            if (addresses.Length == 0 || providerOverride != null)
             {
                 addresses = await ResolveByBootstrapDnsAsync(endpoint.DohHost, endpoint.BootstrapDnsServers, cancellationToken);
-                lock (_lock)
+                if (providerOverride == null)
                 {
-                    _dohServerAddresses = addresses;
+                    lock (_lock)
+                    {
+                        _dohServerAddresses = addresses;
+                    }
                 }
             }
 
@@ -441,7 +455,7 @@ public static class DohService
         {
             try
             {
-                (addresses, ttl) = await ResolveViaDohAsync(host, cancellationToken);
+                (addresses, ttl) = await ResolveViaDohAsync(host, cancellationToken, providerOverride);
             }
             catch (OperationCanceledException)
             {
@@ -462,7 +476,7 @@ public static class DohService
 
         addresses = OrderAddressesByPreference(addresses);
 
-        if (addresses.Length > 0)
+        if (addresses.Length > 0 && providerOverride == null)
         {
             _dnsCache[host] = new DnsCacheItem
             {
@@ -476,20 +490,20 @@ public static class DohService
 
 
 
-    private static async Task<(IPAddress[] Addresses, TimeSpan Ttl)> ResolveViaDohAsync(string host, CancellationToken cancellationToken)
+    private static async Task<(IPAddress[] Addresses, TimeSpan Ttl)> ResolveViaDohAsync(string host, CancellationToken cancellationToken, DohProvider? providerOverride = null)
     {
         bool hasLocalIPv4 = HasLocalIPv4();
         var primaryType = hasLocalIPv4 ? "A" : "AAAA";
         var secondaryType = hasLocalIPv4 ? "AAAA" : "A";
 
-        var primaryResult = await QueryDohRecordSafeAsync(host, primaryType, cancellationToken);
+        var primaryResult = await QueryDohRecordSafeAsync(host, primaryType, cancellationToken, providerOverride);
 
         IPAddress[] addresses = primaryResult.Addresses;
         long minTtl = primaryResult.MinTtl;
 
         if (addresses.Length == 0)
         {
-            var fallbackResult = await QueryDohRecordSafeAsync(host, secondaryType, cancellationToken);
+            var fallbackResult = await QueryDohRecordSafeAsync(host, secondaryType, cancellationToken, providerOverride);
             addresses = fallbackResult.Addresses;
             minTtl = fallbackResult.MinTtl;
         }
@@ -504,7 +518,7 @@ public static class DohService
 
 
 
-    private static async Task<IPAddress[]> ResolveFallbackFamilyAddressesAsync(string host, IPAddress[] primaryAddresses, CancellationToken cancellationToken)
+    private static async Task<IPAddress[]> ResolveFallbackFamilyAddressesAsync(string host, IPAddress[] primaryAddresses, CancellationToken cancellationToken, DohProvider? providerOverride = null, bool? enabledOverride = null)
     {
         if (IPAddress.TryParse(host, out _))
         {
@@ -519,7 +533,7 @@ public static class DohService
             return [];
         }
 
-        var endpoint = GetProviderEndpoint(_provider);
+        var endpoint = GetProviderEndpoint(providerOverride ?? _provider);
         IPAddress[] fallbackAddresses;
         if (string.Equals(host, endpoint.DohHost, StringComparison.OrdinalIgnoreCase))
         {
@@ -530,7 +544,7 @@ public static class DohService
                     .ToArray();
             }
 
-            if (fallbackAddresses.Length == 0)
+            if (fallbackAddresses.Length == 0 || providerOverride != null)
             {
                 fallbackAddresses = (await ResolveByBootstrapDnsAsync(host, endpoint.BootstrapDnsServers, cancellationToken))
                     .Where(ip => ip.AddressFamily == secondaryFamily)
@@ -540,7 +554,7 @@ public static class DohService
         else
         {
             string fallbackType = hasLocalIPv4 ? "AAAA" : "A";
-            var fallbackResult = await QueryDohRecordSafeAsync(host, fallbackType, cancellationToken);
+            var fallbackResult = await QueryDohRecordSafeAsync(host, fallbackType, cancellationToken, providerOverride);
             fallbackAddresses = fallbackResult.Addresses;
 
             if (fallbackAddresses.Length == 0)
@@ -551,7 +565,7 @@ public static class DohService
             fallbackAddresses = fallbackAddresses.Where(ip => ip.AddressFamily == secondaryFamily).ToArray();
         }
 
-        if (fallbackAddresses.Length > 0)
+        if (fallbackAddresses.Length > 0 && providerOverride == null)
         {
             var merged = primaryAddresses.Concat(fallbackAddresses).Distinct().ToArray();
             _dnsCache[host] = new DnsCacheItem
@@ -658,11 +672,11 @@ public static class DohService
 
 
 
-    private static async Task<(IPAddress[] Addresses, long MinTtl)> QueryDohRecordSafeAsync(string host, string type, CancellationToken cancellationToken)
+    private static async Task<(IPAddress[] Addresses, long MinTtl)> QueryDohRecordSafeAsync(string host, string type, CancellationToken cancellationToken, DohProvider? providerOverride = null)
     {
         try
         {
-            return await QueryDohRecordAsync(host, type, cancellationToken);
+            return await QueryDohRecordAsync(host, type, cancellationToken, providerOverride);
         }
         catch (OperationCanceledException)
         {
@@ -725,7 +739,7 @@ public static class DohService
 
 
 
-    private static async Task<(IPAddress[] Addresses, long MinTtl)> QueryDohRecordAsync(string host, string type, CancellationToken cancellationToken)
+    private static async Task<(IPAddress[] Addresses, long MinTtl)> QueryDohRecordAsync(string host, string type, CancellationToken cancellationToken, DohProvider? providerOverride = null)
     {
         ushort queryType = type switch
         {
@@ -737,7 +751,7 @@ public static class DohService
         byte[] queryMessage = BuildDnsQueryMessage(host, queryType, out ushort queryId);
         string dnsParam = Convert.ToBase64String(queryMessage).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
-        var endpoint = GetProviderEndpoint(_provider);
+        var endpoint = GetProviderEndpoint(providerOverride ?? _provider);
         string url = $"{endpoint.DohEndpoint}?dns={dnsParam}";
 
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -915,14 +929,15 @@ public static class DohService
 
 
 
-    public static async Task<bool> DetectEchSupportAsync(string host, CancellationToken cancellationToken = default)
+    public static async Task<bool> DetectEchSupportAsync(string host, CancellationToken cancellationToken = default, DohProvider? providerOverride = null, bool? enabledOverride = null)
     {
-        if (!_enabled)
+        bool isEnabled = enabledOverride ?? _enabled;
+        if (!isEnabled)
         {
             return false;
         }
 
-        if (_echCache.TryGetValue(host, out var cacheItem) && cacheItem.ExpireAt > DateTimeOffset.UtcNow)
+        if (providerOverride == null && _echCache.TryGetValue(host, out var cacheItem) && cacheItem.ExpireAt > DateTimeOffset.UtcNow)
         {
             return cacheItem.Supported;
         }
@@ -932,7 +947,7 @@ public static class DohService
             byte[] queryMessage = BuildDnsQueryMessage(host, 65, out ushort queryId);
             string dnsParam = Convert.ToBase64String(queryMessage).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
-            var endpoint = GetProviderEndpoint(_provider);
+            var endpoint = GetProviderEndpoint(providerOverride ?? _provider);
             string url = $"{endpoint.DohEndpoint}?dns={dnsParam}";
 
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -944,7 +959,10 @@ public static class DohService
             byte[] responseMessage = await response.Content.ReadAsByteArrayAsync(cancellationToken);
             bool supported = ParseDnsResponse65(responseMessage, queryId);
 
-            _echCache[host] = (supported, DateTimeOffset.UtcNow.AddMinutes(5));
+            if (providerOverride == null)
+            {
+                _echCache[host] = (supported, DateTimeOffset.UtcNow.AddMinutes(5));
+            }
             return supported;
         }
         catch (OperationCanceledException)
@@ -954,7 +972,10 @@ public static class DohService
         catch
         {
             // Cache failure briefly to avoid hammer if DNS fails
-            _echCache[host] = (false, DateTimeOffset.UtcNow.AddSeconds(30));
+            if (providerOverride == null)
+            {
+                _echCache[host] = (false, DateTimeOffset.UtcNow.AddSeconds(30));
+            }
             return false;
         }
     }
