@@ -882,12 +882,15 @@ public sealed partial class FileManageSetting : PageBase
             
             await dialog.ShowAsync();
             
-            // Clear version info after uninstall
-            await _versionService.ClearHoYoShadeVersionAsync();
-            
-            // 刷新安装状态
-            await UpdateHoYoShadeSizeAsync();
-            await LoadVersionInfoAsync();
+            if (dialog.IsCompleted)
+            {
+                // Clear version info after uninstall
+                await _versionService.ClearHoYoShadeVersionAsync();
+                
+                // 刷新安装状态
+                await UpdateHoYoShadeSizeAsync();
+                await LoadVersionInfoAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -914,8 +917,11 @@ public sealed partial class FileManageSetting : PageBase
             
             await dialog.ShowAsync();
             
-            // 刷新安装状态
-            await UpdateHoYoShadeSizeAsync();
+            if (dialog.IsCompleted)
+            {
+                // 刷新安装状态
+                await UpdateHoYoShadeSizeAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -964,12 +970,15 @@ public sealed partial class FileManageSetting : PageBase
             
             await dialog.ShowAsync();
             
-            // Clear version info after uninstall
-            await _versionService.ClearOpenHoYoShadeVersionAsync();
-            
-            // 刷新安装状态
-            await UpdateHoYoShadeSizeAsync();
-            await LoadVersionInfoAsync();
+            if (dialog.IsCompleted)
+            {
+                // Clear version info after uninstall
+                await _versionService.ClearOpenHoYoShadeVersionAsync();
+                
+                // 刷新安装状态
+                await UpdateHoYoShadeSizeAsync();
+                await LoadVersionInfoAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -996,8 +1005,11 @@ public sealed partial class FileManageSetting : PageBase
             
             await dialog.ShowAsync();
             
-            // 刷新安装状态
-            await UpdateHoYoShadeSizeAsync();
+            if (dialog.IsCompleted)
+            {
+                // 刷新安装状态
+                await UpdateHoYoShadeSizeAsync();
+            }
         }
         catch (Exception ex)
         {

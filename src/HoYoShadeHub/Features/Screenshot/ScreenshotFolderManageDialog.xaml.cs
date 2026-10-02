@@ -106,7 +106,7 @@ public sealed partial class ScreenshotFolderManageDialog : ContentDialog
 
 
     /// <summary>
-    /// ±¸·İËùÓĞÎÄ¼ş¼ĞÖĞµÄ½ØÍ¼µ½ÓÃ»§Êı¾İÄ¿Â¼/Screenshots/
+    /// å¤‡ä»½æ‰€æœ‰æ–‡ä»¶å¤¹ä¸­çš„æˆªå›¾åˆ°ç”¨æˆ·æ•°æ®ç›®å½•/Screenshots/
     /// </summary>
     [RelayCommand]
     private async Task BackupAllScreenshotsAsync()
@@ -123,7 +123,7 @@ public sealed partial class ScreenshotFolderManageDialog : ContentDialog
                 return;
             }
 
-            // Ä¿±ê±¸·İÎÄ¼ş¼Ğ£ºÓÃ»§Êı¾İÄ¿Â¼/Screenshots/
+            // ç›®æ ‡å¤‡ä»½æ–‡ä»¶å¤¹ï¼šç”¨æˆ·æ•°æ®ç›®å½•/Screenshots/
             string backupFolder = Path.Combine(AppConfig.UserDataFolder, "Screenshots");
             Directory.CreateDirectory(backupFolder);
             
@@ -133,7 +133,7 @@ public sealed partial class ScreenshotFolderManageDialog : ContentDialog
             {
                 int count = 0;
                 
-                // ±éÀúËùÓĞÎÄ¼ş¼Ğ
+                // éå†æ‰€æœ‰æ–‡ä»¶å¤¹
                 foreach (var screenshotFolder in ScreenshotFolders)
                 {
                     if (!Directory.Exists(screenshotFolder.Folder))
@@ -146,7 +146,7 @@ public sealed partial class ScreenshotFolderManageDialog : ContentDialog
                         var files = Directory.GetFiles(screenshotFolder.Folder);
                         foreach (var sourceFile in files)
                         {
-                            // Ö»±¸·İÖ§³ÖµÄÍ¼Æ¬¸ñÊ½
+                            // åªå¤‡ä»½æ”¯æŒçš„å›¾ç‰‡æ ¼å¼
                             if (!ScreenshotHelper.IsSupportedExtension(sourceFile))
                             {
                                 continue;
@@ -155,7 +155,7 @@ public sealed partial class ScreenshotFolderManageDialog : ContentDialog
                             string fileName = Path.GetFileName(sourceFile);
                             string targetFile = Path.Combine(backupFolder, fileName);
                             
-                            // Èç¹ûÄ¿±êÎÄ¼ş²»´æÔÚ£¬²Å½øĞĞ¸´ÖÆ
+                            // å¦‚æœç›®æ ‡æ–‡ä»¶ä¸å­˜åœ¨ï¼Œæ‰è¿›è¡Œå¤åˆ¶
                             if (!File.Exists(targetFile))
                             {
                                 File.Copy(sourceFile, targetFile, false);

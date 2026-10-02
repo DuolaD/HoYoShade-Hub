@@ -467,25 +467,40 @@ public sealed partial class WelcomeView : UserControl
         }
     }
 
+    private bool _isShowingNetworkDialog;
+
     private async void Hyperlink_NetworkSettings_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
     {
-        var dialog = new NetworkSettingDialog
+        if (_isShowingNetworkDialog) return;
+        try
         {
-            XamlRoot = this.XamlRoot,
-            IsWelcomeMode = true,
-            InitialEnableDoh = _welcomeEnableDoh,
-            InitialDohProvider = _welcomeDohProvider,
-            InitialEnableEch = _welcomeEnableEch
-        };
-        var result = await dialog.ShowAsync();
+            _isShowingNetworkDialog = true;
+            var dialog = new NetworkSettingDialog
+            {
+                XamlRoot = this.XamlRoot,
+                IsWelcomeMode = true,
+                InitialEnableDoh = _welcomeEnableDoh,
+                InitialDohProvider = _welcomeDohProvider,
+                InitialEnableEch = _welcomeEnableEch
+            };
+            var result = await dialog.ShowAsync();
 
-        if (result == ContentDialogResult.Primary)
+            if (result == ContentDialogResult.Primary)
+            {
+                _welcomeEnableDoh = dialog.ConfirmedEnableDoh;
+                _welcomeDohProvider = dialog.ConfirmedDohProvider;
+                _welcomeEnableEch = dialog.ConfirmedEnableEch;
+
+                TestSpeedCommand.Execute(null);
+            }
+        }
+        catch (Exception ex)
         {
-            _welcomeEnableDoh = dialog.ConfirmedEnableDoh;
-            _welcomeDohProvider = dialog.ConfirmedDohProvider;
-            _welcomeEnableEch = dialog.ConfirmedEnableEch;
-
-            TestSpeedCommand.Execute(null);
+            Debug.WriteLine(ex);
+        }
+        finally
+        {
+            _isShowingNetworkDialog = false;
         }
     }
 

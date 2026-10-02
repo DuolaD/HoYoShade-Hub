@@ -1,8 +1,10 @@
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using HoYoShadeHub.Features.Screenshot;
 using HoYoShadeHub.Features.Toolbox;
 using HoYoShadeHub.Frameworks;
+using HoYoShadeHub.Models;
 using System.Collections.Generic;
 
 
@@ -42,12 +44,14 @@ public sealed partial class ToolboxSetting : PageBase
                             nameof(Lang.ToolboxSetting_DiagnosticTool),
                             nameof(Lang.ToolboxSetting_DiagnosticToolDescription)),
         ];
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, OnLanguageChanged);
     }
 
 
 
     protected override void OnUnloaded()
     {
+        WeakReferenceMessenger.Default.Unregister<LanguageChangedMessage>(this);
         ToolboxItems = null!;
     }
 
@@ -59,9 +63,12 @@ public sealed partial class ToolboxSetting : PageBase
 
     private void OnLanguageChanged(object _, LanguageChangedMessage __)
     {
-        foreach (var item in ToolboxItems)
+        if (ToolboxItems != null)
         {
-            item.UpdateLanguage();
+            foreach (var item in ToolboxItems)
+            {
+                item.UpdateLanguage();
+            }
         }
     }
 

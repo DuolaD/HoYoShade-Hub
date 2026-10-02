@@ -77,7 +77,7 @@
                                     <TextBlock x:Name="TextBlock_AccurateTime"
                                                FontSize="20"
                                                FontWeight="SemiBold"
-                                               Text="Loading..." />
+                                               Text="{x:Bind lang:Lang.DiagnosticTool_Loading}" />
                                     <Button x:Name="Button_RefreshAccurateTime"
                                             Width="32"
                                             Height="32"
@@ -126,7 +126,7 @@
                             <TextBlock Text="{x:Bind lang:Lang.ExMBlenderRepairTool_NTPServer}" />
                             <ComboBox x:Name="ComboBox_NtpServer"
                                       HorizontalAlignment="Stretch"
-                                      PlaceholderText="Select NTP Server" />
+                                      PlaceholderText="{x:Bind lang:Lang.ExMBlenderRepairTool_SelectNTPServer}" />
                         </StackPanel>
 
                         <!--  HTTP Endpoint Selection (visible when HTTP is selected)  -->
@@ -136,7 +136,7 @@
                             <TextBlock Text="{x:Bind lang:Lang.ExMBlenderRepairTool_TraceEndpoint}" />
                             <ComboBox x:Name="ComboBox_HttpEndpoint"
                                       HorizontalAlignment="Stretch"
-                                      PlaceholderText="Select Trace Endpoint" />
+                                      PlaceholderText="{x:Bind lang:Lang.ExMBlenderRepairTool_SelectTraceEndpoint}" />
                         </StackPanel>
 
                         <!--  Sync Button  -->

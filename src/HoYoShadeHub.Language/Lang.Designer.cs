@@ -7296,5 +7296,25 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("BackupRestoreDialog_AllSupportedFilterName", resourceCulture);
             }
         }
+        public static string StartGameButton_UpdatePlugin {
+            get {
+                return ResourceManager.GetString("StartGameButton_UpdatePlugin", resourceCulture);
+            }
+        }
+        public static string StartGameButton_ComingSoon {
+            get {
+                return ResourceManager.GetString("StartGameButton_ComingSoon", resourceCulture);
+            }
+        }
+        public static string ExMBlenderRepairTool_SelectNTPServer {
+            get {
+                return ResourceManager.GetString("ExMBlenderRepairTool_SelectNTPServer", resourceCulture);
+            }
+        }
+        public static string ExMBlenderRepairTool_SelectTraceEndpoint {
+            get {
+                return ResourceManager.GetString("ExMBlenderRepairTool_SelectTraceEndpoint", resourceCulture);
+            }
+        }
     }
 }

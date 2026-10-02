@@ -279,10 +279,25 @@ public sealed partial class QuickSetupView : UserControl
         await Task.WhenAll(tasks);
     }
 
+    private bool _isShowingNetworkDialog;
+
     private async void Button_NetworkSettings_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
-        await dialog.ShowAsync();
+        if (_isShowingNetworkDialog) return;
+        try
+        {
+            _isShowingNetworkDialog = true;
+            var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
+            await dialog.ShowAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Open NetworkSettingDialog failed");
+        }
+        finally
+        {
+            _isShowingNetworkDialog = false;
+        }
     }
 
     private void Hyperlink_NetworkSettings_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace HoYoShadeHub.Core.HoYoShade;
 
 /// <summary>
-/// HoYoShade °æ±¾Çåµ¥·şÎñ
+/// HoYoShade ç‰ˆæœ¬æ¸…å•æœåŠ¡
 /// </summary>
 public class HoYoShadeVersionService
 {
@@ -18,9 +18,9 @@ public class HoYoShadeVersionService
     }
 
     /// <summary>
-    /// ¼ÓÔØ°æ±¾Çåµ¥
+    /// åŠ è½½ç‰ˆæœ¬æ¸…å•
     /// </summary>
-    /// <returns>°æ±¾Çåµ¥¶ÔÏó£¬Èç¹û²»´æÔÚÔò·µ»Ø¿ÕÇåµ¥</returns>
+    /// <returns>ç‰ˆæœ¬æ¸…å•å¯¹è±¡ï¼Œå¦‚æœä¸å­˜åœ¨åˆ™è¿”å›ç©ºæ¸…å•</returns>
     public async Task<HoYoShadeVersionManifest> LoadManifestAsync()
     {
         try
@@ -47,9 +47,9 @@ public class HoYoShadeVersionService
     }
 
     /// <summary>
-    /// ±£´æ°æ±¾Çåµ¥
+    /// ä¿å­˜ç‰ˆæœ¬æ¸…å•
     /// </summary>
-    /// <param name="manifest">Òª±£´æµÄ°æ±¾Çåµ¥</param>
+    /// <param name="manifest">è¦ä¿å­˜çš„ç‰ˆæœ¬æ¸…å•</param>
     public async Task SaveManifestAsync(HoYoShadeVersionManifest manifest)
     {
         try
@@ -69,11 +69,11 @@ public class HoYoShadeVersionService
     }
 
     /// <summary>
-    /// ¸üĞÂ HoYoShade °æ±¾ĞÅÏ¢
+    /// æ›´æ–° HoYoShade ç‰ˆæœ¬ä¿¡æ¯
     /// </summary>
-    /// <param name="version">°æ±¾ºÅ</param>
-    /// <param name="source">À´Ô´</param>
-    /// <param name="sha256">SHA256 Ğ£ÑéÖµ£¨¿ÉÑ¡£©</param>
+    /// <param name="version">ç‰ˆæœ¬å·</param>
+    /// <param name="source">æ¥æº</param>
+    /// <param name="sha256">SHA256 æ ¡éªŒå€¼ï¼ˆå¯é€‰ï¼‰</param>
     public async Task UpdateHoYoShadeVersionAsync(string version, string source, string? sha256 = null)
     {
         var manifest = await LoadManifestAsync();
@@ -90,11 +90,11 @@ public class HoYoShadeVersionService
     }
 
     /// <summary>
-    /// ¸üĞÂ OpenHoYoShade °æ±¾ĞÅÏ¢
+    /// æ›´æ–° OpenHoYoShade ç‰ˆæœ¬ä¿¡æ¯
     /// </summary>
-    /// <param name="version">°æ±¾ºÅ</param>
-    /// <param name="source">À´Ô´</param>
-    /// <param name="sha256">SHA256 Ğ£ÑéÖµ£¨¿ÉÑ¡£©</param>
+    /// <param name="version">ç‰ˆæœ¬å·</param>
+    /// <param name="source">æ¥æº</param>
+    /// <param name="sha256">SHA256 æ ¡éªŒå€¼ï¼ˆå¯é€‰ï¼‰</param>
     public async Task UpdateOpenHoYoShadeVersionAsync(string version, string source, string? sha256 = null)
     {
         var manifest = await LoadManifestAsync();
@@ -111,7 +111,7 @@ public class HoYoShadeVersionService
     }
 
     /// <summary>
-    /// »ñÈ¡ HoYoShade °æ±¾ĞÅÏ¢
+    /// è·å– HoYoShade ç‰ˆæœ¬ä¿¡æ¯
     /// </summary>
     public async Task<FrameworkVersionInfo?> GetHoYoShadeVersionAsync()
     {
@@ -120,7 +120,7 @@ public class HoYoShadeVersionService
     }
 
     /// <summary>
-    /// »ñÈ¡ OpenHoYoShade °æ±¾ĞÅÏ¢
+    /// è·å– OpenHoYoShade ç‰ˆæœ¬ä¿¡æ¯
     /// </summary>
     public async Task<FrameworkVersionInfo?> GetOpenHoYoShadeVersionAsync()
     {
@@ -129,7 +129,7 @@ public class HoYoShadeVersionService
     }
 
     /// <summary>
-    /// Çå³ı HoYoShade °æ±¾ĞÅÏ¢
+    /// æ¸…é™¤ HoYoShade ç‰ˆæœ¬ä¿¡æ¯
     /// </summary>
     public async Task ClearHoYoShadeVersionAsync()
     {
@@ -139,7 +139,7 @@ public class HoYoShadeVersionService
     }
 
     /// <summary>
-    /// Çå³ı OpenHoYoShade °æ±¾ĞÅÏ¢
+    /// æ¸…é™¤ OpenHoYoShade ç‰ˆæœ¬ä¿¡æ¯
     /// </summary>
     public async Task ClearOpenHoYoShadeVersionAsync()
     {

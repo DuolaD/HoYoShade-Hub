@@ -244,8 +244,7 @@
                            UnderlineStyle="None">
                     <Run Text="{x:Bind lang:Lang.AppearanceSettingPage_TransparencyEffects}" />
                 </Hyperlink>
-                <Run Text="" />
-                <Run Text="" />
+                <Run Text="   •   " Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                 <Hyperlink Click="Hyperlink_Click"
                            NavigateUri="ms-settings:easeofaccess-visualeffects"
                            UnderlineStyle="None">

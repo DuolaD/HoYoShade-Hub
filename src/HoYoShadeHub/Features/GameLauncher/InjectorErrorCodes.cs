@@ -7,27 +7,27 @@ namespace HoYoShadeHub.Features.GameLauncher;
 public static class InjectorErrorCodes
 {
     /// <summary>
-    /// File integrity check failed (ÎÄ¼şÍêÕûĞÔ¼ì²éÊ§°Ü)
+    /// File integrity check failed (æ–‡ä»¶å®Œæ•´æ€§æ£€æŸ¥å¤±è´¥)
     /// </summary>
     public const int INJECTION_ERROR_FILE_INTEGRITY = 1001;
 
     /// <summary>
-    /// Blacklist process (ºÚÃûµ¥½ø³Ì)
+    /// Blacklist process (é»‘åå•è¿›ç¨‹)
     /// </summary>
     public const int INJECTION_ERROR_BLACKLIST_PROCESS = 1002;
 
     /// <summary>
-    /// Invalid parameter (²ÎÊıÎŞĞ§)
+    /// Invalid parameter (å‚æ•°æ— æ•ˆ)
     /// </summary>
     public const int INJECTION_ERROR_INVALID_PARAM = 1003;
 
     /// <summary>
-    /// Process name doesn't end with .exe (½ø³ÌÃû²»ÒÔ.exe½áÎ²)
+    /// Process name doesn't end with .exe (è¿›ç¨‹åä¸ä»¥.exeç»“å°¾)
     /// </summary>
     public const int INJECTION_ERROR_MISSING_EXE_SUFFIX = 1004;
 
     /// <summary>
-    /// Initialization successful, ready to inject (³õÊ¼»¯³É¹¦£¬×¼±¸×¢Èë)
+    /// Initialization successful, ready to inject (åˆå§‹åŒ–æˆåŠŸï¼Œå‡†å¤‡æ³¨å…¥)
     /// </summary>
     public const int INJECTION_READY = 9999;
 

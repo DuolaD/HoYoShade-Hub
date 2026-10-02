@@ -5,54 +5,54 @@ using System.Text.Json.Serialization;
 namespace HoYoShadeHub.Core.HoYoShade;
 
 /// <summary>
-/// HoYoShade ¿ò¼Ü°æ±¾Çåµ¥
+/// HoYoShade æ¡†æ¶ç‰ˆæœ¬æ¸…å•
 /// </summary>
 public class HoYoShadeVersionManifest
 {
     /// <summary>
-    /// HoYoShade ¿ò¼ÜĞÅÏ¢
+    /// HoYoShade æ¡†æ¶ä¿¡æ¯
     /// </summary>
     [JsonPropertyName("HoYoShade")]
     public FrameworkVersionInfo? HoYoShade { get; set; }
 
     /// <summary>
-    /// OpenHoYoShade ¿ò¼ÜĞÅÏ¢
+    /// OpenHoYoShade æ¡†æ¶ä¿¡æ¯
     /// </summary>
     [JsonPropertyName("OpenHoYoShade")]
     public FrameworkVersionInfo? OpenHoYoShade { get; set; }
 }
 
 /// <summary>
-/// ¿ò¼Ü°æ±¾ĞÅÏ¢
+/// æ¡†æ¶ç‰ˆæœ¬ä¿¡æ¯
 /// </summary>
 public class FrameworkVersionInfo
 {
     /// <summary>
-    /// °æ±¾ºÅ (ÀıÈç: "V3.0.1")
+    /// ç‰ˆæœ¬å· (ä¾‹å¦‚: "V3.0.1")
     /// </summary>
     [JsonPropertyName("version")]
     public string Version { get; set; } = string.Empty;
 
     /// <summary>
-    /// °²×°Ê±¼ä
+    /// å®‰è£…æ—¶é—´
     /// </summary>
     [JsonPropertyName("installed_at")]
     public DateTime InstalledAt { get; set; }
 
     /// <summary>
-    /// À´Ô´ (github_release, local_import)
+    /// æ¥æº (github_release, local_import)
     /// </summary>
     [JsonPropertyName("source")]
     public string Source { get; set; } = string.Empty;
 
     /// <summary>
-    /// ÎÄ¼şĞ£ÑéÖµ (¿ÉÑ¡)
+    /// æ–‡ä»¶æ ¡éªŒå€¼ (å¯é€‰)
     /// </summary>
     [JsonPropertyName("files")]
     public Dictionary<string, string>? Files { get; set; }
 
     /// <summary>
-    /// SHA256 Ğ£ÑéÖµ (¿ÉÑ¡)
+    /// SHA256 æ ¡éªŒå€¼ (å¯é€‰)
     /// </summary>
     [JsonPropertyName("sha256")]
     public string? Sha256 { get; set; }

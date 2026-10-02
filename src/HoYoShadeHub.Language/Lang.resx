@@ -2610,4 +2610,16 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="BackupRestoreDialog_AllSupportedFilterName" xml:space="preserve">
     <value>HoYoShade Backup Archives (*.zip;*.7z)</value>
   </data>
+  <data name="StartGameButton_UpdatePlugin" xml:space="preserve">
+    <value>Update Plugins</value>
+  </data>
+  <data name="StartGameButton_ComingSoon" xml:space="preserve">
+    <value>Coming Soon</value>
+  </data>
+  <data name="ExMBlenderRepairTool_SelectNTPServer" xml:space="preserve">
+    <value>Select NTP Server</value>
+  </data>
+  <data name="ExMBlenderRepairTool_SelectTraceEndpoint" xml:space="preserve">
+    <value>Select Trace Endpoint</value>
+  </data>
 </root>

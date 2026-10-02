@@ -1060,14 +1060,28 @@ public sealed partial class GameLauncherPage : PageBase
     }
 
 
+    private bool _isShowingDX12Dialog;
+
     /// <summary>
     /// 显示 DX12 说明对话框
     /// </summary>
     private async void Hyperlink_DX12Intro_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
     {
-        if (_dxConfig is not null)
+        if (_dxConfig is not null && !_isShowingDX12Dialog)
         {
-            await new DX12IntroDialog { GameDXConfig = _dxConfig, XamlRoot = this.XamlRoot }.ShowAsync();
+            try
+            {
+                _isShowingDX12Dialog = true;
+                await new DX12IntroDialog { GameDXConfig = _dxConfig, XamlRoot = this.XamlRoot }.ShowAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Show DX12IntroDialog failed");
+            }
+            finally
+            {
+                _isShowingDX12Dialog = false;
+            }
         }
     }
 
@@ -2007,8 +2021,15 @@ public sealed partial class GameLauncherPage : PageBase
     [RelayCommand]
     private async Task OpenGameLauncherSettingDialogAsync()
     {
-        await new GameLauncherSettingDialog { CurrentGameId = this.CurrentGameId, XamlRoot = this.XamlRoot }.ShowAsync();
-        _ = CheckDX12ConfigAsync();
+        try
+        {
+            await new GameLauncherSettingDialog { CurrentGameId = this.CurrentGameId, XamlRoot = this.XamlRoot }.ShowAsync();
+            _ = CheckDX12ConfigAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Open GameLauncherSettingDialog failed");
+        }
     }
 
 

@@ -948,29 +948,6 @@ public sealed partial class GameLauncherSettingDialog : ContentDialog
         defer.Complete();
     }
 
-    private async void Button_OpenThirdPartyIntegration_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            WeakReferenceMessenger.Default.Send(new MainWindowDragRectAdaptToGameIconMessage(true));
-            var dialog = new ViewHost.ThirdPartyIntegrationDialog
-            {
-                XamlRoot = this.XamlRoot,
-                CurrentGameId = this.CurrentGameId
-            };
-            await dialog.ShowAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Open third-party integration dialog");
-        }
-        finally
-        {
-            WeakReferenceMessenger.Default.Send(new MainWindowDragRectAdaptToGameIconMessage());
-        }
-    }
-
-
     #endregion
 
     #region Third-Party Integration

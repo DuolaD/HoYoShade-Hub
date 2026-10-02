@@ -37,15 +37,24 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="12">
+            <!--  进度指示  -->
+            <ProgressRing Width="20"
+                          Height="20"
+                          VerticalAlignment="Center"
+                          IsActive="{x:Bind IsResetting, Mode=OneWay}"
+                          Visibility="{x:Bind IsResetting, Mode=OneWay}" />
+
             <!--  取消按钮  -->
             <Button MinWidth="120"
                     Command="{x:Bind CancelCommand}"
-                    Content="{x:Bind lang:Lang.ResetReShadeIniDialog_Cancel}" />
+                    Content="{x:Bind lang:Lang.ResetReShadeIniDialog_Cancel}"
+                    IsEnabled="{x:Bind CanOperate, Mode=OneWay}" />
 
             <!--  重置按钮  -->
             <Button MinWidth="120"
                     Command="{x:Bind ResetCommand}"
-                    Content="{x:Bind lang:Lang.ResetReShadeIniDialog_Reset}">
+                    Content="{x:Bind lang:Lang.ResetReShadeIniDialog_Reset}"
+                    IsEnabled="{x:Bind CanOperate, Mode=OneWay}">
                 <Button.Style>
                     <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                         <Setter Property="Background" Value="{ThemeResource AccentButtonBackground}" />

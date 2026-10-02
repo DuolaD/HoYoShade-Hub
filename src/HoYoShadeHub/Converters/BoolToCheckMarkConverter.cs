@@ -10,8 +10,8 @@ public partial class BoolToCheckMarkConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        // ¡Ì (checkmark) for true, ¡Á (cross) for false
-        return value is true ? "¡Ì" : "¡Á";
+        // âˆš (checkmark) for true, Ã— (cross) for false
+        return value is true ? "âˆš" : "Ã—";
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -21,7 +21,7 @@ public partial class BoolToCheckMarkConverter : IValueConverter
 }
 
 /// <summary>
-/// ½«²¼¶ûÖµ×ª»»ÎªÑÕÉ«£¨true=ÂÌÉ«, false=ºìÉ«£©
+/// å°†å¸ƒå°”å€¼è½¬æ¢ä¸ºé¢œè‰²ï¼ˆtrue=ç»¿è‰², false=çº¢è‰²ï¼‰
 /// </summary>
 public partial class BoolToColorConverter : IValueConverter
 {

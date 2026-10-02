@@ -21,15 +21,17 @@
         <StaticResource x:Key="ContentDialogTopOverlay" ResourceKey="ControlFillColorTransparentBrush" />
     </ContentDialog.Resources>
 
-    <Grid Width="1200"
-          Height="680"
-          HorizontalAlignment="Center"
-          VerticalAlignment="Center"
+    <Grid MaxWidth="1200"
+          MaxHeight="670"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
           Background="{ThemeResource CustomOverlayAcrylicBrush}">
 
 
-        <Grid Width="1180"
-              Height="660"
+        <Grid MaxWidth="1180"
+              MaxHeight="650"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
               RowSpacing="12">
             <Grid.RowDefinitions>
                 <RowDefinition />

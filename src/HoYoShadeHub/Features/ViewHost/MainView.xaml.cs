@@ -253,6 +253,18 @@ public sealed partial class MainView : UserControl
         {
             MainView_NavigationView.SelectedItem = NavigationViewItem_Launcher;
         }
+        else if (page.Name is nameof(GameSettingPage))
+        {
+            MainView_NavigationView.SelectedItem = NavigationViewItem_GameSetting;
+        }
+        else if (page.Name is nameof(ScreenshotPage))
+        {
+            MainView_NavigationView.SelectedItem = NavigationViewItem_Screenshot;
+        }
+        else if (page.Name is nameof(SettingPage))
+        {
+            MainView_NavigationView.SelectedItem = MainView_NavigationView.SettingsItem;
+        }
         MainView_Frame.Navigate(page, param ?? CurrentGameId, infoOverride);
         if (page.Name is nameof(BlankPage) or nameof(GameLauncherPage))
         {

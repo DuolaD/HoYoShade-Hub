@@ -75,12 +75,14 @@
                     Click="Button_NetworkSettings_Click" />
         </StackPanel>
 
-        <!-- Main Content Area -->
-        <StackPanel Margin="48,0,48,96"
-                    VerticalAlignment="Center"
-                    Spacing="14"
-                    MaxWidth="780"
-                    HorizontalAlignment="Left">
+        <!-- Main Content Area with ScrollViewer for DPI/Resolution adaptation -->
+        <ScrollViewer Margin="48,28,48,112"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      MaxWidth="780"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="14">
 
             <!-- Title & Subtitle -->
             <StackPanel Spacing="4">
@@ -318,6 +320,7 @@
             </Border>
 
         </StackPanel>
+        </ScrollViewer>
 
         <!-- Unified Bottom Navigation Bar -->
         <Grid Canvas.ZIndex="10"

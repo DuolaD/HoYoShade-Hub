@@ -1,7 +1,7 @@
 namespace HoYoShadeHub.Features.Setting;
 
 /// <summary>
-/// "Ê¹ÓÃStarwardÆô¶¯Æ÷Æô¶¯¹«¿ª¿Í»§¶ËÓÎÏ·"ÉèÖÃ±ä¸üÏûÏ¢
+/// "ä½¿ç”¨Starwardå¯åŠ¨å™¨å¯åŠ¨å…¬å¼€å®¢æˆ·ç«¯æ¸¸æˆ"è®¾ç½®å˜æ›´æ¶ˆæ¯
 /// </summary>
 internal class UseStarwardLauncherChangedMessage
 {

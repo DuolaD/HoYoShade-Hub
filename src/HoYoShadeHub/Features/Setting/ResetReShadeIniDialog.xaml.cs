@@ -27,11 +27,23 @@ public sealed partial class ResetReShadeIniDialog : ContentDialog
         set => SetProperty(ref _shadePath, value);
     }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanOperate))]
+    private bool _isResetting;
+
+    public bool CanOperate => !IsResetting;
+
     [RelayCommand]
     private async Task ResetAsync()
     {
+        if (IsResetting)
+        {
+            return;
+        }
+
         try
         {
+            IsResetting = true;
             _logger.LogInformation("ResetAsync called, ShadePath={ShadePath}", ShadePath);
 
             if (!Directory.Exists(ShadePath))
@@ -41,7 +53,7 @@ public sealed partial class ResetReShadeIniDialog : ContentDialog
                 return;
             }
 
-            // INIBuild.exe Î»ÓÚ LauncherResource ×ÓÄ¿Â¼ÏÂ
+            // INIBuild.exe ä½äº LauncherResource å­ç›®å½•ä¸‹
             string iniBuildPath = Path.Combine(ShadePath, "LauncherResource", "INIBuild.exe");
 
             if (File.Exists(iniBuildPath))
@@ -68,11 +80,11 @@ public sealed partial class ResetReShadeIniDialog : ContentDialog
                 {
                     _logger.LogInformation("INIBuild.exe started successfully, PID: {pid}", process.Id);
 
-                    // ¶ÁÈ¡Êä³ö
+                    // è¯»å–è¾“å‡º
                     var outputTask = process.StandardOutput.ReadToEndAsync();
                     var errorTask = process.StandardError.ReadToEndAsync();
 
-                    // µÈ´ı½ø³ÌÍê³É
+                    // ç­‰å¾…è¿›ç¨‹å®Œæˆ
                     await process.WaitForExitAsync();
 
                     string output = await outputTask;
@@ -96,20 +108,28 @@ public sealed partial class ResetReShadeIniDialog : ContentDialog
                 _logger.LogWarning("INIBuild.exe not found at {path}", iniBuildPath);
             }
 
-            // ¹Ø±Õµ¯´°
+            // å…³é—­å¼¹çª—
             this.Hide();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Reset ReShade.ini failed");
-            // ¼´Ê¹³ö´íÒ²¹Ø±Õµ¯´°
+            // å³ä½¿å‡ºé”™ä¹Ÿå…³é—­å¼¹çª—
             this.Hide();
+        }
+        finally
+        {
+            IsResetting = false;
         }
     }
 
     [RelayCommand]
     private void Cancel()
     {
+        if (IsResetting)
+        {
+            return;
+        }
         this.Hide();
     }
 }

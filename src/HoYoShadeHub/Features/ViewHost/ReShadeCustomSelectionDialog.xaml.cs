@@ -68,8 +68,7 @@ public sealed partial class ReShadeCustomSelectionDialog : ContentDialog, INotif
         Addons = addons;
         
         // Set title dynamically using ResourceManager with string literal key
-        this.Title = Lang.ResourceManager.GetString("ReShadeDownloadView_CustomizeInstallDialogTitle") 
-                     ?? "自定义 ReShade 着色器和插件";
+        this.Title = Lang.ReShadeDownloadView_CustomizeInstallDialogTitle;
     }
 
     private void ContentDialog_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

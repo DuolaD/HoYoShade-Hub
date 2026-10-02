@@ -2599,4 +2599,16 @@
   <data name="BackupRestoreDialog_AllSupportedFilterName" xml:space="preserve">
     <value>HoYoShade 备份包 (*.zip;*.7z)</value>
   </data>
+  <data name="StartGameButton_UpdatePlugin" xml:space="preserve">
+    <value>更新插件</value>
+  </data>
+  <data name="StartGameButton_ComingSoon" xml:space="preserve">
+    <value>敬请期待</value>
+  </data>
+  <data name="ExMBlenderRepairTool_SelectNTPServer" xml:space="preserve">
+    <value>选择 NTP 服务器</value>
+  </data>
+  <data name="ExMBlenderRepairTool_SelectTraceEndpoint" xml:space="preserve">
+    <value>选择追踪节点</value>
+  </data>
 </root>

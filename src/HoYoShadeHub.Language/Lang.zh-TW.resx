@@ -2610,4 +2610,16 @@
   <data name="BackupRestoreDialog_AllSupportedFilterName" xml:space="preserve">
     <value>HoYoShade 備份檔案 (*.zip;*.7z)</value>
   </data>
+  <data name="StartGameButton_UpdatePlugin" xml:space="preserve">
+    <value>更新外掛模組</value>
+  </data>
+  <data name="StartGameButton_ComingSoon" xml:space="preserve">
+    <value>敬請期待</value>
+  </data>
+  <data name="ExMBlenderRepairTool_SelectNTPServer" xml:space="preserve">
+    <value>選擇 NTP 伺服器</value>
+  </data>
+  <data name="ExMBlenderRepairTool_SelectTraceEndpoint" xml:space="preserve">
+    <value>選擇追蹤端點</value>
+  </data>
 </root>
