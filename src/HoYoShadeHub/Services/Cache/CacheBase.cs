@@ -481,7 +481,7 @@ public abstract class CacheBase<T>
 
         progress?.Report(new DownloadProgress(DownloadState.Pending, 0, -1));
 
-        var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        using var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         long? contentLength = response.Content.Headers.ContentLength;

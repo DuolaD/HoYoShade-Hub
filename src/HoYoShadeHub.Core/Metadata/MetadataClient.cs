@@ -157,7 +157,7 @@ public class MetadataClient
             Context = "DuolaD/HoYoShade-Hub",
         };
         var content = new StringContent(JsonSerializer.Serialize(request, typeof(GithubMarkdownRequest), MetadataJsonContext.Default), new MediaTypeHeaderValue("application/json"));
-        var response = await _httpClient.PostAsync(url, content, cancellationToken);
+        using var response = await _httpClient.PostAsync(url, content, cancellationToken);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync(cancellationToken);
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 namespace HoYoShadeHub.Features.Toolbox;
 
 /// <summary>
-/// NTP Ê±¼äÍ¬²½·şÎñ
+/// NTP æ—¶é—´åŒæ­¥æœåŠ¡
 /// </summary>
 public class NtpTimeSyncService
 {
-    // Win32 API ½á¹¹Ìå£¬ÓÃÓÚÉèÖÃÏµÍ³Ê±¼ä
+    // Win32 API ç»“æ„ä½“ï¼Œç”¨äºè®¾ç½®ç³»ç»Ÿæ—¶é—´
     [StructLayout(LayoutKind.Sequential)]
     private struct SYSTEMTIME
     {
@@ -26,53 +27,64 @@ public class NtpTimeSyncService
         public ushort wMilliseconds;
     }
 
-    // µ¼Èë Win32 API º¯Êı£¬ÓÃÓÚÉèÖÃÏµÍ³Ê±¼ä
+    // å¯¼å…¥ Win32 API å‡½æ•°ï¼Œç”¨äºè®¾ç½®ç³»ç»Ÿæ—¶é—´
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern bool SetSystemTime(ref SYSTEMTIME time);
 
     /// <summary>
-    /// ³£ÓÃ NTP ·şÎñÆ÷ÁĞ±í
+    /// å¸¸ç”¨çš„ NTP æœåŠ¡å™¨åˆ—è¡¨
     /// </summary>
     public static readonly string[] NtpServers = new[]
     {
-        "time.windows.com",      // Î¢ÈíÊ±¼ä·şÎñÆ÷£¨Ä¬ÈÏ£©
-        "ntp.aliyun.com",        // °¢ÀïÔÆÊ±¼ä·şÎñÆ÷
-        "ntp.ntsc.ac.cn",        // ÖĞ¹ú¿ÆÑ§Ôº¹ú¼ÒÊÚÊ±ÖĞĞÄ
-        "ntp.tencent.com",       // ÌÚÑ¶ÔÆ¹«¹²NTP
-        "ntp.sjtu.edu.cn",       // ÉÏº£½»Í¨´óÑ§
-        "cn.pool.ntp.org",       // ¹úÄÚ×Ô¶¯·ÖÅäNTP³ØÏîÄ¿
-        "ntp.cnnic.cn"           // CNNIC£¨ÖĞ¹ú»¥ÁªÍøĞÅÏ¢ÖĞĞÄ£©
+        "time.windows.com",      // å¾®è½¯æ—¶é—´æœåŠ¡å™¨ï¼ˆé»˜è®¤ï¼‰
+        "ntp.aliyun.com",        // é˜¿é‡Œæ—¶é—´æœåŠ¡å™¨
+        "ntp.ntsc.ac.cn",        // ä¸­ç§‘é™¢å›½å®¶æˆæ—¶ä¸­å¿ƒ
+        "ntp.tencent.com",       // è…¾è®¯å…¬å…± NTP
+        "ntp.sjtu.edu.cn",       // ä¸Šæµ·äº¤é€šå¤§å­¦
+        "cn.pool.ntp.org",       // è‡ªåŠ¨ NTP æœåŠ¡å™¨æ± 
+        "ntp.cnnic.cn"           // CNNICï¼ˆä¸­å›½äº’è”ç½‘ç»œä¿¡æ¯ä¸­å¿ƒï¼‰
     };
 
     /// <summary>
-    /// ´Ó NTP ·şÎñÆ÷»ñÈ¡ÍøÂçÊ±¼ä
+    /// ä» NTP æœåŠ¡å™¨è·å–ç½‘ç»œæ—¶é—´
     /// </summary>
-    /// <param name="ntpServer">NTP ·şÎñÆ÷µØÖ·</param>
-    /// <param name="cancellationToken">È¡ÏûÁîÅÆ</param>
-    /// <returns>»ñÈ¡µ½µÄÍøÂçÊ±¼ä£¨UTC£©</returns>
+    /// <param name="ntpServer">NTP æœåŠ¡å™¨åœ°å€</param>
+    /// <param name="cancellationToken">å–æ¶ˆä»¤ç‰Œ</param>
+    /// <returns>è·å–åˆ°çš„ç½‘ç»œæ—¶é—´ï¼ˆUTCï¼‰</returns>
     public static async Task<DateTime> GetNetworkTimeAsync(string ntpServer, CancellationToken cancellationToken = default)
     {
-        const int timeoutMs = 5000; // 5Ãë³¬Ê±
+        const int timeoutMs = 5000; // 5ç§’è¶…æ—¶
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        linkedCts.CancelAfter(timeoutMs);
+
         var ntpData = new byte[48];
-        ntpData[0] = 0x1B; // NTPĞ­Òé°æ±¾
+        ntpData[0] = 0x1B; // NTPåè®®ç‰ˆæœ¬
 
-        var addresses = await Dns.GetHostEntryAsync(ntpServer, cancellationToken);
-        var ipEndPoint = new IPEndPoint(addresses.AddressList[0], 123);
+        var addresses = await Dns.GetHostEntryAsync(ntpServer, linkedCts.Token);
+        if (addresses.AddressList == null || addresses.AddressList.Length == 0)
+        {
+            throw new InvalidOperationException($"No IP address found for NTP server '{ntpServer}'.");
+        }
 
-        using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        socket.SendTimeout = timeoutMs;
-        socket.ReceiveTimeout = timeoutMs;
+        // ä¼˜å…ˆä½¿ç”¨ IPv4ï¼Œè‹¥æ—  IPv4 åˆ™ä½¿ç”¨ IPv6
+        var targetIp = addresses.AddressList.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetwork)
+            ?? addresses.AddressList.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetworkV6)
+            ?? addresses.AddressList[0];
 
-        // Á¬½Óµ½ NTP ·şÎñÆ÷
-        await socket.ConnectAsync(ipEndPoint, cancellationToken);
+        var ipEndPoint = new IPEndPoint(targetIp, 123);
 
-        // ·¢ËÍ NTP ÇëÇó
-        await socket.SendAsync(ntpData, SocketFlags.None, cancellationToken);
+        using var socket = new Socket(targetIp.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
 
-        // ½ÓÊÕ NTP ÏìÓ¦
-        await socket.ReceiveAsync(ntpData, SocketFlags.None, cancellationToken);
+        // è¿æ¥åˆ° NTP æœåŠ¡å™¨
+        await socket.ConnectAsync(ipEndPoint, linkedCts.Token);
 
-        // ½âÎö NTP ÏìÓ¦
+        // å‘é€ NTP è¯·æ±‚
+        await socket.SendAsync(ntpData, SocketFlags.None, linkedCts.Token);
+
+        // æ¥æ”¶ NTP å“åº”
+        await socket.ReceiveAsync(ntpData, SocketFlags.None, linkedCts.Token);
+
+        // è§£æ NTP å“åº”æ—¶é—´
         const byte serverReplyTime = 40;
         uint intPart = BitConverter.ToUInt32(ntpData, serverReplyTime);
         uint fractPart = BitConverter.ToUInt32(ntpData, serverReplyTime + 4);
@@ -85,10 +97,10 @@ public class NtpTimeSyncService
     }
 
     /// <summary>
-    /// ÉèÖÃÏµÍ³Ê±¼ä
+    /// è®¾ç½®ç³»ç»Ÿæ—¶é—´
     /// </summary>
-    /// <param name="newTime">ÒªÉèÖÃµÄĞÂÊ±¼ä£¨UTC£©</param>
-    /// <returns>ÊÇ·ñÉèÖÃ³É¹¦</returns>
+    /// <param name="newTime">è¦è®¾ç½®çš„æ–°æ—¶é—´ï¼ˆUTCï¼‰</param>
+    /// <returns>æ˜¯å¦è®¾ç½®æˆåŠŸ</returns>
     public static bool SetSystemTimeUtc(DateTime newTime)
     {
         DateTime utcTime = newTime.ToUniversalTime();
@@ -108,11 +120,11 @@ public class NtpTimeSyncService
     }
 
     /// <summary>
-    /// Í¬²½ÏµÍ³Ê±¼ä
+    /// åŒæ­¥ç³»ç»Ÿæ—¶é—´
     /// </summary>
-    /// <param name="ntpServer">NTP ·şÎñÆ÷µØÖ·</param>
-    /// <param name="cancellationToken">È¡ÏûÁîÅÆ</param>
-    /// <returns>Í¬²½ºóµÄ±¾µØÊ±¼ä</returns>
+    /// <param name="ntpServer">NTP æœåŠ¡å™¨åœ°å€</param>
+    /// <param name="cancellationToken">å–æ¶ˆä»¤ç‰Œ</param>
+    /// <returns>åŒæ­¥åçš„æœ¬åœ°æ—¶é—´</returns>
     public static async Task<DateTime> SyncSystemTimeAsync(string ntpServer, CancellationToken cancellationToken = default)
     {
         var ntpTime = await GetNetworkTimeAsync(ntpServer, cancellationToken);
@@ -126,7 +138,7 @@ public class NtpTimeSyncService
     }
 
     /// <summary>
-    /// ½»»»32Î»ÎŞ·ûºÅÕûÊıµÄ×Ö½ÚĞò£¨´ó¶Ë×ªĞ¡¶Ë£©
+    /// äº¤æ¢32ä½æ— ç¬¦å·æ•´æ•°çš„å­—èŠ‚åºï¼ˆå¤§ç«¯è½¬å°ç«¯ï¼‰
     /// </summary>
     private static uint SwapEndianness(uint x)
     {

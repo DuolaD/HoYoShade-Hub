@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.System;
@@ -354,16 +355,19 @@ public sealed partial class WelcomeView : UserControl
             const string url = "https://speed.cloudflare.com/__down?bytes=102400";
             NetworkDelay = null;
             NetworkSpeed = null;
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             using HttpClient httpClient = new HttpClient(DohService.CreateSocketsHttpHandler())
             {
-                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+                Timeout = TimeSpan.FromSeconds(10)
             };
             var sw = Stopwatch.StartNew();
-            var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            using var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cts.Token);
             sw.Stop();
+            response.EnsureSuccessStatusCode();
             NetworkDelay = $"{sw.ElapsedMilliseconds}ms";
             sw.Start();
-            var bytes = await response.Content.ReadAsByteArrayAsync();
+            var bytes = await response.Content.ReadAsByteArrayAsync(cts.Token);
             sw.Stop();
             double speed = bytes.Length / 1024.0 / sw.Elapsed.TotalSeconds;
             if (speed < 1024)

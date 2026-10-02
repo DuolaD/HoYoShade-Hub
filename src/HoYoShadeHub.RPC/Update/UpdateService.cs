@@ -308,7 +308,7 @@ internal class UpdateService
                 {
                     request.Headers.Range = new RangeHeaderValue(fs.Length, null);
                 }
-                var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+                using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
                 response.EnsureSuccessStatusCode();
                 if (response.StatusCode == System.Net.HttpStatusCode.PartialContent && response.Content.Headers.ContentRange?.From is not null)
                 {

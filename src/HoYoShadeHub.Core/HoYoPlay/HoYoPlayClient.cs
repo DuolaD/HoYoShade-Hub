@@ -25,7 +25,7 @@ public class HoYoPlayClient
 
     private async Task<T> CommonGetAsync<T>(string url, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync(url, cancellationToken);
+        using var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         response.EnsureSuccessStatusCode();
         var responseData = await response.Content.ReadFromJsonAsync(typeof(miHoYoApiWrapper<T>), HoYoPlayJsonContext.Default, cancellationToken) as miHoYoApiWrapper<T>;
         if (responseData is null)
@@ -43,7 +43,7 @@ public class HoYoPlayClient
 
     private async Task<T> CommonGetAsync<T>(string url, string node, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync(url, cancellationToken);
+        using var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         response.EnsureSuccessStatusCode();
         var responseData = await response.Content.ReadFromJsonAsync(typeof(miHoYoApiWrapper<JsonNode>), HoYoPlayJsonContext.Default, cancellationToken) as miHoYoApiWrapper<JsonNode>;
         if (responseData is null)
@@ -68,7 +68,7 @@ public class HoYoPlayClient
     private async Task<T> CommonSendAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken = default)
     {
         request.VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
-        var response = await _httpClient.SendAsync(request, cancellationToken);
+        using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         response.EnsureSuccessStatusCode();
         var responseData = await response.Content.ReadFromJsonAsync(typeof(miHoYoApiWrapper<T>), HoYoPlayJsonContext.Default, cancellationToken) as miHoYoApiWrapper<T>;
         if (responseData is null)

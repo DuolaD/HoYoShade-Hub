@@ -31,7 +31,7 @@ public class SelfQueryClient
 
     private async Task<T> CommonGetAsync<T>(string url, CancellationToken cancellationToken = default) where T : class
     {
-        var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        using var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         response.EnsureSuccessStatusCode();
         var wrapper = await response.Content.ReadFromJsonAsync(typeof(miHoYoApiWrapper<T>), SelfQueryJsonContext.Default, cancellationToken) as miHoYoApiWrapper<T>;
         if (wrapper is null)

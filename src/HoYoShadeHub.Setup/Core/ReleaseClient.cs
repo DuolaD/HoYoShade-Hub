@@ -39,7 +39,10 @@ public class ReleaseClient
         {
             _httpClient = httpClient;
         }
-        _httpClient.BaseAddress = DefaultBaseAddress;
+        if (_httpClient.BaseAddress is null)
+        {
+            _httpClient.BaseAddress = DefaultBaseAddress;
+        }
     }
 
 
@@ -133,7 +136,7 @@ public class ReleaseClient
             Context = "DuolaD/HoYoShade-Hub",
         };
         var content = new StringContent(JsonSerializer.Serialize(request, ReleaseJsonContext.Default.GithubMarkdownRequest), Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(url, content, cancellationToken);
+        using var response = await _httpClient.PostAsync(url, content, cancellationToken);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync(cancellationToken);
     }

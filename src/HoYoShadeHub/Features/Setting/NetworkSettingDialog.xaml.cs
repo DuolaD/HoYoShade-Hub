@@ -364,11 +364,13 @@ public sealed partial class NetworkSettingDialog : ContentDialog
             IsRefreshingNetworkStatus = true;
             using var httpClient = new HttpClient(DohService.CreateSocketsHttpHandler())
             {
-                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+                Timeout = TimeSpan.FromSeconds(10),
             };
             var sw = Stopwatch.StartNew();
-            var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationTokenSource.Token);
+            using var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationTokenSource.Token);
             sw.Stop();
+            response.EnsureSuccessStatusCode();
             NetworkDelay = $"{sw.ElapsedMilliseconds}ms";
             sw.Start();
             var bytes = await response.Content.ReadAsByteArrayAsync(cancellationTokenSource.Token);

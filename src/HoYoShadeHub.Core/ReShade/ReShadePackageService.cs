@@ -89,7 +89,7 @@ public class ReShadePackageService
 
                 try
                 {
-                    var response = await client.GetAsync(currentUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+                    using var response = await client.GetAsync(currentUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
                     response.EnsureSuccessStatusCode();
 
                     var memoryStream = new MemoryStream();

@@ -45,6 +45,7 @@ public class DownloadService
 
     protected void RecreateHttpClient()
     {
+        _httpClient?.Dispose();
         string ver = typeof(DownloadService).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "";
         _httpClient = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.All }) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
         _httpClient.DefaultRequestHeaders.Add("User-Agent", $"HoYoShadeHub.Setup/{ver}");
@@ -127,7 +128,7 @@ public class DownloadService
                 {
                     request.Headers.Range = new RangeHeaderValue(fs.Length, null);
                 }
-                var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellation).ConfigureAwait(false);
+                using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellation).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
                 if (response.StatusCode == HttpStatusCode.PartialContent && response.Content.Headers.ContentRange?.From is not null)
                 {
@@ -216,7 +217,7 @@ public class DownloadService
                 fs.SetLength(0);
                 fs.Position = 0;
                 var request = new HttpRequestMessage(HttpMethod.Get, url) { VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
-                var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellation).ConfigureAwait(false);
+                using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellation).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
                 using var hs = await response.Content.ReadAsStreamAsync(cancellation).ConfigureAwait(false);
                 using DecompressionStream ds = new(hs, 8192);
