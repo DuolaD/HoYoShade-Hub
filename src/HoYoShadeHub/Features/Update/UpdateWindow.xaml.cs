@@ -100,6 +100,12 @@ public sealed partial class UpdateWindow : WindowEx
                 {
                     AppConfig.LauncherUpdateDownloadServer = value.ServerIndex;
                 }
+
+                // If error panel is currently visible, automatically retry loading update content with newly selected server
+                if (StackPanel_Error != null && StackPanel_Error.Visibility == Visibility.Visible)
+                {
+                    _ = LoadUpdateContentAsync();
+                }
             }
         }
     }
@@ -986,8 +992,8 @@ public sealed partial class UpdateWindow : WindowEx
                 
                 if (!string.IsNullOrEmpty(tag))
                 {
-                    int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
-                    var frameworkMarkdown = await _hoyoShadeUpdateService.FetchFrameworkChangelogMarkdownAsync(tag, serverIndex);
+                    int frameworkServerIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.HoYoShadeFrameworkDownloadServer;
+                    var frameworkMarkdown = await _hoyoShadeUpdateService.FetchFrameworkChangelogMarkdownAsync(tag, frameworkServerIndex);
                     if (!string.IsNullOrEmpty(frameworkMarkdown))
                     {
                         return frameworkMarkdown;
@@ -1035,7 +1041,8 @@ public sealed partial class UpdateWindow : WindowEx
             }
         }
 
-        var releases = await _metadataClient.GetGithubReleaseAsync(1, 20);
+        int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.LauncherUpdateDownloadServer;
+        var releases = await _metadataClient.GetGithubReleaseAsync(1, 20, serverIndex);
         var markdown = new StringBuilder();
         int count = 0;
         foreach (var release in releases)
@@ -1070,7 +1077,7 @@ public sealed partial class UpdateWindow : WindowEx
         {
             try
             {
-                var r = await _metadataClient.GetGithubReleaseAsync(NewVersion?.Version ?? AppConfig.AppVersion);
+                var r = await _metadataClient.GetGithubReleaseAsync(NewVersion?.Version ?? AppConfig.AppVersion, serverIndex);
                 if (r is not null)
                 {
                     AppendReleaseToStringBuilder(r, markdown);
@@ -1103,7 +1110,21 @@ public sealed partial class UpdateWindow : WindowEx
 
     private async Task<string> RenderMarkdownAsync(string markdown)
     {
-        string html = await _metadataClient.RenderGithubMarkdownAsync(markdown);
+        int serverIndex = SelectedDownloadServer?.ServerIndex ?? AppConfig.LauncherUpdateDownloadServer;
+        string html;
+        try
+        {
+            html = await _metadataClient.RenderGithubMarkdownAsync(markdown, serverIndex);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to render markdown via GitHub API, falling back to local preformatted HTML.");
+            html = $"""
+                <div class="markdown-body">
+                    <pre style="white-space: pre-wrap; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1.6; word-break: break-word;">{System.Net.WebUtility.HtmlEncode(markdown)}</pre>
+                </div>
+                """;
+        }
         var cssFile = Path.Combine(AppContext.BaseDirectory, @"Assets\CSS\github-markdown.css");
         string? css = null;
         if (File.Exists(cssFile))

@@ -1,3 +1,4 @@
+using HoYoShadeHub.Helpers;
 using HoYoShadeHub.RPC.Update.Github;
 using HoYoShadeHub.RPC.Update.Metadata;
 using System;
@@ -149,34 +150,147 @@ public class MetadataClient
 
     #region Github
 
-
-
-    public async Task<GithubRelease?> GetGithubLatestReleaseAsync(CancellationToken cancellationToken = default)
+    private static int[] GetServerSequence(int serverIndex)
     {
-        const string url = "https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases?page=1&per_page=1";
-        var list = await CommonGetAsync<List<GithubRelease>>(url, cancellationToken);
-        return list?.FirstOrDefault();
+        int[] defaultOrder = new[] { 1, 2, 3, 0 };
+        if (serverIndex == -1)
+        {
+            return defaultOrder;
+        }
+        return new[] { serverIndex }.Concat(defaultOrder.Where(s => s != serverIndex)).ToArray();
     }
 
+    private static string CleanProxyInjectedScripts(string html)
+    {
+        if (string.IsNullOrEmpty(html))
+        {
+            return html;
+        }
 
+        // GFM output never includes script tags; any script tags present are injected by cloud CDN proxies (e.g. Cloudflare beacon, EdgeOne hooks)
+        try
+        {
+            return System.Text.RegularExpressions.Regex.Replace(
+                html,
+                @"<script\b[^>]*>[\s\S]*?<\/script>",
+                string.Empty,
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+        }
+        catch
+        {
+            return html;
+        }
+    }
 
-    public async Task<List<GithubRelease>> GetGithubReleaseAsync(int page, int perPage, CancellationToken cancellationToken = default)
+    private async Task<T> CommonGetWithFallbackAsync<T>(string url, int serverIndex = -1, CancellationToken cancellationToken = default) where T : class
+    {
+        int[] serverSequence = GetServerSequence(serverIndex);
+        Exception? lastFallbackException = null;
+
+        // If a specific _proxyUrl was set explicitly, try it first
+        if (!string.IsNullOrWhiteSpace(_proxyUrl))
+        {
+            try
+            {
+                string proxiedUrl = CloudProxyManager.ApplyProxy(url, _proxyUrl);
+                return await CommonGetAsync<T>(proxiedUrl, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                lastFallbackException = ex;
+            }
+        }
+
+        foreach (var currentServerIndex in serverSequence)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string?[] proxies = currentServerIndex == 0
+                ? new string?[] { null }
+                : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+            if (proxies.Length == 0)
+            {
+                proxies = new string?[] { null };
+            }
+
+            foreach (var proxyUrl in proxies)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                string currentUrl = string.IsNullOrWhiteSpace(proxyUrl)
+                    ? url
+                    : CloudProxyManager.ApplyProxy(url, proxyUrl);
+
+                try
+                {
+                    return await CommonGetAsync<T>(currentUrl, cancellationToken);
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    lastFallbackException = ex;
+                }
+            }
+        }
+
+        throw lastFallbackException ?? new HttpRequestException($"Failed to fetch metadata from {url} across all fallback servers.");
+    }
+
+    public Task<GithubRelease?> GetGithubLatestReleaseAsync(CancellationToken cancellationToken = default)
+        => GetGithubLatestReleaseAsync(-1, cancellationToken);
+
+    public async Task<GithubRelease?> GetGithubLatestReleaseAsync(int serverIndex, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            const string url = "https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases?page=1&per_page=1";
+            var list = await CommonGetWithFallbackAsync<List<GithubRelease>>(url, serverIndex, cancellationToken);
+            return list?.FirstOrDefault();
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+    }
+
+    public Task<List<GithubRelease>> GetGithubReleaseAsync(int page, int perPage, CancellationToken cancellationToken = default)
+        => GetGithubReleaseAsync(page, perPage, -1, cancellationToken);
+
+    public async Task<List<GithubRelease>> GetGithubReleaseAsync(int page, int perPage, int serverIndex, CancellationToken cancellationToken = default)
     {
         string url = $"https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases?page={page}&per_page={perPage}";
-        var list = await CommonGetAsync<List<GithubRelease>>(url, cancellationToken);
+        var list = await CommonGetWithFallbackAsync<List<GithubRelease>>(url, serverIndex, cancellationToken);
         return list ?? new List<GithubRelease>();
     }
 
+    public Task<GithubRelease?> GetGithubReleaseAsync(string tag, CancellationToken cancellationToken = default)
+        => GetGithubReleaseAsync(tag, -1, cancellationToken);
 
-
-    public async Task<GithubRelease?> GetGithubReleaseAsync(string tag, CancellationToken cancellationToken = default)
+    public async Task<GithubRelease?> GetGithubReleaseAsync(string tag, int serverIndex, CancellationToken cancellationToken = default)
     {
-        string url = $"https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases/tags/{tag}";
-        return await CommonGetAsync<GithubRelease>(url, cancellationToken);
+        try
+        {
+            string url = $"https://api.github.com/repos/DuolaD/HoYoShade-Hub/releases/tags/{tag}";
+            return await CommonGetWithFallbackAsync<GithubRelease>(url, serverIndex, cancellationToken);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
     }
 
+    public Task<string> RenderGithubMarkdownAsync(string markdown, CancellationToken cancellationToken = default)
+        => RenderGithubMarkdownAsync(markdown, -1, cancellationToken);
 
-    public async Task<string> RenderGithubMarkdownAsync(string markdown, CancellationToken cancellationToken = default)
+    public async Task<string> RenderGithubMarkdownAsync(string markdown, int serverIndex, CancellationToken cancellationToken = default)
     {
         const string url = "https://api.github.com/markdown";
         var request = new GithubMarkdownRequest
@@ -185,13 +299,76 @@ public class MetadataClient
             Mode = "gfm",
             Context = "DuolaD/HoYoShade-Hub",
         };
-        var content = new StringContent(JsonSerializer.Serialize(request, typeof(GithubMarkdownRequest), MetadataJsonContext.Default), new MediaTypeHeaderValue("application/json"));
-        using var response = await _httpClient.PostAsync(url, content, cancellationToken);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync(cancellationToken);
+        var contentString = JsonSerializer.Serialize(request, typeof(GithubMarkdownRequest), MetadataJsonContext.Default);
+
+        int[] serverSequence = GetServerSequence(serverIndex);
+        Exception? lastFallbackException = null;
+
+        async Task<string> ExecutePostAsync(string targetUrl)
+        {
+            using var content = new StringContent(contentString, new MediaTypeHeaderValue("application/json"));
+            using var response = await _httpClient.PostAsync(targetUrl, content, cancellationToken);
+            response.EnsureSuccessStatusCode();
+            string result = await response.Content.ReadAsStringAsync(cancellationToken);
+            return CleanProxyInjectedScripts(result);
+        }
+
+        // If a specific _proxyUrl was set explicitly, try it first
+        if (!string.IsNullOrWhiteSpace(_proxyUrl))
+        {
+            try
+            {
+                string proxiedUrl = CloudProxyManager.ApplyProxy(url, _proxyUrl);
+                return await ExecutePostAsync(proxiedUrl);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                lastFallbackException = ex;
+            }
+        }
+
+        foreach (var currentServerIndex in serverSequence)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string?[] proxies = currentServerIndex == 0
+                ? new string?[] { null }
+                : CloudProxyManager.GetAllProxiesForServer(currentServerIndex).OrderBy(_ => Random.Shared.Next()).ToArray();
+
+            if (proxies.Length == 0)
+            {
+                proxies = new string?[] { null };
+            }
+
+            foreach (var proxyUrl in proxies)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                string currentUrl = string.IsNullOrWhiteSpace(proxyUrl)
+                    ? url
+                    : CloudProxyManager.ApplyProxy(url, proxyUrl);
+
+                try
+                {
+                    return await ExecutePostAsync(currentUrl);
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    lastFallbackException = ex;
+                }
+            }
+        }
+
+        throw lastFallbackException ?? new HttpRequestException("Failed to render markdown via all fallback servers.");
     }
-
-
 
     #endregion
 

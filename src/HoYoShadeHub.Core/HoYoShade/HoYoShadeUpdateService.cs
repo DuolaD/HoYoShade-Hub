@@ -348,7 +348,7 @@ public class HoYoShadeUpdateService
         string apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{tagName}";
         int[] serverSequence = serverIndex == -1
             ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
-            : new[] { serverIndex };
+            : new[] { serverIndex }.Concat(CloudProxyManager.GetAutoSelectFallbackSequence(false).Where(s => s != serverIndex)).ToArray();
 
         Exception? lastFallbackException = null;
 
@@ -415,7 +415,7 @@ public class HoYoShadeUpdateService
         string apiUrl = $"https://api.github.com/repos/DuolaD/HoYoShade/releases/tags/{tagName}";
         int[] serverSequence = serverIndex == -1
             ? CloudProxyManager.GetAutoSelectFallbackSequence(false)
-            : new[] { serverIndex };
+            : new[] { serverIndex }.Concat(CloudProxyManager.GetAutoSelectFallbackSequence(false).Where(s => s != serverIndex)).ToArray();
 
         foreach (var currentServerIndex in serverSequence)
         {
