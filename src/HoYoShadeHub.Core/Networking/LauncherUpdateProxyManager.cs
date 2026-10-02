@@ -26,7 +26,6 @@ public class LauncherUpdateProxyManager
         "https://cdn.steep.pond.0c55.ali.storage.hub.hoyosha.de"
     };
 
-    private static readonly Random _random = new Random();
 
     /// <summary>
     /// Get proxy URL for the specified download server
@@ -67,7 +66,7 @@ public class LauncherUpdateProxyManager
             return null;
         }
 
-        int index = _random.Next(proxies.Length);
+        int index = Random.Shared.Next(proxies.Length);
         return proxies[index];
     }
 }

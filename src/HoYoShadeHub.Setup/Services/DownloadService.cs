@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using SharpCompress.Compressors.ZStandard;
 using HoYoShadeHub.Setup.Core;
 using System.Buffers;
@@ -116,18 +116,29 @@ public class DownloadService
     {
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         using var fs = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite | FileShare.Delete);
+        long initialBytes = 0;
+        long sessionDownloaded = 0;
         if (fs.Length < size)
         {
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Get, url) { VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
-                request.Headers.Range = new RangeHeaderValue(fs.Length, null);
+                if (fs.Length > 0)
+                {
+                    request.Headers.Range = new RangeHeaderValue(fs.Length, null);
+                }
                 var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellation).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
-                if (response.Content.Headers.ContentRange?.From is not null)
+                if (response.StatusCode == HttpStatusCode.PartialContent && response.Content.Headers.ContentRange?.From is not null)
                 {
                     fs.Position = response.Content.Headers.ContentRange.From.Value;
-                    Interlocked.Add(ref _downloadBytes, fs.Position);
+                    initialBytes = fs.Position;
+                    Interlocked.Add(ref _downloadBytes, initialBytes);
+                }
+                else
+                {
+                    fs.SetLength(0);
+                    fs.Position = 0;
                 }
                 using var hs = await response.Content.ReadAsStreamAsync(cancellation).ConfigureAwait(false);
                 byte[] buffer = ArrayPool<byte>.Shared.Rent(1 << 16);
@@ -137,6 +148,7 @@ public class DownloadService
                     while ((read = await hs.ReadAsync(buffer, cancellation).ConfigureAwait(false)) != 0)
                     {
                         await fs.WriteAsync(buffer.AsMemory(0, read), cancellation).ConfigureAwait(false);
+                        sessionDownloaded += read;
                         Interlocked.Add(ref _downloadBytes, read);
                     }
                     await fs.FlushAsync(cancellation).ConfigureAwait(false);
@@ -148,7 +160,7 @@ public class DownloadService
             }
             catch
             {
-                Interlocked.Add(ref _downloadBytes, -fs.Length);
+                Interlocked.Add(ref _downloadBytes, -(initialBytes + sessionDownloaded));
                 throw;
             }
         }
@@ -184,6 +196,7 @@ public class DownloadService
             else
             {
                 File.Delete(path_tmp);
+                Interlocked.Add(ref _downloadBytes, -size);
                 throw new Exception($"Checksum failed: {path}");
             }
         }
@@ -195,28 +208,39 @@ public class DownloadService
     {
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         using var fs = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite | FileShare.Delete);
+        long downloaded = 0;
         if (fs.Length < size)
         {
-            fs.Position = 0;
-            var request = new HttpRequestMessage(HttpMethod.Get, url) { VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
-            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellation).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            using var hs = await response.Content.ReadAsStreamAsync(cancellation).ConfigureAwait(false);
-            using DecompressionStream ds = new(hs, 8192);
-            byte[] buffer = ArrayPool<byte>.Shared.Rent(8192);
             try
             {
-                int read = 0;
-                while ((read = await ds.ReadAsync(buffer, cancellation).ConfigureAwait(false)) > 0)
+                fs.SetLength(0);
+                fs.Position = 0;
+                var request = new HttpRequestMessage(HttpMethod.Get, url) { VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+                var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellation).ConfigureAwait(false);
+                response.EnsureSuccessStatusCode();
+                using var hs = await response.Content.ReadAsStreamAsync(cancellation).ConfigureAwait(false);
+                using DecompressionStream ds = new(hs, 8192);
+                byte[] buffer = ArrayPool<byte>.Shared.Rent(8192);
+                try
                 {
-                    await fs.WriteAsync(buffer.AsMemory(0, read), cancellation).ConfigureAwait(false);
-                    Interlocked.Add(ref _downloadBytes, read);
+                    int read;
+                    while ((read = await ds.ReadAsync(buffer, cancellation).ConfigureAwait(false)) > 0)
+                    {
+                        await fs.WriteAsync(buffer.AsMemory(0, read), cancellation).ConfigureAwait(false);
+                        downloaded += read;
+                        Interlocked.Add(ref _downloadBytes, read);
+                    }
+                    await fs.FlushAsync(cancellation).ConfigureAwait(false);
                 }
-                await fs.FlushAsync(cancellation).ConfigureAwait(false);
+                finally
+                {
+                    ArrayPool<byte>.Shared.Return(buffer);
+                }
             }
-            finally
+            catch
             {
-                ArrayPool<byte>.Shared.Return(buffer);
+                Interlocked.Add(ref _downloadBytes, -downloaded);
+                throw;
             }
         }
         else
@@ -229,10 +253,10 @@ public class DownloadService
 
     protected static void CopySetupFile(string installFolder)
     {
-        if (Path.Combine(installFolder, "HoYoShadeHub.Setup.exe") != Environment.ProcessPath)
+        if (!string.IsNullOrEmpty(Environment.ProcessPath) && Path.Combine(installFolder, "HoYoShadeHub.Setup.exe") != Environment.ProcessPath)
         {
             Directory.CreateDirectory(installFolder);
-            File.Copy(Environment.ProcessPath!, Path.Combine(installFolder, "HoYoShadeHub.Setup.exe"), true);
+            File.Copy(Environment.ProcessPath, Path.Combine(installFolder, "HoYoShadeHub.Setup.exe"), true);
         }
     }
 

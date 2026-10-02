@@ -26,6 +26,10 @@ public class EchFallbackHttpMessageHandler : DelegatingHandler
             {
                 isEchSupported = await DohService.DetectEchSupportAsync(host, cancellationToken);
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch
             {
                 // Ignored
@@ -41,6 +45,10 @@ public class EchFallbackHttpMessageHandler : DelegatingHandler
                         return response;
                     }
                 }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
                 catch
                 {
                     // Ignored
@@ -54,6 +62,8 @@ public class EchFallbackHttpMessageHandler : DelegatingHandler
 
     private async Task<HttpResponseMessage?> CurlExecuteAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         string curlPath = Path.Combine(AppContext.BaseDirectory, "curl.exe");
         if (!File.Exists(curlPath))
         {
@@ -62,56 +72,64 @@ public class EchFallbackHttpMessageHandler : DelegatingHandler
 
         var url = request.RequestUri!.ToString();
         var dohUrl = DohService.GetCurrentDohUrl();
-        var argsBuilder = new StringBuilder();
-        argsBuilder.Append("--ech true --ca-native ");
-        if (!string.IsNullOrWhiteSpace(dohUrl))
-        {
-            argsBuilder.Append($"--doh-url \"{dohUrl}\" ");
-        }
-        
-        argsBuilder.Append("-s -L -f ");
-
-        foreach (var header in request.Headers)
-        {
-            foreach (var val in header.Value)
-            {
-                argsBuilder.Append($"-H \"{header.Key}: {val}\" ");
-            }
-        }
-
-        string? tempFile = null;
-        if (request.Method == HttpMethod.Post && request.Content != null)
-        {
-            string postData = await request.Content.ReadAsStringAsync(cancellationToken);
-            tempFile = Path.Combine(Path.GetTempPath(), $"curl_post_{Guid.NewGuid():N}.json");
-            await File.WriteAllTextAsync(tempFile, postData, Encoding.UTF8, cancellationToken);
-            
-            if (request.Content.Headers.ContentType != null)
-            {
-                argsBuilder.Append($"-H \"Content-Type: {request.Content.Headers.ContentType}\" ");
-            }
-            argsBuilder.Append($"-d @\"{tempFile}\" ");
-        }
-        else if (request.Method != HttpMethod.Get)
-        {
-            argsBuilder.Append($"-X {request.Method.Method} ");
-        }
-
-        argsBuilder.Append($"\"{url}\"");
-
         var startInfo = new ProcessStartInfo
         {
             FileName = curlPath,
-            Arguments = argsBuilder.ToString(),
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true
         };
 
+        startInfo.ArgumentList.Add("--ech");
+        startInfo.ArgumentList.Add("true");
+        startInfo.ArgumentList.Add("--ca-native");
+
+        if (!string.IsNullOrWhiteSpace(dohUrl))
+        {
+            startInfo.ArgumentList.Add("--doh-url");
+            startInfo.ArgumentList.Add(dohUrl);
+        }
+
+        startInfo.ArgumentList.Add("-s");
+        startInfo.ArgumentList.Add("-L");
+        startInfo.ArgumentList.Add("-f");
+
+        foreach (var header in request.Headers)
+        {
+            foreach (var val in header.Value)
+            {
+                startInfo.ArgumentList.Add("-H");
+                startInfo.ArgumentList.Add($"{header.Key}: {val}");
+            }
+        }
+
+        string? tempFile = null;
         Process? process = null;
         try
         {
+            if (request.Method == HttpMethod.Post && request.Content != null)
+            {
+                string postData = await request.Content.ReadAsStringAsync(cancellationToken);
+                tempFile = Path.Combine(Path.GetTempPath(), $"curl_post_{Guid.NewGuid():N}.json");
+                await File.WriteAllTextAsync(tempFile, postData, Encoding.UTF8, cancellationToken);
+
+                if (request.Content.Headers.ContentType != null)
+                {
+                    startInfo.ArgumentList.Add("-H");
+                    startInfo.ArgumentList.Add($"Content-Type: {request.Content.Headers.ContentType}");
+                }
+                startInfo.ArgumentList.Add("-d");
+                startInfo.ArgumentList.Add($"@{tempFile}");
+            }
+            else if (request.Method != HttpMethod.Get)
+            {
+                startInfo.ArgumentList.Add("-X");
+                startInfo.ArgumentList.Add(request.Method.Method);
+            }
+
+            startInfo.ArgumentList.Add(url);
+
             process = new Process { StartInfo = startInfo };
 
             if (!process.Start())
@@ -145,6 +163,19 @@ public class EchFallbackHttpMessageHandler : DelegatingHandler
                 Content = new StreamContent(new ProcessStream(process.StandardOutput.BaseStream, process, tempFile, cancellationToken))
             };
             return responseMessage;
+        }
+        catch (OperationCanceledException)
+        {
+            if (process != null)
+            {
+                try { if (!process.HasExited) process.Kill(); } catch {}
+                process.Dispose();
+            }
+            if (tempFile != null && File.Exists(tempFile))
+            {
+                try { File.Delete(tempFile); } catch { }
+            }
+            throw;
         }
         catch
         {

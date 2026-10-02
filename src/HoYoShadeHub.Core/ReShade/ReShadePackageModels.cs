@@ -24,12 +24,12 @@ public static class ReShadeDownloadServer
     
     public static string GetEffectPackagesUrl(string proxyUrl)
     {
-        return string.IsNullOrWhiteSpace(proxyUrl) ? EffectPackagesUrl : $"{proxyUrl}/{EffectPackagesUrl}";
+        return string.IsNullOrWhiteSpace(proxyUrl) ? EffectPackagesUrl : $"{proxyUrl.TrimEnd('/')}/{EffectPackagesUrl.TrimStart('/')}";
     }
     
     public static string GetAddonsUrl(string proxyUrl)
     {
-        return string.IsNullOrWhiteSpace(proxyUrl) ? AddonsUrl : $"{proxyUrl}/{AddonsUrl}";
+        return string.IsNullOrWhiteSpace(proxyUrl) ? AddonsUrl : $"{proxyUrl.TrimEnd('/')}/{AddonsUrl.TrimStart('/')}";
     }
 }
 

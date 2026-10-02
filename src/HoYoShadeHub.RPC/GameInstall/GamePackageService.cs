@@ -840,7 +840,7 @@ internal partial class GamePackageService
         }
         if (needDownload)
         {
-            using FileStream fs = File.Open(file, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using FileStream fs = File.Open(file, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
             string url = $"{manifestUrl.UrlPrefix.TrimEnd('/')}/{manifestFile.Id}";
             using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url) { VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
             using HttpResponseMessage response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
@@ -912,7 +912,7 @@ internal partial class GamePackageService
         await hs.CopyToAsync(ms, cancellationToken);
         ms.Position = 0;
         List<PkgVersionItem> list = await GameInstallHelper.DeserilizerLinesAsync<PkgVersionItem>(ms, cancellationToken);
-        using FileStream fs = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+        using FileStream fs = File.Open(path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
         ms.Position = 0;
         await ms.CopyToAsync(fs, cancellationToken);
         return list;

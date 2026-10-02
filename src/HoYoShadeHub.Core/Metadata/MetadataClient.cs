@@ -35,6 +35,10 @@ public class MetadataClient
     {
         SetApiPrefix(apiIndex);
         _httpClient = httpClient ?? new HttpClient(DohService.CreateSocketsHttpHandler()) { DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+        if (_httpClient.DefaultRequestHeaders.UserAgent.Count == 0)
+        {
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("HoYoShadeHub");
+        }
     }
 
 

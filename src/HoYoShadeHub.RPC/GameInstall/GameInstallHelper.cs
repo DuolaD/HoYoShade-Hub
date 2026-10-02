@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -383,33 +384,50 @@ internal partial class GameInstallHelper
                             int read = 0;
                             long lastFsPosition = fs.Position;
                             Task writeFileTask = ds.CopyToAsync(fs, cancellationToken);
-                            while ((read = await hs.ReadAsync(buffer, cancellationToken)) > 0)
+                            try
                             {
-                                // RateLimiter 的等待队列已设置为 int.MaxValue，理论上不会出现获取令牌失败的情况
-                                RateLimitLease lease = await _rateLimiter.AcquireAsync(read, cancellationToken);
-                                while (!lease.IsAcquired)
+                                while ((read = await hs.ReadAsync(buffer, cancellationToken)) > 0)
                                 {
-                                    await Task.Delay(1, cancellationToken);
-                                    lease = await _rateLimiter.AcquireAsync(read, cancellationToken);
-                                }
-                                await pipe.Writer.WriteAsync(buffer.Slice(0, read), cancellationToken);
-                                Interlocked.Add(ref task._progress_DownloadFinishBytes, read);
-                                Interlocked.Add(ref task.networkDownloadBytes, read);
-                                size_download += read;
+                                    if (writeFileTask.IsFaulted)
+                                    {
+                                        await writeFileTask;
+                                    }
+                                    // RateLimiter 的等待队列已设置为 int.MaxValue，理论上不会出现获取令牌失败的情况
+                                    RateLimitLease lease = await _rateLimiter.AcquireAsync(read, cancellationToken);
+                                    while (!lease.IsAcquired)
+                                    {
+                                        lease.Dispose();
+                                        await Task.Delay(1, cancellationToken);
+                                        lease = await _rateLimiter.AcquireAsync(read, cancellationToken);
+                                    }
+                                    using (lease)
+                                    {
+                                    }
+                                    await pipe.Writer.WriteAsync(buffer.Slice(0, read), cancellationToken);
+                                    Interlocked.Add(ref task._progress_DownloadFinishBytes, read);
+                                    Interlocked.Add(ref task.networkDownloadBytes, read);
+                                    size_download += read;
 
-                                long p = fs.Position;
-                                long add = p - lastFsPosition;
-                                Interlocked.Add(ref task._progress_WriteFinishBytes, add);
-                                Interlocked.Add(ref task.storageWriteBytes, add);
-                                size_write += add;
-                                lastFsPosition = p;
+                                    long p = fs.Position;
+                                    long add = p - lastFsPosition;
+                                    Interlocked.Add(ref task._progress_WriteFinishBytes, add);
+                                    Interlocked.Add(ref task.storageWriteBytes, add);
+                                    size_write += add;
+                                    lastFsPosition = p;
+                                }
+                                await pipe.Writer.CompleteAsync();
+                                await writeFileTask;
+                                long remainWrite = fs.Position - lastFsPosition;
+                                Interlocked.Add(ref task._progress_WriteFinishBytes, remainWrite);
+                                Interlocked.Add(ref task.storageWriteBytes, remainWrite);
+                                size_write += remainWrite;
                             }
-                            await pipe.Writer.CompleteAsync();
-                            await writeFileTask;
-                            long remainWrite = fs.Position - lastFsPosition;
-                            Interlocked.Add(ref task._progress_WriteFinishBytes, remainWrite);
-                            Interlocked.Add(ref task.storageWriteBytes, remainWrite);
-                            size_write += remainWrite;
+                            catch (Exception ex)
+                            {
+                                pipe.Writer.Complete(ex);
+                                pipe.Reader.Complete(ex);
+                                throw;
+                            }
                         }
                     }
                     else
@@ -518,6 +536,8 @@ internal partial class GameInstallHelper
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         string path_tmp = path + "_tmp";
 
+        long initialProgressBytes = 0;
+        long currentSessionDownloaded = 0;
         using FileStream fs = File.Open(path_tmp, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
         if (fs.Length < size)
         {
@@ -525,14 +545,23 @@ internal partial class GameInstallHelper
             {
                 using HttpClient httpClient = _httpClientFactory.CreateClient();
                 HttpRequestMessage request = new(HttpMethod.Get, url) { VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
-                request.Headers.Range = new RangeHeaderValue(fs.Length, null);
+                if (fs.Length > 0)
+                {
+                    request.Headers.Range = new RangeHeaderValue(fs.Length, null);
+                }
                 using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
                 response.EnsureSuccessStatusCode();
-                if (response.Content.Headers.ContentRange?.From is not null)
+                if (response.StatusCode == HttpStatusCode.PartialContent && response.Content.Headers.ContentRange?.From is not null)
                 {
                     // 文件链接支持断点续传
                     fs.Position = response.Content.Headers.ContentRange.From.Value;
-                    Interlocked.Add(ref task._progress_DownloadFinishBytes, fs.Position);
+                    initialProgressBytes = fs.Position;
+                    Interlocked.Add(ref task._progress_DownloadFinishBytes, initialProgressBytes);
+                }
+                else
+                {
+                    fs.SetLength(0);
+                    fs.Position = 0;
                 }
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int read = 0;
@@ -542,22 +571,27 @@ internal partial class GameInstallHelper
                     RateLimitLease lease = await _rateLimiter.AcquireAsync(read, cancellationToken);
                     while (!lease.IsAcquired)
                     {
+                        lease.Dispose();
                         await Task.Delay(1, cancellationToken);
                         lease = await _rateLimiter.AcquireAsync(read, cancellationToken);
                     }
+                    using (lease)
+                    {
+                    }
                     await fs.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
+                    currentSessionDownloaded += read;
                     Interlocked.Add(ref task._progress_DownloadFinishBytes, read);
                     Interlocked.Add(ref task.networkDownloadBytes, read);
                 }
             }
             catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException)
             {
-                Interlocked.Add(ref task._progress_DownloadFinishBytes, -fs.Position);
+                Interlocked.Add(ref task._progress_DownloadFinishBytes, -(initialProgressBytes + currentSessionDownloaded));
                 throw ex.InnerException;
             }
             catch
             {
-                Interlocked.Add(ref task._progress_DownloadFinishBytes, -fs.Position);
+                Interlocked.Add(ref task._progress_DownloadFinishBytes, -(initialProgressBytes + currentSessionDownloaded));
                 throw;
             }
         }
@@ -570,7 +604,7 @@ internal partial class GameInstallHelper
         else
         {
             File.Delete(path_tmp);
-            Interlocked.Add(ref task._progress_WriteFinishBytes, -size);
+            Interlocked.Add(ref task._progress_DownloadFinishBytes, -size);
             var ex = new Exception("MD5 not match.");
             _logger.LogError(ex, "MD5 not match.\nFile: {file}\nReal MD5: {realMD5}", path, md5);
             throw ex;

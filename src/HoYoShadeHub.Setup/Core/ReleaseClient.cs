@@ -1,4 +1,4 @@
-﻿using HoYoShadeHub.Setup.Core.Github;
+using HoYoShadeHub.Setup.Core.Github;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +32,8 @@ public class ReleaseClient
                 EnableMultipleHttp3Connections = true,
                 PooledConnectionLifetime = TimeSpan.FromMinutes(5),
             });
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", $"{Path.GetFileNameWithoutExtension(Environment.ProcessPath)}/*");
+            string appName = !string.IsNullOrEmpty(Environment.ProcessPath) ? Path.GetFileNameWithoutExtension(Environment.ProcessPath) : "HoYoShadeHub";
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", $"{appName}/*");
         }
         else
         {
@@ -134,7 +135,7 @@ public class ReleaseClient
         var content = new StringContent(JsonSerializer.Serialize(request, ReleaseJsonContext.Default.GithubMarkdownRequest), Encoding.UTF8, "application/json");
         var response = await _httpClient.PostAsync(url, content, cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+        return await response.Content.ReadAsStringAsync(cancellationToken);
     }
 
 

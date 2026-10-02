@@ -290,30 +290,51 @@ internal class UpdateService
         // Apply proxy if provided
         if (!string.IsNullOrWhiteSpace(proxyUrl))
         {
-            url = $"{proxyUrl}/{url}";
+            url = $"{proxyUrl.TrimEnd('/')}/{url.TrimStart('/')}";
         }
         
         string path = Path.Combine(updateCacheFolder, item.Id);
 
         using var fs = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite | FileShare.Delete);
-        Interlocked.Add(ref progress_DownloadBytes, fs.Length);
+        long initialBytes = fs.Length;
+        long sessionDownloadedBytes = 0;
+        Interlocked.Add(ref progress_DownloadBytes, initialBytes);
         if (fs.Length < item.Size)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, url) { VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
-            request.Headers.Range = new RangeHeaderValue(fs.Length, null);
-            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
-            response.EnsureSuccessStatusCode();
-            if (response.Content.Headers.ContentRange?.From is not null)
+            try
             {
-                fs.Position = response.Content.Headers.ContentRange.From.Value;
+                var request = new HttpRequestMessage(HttpMethod.Get, url) { VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher };
+                if (fs.Length > 0)
+                {
+                    request.Headers.Range = new RangeHeaderValue(fs.Length, null);
+                }
+                var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+                response.EnsureSuccessStatusCode();
+                if (response.StatusCode == System.Net.HttpStatusCode.PartialContent && response.Content.Headers.ContentRange?.From is not null)
+                {
+                    fs.Position = response.Content.Headers.ContentRange.From.Value;
+                }
+                else
+                {
+                    fs.SetLength(0);
+                    fs.Position = 0;
+                    Interlocked.Add(ref progress_DownloadBytes, -initialBytes);
+                    initialBytes = 0;
+                }
+                using var hs = await response.Content.ReadAsStreamAsync(cancellationToken);
+                var buffer = new byte[1 << 16];
+                int length;
+                while ((length = await hs.ReadAsync(buffer, cancellationToken)) != 0)
+                {
+                    await fs.WriteAsync(buffer.AsMemory(0, length), cancellationToken);
+                    sessionDownloadedBytes += length;
+                    Interlocked.Add(ref progress_DownloadBytes, length);
+                }
             }
-            using var hs = await response.Content.ReadAsStreamAsync(cancellationToken);
-            var buffer = new byte[1 << 16];
-            int length;
-            while ((length = await hs.ReadAsync(buffer, cancellationToken)) != 0)
+            catch
             {
-                await fs.WriteAsync(buffer.AsMemory(0, length), cancellationToken);
-                Interlocked.Add(ref progress_DownloadBytes, length);
+                Interlocked.Add(ref progress_DownloadBytes, -(initialBytes + sessionDownloadedBytes));
+                throw;
             }
         }
         await fs.FlushAsync(cancellationToken);
@@ -328,7 +349,7 @@ internal class UpdateService
         _logger.LogWarning("Checksum failed: {path}", path);
         fs.Dispose();
         File.Delete(path);
-        Interlocked.Add(ref progress_DownloadBytes, -item.Size);
+        Interlocked.Add(ref progress_DownloadBytes, -(initialBytes + sessionDownloadedBytes));
         Interlocked.Decrement(ref progress_DownloadFileCount);
         throw new Exception($"Checksum failed: {path}");
     }
@@ -384,7 +405,7 @@ internal class UpdateService
             string url = releaseManifest.UrlPrefix + releaseFile.Id;
             if (!string.IsNullOrWhiteSpace(proxyUrl))
             {
-                url = $"{proxyUrl}/{url}";
+                url = $"{proxyUrl.TrimEnd('/')}/{url.TrimStart('/')}";
             }
             using var hs = await _httpClient.GetStreamAsync(url, cancellationToken);
             fs.SetLength(0);

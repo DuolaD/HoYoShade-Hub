@@ -48,7 +48,8 @@ public static class DohService
         AutomaticDecompression = DecompressionMethods.All,
         EnableMultipleHttp2Connections = true,
         EnableMultipleHttp3Connections = true,
-        ConnectCallback = ConnectWithDohAsync,
+        AllowAutoRedirect = false,
+        ConnectCallback = ConnectDohEndpointAsync,
     })
     {
         DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
@@ -221,6 +222,10 @@ public static class DohService
                 }
             }
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch
         {
         }
@@ -249,6 +254,10 @@ public static class DohService
                 stopwatch.Stop();
                 return stopwatch.ElapsedMilliseconds;
             }
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch
         {
@@ -327,6 +336,38 @@ public static class DohService
 
 
 
+    private static async ValueTask<Stream> ConnectDohEndpointAsync(SocketsHttpConnectionContext context, CancellationToken cancellationToken)
+    {
+        string host = context.DnsEndPoint.Host;
+        var endpoint = GetProviderEndpoint(_provider);
+
+        IPAddress[] addresses;
+        lock (_lock)
+        {
+            addresses = _dohServerAddresses;
+        }
+
+        if (addresses.Length == 0 || !string.Equals(host, endpoint.DohHost, StringComparison.OrdinalIgnoreCase))
+        {
+            addresses = await ResolveByBootstrapDnsAsync(host, endpoint.BootstrapDnsServers, cancellationToken);
+            if (string.Equals(host, endpoint.DohHost, StringComparison.OrdinalIgnoreCase) && addresses.Length > 0)
+            {
+                lock (_lock)
+                {
+                    _dohServerAddresses = addresses;
+                }
+            }
+        }
+
+        addresses = OrderAddressesByPreference(addresses);
+        if (await TryConnectAsync(addresses, context.DnsEndPoint.Port, cancellationToken) is Stream stream)
+        {
+            return stream;
+        }
+
+        throw new SocketException((int)SocketError.HostNotFound);
+    }
+
     private static async Task<Stream?> TryConnectAsync(IPAddress[] addresses, int port, CancellationToken cancellationToken)
     {
         Exception? lastException = null;
@@ -337,6 +378,11 @@ public static class DohService
             {
                 await socket.ConnectAsync(ip, port, cancellationToken);
                 return new NetworkStream(socket, ownsSocket: true);
+            }
+            catch (OperationCanceledException)
+            {
+                socket.Dispose();
+                throw;
             }
             catch (Exception ex)
             {
@@ -396,6 +442,10 @@ public static class DohService
             try
             {
                 (addresses, ttl) = await ResolveViaDohAsync(host, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch
             {
@@ -614,6 +664,10 @@ public static class DohService
         {
             return await QueryDohRecordAsync(host, type, cancellationToken);
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch
         {
             return ([], 0);
@@ -627,6 +681,10 @@ public static class DohService
         try
         {
             return await QueryDnsServerRecordAsync(host, type, dnsServer, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch
         {
@@ -645,7 +703,7 @@ public static class DohService
             _ => throw new ArgumentOutOfRangeException(nameof(type)),
         };
 
-        byte[] queryMessage = BuildDnsQueryMessage(host, queryType);
+        byte[] queryMessage = BuildDnsQueryMessage(host, queryType, out ushort queryId);
 
         using var socket = new Socket(dnsServer.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
         await socket.ConnectAsync(new IPEndPoint(dnsServer, 53), cancellationToken);
@@ -662,7 +720,7 @@ public static class DohService
 
         var response = new byte[received];
         Buffer.BlockCopy(buffer, 0, response, 0, received);
-        return ParseDnsResponse(response, queryType);
+        return ParseDnsResponse(response, queryType, queryId);
     }
 
 
@@ -676,7 +734,7 @@ public static class DohService
             _ => throw new ArgumentOutOfRangeException(nameof(type)),
         };
 
-        byte[] queryMessage = BuildDnsQueryMessage(host, queryType);
+        byte[] queryMessage = BuildDnsQueryMessage(host, queryType, out ushort queryId);
         string dnsParam = Convert.ToBase64String(queryMessage).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
         var endpoint = GetProviderEndpoint(_provider);
@@ -689,12 +747,12 @@ public static class DohService
         response.EnsureSuccessStatusCode();
 
         byte[] responseMessage = await response.Content.ReadAsByteArrayAsync(cancellationToken);
-        return ParseDnsResponse(responseMessage, queryType);
+        return ParseDnsResponse(responseMessage, queryType, queryId);
     }
 
 
 
-    private static byte[] BuildDnsQueryMessage(string host, ushort queryType)
+    private static byte[] BuildDnsQueryMessage(string host, ushort queryType, out ushort queryId)
     {
         var labels = host.Trim('.').Split('.', StringSplitOptions.RemoveEmptyEntries);
         if (labels.Length == 0)
@@ -705,6 +763,7 @@ public static class DohService
         int qnameLength = labels.Sum(x => x.Length + 1) + 1;
         byte[] message = new byte[12 + qnameLength + 4];
         ushort id = (ushort)Random.Shared.Next(ushort.MaxValue + 1);
+        queryId = id;
         BinaryPrimitives.WriteUInt16BigEndian(message.AsSpan(0, 2), id);
         BinaryPrimitives.WriteUInt16BigEndian(message.AsSpan(2, 2), 0x0100);
         BinaryPrimitives.WriteUInt16BigEndian(message.AsSpan(4, 2), 1);
@@ -733,11 +792,20 @@ public static class DohService
 
 
 
-    private static (IPAddress[] Addresses, long MinTtl) ParseDnsResponse(byte[] message, ushort expectedType)
+    private static (IPAddress[] Addresses, long MinTtl) ParseDnsResponse(byte[] message, ushort expectedType, ushort? expectedId = null)
     {
         if (message.Length < 12)
         {
             return ([], 0);
+        }
+
+        if (expectedId.HasValue)
+        {
+            ushort id = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(0, 2));
+            if (id != expectedId.Value)
+            {
+                return ([], 0);
+            }
         }
 
         ushort flags = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(2, 2));
@@ -861,7 +929,7 @@ public static class DohService
 
         try
         {
-            byte[] queryMessage = BuildDnsQueryMessage(host, 65);
+            byte[] queryMessage = BuildDnsQueryMessage(host, 65, out ushort queryId);
             string dnsParam = Convert.ToBase64String(queryMessage).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
             var endpoint = GetProviderEndpoint(_provider);
@@ -874,10 +942,14 @@ public static class DohService
             response.EnsureSuccessStatusCode();
 
             byte[] responseMessage = await response.Content.ReadAsByteArrayAsync(cancellationToken);
-            bool supported = ParseDnsResponse65(responseMessage);
+            bool supported = ParseDnsResponse65(responseMessage, queryId);
 
             _echCache[host] = (supported, DateTimeOffset.UtcNow.AddMinutes(5));
             return supported;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch
         {
@@ -887,11 +959,20 @@ public static class DohService
         }
     }
 
-    private static bool ParseDnsResponse65(byte[] message)
+    private static bool ParseDnsResponse65(byte[] message, ushort? expectedId = null)
     {
         if (message.Length < 12)
         {
             return false;
+        }
+
+        if (expectedId.HasValue)
+        {
+            ushort id = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(0, 2));
+            if (id != expectedId.Value)
+            {
+                return false;
+            }
         }
 
         ushort flags = BinaryPrimitives.ReadUInt16BigEndian(message.AsSpan(2, 2));

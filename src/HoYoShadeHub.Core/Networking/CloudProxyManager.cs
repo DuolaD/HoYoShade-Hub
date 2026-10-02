@@ -15,7 +15,7 @@ public class CloudProxyManager
     // Cloudflare proxy URLs
     private static readonly string[] CloudflareProxies = new[]
     {
-        "https://hoyoshadehub-glasses.pages.dev/",
+        "https://hoyoshadehub-glasses.pages.dev",
         "https://cdn.autumn.recipe.2dcd.cf.storage.hub.hoyosha.de",
         "https://cdn.delicate.meadow.be18.cf.storage.hub.hoyosha.de",
         "https://cdn.weathered.wave.q2c3.cf.storage.hub.hoyosha.de"
@@ -36,8 +36,6 @@ public class CloudProxyManager
         "https://cdn.jolly.snowflake.cd46.ali.storage.hub.hoyosha.de",
         "https://cdn.steep.pond.0c55.ali.storage.hub.hoyosha.de"
     };
-
-    private static readonly Random _random = new Random();
 
     /// <summary>
     /// Get proxy URL prefix for the specified download server
@@ -69,7 +67,7 @@ public class CloudProxyManager
             return originalUrl;
         }
 
-        return $"{proxyUrl}/{originalUrl}";
+        return $"{proxyUrl.TrimEnd('/')}/{originalUrl.TrimStart('/')}";
     }
 
     /// <summary>
@@ -102,7 +100,7 @@ public class CloudProxyManager
         {
             // HoYoShade/ReShade: GitHub -> Tencent -> Random(Cloudflare, Alibaba)
             var sequence = new List<int> { 0, 2 };
-            if (_random.Next(2) == 0)
+            if (Random.Shared.Next(2) == 0)
             {
                 sequence.Add(1);
                 sequence.Add(3);
@@ -144,11 +142,12 @@ public class CloudProxyManager
         }
 
         // Shuffle proxies to try them in random order
-        var shuffledProxies = proxies.OrderBy(_ => _random.Next()).ToArray();
+        var shuffledProxies = proxies.OrderBy(_ => Random.Shared.Next()).ToArray();
         Exception? lastException = null;
 
         foreach (var proxy in shuffledProxies)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             try
             {
                 var proxiedUrl = ApplyProxy(originalUrl, proxy);
@@ -162,6 +161,10 @@ public class CloudProxyManager
 
                 // If not successful, dispose and try next
                 response.Dispose();
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -223,14 +226,14 @@ public class CloudProxyManager
     /// <summary>
     /// Get a random proxy from the array
     /// </summary>
-    private static string GetRandomProxy(string[] proxies)
+    private static string? GetRandomProxy(string[] proxies)
     {
         if (proxies.Length == 0)
         {
             return null;
         }
 
-        int index = _random.Next(proxies.Length);
+        int index = Random.Shared.Next(proxies.Length);
         return proxies[index];
     }
 }

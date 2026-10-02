@@ -79,11 +79,7 @@ public static class RpcRunner
             });
         }).UseNamedPipes(options =>
         {
-            var defaultSecurity = new PipeSecurity();
-            var usersGroup = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null);
-            defaultSecurity.AddAccessRule(new PipeAccessRule(usersGroup, PipeAccessRights.ReadWrite | PipeAccessRights.CreateNewInstance, AccessControlType.Allow));
-            options.PipeSecurity = defaultSecurity;
-            options.CurrentUserOnly = false;
+            options.CurrentUserOnly = true;
         });
 
 

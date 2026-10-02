@@ -721,6 +721,8 @@ public class HoYoShadeInstallService
         bool enableEch = false,
         string dohUrl = "")
     {
+        string? downloadPath = null;
+        string? tempPath = null;
         try
         {
             if (string.IsNullOrWhiteSpace(package.DownloadUrl))
@@ -734,17 +736,13 @@ public class HoYoShadeInstallService
             CurrentFile = package.Name;
             
             // Apply proxy URL if needed
-            var downloadUrl = string.IsNullOrWhiteSpace(proxyUrl) ? package.DownloadUrl : $"{proxyUrl}/{package.DownloadUrl}";
+            var downloadUrl = string.IsNullOrWhiteSpace(proxyUrl) ? package.DownloadUrl : $"{proxyUrl.TrimEnd('/')}/{package.DownloadUrl.TrimStart('/')}";
             
             _logger.LogInformation(">>> Downloading effect package: {Package}", package.Name);
             _logger.LogInformation("    Download URL: {Url}", downloadUrl);
 
             // Download to temp file
-            string downloadPath = Path.Combine(Path.GetTempPath(), "ReShadeSetupDownload.tmp");
-            if (File.Exists(downloadPath))
-            {
-                try { File.Delete(downloadPath); } catch { }
-            }
+            downloadPath = Path.Combine(Path.GetTempPath(), $"ReShadeSetupDownload_{Guid.NewGuid():N}.tmp");
 
             bool curlSuccess = false;
             if (enableEch)
@@ -798,15 +796,9 @@ public class HoYoShadeInstallService
             _logger.LogInformation("    Download complete, extracting...");
 
             // Extract archive
-            string tempPath = Path.Combine(Path.GetTempPath(), "ReShadeSetup");
-            string tempPathEffects = null;
-            string tempPathTextures = null;
-            
-            // Delete existing temp directory
-            if (Directory.Exists(tempPath))
-            {
-                Directory.Delete(tempPath, true);
-            }
+            tempPath = Path.Combine(Path.GetTempPath(), $"ReShadeSetup_{Guid.NewGuid():N}");
+            string? tempPathEffects = null;
+            string? tempPathTextures = null;
 
             ZipFile.ExtractToDirectory(downloadPath, tempPath);
             _logger.LogInformation("    Extracted to temp directory");
@@ -821,7 +813,7 @@ public class HoYoShadeInstallService
             // Fallback: find first directory containing shaders/textures
             if (tempPathEffects == null)
             {
-                tempPathEffects = effects.Select(x => Path.GetDirectoryName(x)).OrderBy(x => x.Length).FirstOrDefault();
+                tempPathEffects = effects.Select(x => Path.GetDirectoryName(x)).OrderBy(x => x!.Length).FirstOrDefault();
             }
             if (tempPathTextures == null)
             {
@@ -829,7 +821,7 @@ public class HoYoShadeInstallService
                 tempPathTextures = textureExtensions
                     .SelectMany(ext => Directory.EnumerateFiles(tempPath, ext, SearchOption.AllDirectories))
                     .Select(x => Path.GetDirectoryName(x))
-                    .OrderBy(x => x.Length)
+                    .OrderBy(x => x!.Length)
                     .FirstOrDefault();
             }
 
@@ -888,15 +880,15 @@ public class HoYoShadeInstallService
                 _logger.LogInformation("    Copied texture files to target");
             }
 
-            // Cleanup
-            File.Delete(downloadPath);
-            Directory.Delete(tempPath, true);
-
             DownloadedFiles++;
             UpdateDownloadSpeed();
             _logger.LogInformation("<<< Installed effect package {Package} ({Downloaded}/{Total})",
                 package.Name, DownloadedFiles, TotalFiles);
             return InstallResult.Success;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -905,6 +897,17 @@ public class HoYoShadeInstallService
             DownloadedFiles++; // Count as processed even if failed
             UpdateDownloadSpeed();
             return InstallResult.Failed;
+        }
+        finally
+        {
+            if (downloadPath != null && File.Exists(downloadPath))
+            {
+                try { File.Delete(downloadPath); } catch { }
+            }
+            if (tempPath != null && Directory.Exists(tempPath))
+            {
+                try { Directory.Delete(tempPath, true); } catch { }
+            }
         }
     }
 
@@ -920,6 +923,8 @@ public class HoYoShadeInstallService
         bool enableEch = false,
         string dohUrl = "")
     {
+        string? downloadPath = null;
+        string? tempPath = null;
         try
         {
             if (string.IsNullOrWhiteSpace(addon.DownloadUrl))
@@ -931,16 +936,12 @@ public class HoYoShadeInstallService
             }
 
             CurrentFile = addon.Name;
-            var downloadUrl = string.IsNullOrWhiteSpace(proxyUrl) ? addon.DownloadUrl : $"{proxyUrl}/{addon.DownloadUrl}";
+            var downloadUrl = string.IsNullOrWhiteSpace(proxyUrl) ? addon.DownloadUrl : $"{proxyUrl.TrimEnd('/')}/{addon.DownloadUrl.TrimStart('/')}";
             
             _logger.LogInformation(">>> Downloading addon: {Addon}", addon.Name);
             _logger.LogInformation("    Download URL: {Url}", downloadUrl);
 
-            string downloadPath = Path.Combine(Path.GetTempPath(), "ReShadeSetupDownload.tmp");
-            if (File.Exists(downloadPath))
-            {
-                try { File.Delete(downloadPath); } catch { }
-            }
+            downloadPath = Path.Combine(Path.GetTempPath(), $"ReShadeSetupDownload_{Guid.NewGuid():N}.tmp");
 
             bool curlSuccess = false;
             if (enableEch)
@@ -991,8 +992,7 @@ public class HoYoShadeInstallService
             _logger.LogInformation("    Download complete");
 
             string ext = Path.GetExtension(new Uri(addon.DownloadUrl).AbsolutePath);
-            string tempPath = null;
-            string tempPathEffects = null;
+            string? tempPathEffects = null;
 
             // Target directory for addon binaries: reshade-shaders\Addons
             string targetPathAddon = Path.Combine(targetBaseDir, "reshade-shaders", "Addons");
@@ -1003,18 +1003,13 @@ public class HoYoShadeInstallService
             // If not a direct addon file, extract archive
             if (ext != ".addon" && ext != ".addon32" && ext != ".addon64")
             {
-                tempPath = Path.Combine(Path.GetTempPath(), "reshade-addons");
-                
-                if (Directory.Exists(tempPath))
-                {
-                    Directory.Delete(tempPath, true);
-                }
+                tempPath = Path.Combine(Path.GetTempPath(), $"reshade-addons_{Guid.NewGuid():N}");
 
                 _logger.LogInformation("    Extracting addon archive...");
                 ZipFile.ExtractToDirectory(downloadPath, tempPath);
 
                 // Find addon binary (prefer 64-bit)
-                string addonPath = Directory.EnumerateFiles(tempPath, "*.addon64", SearchOption.AllDirectories).FirstOrDefault();
+                string? addonPath = Directory.EnumerateFiles(tempPath, "*.addon64", SearchOption.AllDirectories).FirstOrDefault();
                 if (addonPath == null)
                 {
                     addonPath = Directory.EnumerateFiles(tempPath, "*.addon32", SearchOption.AllDirectories).FirstOrDefault();
@@ -1042,7 +1037,7 @@ public class HoYoShadeInstallService
                 // Check for effect files bundled with addon
                 var effects = Directory.EnumerateFiles(tempPath, "*.fx", SearchOption.TopDirectoryOnly)
                     .Concat(Directory.EnumerateFiles(tempPath, "*.addonfx", SearchOption.TopDirectoryOnly));
-                tempPathEffects = effects.Select(x => Path.GetDirectoryName(x)).OrderBy(x => x.Length).FirstOrDefault();
+                tempPathEffects = effects.Select(x => Path.GetDirectoryName(x)).OrderBy(x => x!.Length).FirstOrDefault();
             }
 
             // Install addon binary to reshade-shaders\Addons
@@ -1062,18 +1057,15 @@ public class HoYoShadeInstallService
                 _logger.LogInformation("    Installed bundled effect files");
             }
 
-            // Cleanup
-            File.Delete(downloadPath);
-            if (tempPath != null)
-            {
-                Directory.Delete(tempPath, true);
-            }
-
             DownloadedFiles++;
             UpdateDownloadSpeed();
             _logger.LogInformation("<<< Installed addon {Addon} ({Downloaded}/{Total})",
                 addon.Name, DownloadedFiles, TotalFiles);
             return InstallResult.Success;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -1081,6 +1073,17 @@ public class HoYoShadeInstallService
             DownloadedFiles++;
             UpdateDownloadSpeed();
             return InstallResult.Failed;
+        }
+        finally
+        {
+            if (downloadPath != null && File.Exists(downloadPath))
+            {
+                try { File.Delete(downloadPath); } catch { }
+            }
+            if (tempPath != null && Directory.Exists(tempPath))
+            {
+                try { Directory.Delete(tempPath, true); } catch { }
+            }
         }
     }
 
@@ -1317,23 +1320,29 @@ public class HoYoShadeInstallService
             return false;
         }
 
-        var argsBuilder = new System.Text.StringBuilder();
-        argsBuilder.Append("--ech true ");
-        if (!string.IsNullOrWhiteSpace(dohUrl))
-        {
-            argsBuilder.Append($"--doh-url \"{dohUrl}\" ");
-        }
-        argsBuilder.Append($"-L -f -C - -o \"{targetPath}\" \"{url}\"");
-
         var startInfo = new System.Diagnostics.ProcessStartInfo
         {
             FileName = curlPath,
-            Arguments = argsBuilder.ToString(),
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardError = true,
             RedirectStandardOutput = false
         };
+
+        startInfo.ArgumentList.Add("--ech");
+        startInfo.ArgumentList.Add("true");
+        if (!string.IsNullOrWhiteSpace(dohUrl))
+        {
+            startInfo.ArgumentList.Add("--doh-url");
+            startInfo.ArgumentList.Add(dohUrl);
+        }
+        startInfo.ArgumentList.Add("-L");
+        startInfo.ArgumentList.Add("-f");
+        startInfo.ArgumentList.Add("-C");
+        startInfo.ArgumentList.Add("-");
+        startInfo.ArgumentList.Add("-o");
+        startInfo.ArgumentList.Add(targetPath);
+        startInfo.ArgumentList.Add(url);
 
         try
         {
@@ -1393,6 +1402,10 @@ public class HoYoShadeInstallService
             }
 
             return true;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
