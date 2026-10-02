@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Data;
 using System;
 
 namespace HoYoShadeHub.Converters;
@@ -7,7 +7,26 @@ internal partial class ByteLengthToStringConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        double length = System.Convert.ToDouble(value);
+        if (value is null)
+        {
+            return "-";
+        }
+
+        double length;
+        try
+        {
+            length = System.Convert.ToDouble(value);
+        }
+        catch
+        {
+            return "-";
+        }
+
+        if (double.IsNaN(length) || double.IsInfinity(length) || length < 0)
+        {
+            return "-";
+        }
+
         return length switch
         {
             >= (1 << 30) => $"{length / (1 << 30):F2} GB",

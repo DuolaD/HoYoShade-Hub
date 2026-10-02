@@ -309,7 +309,7 @@ public sealed partial class NetworkSettingDialog : ContentDialog
         {
             foreach (var provider in DohProviders)
             {
-                provider.LatencyText = "Tcping...";
+                provider.LatencyText = Lang.FileSettingPage_ServerLatencyChecking;
                 provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
             }
 
@@ -332,7 +332,7 @@ public sealed partial class NetworkSettingDialog : ContentDialog
                     }
                     else
                     {
-                        provider.LatencyText = "Timeout";
+                        provider.LatencyText = Lang.FileSettingPage_ServerLatencyTimeout;
                         provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
                     }
                 }

@@ -139,7 +139,7 @@ public sealed partial class UpdateWindow : WindowEx
         var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
         foreach (var server in serversToUpdate)
         {
-            server.LatencyText = "Ping...";
+            server.LatencyText = Lang.FileSettingPage_ServerLatencyChecking;
             server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
         }
 

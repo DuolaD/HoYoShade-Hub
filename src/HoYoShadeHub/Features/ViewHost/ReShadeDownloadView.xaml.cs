@@ -132,7 +132,7 @@ public sealed partial class ReShadeDownloadView : UserControl
         var serversToUpdate = DownloadServers.Where(s => s.ServerIndex != -1).ToList();
         foreach (var server in serversToUpdate)
         {
-            server.LatencyText = "Ping...";
+            server.LatencyText = Lang.FileSettingPage_ServerLatencyChecking;
             server.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Gray);
         }
 
@@ -1389,10 +1389,25 @@ public sealed partial class ReShadeDownloadView : UserControl
         }
     }
 
+    private bool _isShowingNetworkDialog;
+
     private async void Button_NetworkSettings_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
-        await dialog.ShowAsync();
+        if (_isShowingNetworkDialog) return;
+        try
+        {
+            _isShowingNetworkDialog = true;
+            var dialog = new NetworkSettingDialog { XamlRoot = this.XamlRoot };
+            await dialog.ShowAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Open NetworkSettingDialog failed");
+        }
+        finally
+        {
+            _isShowingNetworkDialog = false;
+        }
     }
 
     [RelayCommand]

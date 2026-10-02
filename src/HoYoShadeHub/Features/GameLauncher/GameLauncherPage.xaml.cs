@@ -2018,17 +2018,29 @@ public sealed partial class GameLauncherPage : PageBase
 
 
 
+    private bool _isShowingGameLauncherSettingDialog;
+
     [RelayCommand]
     private async Task OpenGameLauncherSettingDialogAsync()
     {
+        if (_isShowingGameLauncherSettingDialog)
+        {
+            return;
+        }
+
         try
         {
+            _isShowingGameLauncherSettingDialog = true;
             await new GameLauncherSettingDialog { CurrentGameId = this.CurrentGameId, XamlRoot = this.XamlRoot }.ShowAsync();
             _ = CheckDX12ConfigAsync();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Open GameLauncherSettingDialog failed");
+        }
+        finally
+        {
+            _isShowingGameLauncherSettingDialog = false;
         }
     }
 

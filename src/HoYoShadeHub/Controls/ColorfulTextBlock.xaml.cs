@@ -52,65 +52,86 @@ public sealed partial class ColorfulTextBlock : UserControl
             for (int i = 0; i < desc.Length; i++)
             {
                 // 换行
-                if (desc[i] == '\\' && desc[i + 1] == 'n')
+                if (i + 1 < desc.Length && desc[i] == '\\' && desc[i + 1] == 'n')
                 {
-                    text.Inlines.Add(new Run { Text = desc[lastIndex..i].ToString() });
+                    if (i > lastIndex)
+                    {
+                        text.Inlines.Add(new Run { Text = desc[lastIndex..i].ToString() });
+                    }
                     text.Inlines.Add(new LineBreak());
                     i += 1;
                     lastIndex = i + 1;
+                    continue;
                 }
-                // 颜色
-                if (desc[i] == '<' && desc[i + 1] == 'c')
+                // 颜色: <color=#RRGGBB>...</color> 或 <color=#AARRGGBB>...</color>
+                if (desc[i..].StartsWith("<color=#", StringComparison.OrdinalIgnoreCase))
                 {
-                    text.Inlines.Add(new Run { Text = desc[lastIndex..i].ToString() });
-                    var colorLength = desc.Slice(i + 8).IndexOf('>');
-                    var colorString = desc.Slice(i + 8, colorLength);
-                    var color = Convert.FromHexString(colorString);
-                    var textLength = desc.Slice(i + 9 + colorLength).IndexOf('<');
-                    if (colorLength == 8)
+                    var afterTag = desc[(i + 8)..];
+                    var colorLength = afterTag.IndexOf('>');
+                    if (colorLength is 6 or 8)
                     {
+                        var colorString = afterTag[..colorLength];
+                        if (IsHexColor(colorString))
+                        {
+                            var afterColor = desc[(i + 9 + colorLength)..];
+                            var textLength = afterColor.IndexOf('<');
+                            if (textLength >= 0 && afterColor[textLength..].StartsWith("</color>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (i > lastIndex)
+                                {
+                                    text.Inlines.Add(new Run { Text = desc[lastIndex..i].ToString() });
+                                }
+
+                                var color = Convert.FromHexString(colorString);
+                                if (colorLength == 8)
+                                {
+                                    text.Inlines.Add(new Run
+                                    {
+                                        Text = afterColor[..textLength].ToString(),
+                                        Foreground = new SolidColorBrush(Color.FromArgb(color[3], color[0], color[1], color[2])),
+                                    });
+                                }
+                                else
+                                {
+                                    text.Inlines.Add(new Run
+                                    {
+                                        Text = afterColor[..textLength].ToString(),
+                                        Foreground = new SolidColorBrush(Color.FromArgb(0xFF, color[0], color[1], color[2])),
+                                    });
+                                }
+
+                                i += 16 + colorLength + textLength;
+                                lastIndex = i + 1;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                // 引用 (斜体): <i>...</i>
+                if (desc[i..].StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                {
+                    var afterItalic = desc[(i + 3)..];
+                    var length = afterItalic.IndexOf("</i>", StringComparison.OrdinalIgnoreCase);
+                    if (length >= 0)
+                    {
+                        if (i > lastIndex)
+                        {
+                            text.Inlines.Add(new Run { Text = desc[lastIndex..i].ToString() });
+                        }
                         text.Inlines.Add(new Run
                         {
-                            Text = desc.Slice(i + 9 + colorLength, textLength).ToString(),
-                            Foreground = new SolidColorBrush(Color.FromArgb(color[3], color[0], color[1], color[2])),
+                            Text = afterItalic[..length].ToString(),
+                            FontStyle = Windows.UI.Text.FontStyle.Italic,
                         });
+                        i += length + 6;
+                        lastIndex = i + 1;
+                        continue;
                     }
-                    else if (colorLength == 6)
-                    {
-                        text.Inlines.Add(new Run
-                        {
-                            Text = desc.Slice(i + 9 + colorLength, textLength).ToString(),
-                            Foreground = new SolidColorBrush(Color.FromArgb(0xFF, color[0], color[1], color[2])),
-                        });
-                    }
-                    else
-                    {
-                        text.Inlines.Add(new Run
-                        {
-                            Text = desc.Slice(i + 9 + colorLength, textLength).ToString(),
-                        });
-                    }
-                    i += 16 + colorLength + textLength;
-                    lastIndex = i + 1;
                 }
-                // 引用
-                if (desc[i] == '<' && desc[i + 1] == 'i')
-                {
-                    text.Inlines.Add(new Run { Text = desc[lastIndex..i].ToString() });
-                    var length = desc.Slice(i + 3).IndexOf('<');
-                    text.Inlines.Add(new Run
-                    {
-                        Text = desc.Slice(i + 3, length).ToString(),
-                        FontStyle = Windows.UI.Text.FontStyle.Italic,
-                    });
-                    i += length + 6;
-                    lastIndex = i + 1;
-                }
-                // 结尾
-                if (i == desc.Length - 1)
-                {
-                    text.Inlines.Add(new Run { Text = desc.Slice(lastIndex).ToString() });
-                }
+            }
+            if (lastIndex < desc.Length)
+            {
+                text.Inlines.Add(new Run { Text = desc[lastIndex..].ToString() });
             }
         }
         catch (Exception ex)
@@ -121,9 +142,22 @@ public sealed partial class ColorfulTextBlock : UserControl
         }
     }
 
+    private static bool IsHexColor(ReadOnlySpan<char> span)
+    {
+        if (span.Length is not (6 or 8))
+        {
+            return false;
+        }
 
-
-
-
+        for (int i = 0; i < span.Length; i++)
+        {
+            char c = span[i];
+            if (!char.IsAsciiHexDigit(c))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

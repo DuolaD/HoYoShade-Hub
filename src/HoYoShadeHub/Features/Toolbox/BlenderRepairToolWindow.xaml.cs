@@ -59,6 +59,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         
         // 监听窗口激活事件以刷新配置
         this.Activated += BlenderRepairToolWindow_Activated;
+        this.Closed += BlenderRepairToolWindow_Closed;
     }
 
     private void BlenderRepairToolWindow_Activated(object sender, WindowActivatedEventArgs args)
@@ -68,6 +69,35 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         {
             // 可以在这里添加配置刷新逻辑，但为了性能考虑，我们只在按钮点击时检测
             _logger.LogDebug("Window activated, plugin configurations will be checked on button click");
+        }
+    }
+
+    private void BlenderRepairToolWindow_Closed(object sender, WindowEventArgs args)
+    {
+        try
+        {
+            this.Activated -= BlenderRepairToolWindow_Activated;
+            this.Closed -= BlenderRepairToolWindow_Closed;
+
+            if (_localTimeTimer != null)
+            {
+                _localTimeTimer.Stop();
+                _localTimeTimer.Tick -= LocalTimeTimer_Tick;
+            }
+            if (_accurateTimeTimer != null)
+            {
+                _accurateTimeTimer.Stop();
+                _accurateTimeTimer.Tick -= AccurateTimeTimer_Tick;
+            }
+            if (_autoSyncTimer != null)
+            {
+                _autoSyncTimer.Stop();
+                _autoSyncTimer.Tick -= AutoSyncTimer_Tick;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while cleaning up BlenderRepairToolWindow");
         }
     }
 
@@ -90,13 +120,13 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         // Initialize local time display timer
         _localTimeTimer = new DispatcherTimer();
         _localTimeTimer.Interval = TimeSpan.FromSeconds(1);
-        _localTimeTimer.Tick += (s, e) => UpdateLocalTimeDisplay();
+        _localTimeTimer.Tick += LocalTimeTimer_Tick;
         _localTimeTimer.Start();
 
         // Initialize accurate time display timer (updates every second based on last network time)
         _accurateTimeTimer = new DispatcherTimer();
         _accurateTimeTimer.Interval = TimeSpan.FromSeconds(1);
-        _accurateTimeTimer.Tick += (s, e) => UpdateAccurateTimeDisplay();
+        _accurateTimeTimer.Tick += AccurateTimeTimer_Tick;
         _accurateTimeTimer.Start();
 
         // Initialize auto sync timer
@@ -106,6 +136,16 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
         UpdateLocalTimeDisplay();
         _ = RefreshAccurateTimeAsync(); // Initial load
+    }
+
+    private void LocalTimeTimer_Tick(object? sender, object e)
+    {
+        UpdateLocalTimeDisplay();
+    }
+
+    private void AccurateTimeTimer_Tick(object? sender, object e)
+    {
+        UpdateAccurateTimeDisplay();
     }
 
     private void UpdateLocalTimeDisplay()
@@ -125,7 +165,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         }
         else
         {
-            TextBlock_AccurateTime.Text = "Loading...";
+            TextBlock_AccurateTime.Text = Lang.DiagnosticTool_Loading;
         }
     }
 

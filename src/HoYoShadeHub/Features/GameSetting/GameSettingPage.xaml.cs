@@ -379,11 +379,19 @@ public sealed partial class GameSettingPage : PageBase
     }
 
 
+    private bool _isOpeningHDRSettingDialog;
+
     [RelayCommand]
     private async Task OpenGenshinHDRLumianceSettingWindow()
     {
+        if (_isOpeningHDRSettingDialog)
+        {
+            return;
+        }
+
         try
         {
+            _isOpeningHDRSettingDialog = true;
             WeakReferenceMessenger.Default.Send(new MainWindowDragRectAdaptToGameIconMessage(true));
             await new GenshinHDRLuminanceSettingDialog { XamlRoot = this.XamlRoot, CurrentGameBiz = this.CurrentGameBiz }.ShowAsync();
         }
@@ -393,6 +401,7 @@ public sealed partial class GameSettingPage : PageBase
         }
         finally
         {
+            _isOpeningHDRSettingDialog = false;
             WeakReferenceMessenger.Default.Send(new MainWindowDragRectAdaptToGameIconMessage());
         }
     }
