@@ -2622,4 +2622,10 @@
   <data name="ExMBlenderRepairTool_SelectTraceEndpoint" xml:space="preserve">
     <value>選擇追蹤端點</value>
   </data>
+  <data name="UninstallShadeDialog_UninstallFailed" xml:space="preserve">
+    <value>解除安裝失敗: {0}</value>
+  </data>
+  <data name="ImageBatchConvertWindow_Import" xml:space="preserve">
+    <value>匯入</value>
+  </data>
 </root>

@@ -33,7 +33,7 @@ public partial class GameInstallPathItemDialog : ObservableObject
     protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (e.PropertyName == nameof(IsSelected) && _isSelected)
+        if (e.PropertyName == nameof(IsSelected) && IsSelected)
         {
             _dialog.OnPathSelected(this);
         }
@@ -42,7 +42,7 @@ public partial class GameInstallPathItemDialog : ObservableObject
     [RelayCommand]
     private async Task OpenFolderAsync()
     {
-        var fullPath = GameLauncherService.GetFullPathIfRelativePath(_path);
+        var fullPath = GameLauncherService.GetFullPathIfRelativePath(Path);
         if (Directory.Exists(fullPath))
         {
             await Launcher.LaunchUriAsync(new Uri(fullPath)).AsTask();

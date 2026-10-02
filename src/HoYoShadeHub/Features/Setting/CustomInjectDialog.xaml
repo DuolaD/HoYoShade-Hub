@@ -34,6 +34,7 @@
             <Button Click="{x:Bind OnCancelClick}" Content="{x:Bind lang:Lang.CustomInjectDialog_Cancel}" />
             <Button Click="{x:Bind OnInjectClick}"
                     Content="{x:Bind lang:Lang.CustomInjectDialog_Inject}"
+                    IsEnabled="{x:Bind HasProcessName, Mode=OneWay}"
                     Style="{ThemeResource AccentButtonStyle}" />
         </StackPanel>
     </Grid>

@@ -681,6 +681,20 @@ public sealed partial class ScreenshotPage : PageBase
     {
         try
         {
+            var dialog = new ContentDialog
+            {
+                Title = Lang.Common_Delete,
+                Content = Lang.ImageViewWindow2_DeleteImageFile,
+                PrimaryButtonText = Lang.LauncherPage_ConfirmDelete,
+                CloseButtonText = Lang.Common_Cancel,
+                DefaultButton = ContentDialogButton.Close,
+                XamlRoot = this.XamlRoot,
+            };
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+            {
+                return;
+            }
+
             if (GridView_Images.SelectionMode is ListViewSelectionMode.Multiple && GridView_Images.SelectedItems.Count > 0)
             {
                 var list = GridView_Images.SelectedItems.Cast<ScreenshotItem>().ToList();
@@ -728,7 +742,7 @@ public sealed partial class ScreenshotPage : PageBase
         }
         catch (UnauthorizedAccessException ex)
         {
-            // TODO 使用 RPC 删除
+            // TODO: 使用 RPC 删除
             InAppToast.MainWindow?.Warning(Lang.ImageViewWindow2_UnableToDeleteTheFile, Lang.ImageViewWindow2_InsufficientPermissionsOrTheFileIsInUse, 5000);
             _logger.LogError(ex, "Failed to delete image file");
         }

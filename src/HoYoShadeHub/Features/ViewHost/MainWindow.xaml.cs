@@ -367,12 +367,19 @@ public sealed partial class MainWindow : WindowEx
 
 
 
+    private bool _isExiting;
+
     private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
     {
         try
         {
+            if (_isExiting)
+            {
+                return;
+            }
             if (!_mainViewLoaded)
             {
+                _isExiting = true;
                 App.Current.Exit();
                 return;
             }
@@ -388,7 +395,17 @@ public sealed partial class MainWindow : WindowEx
                     DefaultButton = ContentDialogButton.Primary,
                     XamlRoot = Content.XamlRoot,
                 };
-                var result = await dialog.ShowAsync();
+                ContentDialogResult result;
+                try
+                {
+                    result = await dialog.ShowAsync();
+                }
+                catch (COMException)
+                {
+                    // If another ContentDialog is already open, default to Hide to avoid UI lockup
+                    Hide();
+                    return;
+                }
                 if (result is not ContentDialogResult.Primary)
                 {
                     return;
@@ -402,6 +419,8 @@ public sealed partial class MainWindow : WindowEx
             }
             if (option is MainWindowCloseOption.Exit)
             {
+                _isExiting = true;
+                AppWindow.Closing -= AppWindow_Closing;
                 Close();
                 AppInstance.GetCurrent().UnregisterKey();
                 Task backupTask = Task.Run(DatabaseService.AutoBackupToAppDataLocal);

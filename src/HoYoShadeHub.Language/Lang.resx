@@ -2622,4 +2622,10 @@ When the content provider supports ECH, the program will preferentially attempt 
   <data name="ExMBlenderRepairTool_SelectTraceEndpoint" xml:space="preserve">
     <value>Select Trace Endpoint</value>
   </data>
+  <data name="UninstallShadeDialog_UninstallFailed" xml:space="preserve">
+    <value>Uninstall failed: {0}</value>
+  </data>
+  <data name="ImageBatchConvertWindow_Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
 </root>

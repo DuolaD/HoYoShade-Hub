@@ -7316,5 +7316,15 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("ExMBlenderRepairTool_SelectTraceEndpoint", resourceCulture);
             }
         }
+        public static string UninstallShadeDialog_UninstallFailed {
+            get {
+                return ResourceManager.GetString("UninstallShadeDialog_UninstallFailed", resourceCulture);
+            }
+        }
+        public static string ImageBatchConvertWindow_Import {
+            get {
+                return ResourceManager.GetString("ImageBatchConvertWindow_Import", resourceCulture);
+            }
+        }
     }
 }

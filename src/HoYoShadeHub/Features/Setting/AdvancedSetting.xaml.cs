@@ -46,7 +46,7 @@ public sealed partial class AdvancedSetting : PageBase
 
 
     [ObservableProperty]
-    public bool _EnableUrlProtocol;
+    private bool _enableUrlProtocol;
 
 
     partial void OnEnableUrlProtocolChanged(bool value)
@@ -76,7 +76,7 @@ public sealed partial class AdvancedSetting : PageBase
         {
             var status = await Launcher.QueryUriSupportAsync(new Uri("hoyoshadehub://"), LaunchQuerySupportType.Uri);
 #pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
-            _EnableUrlProtocol = status is LaunchQuerySupportStatus.Available;
+            _enableUrlProtocol = status is LaunchQuerySupportStatus.Available;
 #pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
             OnPropertyChanged(nameof(EnableUrlProtocol));
         }

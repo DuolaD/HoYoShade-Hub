@@ -525,7 +525,7 @@ public sealed partial class ShadeBackupRestoreDialog : ContentDialog
 
     public bool HasErrorMessage => !string.IsNullOrWhiteSpace(StatusErrorMessage);
 
-    public string CloseButtonText => (IsBackupSuccess || IsRestoreSuccess)
+    public new string CloseButtonText => (IsBackupSuccess || IsRestoreSuccess)
         ? Lang.BackupRestoreDialog_Close
         : Lang.BackupRestoreDialog_Cancel;
 

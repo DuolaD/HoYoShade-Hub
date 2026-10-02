@@ -31,7 +31,7 @@
                        TextWrapping="Wrap" />
         </StackPanel>
 
-        <!--  ������ʾ  -->
+        <!--  进度提示  -->
         <StackPanel Grid.Row="1"
                     Margin="0,16,0,0"
                     Spacing="8"
@@ -50,19 +50,19 @@
             </Grid>
         </StackPanel>
 
-        <!--  ��ť��  -->
+        <!--  按钮区  -->
         <StackPanel Grid.Row="2"
                     Margin="0,24,0,0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Spacing="12">
-            <!--  ȡ��/��ɰ�ť  -->
+            <!--  取消/完成按钮  -->
             <Button MinWidth="120"
                     Command="{x:Bind CancelCommand}"
                     Content="{x:Bind CancelButtonText}"
                     IsEnabled="{x:Bind CanCancel}" />
 
-            <!--  ж��/ȷ��ж�ذ�ť  -->
+            <!--  卸载/确认卸载按钮  -->
             <Button MinWidth="120"
                     Command="{x:Bind UninstallCommand}"
                     Content="{x:Bind UninstallButtonText, Mode=OneWay}"
@@ -77,7 +77,7 @@
                 </Button.Style>
             </Button>
             
-            <!--  ȷ��ж�ذ�ť����ɫ�����ڵڶ���ȷ��ʱ��ʾ��  -->
+            <!--  确认卸载按钮（红色，仅在第二次确认时显示）  -->
             <Button MinWidth="120"
                     x:Name="ConfirmUninstallButton"
                     Command="{x:Bind UninstallCommand}"

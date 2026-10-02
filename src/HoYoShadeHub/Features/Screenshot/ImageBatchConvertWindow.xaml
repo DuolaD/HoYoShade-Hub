@@ -34,7 +34,7 @@
                 <Button x:Name="Button_Import"
                         VerticalAlignment="Center"
                         Click="Button_Import_Click"
-                        Content="{x:Bind lang:Lang.GachaImportAndExportWindow_Import}" />
+                        Content="{x:Bind lang:Lang.ImageBatchConvertWindow_Import}" />
                 <!--  输出格式  -->
                 <ComboBox x:Name="ComboBox_OutputFormat"
                           MinWidth="100"

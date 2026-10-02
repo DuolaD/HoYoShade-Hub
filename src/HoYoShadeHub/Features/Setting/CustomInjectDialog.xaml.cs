@@ -1,11 +1,17 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace HoYoShadeHub.Features.Setting;
 
+[INotifyPropertyChanged]
 public sealed partial class CustomInjectDialog : ContentDialog
 {
-    public string ProcessName { get; set; } = "";
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasProcessName))]
+    private string _processName = "";
+
+    public bool HasProcessName => !string.IsNullOrWhiteSpace(ProcessName);
 
     public ContentDialogResult Result { get; private set; } = ContentDialogResult.None;
 
@@ -16,6 +22,10 @@ public sealed partial class CustomInjectDialog : ContentDialog
 
     private void OnInjectClick(object sender, RoutedEventArgs e)
     {
+        if (!HasProcessName)
+        {
+            return;
+        }
         Result = ContentDialogResult.Primary;
         Hide();
     }

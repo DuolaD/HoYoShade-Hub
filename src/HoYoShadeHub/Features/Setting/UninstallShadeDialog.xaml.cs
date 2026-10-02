@@ -103,7 +103,7 @@ public sealed partial class UninstallShadeDialog : ContentDialog
         {
             _logger.LogInformation("UninstallAsync called, IsFirstConfirmation={IsFirstConfirmation}", IsFirstConfirmation);
             
-            // ��һ�ε����ȷ�ϲ���
+            // 第一次点击：确认操作
             if (IsFirstConfirmation)
             {
                 _logger.LogInformation("First confirmation, changing IsFirstConfirmation to false");
@@ -145,7 +145,7 @@ public sealed partial class UninstallShadeDialog : ContentDialog
         catch (Exception ex)
         {
             _logger.LogError(ex, "Uninstall {shade} failed", ShadeName);
-            StatusMessage = $"卸载失败: {ex.Message}";
+            StatusMessage = string.Format(Lang.UninstallShadeDialog_UninstallFailed, ex.Message);
             IsUninstalling = false;
             CanUninstall = true;
             IsIndeterminate = false;

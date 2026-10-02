@@ -439,34 +439,34 @@ public sealed partial class ReShadeDownloadView : UserControl
             IsOpenHoYoShadeInstalled = HasContent(openHoYoShadeFolder);
 
             // Logic: Select installation target based on which frameworks are installed
-            // - If only HoYoShade is installed �� select HoYoShade (install shaders to the installed framework)
-            // - If only OpenHoYoShade is installed �� select OpenHoYoShade (install shaders to the installed framework)
-            // - If both are installed �� default to HoYoShade, all options available
-            // - If neither is installed �� default to HoYoShade (should not happen in this page)
+            // - If only HoYoShade is installed -> select HoYoShade (install shaders to the installed framework)
+            // - If only OpenHoYoShade is installed -> select OpenHoYoShade (install shaders to the installed framework)
+            // - If both are installed -> default to HoYoShade, all options available
+            // - If neither is installed -> default to HoYoShade (should not happen in this page)
             if (IsHoYoShadeInstalled && !IsOpenHoYoShadeInstalled)
             {
-                // Only HoYoShade installed �� select HoYoShade
+                // Only HoYoShade installed -> select HoYoShade
                 IsInstallToHoYoShadeOnly = true;
                 IsInstallToOpenHoYoShadeOnly = false;
                 IsInstallToBoth = false;
             }
             else if (!IsHoYoShadeInstalled && IsOpenHoYoShadeInstalled)
             {
-                // Only OpenHoYoShade installed �� select OpenHoYoShade
+                // Only OpenHoYoShade installed -> select OpenHoYoShade
                 IsInstallToHoYoShadeOnly = false;
                 IsInstallToOpenHoYoShadeOnly = true;
                 IsInstallToBoth = false;
             }
             else if (IsHoYoShadeInstalled && IsOpenHoYoShadeInstalled)
             {
-                // Both installed �� default to HoYoShade, but all options available
+                // Both installed -> default to HoYoShade, but all options available
                 IsInstallToHoYoShadeOnly = true;
                 IsInstallToOpenHoYoShadeOnly = false;
                 IsInstallToBoth = false;
             }
             else
             {
-                // Neither installed �� default to HoYoShade (fallback, shouldn't happen)
+                // Neither installed -> default to HoYoShade (fallback, shouldn't happen)
                 IsInstallToHoYoShadeOnly = true;
                 IsInstallToOpenHoYoShadeOnly = false;
                 IsInstallToBoth = false;

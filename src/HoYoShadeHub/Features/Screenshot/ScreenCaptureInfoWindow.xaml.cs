@@ -493,11 +493,21 @@ public sealed partial class ScreenCaptureInfoWindow : WindowEx
             {
                 return;
             }
-            if (_imageViewWindow2?.AppWindow is null)
+            if (_imageViewWindow2 is null)
             {
                 _imageViewWindow2 = new();
+                _imageViewWindow2.Closed += (_, _) => _imageViewWindow2 = null;
             }
-            await _imageViewWindow2.ShowWindowAsync(AppWindow.Id, _lastFile, true);
+            try
+            {
+                await _imageViewWindow2.ShowWindowAsync(AppWindow.Id, _lastFile, true);
+            }
+            catch
+            {
+                _imageViewWindow2 = new();
+                _imageViewWindow2.Closed += (_, _) => _imageViewWindow2 = null;
+                await _imageViewWindow2.ShowWindowAsync(AppWindow.Id, _lastFile, true);
+            }
             if (_finishedImageCount == _captureImageCount)
             {
                 await HideWindowAsync(_openImageCancellationToken);

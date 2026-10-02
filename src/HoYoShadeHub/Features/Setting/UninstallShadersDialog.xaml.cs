@@ -136,7 +136,7 @@ public sealed partial class UninstallShadersDialog : ContentDialog
         catch (Exception ex)
         {
             _logger.LogError(ex, "Uninstall shaders for {shade} failed", ShadeName);
-            StatusMessage = $"\u5378\u8F7D\u5931\u8D25: {ex.Message}";
+            StatusMessage = string.Format(Lang.UninstallShadeDialog_UninstallFailed, ex.Message);
             IsUninstalling = false;
             CanUninstall = true;
             IsIndeterminate = false;

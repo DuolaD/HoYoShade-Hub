@@ -1695,7 +1695,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     }
     
     /// <summary>
-    /// �����Ѱ�װ��HoYoShade��OpenHoYoShade�汾
+    /// 加载已安装的 HoYoShade 和 OpenHoYoShade 版本
     /// </summary>
     private async Task LoadInstalledVersionsAsync()
     {
@@ -1716,16 +1716,16 @@ public sealed partial class HoYoShadeDownloadView : UserControl
     }
     
     /// <summary>
-    /// �Ƚ������汾�� (ʹ�� NuGetVersion �ṩ��ҵ�����廯�汾�Ƚ�)
-    /// ֧�����б�׼���廯�汾��ʽ������:
-    /// - ��׼�汾: 3.0.1, 3.1.0
-    /// - Ԥ�����汾: 3.0.0-Beta.1, 3.0.0-Alpha.2, 3.0.0-RC.1
-    /// - ������Ԫ����: 3.0.0+build.123
-    /// - ��ϸ�ʽ: 3.0.0-Beta.1+build.456
+    /// 比较两个版本号 (使用 NuGetVersion 工业级语义化版本比较)
+    /// 支持所有标准语义化版本格式，包括:
+    /// - 标准版本: 3.0.1, 3.1.0
+    /// - 预发布版本: 3.0.0-Beta.1, 3.0.0-Alpha.2, 3.0.0-RC.1
+    /// - 构建元数据: 3.0.0+build.123
+    /// - 混合格式: 3.0.0-Beta.1+build.456
     /// </summary>
-    /// <param name="version1">�汾1 (����: "V3.0.1", "V3.0.0-Beta.1")</param>
-    /// <param name="version2">�汾2 (����: "V3.1.0", "V3.0.0-Beta.3")</param>
-    /// <returns>���version1 > version2����1,���version1 < version2����-1,�����ȷ���0,�޷��ȽϷ���null</returns>
+    /// <param name="version1">版本1 (例如: "V3.0.1", "V3.0.0-Beta.1")</param>
+    /// <param name="version2">版本2 (例如: "V3.1.0", "V3.0.0-Beta.3")</param>
+    /// <returns>若version1 > version2返回1, 若version1 < version2返回-1, 两者相等返回0, 无法比较返回null</returns>
     private int? CompareVersions(string? version1, string? version2)
     {
         if (string.IsNullOrWhiteSpace(version1) || string.IsNullOrWhiteSpace(version2))
@@ -1735,16 +1735,16 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         
         try
         {
-            // �Ƴ� 'v' �� 'V' ǰ׺
+            // 移除 'v' 和 'V' 前缀
             string v1 = version1.TrimStart('v', 'V').Trim();
             string v2 = version2.TrimStart('v', 'V').Trim();
             
-            // ʹ�� NuGetVersion �����汾��
-            // NuGetVersion ��ȫ֧�����廯�汾�淶 (SemVer 2.0):
-            // - ��ȷ�������汾���ΰ汾���޶��汾�����ֱȽ�
-            // - Ԥ������ʶ���ֵ�������ֱȽ� (Beta.1 < Beta.2 < Beta.10)
-            // - ��ʽ�� > Ԥ���� (3.0.0 > 3.0.0-Beta.1)
-            // - Ԥ������ʶ�����ȼ� (Alpha < Beta < RC < ��ʽ��)
+            // 使用 NuGetVersion 解析版本号
+            // NuGetVersion 完全支持语义化版本规范 (SemVer 2.0):
+            // - 正确处理主版本、次版本、修订版本数字比较
+            // - 预发布标识符的点分隔数字比较 (Beta.1 < Beta.2 < Beta.10)
+            // - 正式版 > 预发布 (3.0.0 > 3.0.0-Beta.1)
+            // - 预发布标识符优先级 (Alpha < Beta < RC < 正式版)
             if (NuGetVersion.TryParse(v1, out var nugetV1) && NuGetVersion.TryParse(v2, out var nugetV2))
             {
                 int result = nugetV1.CompareTo(nugetV2);
@@ -1754,7 +1754,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             
             Debug.WriteLine($"CompareVersions: NuGetVersion parse failed for '{version1}' or '{version2}', falling back to manual parse");
             
-            // ��� NuGetVersion �޷�����,���˵��ֶ����� (������Ϊ��ȫ��)
+            // 若 NuGetVersion 无法解析，回退到手动解析 (防御性兜底)
             var parts1 = v1.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
             var parts2 = v2.Split('.').Select(p => int.TryParse(p, out int n) ? n : 0).ToArray();
             

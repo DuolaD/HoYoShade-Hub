@@ -1288,7 +1288,7 @@ public sealed partial class DiagnosticToolWindow : WindowEx
                         }
                         else
                         {
-                            provider.LatencyText = "Timeout";
+                            provider.LatencyText = Lang.FileSettingPage_ServerLatencyTimeout;
                             provider.LatencyColor = new SolidColorBrush(Microsoft.UI.Colors.Red);
                         }
                     });
