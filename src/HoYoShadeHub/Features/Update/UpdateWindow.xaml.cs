@@ -229,50 +229,57 @@ public sealed partial class UpdateWindow : WindowEx
 
     private async void RootGrid_Loaded(object sender, RoutedEventArgs e)
     {
-        // Check if this is a framework update and adjust UI accordingly
-        if (NewVersion?.DisableAutoUpdate ?? false)
+        try
         {
-            // Hide Hub update checkboxes, show framework update checkbox
-            CheckBox_HubUpdate1.Visibility = Visibility.Collapsed;
-            CheckBox_HubUpdate2.Visibility = Visibility.Collapsed;
-            CheckBox_FrameworkUpdate.Visibility = Visibility.Visible;
-            
-            // Hide architecture info for framework updates
-            TextBlock_ArchLabel.Visibility = Visibility.Collapsed;
-            TextBlock_ArchValue.Visibility = Visibility.Collapsed;
-            
-            // Hide download server selection for framework updates
-            Grid_DownloadServer.Visibility = Visibility.Collapsed;
-            
-            // Fetch and display GitHub release time
-            await FetchAndDisplayReleaseTimeAsync();
-        }
-        else
-        {
-            // Show Hub update checkboxes, hide framework checkbox
-            CheckBox_HubUpdate1.Visibility = Visibility.Visible;
-            CheckBox_HubUpdate2.Visibility = Visibility.Visible;
-            CheckBox_FrameworkUpdate.Visibility = Visibility.Collapsed;
-            
-            // Show architecture info for Hub updates
-            TextBlock_ArchLabel.Visibility = Visibility.Visible;
-            TextBlock_ArchValue.Visibility = Visibility.Visible;
-            
-            // Show download server selection for Hub updates
-            Grid_DownloadServer.Visibility = Visibility.Visible;
-            
-            // Display build time for Hub updates
-            if (NewVersion != null)
+            // Check if this is a framework update and adjust UI accordingly
+            if (NewVersion?.DisableAutoUpdate ?? false)
             {
-                ReleaseTimeText = NewVersion.BuildTime.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                // Hide Hub update checkboxes, show framework update checkbox
+                CheckBox_HubUpdate1.Visibility = Visibility.Collapsed;
+                CheckBox_HubUpdate2.Visibility = Visibility.Collapsed;
+                CheckBox_FrameworkUpdate.Visibility = Visibility.Visible;
+                
+                // Hide architecture info for framework updates
+                TextBlock_ArchLabel.Visibility = Visibility.Collapsed;
+                TextBlock_ArchValue.Visibility = Visibility.Collapsed;
+                
+                // Hide download server selection for framework updates
+                Grid_DownloadServer.Visibility = Visibility.Collapsed;
+                
+                // Fetch and display GitHub release time
+                await FetchAndDisplayReleaseTimeAsync();
             }
+            else
+            {
+                // Show Hub update checkboxes, hide framework checkbox
+                CheckBox_HubUpdate1.Visibility = Visibility.Visible;
+                CheckBox_HubUpdate2.Visibility = Visibility.Visible;
+                CheckBox_FrameworkUpdate.Visibility = Visibility.Collapsed;
+                
+                // Show architecture info for Hub updates
+                TextBlock_ArchLabel.Visibility = Visibility.Visible;
+                TextBlock_ArchValue.Visibility = Visibility.Visible;
+                
+                // Show download server selection for Hub updates
+                Grid_DownloadServer.Visibility = Visibility.Visible;
+                
+                // Display build time for Hub updates
+                if (NewVersion != null)
+                {
+                    ReleaseTimeText = NewVersion.BuildTime.LocalDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                }
+            }
+            
+            if (UpdateService.UpdateFinished)
+            {
+                Finish(skipRestart: true);
+            }
+            _ = LoadUpdateContentAsync();
         }
-        
-        if (UpdateService.UpdateFinished)
+        catch (Exception ex)
         {
-            Finish(skipRestart: true);
+            _logger.LogError(ex, "Failed in RootGrid_Loaded of UpdateWindow");
         }
-        _ = LoadUpdateContentAsync();
     }
 
 
@@ -752,21 +759,28 @@ public sealed partial class UpdateWindow : WindowEx
 
     private async void Finish(bool skipRestart = false)
     {
-        AppConfig.IgnoreVersion = null;
-        Button_UpdateNow.Visibility = Visibility.Collapsed;
-        Button_Restart.Visibility = Visibility.Visible;
-        AppConfig.GetService<RpcService>().KeepRunningOnExited(false, noLongerChange: true);
-        
-        // If this was a framework update, update the manifest and notify other views
-        if (NewVersion?.DisableAutoUpdate ?? false)
+        try
         {
-            await UpdateFrameworkVersionManifestAsync();
-            WeakReferenceMessenger.Default.Send(new HoYoShadeInstallationChangedMessage());
+            AppConfig.IgnoreVersion = null;
+            Button_UpdateNow.Visibility = Visibility.Collapsed;
+            Button_Restart.Visibility = Visibility.Visible;
+            AppConfig.GetService<RpcService>().KeepRunningOnExited(false, noLongerChange: true);
+            
+            // If this was a framework update, update the manifest and notify other views
+            if (NewVersion?.DisableAutoUpdate ?? false)
+            {
+                await UpdateFrameworkVersionManifestAsync();
+                WeakReferenceMessenger.Default.Send(new HoYoShadeInstallationChangedMessage());
+            }
+            
+            if (AutoRestartWhenUpdateFinished && !skipRestart)
+            {
+                Restart();
+            }
         }
-        
-        if (AutoRestartWhenUpdateFinished && !skipRestart)
+        catch (Exception ex)
         {
-            Restart();
+            _logger.LogError(ex, "Failed in Finish of UpdateWindow");
         }
     }
 

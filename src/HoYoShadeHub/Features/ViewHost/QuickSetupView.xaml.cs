@@ -63,14 +63,20 @@ public sealed partial class QuickSetupView : UserControl
         this.InitializeComponent();
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         _updateService = new HoYoShadeUpdateService(_versionService);
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
-        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
-        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
+        RegisterMessengers();
         this.Unloaded += (s, e) =>
         {
             WeakReferenceMessenger.Default.UnregisterAll(this);
             _cancellationTokenSource?.Cancel();
         };
+    }
+
+    private void RegisterMessengers()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
+        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
+        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
     }
 
     [ObservableProperty]
@@ -149,11 +155,19 @@ public sealed partial class QuickSetupView : UserControl
 
     private async void Grid_Loaded(object sender, RoutedEventArgs e)
     {
-        HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
-        InitializeLanguageSelector();
-        UpdateDownloadServers();
-        await LoadInstalledVersionsAsync();
-        CheckInstallationStatus();
+        try
+        {
+            RegisterMessengers();
+            HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
+            InitializeLanguageSelector();
+            UpdateDownloadServers();
+            await LoadInstalledVersionsAsync();
+            CheckInstallationStatus();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to initialize QuickSetupView");
+        }
     }
 
     private void OnLanguageChanged()

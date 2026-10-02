@@ -58,6 +58,7 @@ public sealed partial class ImageViewWindow2 : Window
         InitializeWindow();
         InitializeResource();
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) => this.Bindings.Update());
+        this.Closed += ImageViewWindow2_Closed;
     }
 
 
@@ -92,23 +93,49 @@ public sealed partial class ImageViewWindow2 : Window
     }
 
 
+    private bool _isDisposed;
+
+    private void ImageViewWindow2_Closed(object sender, WindowEventArgs args)
+    {
+        this.Closed -= ImageViewWindow2_Closed;
+        CleanupResources();
+    }
+
     private void RootGrid_Unloaded(object sender, RoutedEventArgs e)
     {
+        CleanupResources();
+    }
+
+    private void CleanupResources()
+    {
+        if (_isDisposed)
+        {
+            return;
+        }
+        _isDisposed = true;
+
         try
         {
             WeakReferenceMessenger.Default.UnregisterAll(this);
             _loadImageCts?.Cancel();
             _loadImageCts?.Dispose();
-            CanvasSwapChainPanel_Image.SwapChain = null;
-            CanvasSwapChainPanel_Image.RemoveFromVisualTree();
-            CanvasSwapChainPanel_Image = null;
+            _loadImageCts = null;
+            if (CanvasSwapChainPanel_Image != null)
+            {
+                CanvasSwapChainPanel_Image.SwapChain = null;
+                CanvasSwapChainPanel_Image.RemoveFromVisualTree();
+                CanvasSwapChainPanel_Image = null;
+            }
             _canvasSwapChain?.Dispose();
             _canvasSwapChain = null!;
             _sourceBitmap?.Dispose();
             _sourceBitmap = null!;
-            _displayInformation?.AdvancedColorInfoChanged -= DisplayInformation_AdvancedColorInfoChanged;
-            _displayInformation?.Dispose();
-            _displayInformation = null!;
+            if (_displayInformation != null)
+            {
+                _displayInformation.AdvancedColorInfoChanged -= DisplayInformation_AdvancedColorInfoChanged;
+                _displayInformation.Dispose();
+                _displayInformation = null!;
+            }
             ScreenshotCollection = null;
             CurrentScreenshot = null;
 
@@ -153,7 +180,10 @@ public sealed partial class ImageViewWindow2 : Window
             Button_ExportImage.Click -= Button_ExportImage_Click;
             Button_OpenFiles.Click -= MenuFlyoutItem_OpenNewFile_Click;
         }
-        catch { }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to cleanup ImageViewWindow2 resources");
+        }
     }
 
 

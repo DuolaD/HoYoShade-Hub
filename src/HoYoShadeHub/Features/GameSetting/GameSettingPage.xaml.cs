@@ -65,8 +65,15 @@ public sealed partial class GameSettingPage : PageBase
 
     protected override async void OnLoaded()
     {
-        InitializeResolutionItem();
-        await InitializeGameSettingAsync();
+        try
+        {
+            InitializeResolutionItem();
+            await InitializeGameSettingAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to initialize game setting page");
+        }
     }
 
 
@@ -235,9 +242,13 @@ public sealed partial class GameSettingPage : PageBase
                 IsGraphicsSettingEnable = true;
                 StackPanel_GenshinHDR.Visibility = Visibility.Visible;
                 EnableGenshinHDR = AppConfig.EnableGenshinHDR;
-                _displayInformation = DisplayInformation.CreateForWindowId(this.XamlRoot.GetAppWindow().Id);
-                _displayInformation.AdvancedColorInfoChanged += _displayInformation_AdvancedColorInfoChanged;
-                UpdateHdrState(_displayInformation);
+                var appWindow = this.XamlRoot?.GetAppWindow();
+                if (appWindow != null)
+                {
+                    _displayInformation = DisplayInformation.CreateForWindowId(appWindow.Id);
+                    _displayInformation.AdvancedColorInfoChanged += _displayInformation_AdvancedColorInfoChanged;
+                    UpdateHdrState(_displayInformation);
+                }
             }
             StartArgument = AppConfig.GetStartArgument(CurrentGameBiz);
             UsePopupWindow = AppConfig.GetUsePopupWindow(CurrentGameBiz);

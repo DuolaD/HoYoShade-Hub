@@ -991,29 +991,36 @@ public sealed partial class DiagnosticToolWindow : WindowEx
 
     private async void Toggle_EnableNetwork_Toggled(object sender, RoutedEventArgs e)
     {
-        bool isEnabled = Toggle_EnableNetwork.IsOn;
-        AppConfig.EnableDiagnosticNetworkInfo = isEnabled;
-        EnableNetworkInfo = isEnabled;
-
-        if (isEnabled)
+        try
         {
-            // If network info is not yet fetched or was empty, probe it now
-            if (_currentReport != null && (!_currentReport.Network.IsEnabled || (string.IsNullOrWhiteSpace(_currentReport.Network.Ipv4) && string.IsNullOrWhiteSpace(_currentReport.Network.SuccessfulTier))))
+            bool isEnabled = Toggle_EnableNetwork.IsOn;
+            AppConfig.EnableDiagnosticNetworkInfo = isEnabled;
+            EnableNetworkInfo = isEnabled;
+
+            if (isEnabled)
             {
-                await FetchNetworkInfoAsync();
+                // If network info is not yet fetched or was empty, probe it now
+                if (_currentReport != null && (_currentReport.Network == null || !_currentReport.Network.IsEnabled || (string.IsNullOrWhiteSpace(_currentReport.Network.Ipv4) && string.IsNullOrWhiteSpace(_currentReport.Network.SuccessfulTier))))
+                {
+                    await FetchNetworkInfoAsync();
+                }
+                else if (_currentReport?.Network != null)
+                {
+                    UpdateNetworkCardDisplays(_currentReport.Network);
+                    ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+                }
             }
-            else if (_currentReport != null)
+            else
             {
-                UpdateNetworkCardDisplays(_currentReport.Network);
-                ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+                if (_currentReport != null)
+                {
+                    ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
+                }
             }
         }
-        else
+        catch (Exception ex)
         {
-            if (_currentReport != null)
-            {
-                ReportText = DiagnosticService.ToFormattedText(_currentReport, MaskIpAddress);
-            }
+            _logger.LogError(ex, "Failed to toggle enable network");
         }
     }
 
@@ -1093,7 +1100,14 @@ public sealed partial class DiagnosticToolWindow : WindowEx
     private async void Toggle_MaskIp_Toggled(object sender, RoutedEventArgs e)
     {
         if (_suppressMaskToggledEvent) return;
-        await RequestSetMaskIpAddressAsync(Toggle_MaskIp.IsOn);
+        try
+        {
+            await RequestSetMaskIpAddressAsync(Toggle_MaskIp.IsOn);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed in Toggle_MaskIp_Toggled");
+        }
     }
 
     private async Task<bool> ShowUnmaskWarningDialogAsync()
@@ -1157,7 +1171,14 @@ public sealed partial class DiagnosticToolWindow : WindowEx
 
     private async void Button_ToggleIpMask_Click(object sender, RoutedEventArgs e)
     {
-        await RequestSetMaskIpAddressAsync(!MaskIpAddress);
+        try
+        {
+            await RequestSetMaskIpAddressAsync(!MaskIpAddress);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed in Button_ToggleIpMask_Click");
+        }
     }
 
     private async void Button_RetestNetwork_Click(object sender, RoutedEventArgs e)

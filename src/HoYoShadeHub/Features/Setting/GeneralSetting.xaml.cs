@@ -549,13 +549,27 @@ public sealed partial class GeneralSetting : PageBase
     /// <param name="args"></param>
     private async void Hyperlink_VisualEffects_Click(Microsoft.UI.Xaml.Documents.Hyperlink sender, Microsoft.UI.Xaml.Documents.HyperlinkClickEventArgs args)
     {
-        await Launcher.LaunchUriAsync(new Uri("ms-settings:easeofaccess-visualeffects"));
+        try
+        {
+            await Launcher.LaunchUriAsync(new Uri("ms-settings:easeofaccess-visualeffects"));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to launch easeofaccess-visualeffects settings");
+        }
     }
 
 
     private async void Button_RefreshNetworkStatus_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshNetworkStatusAsync();
+        try
+        {
+            await RefreshNetworkStatusAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to refresh network status");
+        }
     }
 
 

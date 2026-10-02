@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -35,6 +36,7 @@ namespace HoYoShadeHub.Features.GameSelector;
 [INotifyPropertyChanged]
 public sealed partial class GameSelector : UserControl
 {
+    private readonly ILogger<GameSelector> _logger = AppConfig.GetLogger<GameSelector>();
 
 
     public event EventHandler<(GameId, bool DoubleTapped)>? CurrentGameChanged;
@@ -123,16 +125,26 @@ public sealed partial class GameSelector : UserControl
 
     private async void GameSelector_Loaded(object sender, RoutedEventArgs e)
     {
-        this.XamlRoot.Changed -= XamlRoot_Changed;
-        this.XamlRoot.Changed += XamlRoot_Changed;
-        WeakReferenceMessenger.Default.UnregisterAll(this);
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, OnLanguageChanged);
-        WeakReferenceMessenger.Default.Register<MainWindowStateChangedMessage>(this, OnMainWindowStateChanged);
-        WeakReferenceMessenger.Default.Register<MainWindowDragRectAdaptToGameIconMessage>(this, OnMainWindowStateChanged);
-        WeakReferenceMessenger.Default.Register<GameInstallPathChangedMessage>(this, OnGameInstallPathChanged);
-        WeakReferenceMessenger.Default.Register<RemovableStorageDeviceChangedMessage>(this, OnRemovableStorageDeviceChanged);
-        await Task.Delay(1000);
-        await UpdateGameInfoAsync();
+        try
+        {
+            if (this.XamlRoot is not null)
+            {
+                this.XamlRoot.Changed -= XamlRoot_Changed;
+                this.XamlRoot.Changed += XamlRoot_Changed;
+            }
+            WeakReferenceMessenger.Default.UnregisterAll(this);
+            WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, OnLanguageChanged);
+            WeakReferenceMessenger.Default.Register<MainWindowStateChangedMessage>(this, OnMainWindowStateChanged);
+            WeakReferenceMessenger.Default.Register<MainWindowDragRectAdaptToGameIconMessage>(this, OnMainWindowStateChanged);
+            WeakReferenceMessenger.Default.Register<GameInstallPathChangedMessage>(this, OnGameInstallPathChanged);
+            WeakReferenceMessenger.Default.Register<RemovableStorageDeviceChangedMessage>(this, OnRemovableStorageDeviceChanged);
+            await Task.Delay(1000);
+            await UpdateGameInfoAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed in GameSelector_Loaded");
+        }
     }
 
 
@@ -167,8 +179,15 @@ public sealed partial class GameSelector : UserControl
 
     private async void OnLanguageChanged(object? _, LanguageChangedMessage __)
     {
-        this.Bindings.Update();
-        await UpdateGameInfoAsync();
+        try
+        {
+            this.Bindings.Update();
+            await UpdateGameInfoAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed in OnLanguageChanged");
+        }
     }
 
 
@@ -1283,7 +1302,14 @@ public sealed partial class GameSelector : UserControl
     /// </summary>
     private async void Expander_InstalledGamesActualSize_Expanding(Expander sender, ExpanderExpandingEventArgs args)
     {
-        await InitializeInstalledGamesAsync();
+        try
+        {
+            await InitializeInstalledGamesAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to initialize installed games on expand");
+        }
     }
 
 

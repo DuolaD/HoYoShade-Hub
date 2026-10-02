@@ -47,6 +47,7 @@ public sealed partial class ImageBatchConvertWindow : WindowEx
     {
         InitializeComponent();
         InitializeWindow();
+        this.Closed += ImageBatchConvertWindow_Closed;
     }
 
 
@@ -69,8 +70,27 @@ public sealed partial class ImageBatchConvertWindow : WindowEx
 
 
 
+    private bool _isDisposed;
+
+    private void ImageBatchConvertWindow_Closed(object sender, WindowEventArgs args)
+    {
+        this.Closed -= ImageBatchConvertWindow_Closed;
+        CleanupResources();
+    }
+
     private void RootGrid_Unloaded(object sender, RoutedEventArgs e)
     {
+        CleanupResources();
+    }
+
+    private void CleanupResources()
+    {
+        if (_isDisposed)
+        {
+            return;
+        }
+        _isDisposed = true;
+
         try
         {
             RootGrid.Loaded -= RootGrid_Loaded;
@@ -83,12 +103,17 @@ public sealed partial class ImageBatchConvertWindow : WindowEx
             ListView_ImageConvertItems.DragOver -= ListView_ImageConvertItems_DragOver;
             ListView_ImageConvertItems.Drop -= ListView_ImageConvertItems_Drop;
             _cancellationTokenSource?.Cancel();
-            _itemsDict.Clear();
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
+            _itemsDict?.Clear();
             _itemsDict = null!;
-            ImageConvertItems.Clear();
+            ImageConvertItems?.Clear();
             ImageConvertItems = null!;
         }
-        catch { }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to cleanup ImageBatchConvertWindow resources");
+        }
     }
 
 

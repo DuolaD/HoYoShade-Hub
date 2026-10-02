@@ -59,8 +59,7 @@ public sealed partial class HoYoShadeDownloadView : UserControl
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         _updateService = new HoYoShadeUpdateService(_versionService);
         
-        // Register for installation change messages from other views/windows
-        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
+        RegisterMessengers();
         
         Versions.CollectionChanged += (_, __) =>
         {
@@ -76,6 +75,14 @@ public sealed partial class HoYoShadeDownloadView : UserControl
             _downloadCts?.Cancel();
             _validationCts?.Cancel();
         };
+    }
+
+    private void RegisterMessengers()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
+        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
+        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
     }
 
     private void OnLanguageChanged()
@@ -340,24 +347,24 @@ public sealed partial class HoYoShadeDownloadView : UserControl
 
     private async void Grid_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
-        InitializeLanguageSelector();
-        // Unregister first to avoid duplicate registration crash if Grid_Loaded is called multiple times
-        WeakReferenceMessenger.Default.Unregister<LanguageChangedMessage>(this);
-        WeakReferenceMessenger.Default.Unregister<EchSettingChangedMessage>(this);
-        
-        // _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder); // Already initialized in constructor
-        await LoadInstalledVersionsAsync();
-        CheckInstallationStatus();
-        _ = LoadVersionsAsync();
-        // Notify dependencies
-        OnPropertyChanged(nameof(CanDownload));
-        OnPropertyChanged(nameof(CanImport));
-        ImportFromLocalCommand.NotifyCanExecuteChanged();
-        
-        // Register for language change messages
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
-        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
+        try
+        {
+            HoYoShadeHub.Features.Background.AccentColorHelper.ResetToDefaultLauncherAccentColor();
+            InitializeLanguageSelector();
+            RegisterMessengers();
+            
+            await LoadInstalledVersionsAsync();
+            CheckInstallationStatus();
+            _ = LoadVersionsAsync();
+            // Notify dependencies
+            OnPropertyChanged(nameof(CanDownload));
+            OnPropertyChanged(nameof(CanImport));
+            ImportFromLocalCommand.NotifyCanExecuteChanged();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to initialize HoYoShadeDownloadView");
+        }
     }
 
     private void InitializeLanguageSelector()

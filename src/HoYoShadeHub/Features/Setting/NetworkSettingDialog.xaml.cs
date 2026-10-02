@@ -62,11 +62,6 @@ public sealed partial class NetworkSettingDialog : ContentDialog
     {
         this.InitializeComponent();
         DohProviders = new ObservableCollection<DownloadServerItem>();
-        
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
-        {
-            OnPropertyChanged(nameof(LocationText));
-        });
 
         this.Loaded += NetworkSettingDialog_Loaded;
         this.Unloaded += NetworkSettingDialog_Unloaded;
@@ -74,6 +69,12 @@ public sealed partial class NetworkSettingDialog : ContentDialog
 
     private void NetworkSettingDialog_Loaded(object sender, RoutedEventArgs e)
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
+        {
+            OnPropertyChanged(nameof(LocationText));
+        });
+
         _originalDohEnabled = IsWelcomeMode ? InitialEnableDoh : AppConfig.EnableDoh;
         _originalDohProvider = IsWelcomeMode ? InitialDohProvider : AppConfig.DohProvider;
         _originalEchEnabled = IsWelcomeMode ? InitialEnableEch : AppConfig.EnableEch;
@@ -401,7 +402,14 @@ public sealed partial class NetworkSettingDialog : ContentDialog
 
     private async void Button_RefreshNetworkStatus_Click(object sender, RoutedEventArgs e)
     {
-        await RefreshNetworkStatusAsync();
+        try
+        {
+            await RefreshNetworkStatusAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to refresh network status");
+        }
     }
 
     /// <summary>
