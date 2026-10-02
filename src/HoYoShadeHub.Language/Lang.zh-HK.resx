@@ -1,46 +1,45 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  
   <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xs:element name="root" ns1:IsDataSet="true">
       <xs:complexType>
         <xs:choice maxOccurs="unbounded">
           <xs:element name="metadata">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
+                <xs:element name="value" type="xsd:string" minOccurs="0"/>
               </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
+              <xs:attribute name="name" use="required" type="xsd:string"/>
+              <xs:attribute name="type" type="xsd:string"/>
+              <xs:attribute name="mimetype" type="xsd:string"/>
+              <xs:attribute ref="xml:space"/>
             </xs:complexType>
           </xs:element>
           <xs:element name="assembly">
             <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
+              <xs:attribute name="alias" type="xsd:string"/>
+              <xs:attribute name="name" type="xsd:string"/>
             </xs:complexType>
           </xs:element>
           <xs:element name="data">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1"/>
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2"/>
               </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
-              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
-              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
-              <xs:attribute ref="xml:space" />
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1"/>
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3"/>
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4"/>
+              <xs:attribute ref="xml:space"/>
             </xs:complexType>
           </xs:element>
           <xs:element name="resheader">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1"/>
               </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" />
+              <xs:attribute name="name" type="xsd:string" use="required"/>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -101,7 +100,7 @@
   <data name="PresetsDialog_SeparateFolder_Tooltip" xml:space="preserve">
     <value>新版本預設會儲存在另一個資料夾，最安全嘅選擇。</value>
   </data>
-<data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
+  <data name="FileSettingPage_FrameworkRunningLatestVersion" xml:space="preserve">
         <value>而家已經係最新版本</value>
     </data>
   <data name="FileSettingPage_FrameworkUpToDateToastFormat" xml:space="preserve">
@@ -143,7 +142,7 @@
   <data name="SelectDirectoryPage_NoWritePermission" xml:space="preserve">
     <value>無寫入權限</value>
   </data>
-<data name="Common_Cancel" xml:space="preserve">
+  <data name="Common_Cancel" xml:space="preserve">
     <value>取消</value>
   </data>
   <data name="Common_Confirm" xml:space="preserve">
@@ -350,7 +349,7 @@
   <data name="UpdatePage_UpdateNow" xml:space="preserve">
     <value>依家更新</value>
   </data>
-<data name="UpdatePage_PreviewChannel" xml:space="preserve">
+  <data name="UpdatePage_PreviewChannel" xml:space="preserve">
     <value>預覽版</value>
   </data>
   <data name="UpdatePage_StableChannel" xml:space="preserve">
@@ -419,7 +418,7 @@
   <data name="ImageViewPage_ZoomIn" xml:space="preserve">
     <value>放大</value>
   </data>
-<data name="Common_Copy" xml:space="preserve">
+  <data name="Common_Copy" xml:space="preserve">
     <value>複製</value>
   </data>
   <data name="Common_Open" xml:space="preserve">
@@ -500,7 +499,7 @@
   <data name="FileSettingPage_GameResource" xml:space="preserve">
     <value>遊戲資源</value>
   </data>
-<data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
+  <data name="UpdateContentWindow_RecentlyUpdatedContent" xml:space="preserve">
     <value>最近更新內容</value>
   </data>
   <data name="GameBizSelector_AutoSearch" xml:space="preserve">
@@ -670,7 +669,7 @@
   <data name="SettingPage_Toolbox" xml:space="preserve">
     <value>工具箱</value>
   </data>
-<data name="GameSettingPage_EnableHDR" xml:space="preserve">
+  <data name="GameSettingPage_EnableHDR" xml:space="preserve">
     <value>開啟 HDR</value>
   </data>
   <data name="Common_RestoreDefaults" xml:space="preserve">
@@ -724,7 +723,7 @@
   <data name="WelcomeView_OpenWindowsSecurity" xml:space="preserve">
     <value>打開 Windows 安全</value>
   </data>
-<data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
+  <data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
     <value>網絡出錯，你可以繼續使用 HoYoShade Hub，但係冇辦法收到更新。</value>
   </data>
   <data name="MainView_CheckSystemProxy_SystemProxyIsEnabled" xml:space="preserve">
@@ -1003,7 +1002,7 @@
   <data name="HoYoShadeDownloadView_StatusRateLimitExceeded" xml:space="preserve">
     <value>拎版本列表失敗：觸發咗 GitHub 存取頻率限制 (403/429)，請嘗試切換下載伺服器或者稍後再試。</value>
   </data>
-<data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
+  <data name="HoYoShadeDownloadView_StatusAssetNotFound" xml:space="preserve">
     <value>搵唔到匹配嘅安裝包。</value>
   </data>
   <data name="HoYoShadeDownloadView_StatusStartingRPC" xml:space="preserve">
@@ -1030,7 +1029,7 @@
   <data name="HoYoShadeDownloadView_Resume" xml:space="preserve">
     <value>繼續</value>
   </data>
-<data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
+  <data name="HoYoShadeDownloadView_Option_HoYoShade" xml:space="preserve">
     <value>HoYoShade</value>
   </data>
   <data name="HoYoShadeDownloadView_Option_OpenHoYoShade" xml:space="preserve">
@@ -1039,7 +1038,7 @@
   <data name="HoYoShadeDownloadView_Server_GithubDirect" xml:space="preserve">
     <value>GitHub</value>
   </data>
-<data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
+  <data name="HoYoShadeDownloadView_Server_Cloudflare" xml:space="preserve">
     <value>Cloudflare</value>
   </data>
   <data name="HoYoShadeDownloadView_Server_TencentCloud" xml:space="preserve">
@@ -1051,7 +1050,7 @@
   <data name="HoYoShadeDownloadView_Server_AutoSelect" xml:space="preserve">
     <value>自動揀</value>
   </data>
-<data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
+  <data name="HoYoShadeDownloadView_ProgressFormat" xml:space="preserve">
     <value>{0}/s - {1}%</value>
   </data>
   <data name="HoYoShadeDownloadView_HoYoShade_Description" xml:space="preserve">
@@ -1099,7 +1098,7 @@
   <data name="ReShadeDownloadView_Title" xml:space="preserve">
     <value>接下來，讓我們下載並安裝 ReShade 著色器與外掛程式</value>
   </data>
-<data name="ReShadeDownloadView_Description" xml:space="preserve">
+  <data name="ReShadeDownloadView_Description" xml:space="preserve">
     <value>著色器同埋外掛程式係 HoYoShade 正常運作嘅必要元件；但如果你淨係裝咗 OpenHoYoShade，建議直接跳過呢一步。
 安裝清單同 ReShade 官方同步；如果遇到部分著色器同外掛程式缺失，可以喺安裝後手動匯入補返。如果唔知點揀，推薦直接勾選「安裝全部」。</value>
   </data>
@@ -1148,13 +1147,13 @@
   <data name="ReShadeDownloadView_StatusDownloading" xml:space="preserve">
     <value>下載緊...</value>
   </data>
-<data name="ReShadeDownloadView_StatusFinished" xml:space="preserve">
+  <data name="ReShadeDownloadView_StatusFinished" xml:space="preserve">
     <value>安裝完成！</value>
   </data>
   <data name="ReShadeDownloadView_StatusError" xml:space="preserve">
     <value>錯誤：{0}</value>
   </data>
-<data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
+  <data name="ReShadeDownloadView_TypeShaders" xml:space="preserve">
     <value>著色器</value>
   </data>
   <data name="ReShadeDownloadView_TypeAddons" xml:space="preserve">
@@ -1184,7 +1183,7 @@
   <data name="FileSettingPage_InstallReShadeShadersAndAddons" xml:space="preserve">
     <value>安裝 ReShade 著色器與外掛程式</value>
   </data>
-<data name="FileSettingPage_FrameworkVersion" xml:space="preserve">
+  <data name="FileSettingPage_FrameworkVersion" xml:space="preserve">
     <value>框架版本</value>
   </data>
   <data name="FileSettingPage_ReShadeVersion" xml:space="preserve">
@@ -1288,13 +1287,13 @@
   <data name="ResetReShadeIniDialog_Cancel" xml:space="preserve">
     <value>取消</value>
   </data>
-<data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
+  <data name="FileSettingPage_ResetReShadeIni" xml:space="preserve">
     <value>重設ReShade.ini</value>
   </data>
   <data name="SettingPage_Integration" xml:space="preserve">
     <value>聯動</value>
   </data>
-<data name="SettingPage_ExMBlenderPlugin" xml:space="preserve">
+  <data name="SettingPage_ExMBlenderPlugin" xml:space="preserve">
     <value>Ex_M/REL Blender/留影機插件</value>
   </data>
   <data name="SettingPage_ExMGenshinBlenderPlugin" xml:space="preserve">
@@ -1363,10 +1362,10 @@
   <data name="GameLauncher_ExMBlenderPluginStartFailed" xml:space="preserve">
     <value>啟動 Ex_M/REL {0}Blender/留影機插件失敗: {1}</value>
   </data>
-<data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
+  <data name="GameLauncher_GameLaunchFailed" xml:space="preserve">
     <value>遊戲啟動失敗</value>
   </data>
-<data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
+  <data name="GameLauncher_LaunchedWithShader" xml:space="preserve">
     <value>已經用 {0} 啟動遊戲</value>
   </data>
   <data name="GameLauncher_LaunchWithShaderFailed" xml:space="preserve">
@@ -1516,7 +1515,7 @@ Delete 咗之後，你要重新啟動一次客戶端，等無人機重新攞遊�
     <value>已經成功 delete 咗 {0} 個遊戲嘅 config 檔。
 請喺注入器啟動後重新指定客戶端。</value>
   </data>
-<data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
+  <data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
     <value>所有操作都失敗咗。請睇日誌了解詳情。</value>
   </data>
   <data name="ExMBlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
@@ -1642,7 +1641,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="GameLauncherSettingDialog_Note3" xml:space="preserve">
     <value>如果第三方程式唔支援用命令進行連動，建議優先向佢嘅開發者反映支援自訂啟動命令。</value>
   </data>
-<data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
+  <data name="GameLauncherSettingDialog_MultiGameDirectory" xml:space="preserve">
     <value>多遊戲目錄</value>
   </data>
   <data name="GameLauncherSettingDialog_MultiGameDirectoryDesc" xml:space="preserve">
@@ -1793,7 +1792,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="QuickSetupView_UpdateModeCustomInstall" xml:space="preserve">
     <value>自訂 / 進階更新</value>
   </data>
-<data name="QuickSetupView_StatusPreparing" xml:space="preserve">
+  <data name="QuickSetupView_StatusPreparing" xml:space="preserve">
     <value>[1/2] 正在準備安裝服務與獲取版本...</value>
   </data>
   <data name="QuickSetupView_StatusFetchingRelease" xml:space="preserve">
@@ -1928,7 +1927,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="DiagnosticTool_Permissions" xml:space="preserve">
     <value>處理程序權限</value>
   </data>
-<data name="DiagnosticTool_RpcState" xml:space="preserve">
+  <data name="DiagnosticTool_RpcState" xml:space="preserve">
     <value>RPC 背景服務</value>
   </data>
   <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
@@ -1937,7 +1936,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="DiagnosticTool_Motherboard" xml:space="preserve">
     <value>主機板型號</value>
   </data>
-<data name="DiagnosticTool_Disks" xml:space="preserve">
+  <data name="DiagnosticTool_Disks" xml:space="preserve">
     <value>磁碟與對應磁碟機代號</value>
   </data>
   <data name="DiagnosticTool_Monitors" xml:space="preserve">
@@ -2039,7 +2038,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="DiagnosticTool_Off" xml:space="preserve">
     <value>關閉</value>
   </data>
-<data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
+  <data name="DiagnosticTool_Ipv6NotDetected" xml:space="preserve">
     <value>未偵測到 / 無 IPv6 出口</value>
   </data>
   <data name="DiagnosticTool_ProxyEnabled" xml:space="preserve">
@@ -2132,7 +2131,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="DiagnosticTool_Report_DisksDrives" xml:space="preserve">
     <value>存放磁碟與對應磁碟區代號:</value>
   </data>
-<data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
+  <data name="DiagnosticTool_Report_OsArch" xml:space="preserve">
     <value>架構規格: 系統 {0} / 處理程序 {1}</value>
   </data>
   <data name="DiagnosticTool_Report_RunningMode" xml:space="preserve">
@@ -2312,7 +2311,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="BackupRestoreDialog_BackupShadersDesc" xml:space="preserve">
     <value>包含已安裝或自訂的著色器與材質紋理（體積較大）</value>
   </data>
-<data name="BackupRestoreDialog_StartBackup" xml:space="preserve">
+  <data name="BackupRestoreDialog_StartBackup" xml:space="preserve">
     <value>選擇路徑並匯出備份...</value>
   </data>
   <data name="BackupRestoreDialog_BackingUp" xml:space="preserve">
@@ -2321,7 +2320,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="BackupRestoreDialog_BackupSuccess" xml:space="preserve">
     <value>備份匯出成功！</value>
   </data>
-<data name="BackupRestoreDialog_OpenBackupFolder" xml:space="preserve">
+  <data name="BackupRestoreDialog_OpenBackupFolder" xml:space="preserve">
     <value>在檔案總管中開啟</value>
   </data>
   <data name="BackupRestoreDialog_SelectFileButton" xml:space="preserve">
@@ -2330,7 +2329,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="BackupRestoreDialog_NoFileSelected" xml:space="preserve">
     <value>請選擇要匯入還原的 .zip 或 .7z 備份檔案。</value>
   </data>
-<data name="BackupRestoreDialog_PackageSourceFormat" xml:space="preserve">
+  <data name="BackupRestoreDialog_PackageSourceFormat" xml:space="preserve">
     <value>來源框架：{0}</value>
   </data>
   <data name="BackupRestoreDialog_PackageCreatedFormat" xml:space="preserve">
@@ -2390,7 +2389,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="BackupRestoreDialog_ErrorFormat" xml:space="preserve">
     <value>操作失敗：{0}</value>
   </data>
-<data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
+  <data name="BackupRestoreDialog_ZipFilterName" xml:space="preserve">
     <value>ZIP 壓縮檔 (*.zip)</value>
   </data>
   <data name="Common_No" xml:space="preserve">
@@ -2408,7 +2407,7 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
   <data name="BackupRestoreDialog_SevenZipFilterName" xml:space="preserve">
     <value>7-Zip 壓縮檔 (*.7z)</value>
   </data>
-<data name="StartGameButton_UpdatePlugin" xml:space="preserve">
+  <data name="StartGameButton_UpdatePlugin" xml:space="preserve">
     <value>更新外掛程式</value>
   </data>
   <data name="StartGameButton_ComingSoon" xml:space="preserve">
@@ -2445,4 +2444,22 @@ Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value
     <value>無法啟動安裝服務。請確認系統管理員權限或檢查防毒軟件是否攔截。
 日誌目錄：{0}</value>
   </data>
-<data name="ExMBlenderRepairTool_NoConfigFileFound" xml:space="preserve"><value>揀選嘅遊戲外掛程式入面搵唔到 config 檔案。</value></data><data name="ExMBlenderRepairTool_NoCookieFileFound" xml:space="preserve"><value>揀選嘅遊戲外掛程式入面搵唔到 cookies.json 檔案。</value></data><data name="ExMBlenderRepairTool_PartialSuccessDeleted" xml:space="preserve"><value>成功刪除 {0} 個檔案</value></data><data name="ExMBlenderRepairTool_PartialSuccessNotFound" xml:space="preserve"><value>，{0} 個檔案搵唔到</value></data><data name="ExMBlenderRepairTool_PartialSuccessFailed" xml:space="preserve"><value>，{0} 個檔案刪除失敗</value></data><data name="ExMBlenderRepairTool_PartialSuccessPeriod" xml:space="preserve"><value>。</value></data></root>
+  <data name="ExMBlenderRepairTool_NoConfigFileFound" xml:space="preserve">
+    <value>揀選嘅遊戲外掛程式入面搵唔到 config 檔案。</value>
+  </data>
+  <data name="ExMBlenderRepairTool_NoCookieFileFound" xml:space="preserve">
+    <value>揀選嘅遊戲外掛程式入面搵唔到 cookies.json 檔案。</value>
+  </data>
+  <data name="ExMBlenderRepairTool_PartialSuccessDeleted" xml:space="preserve">
+    <value>成功刪除 {0} 個檔案</value>
+  </data>
+  <data name="ExMBlenderRepairTool_PartialSuccessNotFound" xml:space="preserve">
+    <value>，{0} 個檔案搵唔到</value>
+  </data>
+  <data name="ExMBlenderRepairTool_PartialSuccessFailed" xml:space="preserve">
+    <value>，{0} 個檔案刪除失敗</value>
+  </data>
+  <data name="ExMBlenderRepairTool_PartialSuccessPeriod" xml:space="preserve">
+    <value>。</value>
+  </data>
+</root>
