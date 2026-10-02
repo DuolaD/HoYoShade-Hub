@@ -88,13 +88,13 @@ public class HoYoPlayService
         }
         string json = JsonSerializer.Serialize(infos);
         AppConfig.CachedGameInfo = json;
-        _ = DownloadGameVersionPosterAsync(infos);
+        _ = DownloadGameVersionPosterAsync(infos, cancellationToken);
         return infos;
     }
 
 
 
-    private async Task DownloadGameVersionPosterAsync(List<GameInfo> infos)
+    private async Task DownloadGameVersionPosterAsync(List<GameInfo> infos, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -110,7 +110,7 @@ public class HoYoPlayService
             {
                 string bg = Path.Combine(AppConfig.UserDataFolder, "bg");
                 Directory.CreateDirectory(bg);
-                await Parallel.ForEachAsync(infos, async (info, _) =>
+                await Parallel.ForEachAsync(infos, cancellationToken, async (info, ct) =>
                 {
                     if (string.IsNullOrWhiteSpace(info.Display.Background?.Url))
                     {
@@ -123,10 +123,14 @@ public class HoYoPlayService
                         string path = Path.Combine(bg, name);
                         if (!File.Exists(path))
                         {
-                            byte[] bytes = await _httpClient.GetByteArrayAsync(url);
-                            await File.WriteAllBytesAsync(path, bytes);
+                            byte[] bytes = await _httpClient.GetByteArrayAsync(url, ct);
+                            await File.WriteAllBytesAsync(path, bytes, ct);
                         }
                         AppConfig.SetVersionPoster(info.GameBiz, name);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        throw;
                     }
                     catch (Exception ex)
                     {
@@ -134,6 +138,10 @@ public class HoYoPlayService
                     }
                 });
             }
+        }
+        catch (OperationCanceledException)
+        {
+            // Graceful cancellation on app exit or cancellation request
         }
         catch (Exception ex)
         {

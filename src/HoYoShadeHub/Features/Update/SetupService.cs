@@ -155,6 +155,12 @@ internal class SetupService
                     stream.Position = response.Content.Headers.ContentRange.From.Value;
                     SetupDownloadBytes = stream.Position;
                 }
+                else
+                {
+                    stream.Position = 0;
+                    stream.SetLength(0);
+                    SetupDownloadBytes = 0;
+                }
                 using var hs = await response.Content.ReadAsStreamAsync(cancellationToken);
                 int read = 0;
                 Memory<byte> buffer = new byte[8192];
