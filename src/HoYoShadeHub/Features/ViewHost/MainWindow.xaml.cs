@@ -76,6 +76,7 @@ public sealed partial class MainWindow : WindowEx
         AppWindow.Closing += AppWindow_Closing;
         AppWindow.Changed += AppWindow_Changed;
         Content.KeyDown += Content_KeyDown;
+        Closed += MainWindow_Closed;
         CenterInScreen(1200, 676);
         AdaptTitleBarButtonColorToActuallTheme();
         UpdateDragRectangles();
@@ -553,6 +554,22 @@ public sealed partial class MainWindow : WindowEx
     [LibraryImport("wtsapi32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool WTSRegisterSessionNotification(IntPtr hWnd, int dwFlags);
+
+    [LibraryImport("wtsapi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool WTSUnRegisterSessionNotification(IntPtr hWnd);
+
+    private void MainWindow_Closed(object sender, WindowEventArgs args)
+    {
+        try
+        {
+            if (WindowHandle != IntPtr.Zero)
+            {
+                WTSUnRegisterSessionNotification(WindowHandle);
+            }
+        }
+        catch { }
+    }
 
 
     private void UpdateDragRectangles()

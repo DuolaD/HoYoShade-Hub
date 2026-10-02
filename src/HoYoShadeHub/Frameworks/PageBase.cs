@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using HoYoShadeHub.Core;
@@ -34,8 +34,6 @@ public abstract partial class PageBase : Page
 
     private void PageEx_Unloaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        Loaded -= PageEx_Loaded;
-        Unloaded -= PageEx_Unloaded;
         OnUnloaded();
     }
 

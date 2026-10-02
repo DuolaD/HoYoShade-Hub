@@ -20,6 +20,7 @@ public sealed partial class IntegrationSetting : PageBase
 {
 
     private readonly ILogger<IntegrationSetting> _logger = AppConfig.GetLogger<IntegrationSetting>();
+    private bool _isShowingDialog;
 
 
     private string _regionCode = string.Empty;
@@ -444,6 +445,8 @@ public sealed partial class IntegrationSetting : PageBase
     /// </summary>
     private async Task ShowErrorDialogAsync(string title, string message)
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ContentDialog
@@ -459,6 +462,10 @@ public sealed partial class IntegrationSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Show error dialog");
+        }
+        finally
+        {
+            _isShowingDialog = false;
         }
     }
 

@@ -32,6 +32,7 @@ public sealed partial class ScreenshotPage : PageBase
 
 
     private readonly HoYoPlayService _hoyoplayService = AppConfig.GetService<HoYoPlayService>();
+    private bool _isShowingDialog;
 
 
 
@@ -409,6 +410,8 @@ public sealed partial class ScreenshotPage : PageBase
     [RelayCommand]
     private async Task ManageScreenshotFolderAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ScreenshotFolderManageDialog
@@ -427,6 +430,10 @@ public sealed partial class ScreenshotPage : PageBase
             }
         }
         catch { }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
 
@@ -680,6 +687,8 @@ public sealed partial class ScreenshotPage : PageBase
 
     private async void MenuFlyoutItem_Delete_Click(object sender, RoutedEventArgs e)
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ContentDialog
@@ -750,6 +759,10 @@ public sealed partial class ScreenshotPage : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to delete image file");
+        }
+        finally
+        {
+            _isShowingDialog = false;
         }
     }
 

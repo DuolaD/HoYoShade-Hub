@@ -39,6 +39,7 @@ public sealed partial class FileManageSetting : PageBase
 
     private readonly ILogger<FileManageSetting> _logger = AppConfig.GetLogger<FileManageSetting>();
     private readonly HoYoShadeVersionService _versionService = new(AppConfig.UserDataFolder);
+    private bool _isShowingDialog;
 
     private static string GetLangString(string key, string fallback)
     {
@@ -50,34 +51,6 @@ public sealed partial class FileManageSetting : PageBase
     {
         this.InitializeComponent();
         DownloadServers = new ObservableCollection<DownloadServerItem>();
-        UpdateDownloadServers();
-        
-        // Register for language change messages
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) =>
-        {
-            this.DispatcherQueue.TryEnqueue(() =>
-            {
-                UpdateDownloadServers();
-                OnPropertyChanged(nameof(AutoCheckUpdatesText));
-                UpdateFrameworkVersionHints();
-                this.Bindings.Update();
-            });
-        });
-
-        // Register for ECH settings change messages
-        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) =>
-        {
-            UpdateDownloadServers();
-        });
-
-        // Register for framework update detected messages
-        WeakReferenceMessenger.Default.Register<FrameworkUpdateDetectedMessage>(this, (r, m) =>
-        {
-            this.DispatcherQueue.TryEnqueue(() =>
-            {
-                UpdateFrameworkVersionHints();
-            });
-        });
     }
     
     public ObservableCollection<DownloadServerItem> DownloadServers { get; }
@@ -255,17 +228,54 @@ public sealed partial class FileManageSetting : PageBase
 
     protected override void OnLoaded()
     {
+        base.OnLoaded();
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+
+        UpdateDownloadServers();
         GetLastBackupTime();
         _ = UpdateCacheSizeAsync();
         _ = UpdateHoYoShadeSizeAsync();
         _ = LoadVersionInfoAsync();
-        
+
+        // Register for language change messages
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) =>
+        {
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateDownloadServers();
+                OnPropertyChanged(nameof(AutoCheckUpdatesText));
+                UpdateFrameworkVersionHints();
+                this.Bindings.Update();
+            });
+        });
+
+        // Register for ECH settings change messages
+        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) =>
+        {
+            UpdateDownloadServers();
+        });
+
+        // Register for framework update detected messages
+        WeakReferenceMessenger.Default.Register<FrameworkUpdateDetectedMessage>(this, (r, m) =>
+        {
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateFrameworkVersionHints();
+            });
+        });
+
         // Register for installation change messages
         WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, async (r, m) => 
         {
             await UpdateHoYoShadeSizeAsync();
             await LoadVersionInfoAsync();
         });
+    }
+
+    protected override void OnUnloaded()
+    {
+        base.OnUnloaded();
+        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
 
@@ -282,6 +292,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task ChangeUserDataFolderAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ContentDialog
@@ -315,6 +327,10 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Change data folder");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
 
@@ -340,6 +356,7 @@ public sealed partial class FileManageSetting : PageBase
     }
 
 
+
     /// <summary>
     /// 删除所有设置
     /// </summary>
@@ -347,6 +364,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task DeleteAllSettingAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ContentDialog
@@ -371,6 +390,10 @@ public sealed partial class FileManageSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Delete all setting");
+        }
+        finally
+        {
+            _isShowingDialog = false;
         }
 
     }
@@ -870,6 +893,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task UninstallHoYoShadeAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new UninstallShadeDialog
@@ -896,6 +921,10 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Uninstall HoYoShade");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
 
@@ -906,6 +935,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task UninstallHoYoShadeShadersAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new UninstallShadersDialog
@@ -926,6 +957,10 @@ public sealed partial class FileManageSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Uninstall HoYoShade shaders");
+        }
+        finally
+        {
+            _isShowingDialog = false;
         }
     }
 
@@ -958,6 +993,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task UninstallOpenHoYoShadeAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new UninstallShadeDialog
@@ -984,6 +1021,10 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Uninstall OpenHoYoShade");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
 
@@ -994,6 +1035,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task UninstallOpenHoYoShadeShadersAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new UninstallShadersDialog
@@ -1014,6 +1057,10 @@ public sealed partial class FileManageSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Uninstall OpenHoYoShade shaders");
+        }
+        finally
+        {
+            _isShowingDialog = false;
         }
     }
 
@@ -1046,6 +1093,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task ResetHoYoShadeReShadeIniAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ResetReShadeIniDialog
@@ -1060,6 +1109,10 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Reset HoYoShade ReShade.ini");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
 
@@ -1070,6 +1123,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task ResetOpenHoYoShadeReShadeIniAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ResetReShadeIniDialog
@@ -1084,6 +1139,10 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Reset OpenHoYoShade ReShade.ini");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
 
@@ -1094,6 +1153,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task CustomInjectHoYoShadeAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new CustomInjectDialog
@@ -1111,6 +1172,10 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Custom inject HoYoShade");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
 
@@ -1121,6 +1186,8 @@ public sealed partial class FileManageSetting : PageBase
     [RelayCommand]
     private async Task CustomInjectOpenHoYoShadeAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new CustomInjectDialog
@@ -1138,11 +1205,17 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Custom inject OpenHoYoShade");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
     [RelayCommand]
     private async Task BackupRestoreHoYoShadeAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ShadeBackupRestoreDialog
@@ -1165,11 +1238,17 @@ public sealed partial class FileManageSetting : PageBase
         {
             _logger.LogError(ex, "Backup/Restore HoYoShade");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
     [RelayCommand]
     private async Task BackupRestoreOpenHoYoShadeAsync()
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             var dialog = new ShadeBackupRestoreDialog
@@ -1191,6 +1270,10 @@ public sealed partial class FileManageSetting : PageBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Backup/Restore OpenHoYoShade");
+        }
+        finally
+        {
+            _isShowingDialog = false;
         }
     }
 

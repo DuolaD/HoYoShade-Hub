@@ -35,6 +35,7 @@ public sealed partial class ReShadeDownloadView : UserControl
     private readonly ReShadePackageService _packageService = AppConfig.GetService<ReShadePackageService>();
     private readonly HoYoShadeVersionService _versionService;
     private CancellationTokenSource _cancellationTokenSource;
+    private bool _isShowingCustomizeDialog;
 
     public ReShadeDownloadView()
     {
@@ -42,21 +43,23 @@ public sealed partial class ReShadeDownloadView : UserControl
         DownloadServers = new ObservableCollection<DownloadServerItem>();
         _versionService = new HoYoShadeVersionService(AppConfig.UserDataFolder);
         
-        // Register for installation change messages from other views/windows
-        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
-        
         UpdateDownloadServers();
         UpdateContentMargin();
-        // Register for language change messages
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
-        
-        // Register for ECH settings change messages
-        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
+
+        this.Loaded += (s, e) => RegisterMessages();
         this.Unloaded += (s, e) =>
         {
             WeakReferenceMessenger.Default.UnregisterAll(this);
             _cancellationTokenSource?.Cancel();
         };
+    }
+
+    private void RegisterMessages()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<HoYoShadeInstallationChangedMessage>(this, (r, m) => OnInstallationChanged());
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) => OnLanguageChanged());
+        WeakReferenceMessenger.Default.Register<EchSettingChangedMessage>(this, (r, m) => UpdateDownloadServers());
     }
 
     private void OnLanguageChanged()
@@ -490,6 +493,8 @@ public sealed partial class ReShadeDownloadView : UserControl
     [RelayCommand]
     private async Task CustomizeAsync()
     {
+        if (_isShowingCustomizeDialog) return;
+        _isShowingCustomizeDialog = true;
         try
         {
             if (_cachedEffectPackages == null || _cachedAddons == null)
@@ -526,6 +531,10 @@ public sealed partial class ReShadeDownloadView : UserControl
         {
             _logger.LogError(ex, "Error in CustomizeAsync");
             StatusMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            _isShowingCustomizeDialog = false;
         }
     }
 

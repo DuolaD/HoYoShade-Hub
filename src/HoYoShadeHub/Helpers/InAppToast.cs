@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Dispatching;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -44,12 +44,14 @@ public class InAppToast : Behavior<StackPanel>
         {
             MainWindow = this;
         }
+        _dismissTimer.Start();
     }
 
 
     protected override void OnDetaching()
     {
         base.OnDetaching();
+        _dismissTimer.Stop();
         if (Tag is nameof(MainWindow))
         {
             MainWindow = null;

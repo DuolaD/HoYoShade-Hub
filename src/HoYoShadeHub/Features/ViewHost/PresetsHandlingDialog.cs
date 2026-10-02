@@ -15,9 +15,19 @@ public enum PresetsHandlingOption
 
 public static class PresetsHandlingDialog
 {
+    private static bool _isShowing;
+
     public static async Task<(bool cancelled, PresetsHandlingOption option)> ShowAsync(XamlRoot xamlRoot)
     {
-        var radioSeparateFolder = new RadioButton
+        if (_isShowing)
+        {
+            return (true, PresetsHandlingOption.SeparateFolder);
+        }
+
+        _isShowing = true;
+        try
+        {
+            var radioSeparateFolder = new RadioButton
         {
             Content = Lang.PresetsDialog_SeparateFolder,
             Tag = PresetsHandlingOption.SeparateFolder,
@@ -120,6 +130,11 @@ public static class PresetsHandlingDialog
         else if (radioOverwrite.IsChecked == true)
             selectedOption = PresetsHandlingOption.Overwrite;
 
-        return (false, selectedOption);
+            return (false, selectedOption);
+        }
+        finally
+        {
+            _isShowing = false;
+        }
     }
 }

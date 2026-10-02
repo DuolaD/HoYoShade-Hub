@@ -28,9 +28,16 @@ public sealed partial class AboutSetting : PageBase
     {
         this.InitializeComponent();
         DownloadServers = new ObservableCollection<DownloadServerItem>();
+    }
+
+    protected override void OnLoaded()
+    {
+        base.OnLoaded();
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+
         UpdateDownloadServers();
         UpdateLauncherVersionHint();
-        
+
         // Register for language change messages
         WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) =>
         {
@@ -57,6 +64,12 @@ public sealed partial class AboutSetting : PageBase
                 UpdateLauncherVersionHint();
             });
         });
+    }
+
+    protected override void OnUnloaded()
+    {
+        base.OnUnloaded();
+        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
     
     public ObservableCollection<DownloadServerItem> DownloadServers { get; }

@@ -20,7 +20,6 @@ public sealed partial class SettingPage : PageBase
     {
         this.InitializeComponent();
         Frame_Setting.Navigate(typeof(AboutSetting));
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) => OnLanguageChanged());
     }
 
 
@@ -111,8 +110,18 @@ public sealed partial class SettingPage : PageBase
 
 
 
+    protected override void OnLoaded()
+    {
+        base.OnLoaded();
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) => OnLanguageChanged());
+    }
+
+
+
     protected override void OnUnloaded()
     {
+        base.OnUnloaded();
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 

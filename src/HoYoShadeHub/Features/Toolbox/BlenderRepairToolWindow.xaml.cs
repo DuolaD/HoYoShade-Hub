@@ -33,6 +33,7 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
     private CancellationTokenSource? _syncCts;
     private bool _isSyncing = false;
     private bool _isRefreshingAccurateTime = false;
+    private bool _isShowingDialog = false;
     
     // 用于准确时间的计时
     private DateTime? _lastNetworkTime;
@@ -394,6 +395,8 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
 
     private async void Button_ResetClientTarget_Click(object sender, RoutedEventArgs e)
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             // 清除配置缓存，重新从数据库读取最新配置
@@ -533,10 +536,16 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             ShowPluginRepairError($"Failed: {ex.Message}");
             _logger.LogError(ex, "Failed to reset client target");
         }
+        finally
+        {
+            _isShowingDialog = false;
+        }
     }
 
     private async void Button_FixLoginError_Click(object sender, RoutedEventArgs e)
     {
+        if (_isShowingDialog) return;
+        _isShowingDialog = true;
         try
         {
             // 清除配置缓存，重新从数据库读取最新配置
@@ -675,6 +684,10 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
         {
             ShowPluginRepairError($"Failed: {ex.Message}");
             _logger.LogError(ex, "Failed to fix login error");
+        }
+        finally
+        {
+            _isShowingDialog = false;
         }
     }
 
