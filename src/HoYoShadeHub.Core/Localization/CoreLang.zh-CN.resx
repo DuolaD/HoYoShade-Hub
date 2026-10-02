@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-<data name="Game_GenshinImpact" xml:space="preserve">
+  <data name="Game_GenshinImpact" xml:space="preserve">
     <value>原神</value>
   </data>
   <data name="Game_HonkaiStarRail" xml:space="preserve">
@@ -132,7 +132,7 @@
   <data name="GameServer_GlobalServer" xml:space="preserve">
     <value>国际服</value>
   </data>
-<data name="GenshinQueryType_GenesisCrystal" xml:space="preserve">
+  <data name="GenshinQueryType_GenesisCrystal" xml:space="preserve">
     <value>创世结晶</value>
   </data>
   <data name="GenshinQueryType_Primogem" xml:space="preserve">
@@ -162,7 +162,7 @@
   <data name="StarRailQueryType_TrailblazePower" xml:space="preserve">
     <value>开拓力</value>
   </data>
-<data name="Game_ZZZ" xml:space="preserve">
+  <data name="Game_ZZZ" xml:space="preserve">
     <value>绝区零</value>
   </data>
   <data name="Game_PetitPlanet" xml:space="preserve">
@@ -171,7 +171,7 @@
   <data name="Game_NexusAnima" xml:space="preserve">
     <value>崩坏：因缘精灵</value>
   </data>
-<data name="GameServer_Bilibili" xml:space="preserve">
+  <data name="GameServer_Bilibili" xml:space="preserve">
     <value>哔哩哔哩</value>
   </data>
   <data name="GameServer_BetaPreBeta" xml:space="preserve">
@@ -186,7 +186,7 @@
   <data name="GameServer_OSBeta" xml:space="preserve">
     <value>国际服 内测/创作者体验服</value>
   </data>
-<data name="ZZZQueryType_Monochrome" xml:space="preserve">
+  <data name="ZZZQueryType_Monochrome" xml:space="preserve">
     <value>底片</value>
   </data>
   <data name="ZZZQueryType_Ploychrome" xml:space="preserve">
@@ -204,7 +204,7 @@
   <data name="ZZZQueryType_DriveDisc" xml:space="preserve">
     <value>驱动盘</value>
   </data>
-<data name="GameServer_Beta" xml:space="preserve">
+  <data name="GameServer_Beta" xml:space="preserve">
     <value>内测/创作者体验服</value>
   </data>
   <data name="GameServer_CBT1" xml:space="preserve">
