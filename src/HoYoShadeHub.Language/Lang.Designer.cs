@@ -104,6 +104,61 @@ namespace HoYoShadeHub.Language {
                 return ResourceManager.GetString("ExMBlenderRepairTool_AccurateTime", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   查找类似 No config file found in the selected game plugin(s). 的本地化字符串。
+        /// </summary>
+        public static string ExMBlenderRepairTool_NoConfigFileFound {
+            get {
+                return ResourceManager.GetString("ExMBlenderRepairTool_NoConfigFileFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 No cookies.json file found in the selected game plugin(s). 的本地化字符串。
+        /// </summary>
+        public static string ExMBlenderRepairTool_NoCookieFileFound {
+            get {
+                return ResourceManager.GetString("ExMBlenderRepairTool_NoCookieFileFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Successfully deleted {0} file(s) 的本地化字符串。
+        /// </summary>
+        public static string ExMBlenderRepairTool_PartialSuccessDeleted {
+            get {
+                return ResourceManager.GetString("ExMBlenderRepairTool_PartialSuccessDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 , {0} file(s) not found 的本地化字符串。
+        /// </summary>
+        public static string ExMBlenderRepairTool_PartialSuccessNotFound {
+            get {
+                return ResourceManager.GetString("ExMBlenderRepairTool_PartialSuccessNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 , {0} file(s) failed to delete 的本地化字符串。
+        /// </summary>
+        public static string ExMBlenderRepairTool_PartialSuccessFailed {
+            get {
+                return ResourceManager.GetString("ExMBlenderRepairTool_PartialSuccessFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 . 的本地化字符串。
+        /// </summary>
+        public static string ExMBlenderRepairTool_PartialSuccessPeriod {
+            get {
+                return ResourceManager.GetString("ExMBlenderRepairTool_PartialSuccessPeriod", resourceCulture);
+            }
+        }
+
         
         /// <summary>
         ///   查找类似 All operations failed. Check logs for details. 的本地化字符串。

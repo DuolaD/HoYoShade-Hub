@@ -516,14 +516,14 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             }
             else if (notFoundCount > 0 && successCount == 0 && failCount == 0)
             {
-                ShowPluginRepairError($"选中的游戏插件中未找到 config 文件。");
+                ShowPluginRepairError(Lang.ExMBlenderRepairTool_NoConfigFileFound);
             }
             else if (successCount > 0)
             {
-                string message = $"成功删除 {successCount} 个文件";
-                if (notFoundCount > 0) message += $"，{notFoundCount} 个文件未找到";
-                if (failCount > 0) message += $"，{failCount} 个文件删除失败";
-                message += "。";
+                string message = string.Format(Lang.ExMBlenderRepairTool_PartialSuccessDeleted, successCount);
+                if (notFoundCount > 0) message += string.Format(Lang.ExMBlenderRepairTool_PartialSuccessNotFound, notFoundCount);
+                if (failCount > 0) message += string.Format(Lang.ExMBlenderRepairTool_PartialSuccessFailed, failCount);
+                message += Lang.ExMBlenderRepairTool_PartialSuccessPeriod;
                 ShowPluginRepairSuccess(message);
             }
             else
@@ -665,14 +665,14 @@ public sealed partial class BlenderRepairToolWindow : WindowEx
             }
             else if (notFoundCount > 0 && successCount == 0 && failCount == 0)
             {
-                ShowPluginRepairError($"选中的游戏插件中未找到 cookies.json 文件。");
+                ShowPluginRepairError(Lang.ExMBlenderRepairTool_NoCookieFileFound);
             }
             else if (successCount > 0)
             {
-                string message = $"成功删除 {successCount} 个文件";
-                if (notFoundCount > 0) message += $"，{notFoundCount} 个文件未找到";
-                if (failCount > 0) message += $"，{failCount} 个文件删除失败";
-                message += "。";
+                string message = string.Format(Lang.ExMBlenderRepairTool_PartialSuccessDeleted, successCount);
+                if (notFoundCount > 0) message += string.Format(Lang.ExMBlenderRepairTool_PartialSuccessNotFound, notFoundCount);
+                if (failCount > 0) message += string.Format(Lang.ExMBlenderRepairTool_PartialSuccessFailed, failCount);
+                message += Lang.ExMBlenderRepairTool_PartialSuccessPeriod;
                 ShowPluginRepairSuccess(message);
             }
             else

@@ -1,110 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -430,7 +372,7 @@
     <value>螢幕截圖資料夾不存在</value>
   </data>
   <data name="SettingPage_PrivacyPolicy" xml:space="preserve">
-    <value>用戶協議同隱私政策</value>
+    <value>用家協議同私隱政策</value>
   </data>
   <data name="SelectGamePage_SelectGameServer" xml:space="preserve">
     <value>選擇伺服器</value>
@@ -511,10 +453,10 @@
     <value>完全退出</value>
   </data>
   <data name="CloseWindowDialog_YouCouldChangeTheOptionAgainInSettingPage" xml:space="preserve">
-    <value>您可以係設定分頁入面再次更改選項。</value>
+    <value>你可以喺設定分頁入面再次更改選項。</value>
   </data>
   <data name="FileSettingPage_DataFolderIsImportant" xml:space="preserve">
-    <value>您嘅個人資料儲存係下面嘅資料夾入面。 佢非常重要，請唔要隨意 delete。</value>
+    <value>您嘅個人資料儲存喺下面嘅資料夾入面。呢啲資料好重要㗎，千祈唔好隨意 delete。</value>
   </data>
   <data name="ExperienceSettingPage_MinimizeToTaskbar" xml:space="preserve">
     <value>最小化到工作列</value>
@@ -636,7 +578,7 @@
     <comment>General Setting</comment>
   </data>
   <data name="SettingPage_ForABetterExperiencePleaseEnableTheFollowingFeaturesInSystemSettings" xml:space="preserve">
-    <value>為咗更好嘅體驗，請係系統設定入面啟用以下功能。</value>
+    <value>為咗更好嘅體驗，請喺系統設定入面啟用以下功能。</value>
   </data>
   <data name="UpdateWindow_AutoRestartAfterUpdate" xml:space="preserve">
     <value>更新咗之後自動重新啟動應用程式</value>
@@ -651,13 +593,13 @@
     <value>RPC 服務</value>
   </data>
   <data name="SettingPage_RPCService_Desc" xml:space="preserve">
-    <value>RPC 服務係一個獨立嘅處理程式，用係下載遊戲、更新軟件、以及其他需要系統管理員權限嘅功能，避免重新啟動。</value>
+    <value>RPC 服務係一個獨立嘅處理程式，用喺下載遊戲、更新軟件、以及其他需要系統管理員權限嘅功能，避免重新啟動。</value>
   </data>
   <data name="SettingPage_KeepRPCServiceRunningInTheBackground" xml:space="preserve">
-    <value>保持 RPC 服務係後台工作</value>
+    <value>保持 RPC 服務喺背景運作</value>
   </data>
   <data name="SettingPage_RPCServiceWarningIfAppInRemovableStorage" xml:space="preserve">
-    <value>偵測到應用程式處於可移動儲存裝置中，唔建議保持 RPC 服務係後台運作。</value>
+    <value>偵測到應用程式處於可移動儲存裝置中，唔建議保持 RPC 服務喺背景運作。</value>
   </data>
   <data name="Common_Error" xml:space="preserve">
     <value>錯誤</value>
@@ -693,7 +635,7 @@
     <value>呢個係一個專門為 HoYoShade 打造嘅 GUI 啟動器，幫您更加輕鬆安裝同管理它，享受更好的體驗。</value>
   </data>
   <data name="WelcomeView_SelectUserDataFolderDescription" xml:space="preserve">
-    <value>您嘅所有個人資料會 save 係以下嘅資料夾入面。佢好緊要，您亦都可以撳下面嘅按鈕選擇其他資料夾。</value>
+    <value>您嘅所有個人資料會 save 喺以下嘅資料夾入面。呢啲資料好緊要㗎，您亦都可以撳下面個掣揀其他資料夾。</value>
   </data>
   <data name="WelcomeView_BeforeStartingSomeNecessaryEnvironmentChecksAreRequired" xml:space="preserve">
     <value>開始之前仲要檢查一啲必要嘅環境。</value>
@@ -738,7 +680,7 @@
     <value>HDR 亮度設定</value>
   </data>
   <data name="GameSettingPage_IfYouHaveMultipleMonitorsYouNeedToSetTheHDRSupportedMonitorAsThePrimaryDisplay" xml:space="preserve">
-    <value>如果有多過1個顯示器，你要將支持 HDR 嘅顯示器設定為主要顯示器。</value>
+    <value>如果有多過 1 個顯示器，你要將支援 HDR 嘅顯示器設定為主要顯示器。</value>
   </data>
   <data name="GenshinHDRLuminanceSettingDialog_AdaptToMonitorBrightness" xml:space="preserve">
     <value>適配顯示器亮度</value>
@@ -777,19 +719,19 @@
     <value>高動態範圍</value>
   </data>
   <data name="WelcomeView_IfHoYoShadeHubTakesALongTimeToStartItIsRecommendedToDisableSmartAppControlInWindowsSecurity" xml:space="preserve">
-    <value>如果HoYoShade Hub啟動時間要好耐，建議係Windows安全中停用智慧應用程式控制。</value>
+    <value>如果 HoYoShade Hub 啟動時間要好耐，建議喺 Windows 安全性入面停用智慧型應用程式控制。</value>
   </data>
   <data name="WelcomeView_OpenWindowsSecurity" xml:space="preserve">
     <value>打開 Windows 安全</value>
   </data>
 <data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
-    <value>網絡出錯，您可以繼續使用 HoYoShade Hub ，但係沒辦法收到更新。</value>
+    <value>網絡出錯，你可以繼續使用 HoYoShade Hub，但係冇辦法收到更新。</value>
   </data>
   <data name="MainView_CheckSystemProxy_SystemProxyIsEnabled" xml:space="preserve">
     <value>系統代理已開啟。</value>
   </data>
   <data name="GameSettingPage_TheCurrentMonitorDoesNotSupportHDR" xml:space="preserve">
-    <value>當前顯示器唔支持 HDR。</value>
+    <value>目前顯示器唔支援 HDR。</value>
   </data>
   <data name="GameSettingPage_WindowsHDRIsNotTurnedOn" xml:space="preserve">
     <value>Windows HDR 未開啟。</value>
@@ -822,10 +764,10 @@
     <value>查看啓動器日志嚟瞭解更多消息</value>
   </data>
   <data name="GameSettingPage_StarRailFpsTip" xml:space="preserve">
-    <value>請你唔好更改游戲入面嘅「畫面品質」預設，防止 FPS settings 失效。如果 set 為 120 FPS 但係游戲入面顯示為 30 FPS ，呢個係正常現象。</value>
+    <value>請你唔好更改遊戲入面嘅「畫面品質」預設，防止 FPS 設定失效。如果 set 做 120 FPS 但係遊戲入面顯示為 30 FPS，呢個係正常現象。</value>
   </data>
   <data name="ScreenshotFolderManageDialog_ImagesFromTheFollowingFoldersWillBeDisplayedInTheGallery" xml:space="preserve">
-    <value>以下資料夾入面嘅圖片都會顯示係圖庫入面</value>
+    <value>以下資料夾入面嘅圖片都會顯示喺圖庫入面</value>
   </data>
   <data name="ImageViewWindow2_OpenInExplorer" xml:space="preserve">
     <value>在檔案總管中打開</value>
@@ -924,10 +866,10 @@
     <value>快捷鍵 ({0}) 註冊失敗</value>
   </data>
   <data name="HotkeyManager_TheShortcutKeys0IsAlreadyInUsePleaseModifyItInSettingsPage" xml:space="preserve">
-    <value>快捷鍵 ({0}) 已被使用，請係設定頁面入面修改。</value>
+    <value>快捷鍵 ({0}) 已被使用，請喺設定頁面入面修改。</value>
   </data>
   <data name="HotkeyManager_FailedToRegisterTheShortcutKeys0PleaseRetryInSettingsPage" xml:space="preserve">
-    <value>快捷鍵 ({0}) 註冊失敗，請係設定頁面入面重試。</value>
+    <value>快捷鍵 ({0}) 註冊失敗，請喺設定頁面入面重試。</value>
   </data>
   <data name="HotkeySetting_OpenMainWindow" xml:space="preserve">
     <value>打開主視窗</value>
@@ -993,7 +935,7 @@
     <value>如果輸出文件已存在</value>
   </data>
   <data name="ImageBatchConvertWindow_SkipDefault" xml:space="preserve">
-    <value>跳過（默認）</value>
+    <value>跳過（預設）</value>
   </data>
   <data name="ImageBatchConvertWindow_Overwrite" xml:space="preserve">
     <value>覆蓋</value>
@@ -1113,7 +1055,7 @@
     <value>{0}/s - {1}%</value>
   </data>
   <data name="HoYoShadeDownloadView_HoYoShade_Description" xml:space="preserve">
-    <value>完整嘅 HoYoShade 包，包含曬所有內置預設同埋其它資源，啱普通用戶用。</value>
+    <value>完整嘅 HoYoShade 包，包含晒所有內置預設同埋其它資源，啱普通用家用。</value>
   </data>
   <data name="HoYoShadeDownloadView_OpenHoYoShade_Description" xml:space="preserve">
     <value>只係包含基礎框架，唔含任何內置預設同埋其它資源，啱想喺呢個基礎上面做開發嘅開發者用。</value>
@@ -1158,8 +1100,8 @@
     <value>接下來，讓我們下載並安裝 ReShade 著色器與外掛程式</value>
   </data>
 <data name="ReShadeDownloadView_Description" xml:space="preserve">
-    <value>著色器同埋插件係 HoYoShade 正常運作嘅必要元件；但如果你淨係裝咗 OpenHoYoShade，建議直接跳過呢一步。
-安裝清單同 ReShade 官方同步；如果遇到部分著色器同插件缺失，可以喺安裝後手動匯入補返。如果唔知點揀，推薦直接勾選「安裝全部」。</value>
+    <value>著色器同埋外掛程式係 HoYoShade 正常運作嘅必要元件；但如果你淨係裝咗 OpenHoYoShade，建議直接跳過呢一步。
+安裝清單同 ReShade 官方同步；如果遇到部分著色器同外掛程式缺失，可以喺安裝後手動匯入補返。如果唔知點揀，推薦直接勾選「安裝全部」。</value>
   </data>
   <data name="ReShadeDownloadView_SelectInstallTarget" xml:space="preserve">
     <value>選擇安裝目標</value>
@@ -1177,7 +1119,7 @@
     <value>OpenHoYoShade 是作為開發用途而使用的，我們建議您跳過為其安裝 ReShade 著色器與外掛程式的步驟。</value>
   </data>
   <data name="ReShadeDownloadView_BothTargetsWarning" xml:space="preserve">
-    <value>OpenHoYoShade 係用嚕開發嘅，我哋建議你只安裝到 HoYoShade 度。</value>
+    <value>OpenHoYoShade 係用嚟開發嘅，我哋建議你淨係安裝到 HoYoShade 度。</value>
   </data>
   <data name="ReShadeDownloadView_SelectInstallType" xml:space="preserve">
     <value>選擇安裝類型</value>
@@ -1222,7 +1164,7 @@
     <value>或者，從本地導入壓縮包或者資料夾</value>
   </data>
   <data name="ReShadeDownloadView_FolderStructureInvalid" xml:space="preserve">
-    <value>資料夾結構唔啱。你揀嘅資料夾必須要有 "Shaders" 同埋 "Textures" 資料夾，"Addons" 資料夾係可選嘅，而且唔可以有其他資料夾。</value>
+    <value>資料夾結構唔啱。你揀嘅資料夾必須要有「Shaders」同埋「Textures」資料夾，「Addons」資料夾係可選嘅，而且唔可以有其他資料夾。</value>
   </data>
   <data name="ReShadeDownloadView_FolderImporting" xml:space="preserve">
     <value>導入緊資料夾...</value>
@@ -1276,7 +1218,7 @@
     <value>這將同時刪除所有安裝的{0}著色器、外掛程式、預設和遊戲截圖。一旦執行解安裝操作，這些資料將永遠無法恢復。</value>
   </data>
   <data name="UninstallShadeDialog_WarningMessage2" xml:space="preserve">
-    <value>如果你重要咗嘅野仍未備份，請係解安裝之前先備份。</value>
+    <value>如果你重要嘅嘢仲未備份，請喺解除安裝之前先備份。</value>
   </data>
   <data name="UninstallShadeDialog_Cancel" xml:space="preserve">
     <value>取消</value>
@@ -1294,7 +1236,7 @@
     <value>準備緊解安裝...</value>
   </data>
   <data name="UninstallShadeDialog_DeletingFiles" xml:space="preserve">
-    <value>Delete緊檔案... ({0}/{1})</value>
+    <value>Delete 緊檔案... ({0}/{1})</value>
   </data>
   <data name="UninstallShadeDialog_DeletingDirectories" xml:space="preserve">
     <value>清理緊資料夾...</value>
@@ -1362,16 +1304,16 @@
     <value>Ex_M/REL 絕區零Blender/留影機插件</value>
   </data>
   <data name="SettingPage_PluginFolderPath" xml:space="preserve">
-    <value>插件文件夾路徑</value>
+    <value>外掛程式資料夾路徑</value>
   </data>
   <data name="SettingPage_SelectFolder" xml:space="preserve">
-    <value>揀文件夾</value>
+    <value>揀資料夾</value>
   </data>
   <data name="SettingPage_Unbind" xml:space="preserve">
     <value>解綁</value>
   </data>
   <data name="SettingPage_NotSet" xml:space="preserve">
-    <value>未設置</value>
+    <value>未設定</value>
   </data>
   <data name="SettingPage_ExMGenshinBlenderPluginValidationFailed" xml:space="preserve">
     <value>Ex_M/REL 原神Blender/留影機插件驗證失敗咗</value>
@@ -1407,7 +1349,7 @@
     <value>啟動 {0} 注入器失敗: {1}</value>
   </data>
   <data name="GameLauncher_ExMBlenderPluginNotConfigured" xml:space="preserve">
-    <value>Ex_M/REL {0}Blender/留影機插件路徑未配置，請喺設置入面配置</value>
+    <value>Ex_M/REL {0} Blender/留影機外掛程式路徑未設定，請喺設定入面設定</value>
   </data>
   <data name="GameLauncher_ClientExeNotFound" xml:space="preserve">
     <value>搵唔到 client.exe，請檢查插件路徑</value>
@@ -1437,10 +1379,10 @@
     <value>原神</value>
   </data>
   <data name="GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunning" xml:space="preserve">
-    <value>Ex_M/REL Blender/留影機插件注入進程 ({0}) 已經運行緊，唔可以再次啟動 Ex_M/REL Blender/留影機插件。</value>
+    <value>Ex_M/REL Blender/留影機外掛程式注入處理程序 ({0}) 已經運行緊，唔可以再次啟動 Ex_M/REL Blender/留影機外掛程式。</value>
   </data>
   <data name="GameLauncher_ExMBlenderPluginInjectionProcessAlreadyRunningWithShader" xml:space="preserve">
-    <value>Ex_M/REL Blender/留影機插件注入進程 ({0}) 已經運行緊，唔可以啟動 Ex_M/REL Blender/留影機插件或者 HoYoShade/OpenHoYoShade 注入器。</value>
+    <value>Ex_M/REL Blender/留影機外掛程式注入處理程序 ({0}) 已經運行緊，唔可以啟動 Ex_M/REL Blender/留影機外掛程式或者 HoYoShade/OpenHoYoShade 注入器。</value>
   </data>
   <data name="SettingPage_ExMBlenderPluginRegionRestriction" xml:space="preserve">
     <value>呢個插件只係喺中國大陸/香港/澳門/台灣/新加坡等國家同埋地區可以用。如果你唔係喺呢啲國家同埋地區，插件開發者/貢獻者同埋 HoYoShade Hub 嘅開發者/貢獻者有權拒絕提供支援。</value>
@@ -1548,9 +1490,9 @@
     <value>重設插件客戶端目標</value>
   </data>
   <data name="ExMBlenderRepairTool_ResetConfirmMessage" xml:space="preserve">
-    <value>你確定要繼續呵？
+    <value>你確定要繼續？
 
-Delete咗之後，你要重新啟動一次客戶端，等無人機重新攞遊戲進程根目錄。</value>
+Delete 咗之後，你要重新啟動一次客戶端，等無人機重新攞遊戲根目錄。</value>
   </data>
   <data name="ExMBlenderRepairTool_SelectGamesToRepair" xml:space="preserve">
     <value>揀要修復嘅遊戲：</value>
@@ -1571,20 +1513,20 @@ Delete咗之後，你要重新啟動一次客戶端，等無人機重新攞遊�
     <value>請最少揀一個遊戲嚟修復。</value>
   </data>
   <data name="ExMBlenderRepairTool_SuccessMessage" xml:space="preserve">
-    <value>已經成功 delete咗 {0} 個遊戲嘅 config 檔。
-請在注入器啓動後重新指定客戶端。</value>
+    <value>已經成功 delete 咗 {0} 個遊戲嘅 config 檔。
+請喺注入器啟動後重新指定客戶端。</value>
   </data>
 <data name="ExMBlenderRepairTool_AllFailedMessage" xml:space="preserve">
     <value>所有操作都失敗咗。請睇日誌了解詳情。</value>
   </data>
   <data name="ExMBlenderRepairTool_FixLoginConfirmMessage" xml:space="preserve">
-    <value>你確定要 delete cookie 檔呵？
+    <value>你確定要 delete cookie 檔？
 
-Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
+Delete 咗之後，你需要重新掃 QR Code 登入嗶哩嗶哩帳號。</value>
   </data>
   <data name="ExMBlenderRepairTool_CookieSuccessMessage" xml:space="preserve">
-    <value>已經成功 delete咗 {0} 個遊戲嘅 cookie 檔。
-請在注入器啓動後重新掃碼登錄。</value>
+    <value>已經成功 delete 咗 {0} 個遊戲嘅 cookie 檔。
+請喺注入器啟動後重新掃 QR Code 登入。</value>
   </data>
   <data name="ExMBlenderRepairTool_GenshinCookie" xml:space="preserve">
     <value>原神 (cookies.json)</value>
@@ -1614,13 +1556,13 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
     <value>自訂注入</value>
   </data>
   <data name="CustomInjectDialog_ProcessNameInput" xml:space="preserve">
-    <value>請輸入目標進程名稱（包含 .exe 後綴），或使用快捷方式：</value>
+    <value>處理程序名稱</value>
   </data>
   <data name="CustomInjectDialog_ProcessNamePlaceholder" xml:space="preserve">
     <value>例如：GenshinImpact.exe 或者：-GI</value>
   </data>
   <data name="CustomInjectDialog_Description" xml:space="preserve">
-    <value>注入器會嘗試向呢個進程注入 ReShade。</value>
+    <value>注入器會嘗試向呢個處理程序注入 ReShade。</value>
   </data>
   <data name="CustomInjectDialog_Inject" xml:space="preserve">
     <value>注入</value>
@@ -1710,19 +1652,19 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
     <value>複製失敗</value>
   </data>
   <data name="UninstallReShadeFromClient" xml:space="preserve">
-    <value>卸載/還原ReShade對呢個客戶端嘅改動</value>
+    <value>解除安裝/還原 ReShade 對呢個客戶端嘅改動</value>
   </data>
   <data name="UninstallReShadeFromClient_Confirm" xml:space="preserve">
-    <value>你確定要卸載/還原ReShade對呢個客戶端嘅改動嗎？</value>
+    <value>你確定要解除安裝/還原 ReShade 對呢個客戶端嘅改動？</value>
   </data>
   <data name="UninstallReShadeFromClient_Desc1" xml:space="preserve">
-    <value>呢個操作會卸載/還原ReShade對呢個客戶端嘅所有改動，所有擺喺呢個客戶端入面嘅ReShade相關檔案都會被刪除，呢個都可以解決潛在嘅/已經發生嘅反作弊檢測問題。不過你會冇晒所有保存喺呢個客戶端目錄入面嘅ReShade相關檔案，包括一啲由你自行設定嘅個人化設置。一經執行卸載操作，呢啲數據就會永遠無法恢復。</value>
+    <value>呢個操作會解除安裝/還原 ReShade 對呢個客戶端嘅所有改動，所有擺喺呢個客戶端入面嘅 ReShade 相關檔案都會被刪除，呢個都可以解決潛在嘅/已經發生嘅反作弊檢測問題。不過你會冇晒所有保存喺呢個客戶端目錄入面嘅 ReShade 相關檔案，包括一啲由你自行設定嘅個人化設定。一經執行解除安裝操作，呢啲資料就會永遠無法恢復。</value>
   </data>
   <data name="UninstallReShadeFromClient_Desc2" xml:space="preserve">
-    <value>如果你仲有重要數據未備份，請喺卸載之前先進行備份。</value>
+    <value>如果你仲有重要資料未備份，請喺解除安裝之前先進行備份。</value>
   </data>
   <data name="UninstallReShadeFromClient_Completed" xml:space="preserve">
-    <value>已經完成卸載/還原ReShade對呢個客戶端嘅改動。</value>
+    <value>已經完成解除安裝/還原 ReShade 對呢個客戶端嘅改動。</value>
   </data>
   <data name="SettingPage_MainInterface" xml:space="preserve">
     <value>主介面</value>
@@ -1798,7 +1740,7 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
     <value>初始化所需的一切，就這麼一氣呵成。</value>
   </data>
   <data name="QuickSetupView_Description" xml:space="preserve">
-    <value>一般情況下，普通用戶只需要點擊此處的「下載並安裝」，即可完成所有初始化步驟。</value>
+    <value>一般情況下，普通用家只需要點選呢度嘅「下載並安裝」，即可完成所有初始化步驟。</value>
   </data>
   <data name="QuickSetupView_NetworkCensoredPrefix" xml:space="preserve">
     <value>網路受到審查？點擊右上角的「</value>
@@ -1984,10 +1926,10 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
     <value>啟動器版本</value>
   </data>
   <data name="DiagnosticTool_Permissions" xml:space="preserve">
-    <value>進程權限</value>
+    <value>處理程序權限</value>
   </data>
 <data name="DiagnosticTool_RpcState" xml:space="preserve">
-    <value>RPC 後台服務</value>
+    <value>RPC 背景服務</value>
   </data>
   <data name="DiagnosticTool_NoGamesFound" xml:space="preserve">
     <value>暫未配置遊戲安裝路徑。</value>
@@ -2503,4 +2445,4 @@ Delete咗之後，你要重新掃碼登入嗶哩嗶哩帳號。</value>
     <value>無法啟動安裝服務。請確認系統管理員權限或檢查防毒軟件是否攔截。
 日誌目錄：{0}</value>
   </data>
-</root>
+<data name="ExMBlenderRepairTool_NoConfigFileFound" xml:space="preserve"><value>揀選嘅遊戲外掛程式入面搵唔到 config 檔案。</value></data><data name="ExMBlenderRepairTool_NoCookieFileFound" xml:space="preserve"><value>揀選嘅遊戲外掛程式入面搵唔到 cookies.json 檔案。</value></data><data name="ExMBlenderRepairTool_PartialSuccessDeleted" xml:space="preserve"><value>成功刪除 {0} 個檔案</value></data><data name="ExMBlenderRepairTool_PartialSuccessNotFound" xml:space="preserve"><value>，{0} 個檔案搵唔到</value></data><data name="ExMBlenderRepairTool_PartialSuccessFailed" xml:space="preserve"><value>，{0} 個檔案刪除失敗</value></data><data name="ExMBlenderRepairTool_PartialSuccessPeriod" xml:space="preserve"><value>。</value></data></root>

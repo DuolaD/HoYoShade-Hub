@@ -1,110 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -777,13 +719,13 @@
     <value>高動態範圍</value>
   </data>
   <data name="WelcomeView_IfHoYoShadeHubTakesALongTimeToStartItIsRecommendedToDisableSmartAppControlInWindowsSecurity" xml:space="preserve">
-    <value>如果 HoYoShade Hub 啟動時間過長，建議關閉 Windows 安全中心的SmartApp控制功能。</value>
+    <value>如果 HoYoShade Hub 啟動時間過長，建議在 Windows 安全性中關閉智慧型應用程式控制。</value>
   </data>
   <data name="WelcomeView_OpenWindowsSecurity" xml:space="preserve">
     <value>開啟 Windows 安全中心</value>
   </data>
 <data name="WelcomeView_NetworkErrorYouCanContinueUsingHoYoShadeHubButYouWonTReceiveFutureUpdates" xml:space="preserve">
-    <value>網絡出錯，您可以繼續使用 HoYoShade Hub ，但無法收到更新。</value>
+    <value>網絡出錯，您可以繼續使用 HoYoShade Hub，但無法收到更新。</value>
   </data>
   <data name="MainView_CheckSystemProxy_SystemProxyIsEnabled" xml:space="preserve">
     <value>系統代理已開啟。</value>
@@ -1177,7 +1119,7 @@
     <value>OpenHoYoShade 是作為開發用途而使用的，我們建議您跳過為其安裝 ReShade 著色器與外掛程式的步驟。</value>
   </data>
   <data name="ReShadeDownloadView_BothTargetsWarning" xml:space="preserve">
-    <value>OpenHoYoShade 是作為開發用途而使用的，我們建議您僅安裝至 HoYoShade 。</value>
+    <value>OpenHoYoShade 是作為開發用途而使用的，我們建議您僅安裝至 HoYoShade。</value>
   </data>
   <data name="ReShadeDownloadView_SelectInstallType" xml:space="preserve">
     <value>選擇安裝類型</value>
@@ -1222,7 +1164,7 @@
     <value>或者，從本地導入壓縮包或資料夾</value>
   </data>
   <data name="ReShadeDownloadView_FolderStructureInvalid" xml:space="preserve">
-    <value>資料夾結構無效。所選資料夾必須包含 "Shaders" 和 "Textures" 資料夾，"Addons" 資料夾為可選項，且不能有其他資料夾。</value>
+    <value>資料夾結構無效。選取的資料夾必須包含「Shaders」和「Textures」資料夾，「Addons」資料夾為選用資料夾，且不得包含其他多餘資料夾。</value>
   </data>
   <data name="ReShadeDownloadView_FolderImporting" xml:space="preserve">
     <value>正在匯入資料夾...</value>
@@ -1710,19 +1652,19 @@
     <value>複製失敗</value>
   </data>
   <data name="UninstallReShadeFromClient" xml:space="preserve">
-    <value>卸載/還原ReShade對此用戶端的更動</value>
+    <value>解除安裝/還原 ReShade 對此遊戲用戶端的變更</value>
   </data>
   <data name="UninstallReShadeFromClient_Confirm" xml:space="preserve">
-    <value>你確定要卸載/還原ReShade對此用戶端的更動嗎？</value>
+    <value>您確定要解除安裝/還原 ReShade 對此遊戲用戶端的變更嗎？</value>
   </data>
   <data name="UninstallReShadeFromClient_Desc1" xml:space="preserve">
-    <value>這將會卸載/還原ReShade對此用戶端的所有更動，所有放置於此用戶端中的ReShade相關檔案都將會刪除，這也可以解決潛在的/已經發生的反作弊偵測問題。但你會失去所有保存在此用戶端目錄中的ReShade相關檔案，包括一些由您自行設定的個人化設定。一旦執行卸載操作，這些資料將會永遠無法恢復。</value>
+    <value>此作業將解除安裝/還原 ReShade 對此用戶端的所有變更，所有存放在此用戶端內的 ReShade 相關檔案都將被刪除，這也可以解決潛在的/已發生的反作弊偵測問題。不過您將失去所有保存在此用戶端目錄內的 ReShade 相關檔案，包括由您自行設定的個人化設定。一經執行解除安裝，這些資料將永遠無法復原。</value>
   </data>
   <data name="UninstallReShadeFromClient_Desc2" xml:space="preserve">
-    <value>如果您還有重要資料且未進行備份，請在卸載前先進行備份。</value>
+    <value>若您還有重要資料未備份，請在解除安裝前先進行備份。</value>
   </data>
   <data name="UninstallReShadeFromClient_Completed" xml:space="preserve">
-    <value>已完成卸載/還原ReShade對此用戶端的更動。</value>
+    <value>已完成解除安裝/還原 ReShade 對此用戶端的變更。</value>
   </data>
   <data name="SettingPage_MainInterface" xml:space="preserve">
     <value>主介面</value>
@@ -2503,4 +2445,4 @@
     <value>無法啟動安裝服務。請確認系統管理員權限或檢查防毒軟體是否攔截。
 記錄檔目錄：{0}</value>
   </data>
-</root>
+<data name="ExMBlenderRepairTool_NoConfigFileFound" xml:space="preserve"><value>選取的遊戲外掛程式中未找到 config 檔案。</value></data><data name="ExMBlenderRepairTool_NoCookieFileFound" xml:space="preserve"><value>選取的遊戲外掛程式中未找到 cookies.json 檔案。</value></data><data name="ExMBlenderRepairTool_PartialSuccessDeleted" xml:space="preserve"><value>成功刪除 {0} 個檔案</value></data><data name="ExMBlenderRepairTool_PartialSuccessNotFound" xml:space="preserve"><value>，{0} 個檔案未找到</value></data><data name="ExMBlenderRepairTool_PartialSuccessFailed" xml:space="preserve"><value>，{0} 個檔案刪除失敗</value></data><data name="ExMBlenderRepairTool_PartialSuccessPeriod" xml:space="preserve"><value>。</value></data></root>
